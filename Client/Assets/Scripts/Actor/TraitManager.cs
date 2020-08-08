@@ -30,7 +30,6 @@ public class TraitManager : MonoBehaviour
         for (int i = 0; i < traitDatas.Length; i++)
         {
             TraitData item =traitDatas[i];
-            item._lateDate =DateManager.ConvertStringToDate(item.lateDate);
             traitDatas[i] =item;
         }
 

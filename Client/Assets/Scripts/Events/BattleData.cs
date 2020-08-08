@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattleData : TypeEventTool
+public class BattleData : MonoBehaviour
 {
     public int MaxBattle;
     public enum BattleType
@@ -20,8 +20,7 @@ public class BattleData : TypeEventTool
     {
         MaxBattle =monsterList.Count;
         BattleEvent battleEvent= Instantiate((GameObject)Resources.Load("Prefabs/BattleEvent")).GetComponent<BattleEvent>();
-        battleEvent.eventTanser =GetComponent<EventTanser>();
-        battleEvent.battleData =this;
+        // battleEvent.battleData =this;
     }
 
     

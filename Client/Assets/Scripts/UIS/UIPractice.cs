@@ -46,7 +46,6 @@ public class UIPractice : MonoBehaviour
         playerActor.transform.localPosition =Vector3.zero;
         playerActor.transform.localScale =Vector3.one;
         
-        RefreashDate();
         enable=true;
         if(id.Length>0)
         {
@@ -128,25 +127,7 @@ public class UIPractice : MonoBehaviour
         Player.instance.SetSkillProficiency(key,num,out newCurrent,out newMax);
         UpdateSkillProficiency(newCurrent,newMax);   
     }
-    public void RefreashDate()
-    {
-        dateText.text =string.Format("{0}年{1}月{2}日",DateManager.instance.now.year,DateManager.instance.now.month,DateManager.instance.now.day); 
-    }
 
-    public TriggerEvent CreateTriggerEvent(TriggerEventsData data)
-    {
-        TriggerEvent tr = Instantiate((GameObject)Resources.Load("Prefabs/Trigger/"+data.prefab)).GetComponent<TriggerEvent>();
-        tr.triggerEventsData =data;
-        if(tr.triggerPos==0)
-        {
-            tr.transform.SetParent(backPosition);
-        }
-        else
-        {
-            tr.transform.SetParent(frontPosition);
-        }
-        tr.transform.localScale =Vector3.one;
-        tr.transform.localPosition =Vector3.zero;
-        return tr;
-    }
+
+    
 }

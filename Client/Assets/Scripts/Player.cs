@@ -54,7 +54,6 @@ public class Player : MonoBehaviour
 	public string playerNow="";//玩家正在做的事，进入各个界面时会发生改变
 	public List<int> playerAssests =new List<int>();//玩家拥有的资产
 	public List<AssetsItem> playerEquipItems =new List<AssetsItem>(); //玩家装备的资产
-	public List<TaskEvent> dateTaskEvents =new List<TaskEvent>();//玩家预约的事件
 	public int playerAbyss =1;//玩家进入深渊的层数
 	public List<int> playerProfessions =new List<int>();//玩家获得的职业称号
 	public List<int> unlockSkills =new List<int>();

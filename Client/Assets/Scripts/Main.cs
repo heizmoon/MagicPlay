@@ -73,7 +73,6 @@ public class Main : MonoBehaviour {
 		gameObject.AddComponent<MonsterManager>();
 		gameObject.AddComponent<EventManager>();
 		gameObject.AddComponent<AbyssManager>();
-		gameObject.AddComponent<CharacterManager>();
 		gameObject.AddComponent<TraitManager>();
 		gameObject.AddComponent<BuffManager>();
 
@@ -128,19 +127,13 @@ public class Main : MonoBehaviour {
 		yield return new WaitForSeconds(0.4f);
 		InitUIPlayer();
 		yield return new WaitForSeconds(0.2f);
-		InitUIEvents();
-		yield return new WaitForSeconds(0.2f);
+		
 		//等到全部加载完毕，全部隐藏
-		EventManager.TryCreateEventOnDate();
-		UIEvents.instance.TryMarkOverDueEvent();
-		UIEvents.instance.TryRelieveTimeConfict();
-		yield return new WaitForSeconds(0.2f);
-		InitUICharacter();
-		yield return new WaitForSeconds(0.2f);
+		
+		
 		CloseOhterUIs();
 		JudgeWhatsDoing();
 		player.playerActor.InitPlayerActor();
-		dateEventStopWorld = DateManager.instance.TryFindDateEvents();
 		Debug.LogFormat("加载完毕---");
 		if(!dateEventStopWorld)
 		{
@@ -226,10 +219,8 @@ public class Main : MonoBehaviour {
 		SkillManager.ClearPool();
 		Destroy(UISkillTree.instance.gameObject);
 		// Destroy(UIEvents.instance.gameObject);
-		UIEvents.instance.transform.SetParent(BottomUI);
-		UIEvents.instance.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-		UIEvents.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-		Destroy(UICharacter.instance.gameObject);
+		
+		
 		offLineRewardsUI.GetComponent<UIOffLineRewards>().OnReceiveReward(1);
 	}
 	public void ShowDateEventRemind()
@@ -248,7 +239,7 @@ public class Main : MonoBehaviour {
 		if (_lastTime == "") 
 		{
 			TimeSpan span =new TimeSpan(0);
-			return DateManager.instance.AdjustNow(span);
+			return 0;
 			 
 		} 
 		else 
@@ -261,7 +252,7 @@ public class Main : MonoBehaviour {
 				span =new TimeSpan(12,0,0);
 			}
 			Debug.Log ("spanTime::::"+span.TotalSeconds);
-			return DateManager.instance.AdjustNow(span);
+			return 0;
 		}
 
 	}
@@ -298,11 +289,9 @@ public class Main : MonoBehaviour {
 			break;
 			case "Toggle_Events":
 			CloseOhterUIs();
-			InitUIEvents();
 			break;	
 			case "Toggle_Character":
 			CloseOhterUIs();
-			InitUICharacter();
 			break;
 		}
 		
@@ -403,48 +392,8 @@ public class Main : MonoBehaviour {
 		}
 		
 	}
-	public void InitUIEvents()
-	{
-		if(UIEvents.instance==null)
-		{
-			GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UIEvents"));
-			go.transform.SetParent(middleUI);
-			go.transform.localScale =Vector3.one;
-			go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-			EventManager.CreateTaskEvents();
-			
-		}
-		else
-		{
-			UIEvents.instance.transform.SetParent(middleUI);
-			UIEvents.instance.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			UIEvents.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-			UIEvents.instance.information.SetActive(false);
-			HideDateEventRemind();
-		}
-		UIState =0;
-	}
-	public void InitUICharacter()
-	{
-		if(!UICharacter.instance)
-		{
-			GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UICharacter"));
-			go.transform.SetParent(middleUI);
-			go.transform.localScale =Vector3.one;
-			go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-			UICharacter.instance.CreateCharacters();
-		}
-		else
-		{
-			UICharacter.instance.transform.SetParent(middleUI);
-			UICharacter.instance.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			UICharacter.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-			UICharacter.instance.HideInformation();
-		}
-		UIState =0;
-	}
+	
+	
 	public void IntoStoryMode(int mode)
 	{
 		storyModeUI.SetActive(true);
@@ -474,7 +423,6 @@ public class Main : MonoBehaviour {
 	IEnumerator WaitForOverDueEvent()
 	{
 		yield return new WaitForSeconds(0.5f);
-		UIEvents.instance.TryMarkOverDueEvent();
 	}
 	// void RemindEventOpen()
 	// {
@@ -512,33 +460,16 @@ public class Main : MonoBehaviour {
 			UIPlayer.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
 		}
 		
-		if(UIEvents.instance)
-		{
-			UIEvents.instance.transform.SetParent(BottomUI);
-			UIEvents.instance.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			UIEvents.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-		}
-		if(UICharacter.instance)
-		{
-			UICharacter.instance.transform.SetParent(BottomUI);
-			UICharacter.instance.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			UICharacter.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-		}
-		if(dateEventStopWorld)
-		{
-			ShowDateEventRemind();
-		}
+		
+		
+		
 
 		// if(UILoading.activeSelf)
 		// {
 		// 	UILoading.SetActive(false);
 		// }
 	}
-	public void NewEventRemind()
-    {
-        //新事件出现提醒，当切换到UIEvent界面时，提醒消失
-		ShowDateEventRemind();
-    }
+	
 
 
 	void OnApplicationQuit()//退出时保存
@@ -577,17 +508,12 @@ public class Main : MonoBehaviour {
 		AssetsManager.instance.SavePlayerAssetsItem();
 		//保存玩家拥有的特质列表
 		player.SaveTraitList();
-		//保存事件列表
-		PlayerPrefs.SetString("taskEventsInList",EventManager.SaveTaskEventsInList());
-		Debug.LogFormat("taskEventsInList:{0}",PlayerPrefs.GetString("taskEventsInList"));
-		//保存玩家预约事件列表
-		PlayerPrefs.SetString("playerDateEvents",EventManager.SaveDateEvents());
+		
 		//保存玩家解锁的技能
 		Player.instance.SaveUnlockSkill();
 		//保存玩家使用的技能列表
 		player.SaveUsedBattleSkillListOnQuit();
 		//保存角色列表
-		CharacterManager.instance.SaveDatabase();
 		//保存退出时间
 		_lastTime =System.DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss");
 		PlayerPrefs.SetString ("lastTime",_lastTime);

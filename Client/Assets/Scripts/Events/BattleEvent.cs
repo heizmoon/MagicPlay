@@ -7,7 +7,6 @@ public class BattleEvent : MonoBehaviour
     int currentBattle;
 
     public BattleData battleData;
-    public EventTanser eventTanser;
     public static BattleEvent instance;
     GameObject skillChooseUI;
     public GameObject stageUI;
@@ -118,7 +117,7 @@ public class BattleEvent : MonoBehaviour
     }
     void OnBattleEnd(int result)
     {
-        battleData.GetResult(result);
+        
         DestroySelf();
     }
     public void GetBattleResult(int result)

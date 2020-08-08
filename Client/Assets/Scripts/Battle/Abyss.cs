@@ -18,7 +18,7 @@ public class Abyss : MonoBehaviour
     Actor enemy;
     public Text TextBattle;
     public Text TextEnemyName;
-    EventTanser eventTanser;
+    
     AbyssGroupData abyssGroupData;
     public GameObject successUI;
     public GameObject failUI;
@@ -43,7 +43,7 @@ public class Abyss : MonoBehaviour
     }
     void Start()
     {
-        eventTanser=gameObject.GetComponent<EventTanser>();
+        
         abyssLevel =Player.instance.playerAbyss;
         this.transform.SetParent(Main.instance.allScreenUI);
         GetComponent<RectTransform>().sizeDelta = Vector2.zero;
@@ -303,7 +303,6 @@ public class Abyss : MonoBehaviour
         //清除PlayerPrefs中的怪物表
         PlayerPrefs.SetString("abyssMonsters","");
         
-        EventManager.TaskEventEnd(eventTanser.data);
         // Main.instance.StartLoadingUI();
         // //此处应修改为一旦进入事件，时间就变化，并且默认事件为失败-------------------------------------------
         // DateManager.instance.now = DateManager.instance.DateAddtionCompute(DateManager.instance.now,eventTanser.data.timeCost);
@@ -345,7 +344,6 @@ public class Abyss : MonoBehaviour
             failUI.SetActive(true);
             resultText.text ="失败";
             _text = failUI.GetComponent<Text>();
-            eventTanser.data.result =2;
             break;
             case 1:
             //显示成功时的界面
@@ -355,14 +353,12 @@ public class Abyss : MonoBehaviour
             Player.instance.playerAbyss++;
             PlayerPrefs.SetInt("abyssLevel",Player.instance.playerAbyss);
             _text = successUI.GetComponent<Text>();
-            eventTanser.data.result =1;
             break;
             case 2:
             //显示逃跑时的界面
             runAwayUI.SetActive(true);
             resultText.text ="失败";
             _text = runAwayUI.GetComponent<Text>();
-            eventTanser.data.result =2;
             break;
             default:
             _text = runAwayUI.GetComponent<Text>();
@@ -370,7 +366,7 @@ public class Abyss : MonoBehaviour
         }
         //复活角色
         Player.instance.playerActor.GetComponent<Actor>().ReLiveActor();
-        _text.text =string.Format(_text.text,eventTanser.data.timeCost,abyssLevel);
+        // _text.text =string.Format(_text.text,eventTanser.data.timeCost,abyssLevel);
     }
     void OnAbyssSuccess()
     {
