@@ -96,7 +96,7 @@ public class UISkillChoose : MonoBehaviour
     }
     void ChangeActorUsingSkillList()
     {
-        Player.instance.playerActor.UsingSkillsID =new int[4];
+        // Player.instance.playerActor.UsingSkillsID =new List<int>();
         for (int i = 0; i < 4; i++)
         {
             Player.instance.playerActor.UsingSkillsID[i] = choosenSkills[i].id;   

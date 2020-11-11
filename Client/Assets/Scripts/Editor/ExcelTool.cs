@@ -11,7 +11,7 @@ namespace EditorTool {
     public class ExcelTool {
         
         static DropGroup[] droupGroupArray;
-        static Ability[] abilityArray;
+        static SkillData[] skillDataArray;
         static AssetsItemData[] assetsItemArray;
         static AbyssGroupData[] abyssGroups;
         static CharacterData[] characterDatas;
@@ -29,6 +29,9 @@ namespace EditorTool {
         static GuildData[] guildDatas;
         static IdealData[] idealDatas;
         static RelicGroupData[] relicGroupDatas;
+        static ReformData[] reformDatas;
+        static AbilityData[] abilityDatas;
+
 
 
 
@@ -41,8 +44,8 @@ namespace EditorTool {
             switch(type)
             {
                 
-                case "Ability":
-                CreateAbilityArray(filePath);
+                case "Skill":
+                CreateSkillArray(filePath);
                 break;
                 case "AssetsItem":
                 CreateAssetsItemArray(filePath);
@@ -98,7 +101,12 @@ namespace EditorTool {
                 case "RelicGroup":
                 CreateRelicGroupArray(filePath);
                 break;
-
+                case "Reform":
+                CreateReformArray(filePath);
+                break;
+                case "Abiltiy":
+                CreateAbilityArray(filePath);
+                break;
 
             }
 
@@ -123,27 +131,17 @@ namespace EditorTool {
                 //解析每列的数据
                 item.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
                 item.name = collect[i][1].ToString();
-                item.gender = collect[i][2].ToString()==""?0:int.Parse(collect[i][2].ToString());
-                item.birthday = collect[i][3].ToString();
-                item.deathday = collect[i][4].ToString();
-                item.marriageDay = collect[i][5].ToString();
-                item.describe1 = collect[i][6].ToString();
-                item.describe2 = collect[i][7].ToString();
-                item.describe3 = collect[i][8].ToString();
-                item.prefab = collect[i][9].ToString();
-                item.rank =collect[i][10].ToString();
-                item.traitList =collect[i][11].ToString();
-                item.skillList =collect[i][12].ToString();
-                item.assetsList =collect[i][13].ToString();
-                item.gold =collect[i][14].ToString();
-                item.updateTime =collect[i][15].ToString();
-                item.skillGrow =collect[i][16].ToString()==""?0:int.Parse(collect[i][16].ToString());
-                item.hpGrow =collect[i][17].ToString()==""?0:int.Parse(collect[i][17].ToString());
-                item.mpGrow =collect[i][18].ToString()==""?0:int.Parse(collect[i][18].ToString());
-                item.resistanceGrow =collect[i][19].ToString()==""?0:int.Parse(collect[i][19].ToString());
-                item.resistances =collect[i][20].ToString();
-                item.portrait =collect[i][21].ToString();
-                item._traitList =GetListIntFromString(item.traitList);
+                item.describe = collect[i][2].ToString();
+                item.prefab = collect[i][3].ToString();
+                item.hp =collect[i][4].ToString()==""?0:int.Parse(collect[i][4].ToString());
+                item.mp =collect[i][5].ToString()==""?0:int.Parse(collect[i][5].ToString());
+                item.attack =collect[i][6].ToString()==""?0:int.Parse(collect[i][6].ToString());
+                item.skills =collect[i][7].ToString();
+                item.portrait = collect[i][8].ToString();
+                item.reMp =collect[i][9].ToString()==""?0:float.Parse(collect[i][9].ToString());
+                item.crit =collect[i][10].ToString()==""?0:float.Parse(collect[i][10].ToString());
+                item.allSkills =collect[i][11].ToString();
+                item.allSkillsList =GetListIntFromString(item.allSkills);
                 array[i - 2] = item;
             }
             characterDatas =array;
@@ -219,7 +217,7 @@ namespace EditorTool {
                 //解析每列的数据
                 item.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
                 item.eventName = collect[i][1].ToString();
-                item.discribe = collect[i][2].ToString();
+                item.describe = collect[i][2].ToString();
                 item.icon = collect[i][3].ToString();
                 item.type = collect[i][4].ToString()==""?0: int.Parse(collect[i][4].ToString());
                 item.startDate =collect[i][5].ToString();
@@ -347,7 +345,7 @@ namespace EditorTool {
                 //解析每列的数据
                 item.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
                 item.eventName = collect[i][1].ToString();
-                item.discribe = collect[i][2].ToString();
+                item.describe = collect[i][2].ToString();
                 item.scene = collect[i][3].ToString();
                 item.timeLimit = collect[i][4].ToString()==""?0: int.Parse(collect[i][4].ToString());
                 item.timeInterval = collect[i][5].ToString()==""?0: int.Parse(collect[i][5].ToString());
@@ -568,26 +566,62 @@ namespace EditorTool {
                 item.monsterName = collect[i][1].ToString();
                 item.prefab = collect[i][2].ToString();
                 item.type = collect[i][3].ToString()==""?0: int.Parse(collect[i][3].ToString());
-                item.skills = collect[i][4].ToString();
-                item.hp = collect[i][5].ToString()==""?0: int.Parse(collect[i][5].ToString());
-                item.mp = collect[i][6].ToString()==""?0: int.Parse(collect[i][6].ToString());
-                item.dodge = collect[i][7].ToString()==""?0: int.Parse(collect[i][7].ToString());
-                item.tough = collect[i][8].ToString()==""?0: int.Parse(collect[i][8].ToString());
-                item.aiType = collect[i][9].ToString()==""?0: int.Parse(collect[i][9].ToString());
-                item.resistance0 = collect[i][10].ToString()==""?0: int.Parse(collect[i][10].ToString());
-                item.resistance1 = collect[i][11].ToString()==""?0: int.Parse(collect[i][11].ToString());
-                item.resistance2 = collect[i][12].ToString()==""?0: int.Parse(collect[i][12].ToString());
-                item.resistance3 = collect[i][13].ToString()==""?0: int.Parse(collect[i][13].ToString());
-                item.resistance4 = collect[i][14].ToString()==""?0: int.Parse(collect[i][14].ToString());
-                item.resistance5 = collect[i][15].ToString()==""?0: int.Parse(collect[i][15].ToString());
-                item.resistance6 = collect[i][16].ToString()==""?0: int.Parse(collect[i][16].ToString());
-                item.resistance7 = collect[i][17].ToString()==""?0: int.Parse(collect[i][17].ToString());
-                item.skillGrow = collect[i][18].ToString()==""?0: int.Parse(collect[i][18].ToString());
-                item.hpGrow = collect[i][19].ToString()==""?0: int.Parse(collect[i][19].ToString());
-                item.mpGrow = collect[i][20].ToString()==""?0: int.Parse(collect[i][20].ToString());
-                item.dodgeGrow = collect[i][21].ToString()==""?0: int.Parse(collect[i][21].ToString());
-                item.toughGrow = collect[i][22].ToString()==""?0: int.Parse(collect[i][22].ToString());
-                item.resistanceGrow = collect[i][23].ToString()==""?0: int.Parse(collect[i][23].ToString());
+                item.hp = collect[i][4].ToString()==""?0: int.Parse(collect[i][4].ToString());
+                item.attack = collect[i][5].ToString()==""?0: int.Parse(collect[i][5].ToString());
+                item.crit = collect[i][6].ToString()==""?0: int.Parse(collect[i][6].ToString());
+                item.switchCondition1 = collect[i][7].ToString()==""?0: int.Parse(collect[i][7].ToString());
+                item.speed1 = collect[i][8].ToString()==""?0: int.Parse(collect[i][8].ToString());
+                item.AIType1 = collect[i][9].ToString();
+                item.listAttack1 = collect[i][10].ToString();
+                item.listDefend1 = collect[i][11].ToString();
+                item.listBuff1 = collect[i][12].ToString();
+                item.listNerf1 = collect[i][13].ToString();
+                item.switchCondition2 = collect[i][14].ToString()==""?0: int.Parse(collect[i][14].ToString());
+                item.speed2 = collect[i][15].ToString()==""?0: int.Parse(collect[i][15].ToString());
+                item.AIType2 = collect[i][16].ToString();
+                item.listAttack2 = collect[i][17].ToString();
+                item.listDefend2 = collect[i][18].ToString();
+                item.listBuff2 = collect[i][19].ToString();
+                item.listNerf2 = collect[i][20].ToString();
+                item.switchCondition3 = collect[i][21].ToString()==""?0: int.Parse(collect[i][21].ToString());
+                item.speed3 = collect[i][22].ToString()==""?0: int.Parse(collect[i][22].ToString());
+                item.AIType3 = collect[i][23].ToString();
+                item.listAttack3 = collect[i][24].ToString();
+                item.listDefend3 = collect[i][25].ToString();
+                item.listBuff3 = collect[i][26].ToString();
+                item.listNerf3 = collect[i][27].ToString();
+
+                item.m_aitype1 =GetListIntFromString(item.AIType1);
+                item.m_aitype2 =GetListIntFromString(item.AIType2);
+                item.m_aitype3 =GetListIntFromString(item.AIType3);
+
+                item.m_attackSkills1 =GetListIntFromLongString(item.listAttack1,true);
+                item.m_weightAttackSkills1 =GetListIntFromLongString(item.listAttack1,false);
+                item.m_attackSkills2 =GetListIntFromLongString(item.listAttack2,true);
+                item.m_weightAttackSkills2 =GetListIntFromLongString(item.listAttack2,false);
+                item.m_attackSkills3 =GetListIntFromLongString(item.listAttack3,true);
+                item.m_weightAttackSkills3 =GetListIntFromLongString(item.listAttack3,false);
+
+                item.m_defendSkills1 =GetListIntFromLongString(item.listDefend1,true);
+                item.m_weightDefendSkills1 =GetListIntFromLongString(item.listDefend1,false);
+                item.m_defendSkills2 =GetListIntFromLongString(item.listDefend2,true);
+                item.m_weightDefendSkills2 =GetListIntFromLongString(item.listDefend2,false);
+                item.m_defendSkills3 =GetListIntFromLongString(item.listDefend3,true);
+                item.m_weightDefendSkills3 =GetListIntFromLongString(item.listDefend3,false);
+
+                item.m_buffSkills1 =GetListIntFromLongString(item.listBuff1,true);
+                item.m_weightBuffSkills1 =GetListIntFromLongString(item.listBuff1,false);
+                item.m_buffSkills2 =GetListIntFromLongString(item.listBuff2,true);
+                item.m_weightBuffSkills1 =GetListIntFromLongString(item.listBuff2,false);
+                item.m_buffSkills3 =GetListIntFromLongString(item.listBuff3,true);
+                item.m_weightBuffSkills1 =GetListIntFromLongString(item.listBuff3,false);
+
+                item.m_nerfSkills1 =GetListIntFromLongString(item.listNerf1,true);
+                item.m_weightNerfSkills1 =GetListIntFromLongString(item.listNerf1,false);
+                item.m_nerfSkills2 =GetListIntFromLongString(item.listNerf2,true);
+                item.m_weightNerfSkills2 =GetListIntFromLongString(item.listNerf2,false);
+                item.m_nerfSkills3 =GetListIntFromLongString(item.listNerf3,true);
+                item.m_weightNerfSkills3 =GetListIntFromLongString(item.listNerf3,false);
                
                 array[i - 2] = item;
             }
@@ -677,7 +711,7 @@ namespace EditorTool {
                 //解析每列的数据
                 item.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
                 item.groupName = collect[i][1].ToString();
-                item.discribe = collect[i][2].ToString();
+                item.describe = collect[i][2].ToString();
                 item.icon = collect[i][3].ToString();
                 item.background =collect[i][4].ToString();
                 item.timeCost = collect[i][5].ToString()==""?0: int.Parse(collect[i][5].ToString());
@@ -703,60 +737,51 @@ namespace EditorTool {
         }
 
 
-        public static void CreateAbilityArray(string filePath) {
+        public static void CreateSkillArray(string filePath) {
             //获得表数据
             int columnNum = 0, rowNum = 0;
             DataRowCollection collect = ReadExcel(filePath, ref columnNum, ref rowNum);
  
             //根据excel的定义，第二行开始才是数据
-            Ability[] array = new Ability[rowNum - 2];
+            SkillData[] array = new SkillData[rowNum - 2];
             for(int i = 2; i < rowNum; i++) {
-                Ability ability = new Ability();
+                SkillData skillData = new SkillData();
                 //解析每列的数据
-                ability.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
-                ability.name = collect[i][1].ToString();
-                ability.discribe = collect[i][2].ToString();
-                ability.icon = collect[i][3].ToString();
-                ability.spellEffect = collect[i][4].ToString();
-                ability.castEffect = collect[i][5].ToString();
-                ability.hitEffect = collect[i][6].ToString();
+                skillData.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
+                skillData.name = collect[i][1].ToString();
+                skillData.describe = collect[i][2].ToString();
+                skillData.icon = collect[i][3].ToString();
+                skillData.spellEffect = collect[i][4].ToString();
+                skillData.castEffect = collect[i][5].ToString();
+                skillData.hitEffect = collect[i][6].ToString();
 
-                ability.spelllTime =collect[i][7].ToString()==""?0: float.Parse(collect[i][7].ToString());
-                ability.CD = collect[i][8].ToString()==""?0:float.Parse(collect[i][8].ToString());
-                ability.isChannel =collect[i][9].ToString()=="1"?true:false;
-                ability.maxChannelTime =collect[i][10].ToString()==""?0:float.Parse(collect[i][10].ToString());
-                ability.ifActive = collect[i][11].ToString()=="1"?true:false;
-                ability.genre =collect[i][12].ToString()==""?0: int.Parse(collect[i][12].ToString());
-                ability.manaCost =collect[i][13].ToString()==""?0: int.Parse(collect[i][13].ToString());
-                ability.manaCostPercent =collect[i][14].ToString()==""?0:float.Parse(collect[i][14].ToString());
-                ability.damage =collect[i][15].ToString()==""?0: int.Parse(collect[i][15].ToString());
-                ability.damagePercent =collect[i][16].ToString()==""?0:float.Parse(collect[i][16].ToString());
-                ability.damageDistribution =collect[i][17].ToString();
-
-                ability.targetSelf =collect[i][18].ToString()=="1"?true:false;
+                skillData.spelllTime =collect[i][7].ToString()==""?0: float.Parse(collect[i][7].ToString());
+                skillData.CD = collect[i][8].ToString()==""?0:float.Parse(collect[i][8].ToString());
                 
-                ability.fast =collect[i][19].ToString()==""?0: int.Parse(collect[i][19].ToString());
-                ability.hit =collect[i][20].ToString()==""?0: int.Parse(collect[i][20].ToString());
-                ability.crit =collect[i][21].ToString()==""?0: int.Parse(collect[i][21].ToString());
-                ability.seep =collect[i][22].ToString()==""?0: int.Parse(collect[i][22].ToString());
-                ability.manaProduce =collect[i][23].ToString()==""?0: int.Parse(collect[i][23].ToString());
-                ability.manaProducePercent =collect[i][24].ToString()==""?0:float.Parse(collect[i][24].ToString());
+                skillData.ifActive = collect[i][9].ToString()=="1"?true:false;
+                skillData.color =collect[i][10].ToString()==""?0: int.Parse(collect[i][10].ToString());
+                skillData.amount =collect[i][11].ToString()==""?0: int.Parse(collect[i][11].ToString());
 
-                ability.manaCostGrow =collect[i][25].ToString()==""?0: int.Parse(collect[i][25].ToString());
-                ability.damageGrow =collect[i][26].ToString()==""?0: int.Parse(collect[i][26].ToString());               
-                ability.hitGrow =collect[i][27].ToString()==""?0: int.Parse(collect[i][27].ToString());               
-                ability.fastGrow =collect[i][28].ToString()==""?0: int.Parse(collect[i][28].ToString());               
-                ability.critGrow =collect[i][29].ToString()==""?0: int.Parse(collect[i][29].ToString());
-                ability.seepGrow =collect[i][30].ToString()==""?0: int.Parse(collect[i][30].ToString());
-                ability.manaProduceGrow =collect[i][31].ToString()==""?0: int.Parse(collect[i][31].ToString());
-                ability.buffID = collect[i][32].ToString()==""?0:int.Parse(collect[i][32].ToString());
+                skillData.manaCost =collect[i][12].ToString()==""?0: int.Parse(collect[i][12].ToString());
+                skillData.damage =collect[i][13].ToString()==""?0: int.Parse(collect[i][13].ToString());
+                skillData.basicAttack =collect[i][14].ToString()==""?0: int.Parse(collect[i][14].ToString());
+                skillData.damagePercent =collect[i][15].ToString()==""?0:float.Parse(collect[i][15].ToString());
+                skillData.damageDistribution =collect[i][16].ToString();
+
+                skillData.targetSelf =collect[i][17].ToString()=="1"?true:false;
                 
-                ability.ifNoDamage = collect[i][33].ToString()=="1"?true:false;
+                skillData.manaProduce =collect[i][18].ToString()==""?0: int.Parse(collect[i][18].ToString());
 
+                skillData.buffID = collect[i][19].ToString()==""?0:int.Parse(collect[i][19].ToString());
+                
+                skillData.usedToRemove = collect[i][20].ToString()=="1"?true:false;
+                skillData.usedChooseCard =collect[i][21].ToString()==""?0:int.Parse(collect[i][21].ToString());
+                skillData.usedThrowCard =collect[i][22].ToString()==""?0:int.Parse(collect[i][22].ToString());
 
-                array[i - 2] = ability;
+                array[i - 2] = skillData;
             }
-              abilityArray =array;
+              skillDataArray =array;
+            //   Debug.Log("skillDataArray:"+skillDataArray[0].name);
         }
         public static void CreateAssetsItemArray(string filePath) {
             //获得表数据
@@ -770,7 +795,7 @@ namespace EditorTool {
             //解析每列的数据
             data.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
             data.name = collect[i][1].ToString();
-            data.discribe = collect[i][2].ToString();
+            data.describe = collect[i][2].ToString();
             data.icon = collect[i][3].ToString();
             data.type = collect[i][4].ToString()==""?0: int.Parse(collect[i][4].ToString());;
             data.equipType = collect[i][5].ToString()==""?0: int.Parse(collect[i][5].ToString());;
@@ -803,14 +828,62 @@ namespace EditorTool {
             }
             assetsItemArray =array;
         }
+        public static void CreateReformArray(string filePath) {
+            //获得表数据
+            int columnNum = 0, rowNum = 0;
+            DataRowCollection collect = ReadExcel(filePath, ref columnNum, ref rowNum);
+ 
+            //根据excel的定义，第二行开始才是数据
+            ReformData[] array = new ReformData[rowNum - 2];
+            for(int i = 2; i < rowNum; i++) {
+            ReformData data = new ReformData();
+            //解析每列的数据
+            data.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
+            data.name = collect[i][1].ToString();
+            data.describe = collect[i][2].ToString();
+            data.icon = collect[i][3].ToString();
+            data.price =collect[i][4].ToString()==""?0:int.Parse(collect[i][4].ToString());
+            data.rewardPool =collect[i][5].ToString()==""?0:int.Parse(collect[i][5].ToString());
+            data.perfect =collect[i][6].ToString();
+            data.common =collect[i][7].ToString();
+            data.fail =collect[i][8].ToString();
+            data.percentP =collect[i][9].ToString()==""?0:float.Parse(collect[i][9].ToString());
+            data.percentC =collect[i][10].ToString()==""?0:float.Parse(collect[i][10].ToString());
+            data.percentF =collect[i][11].ToString()==""?0:float.Parse(collect[i][11].ToString());
 
+
+
+            array[i - 2] = data;
+            }
+            reformDatas =array;
+        }
+        public static void CreateAbilityArray(string filePath) {
+            //获得表数据
+            int columnNum = 0, rowNum = 0;
+            DataRowCollection collect = ReadExcel(filePath, ref columnNum, ref rowNum);
+ 
+            //根据excel的定义，第二行开始才是数据
+            AbilityData[] array = new AbilityData[rowNum - 2];
+            for(int i = 2; i < rowNum; i++) {
+            AbilityData data = new AbilityData();
+            //解析每列的数据
+            data.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
+            data.name = collect[i][1].ToString();
+            data.describe = collect[i][2].ToString();
+            data.icon = collect[i][3].ToString();
+            data.price =collect[i][4].ToString()==""?0:int.Parse(collect[i][4].ToString());
+
+            array[i - 2] = data;
+            }
+            abilityDatas =array;
+        }
         public static DropGroup[] GetItemArray()
         {
             return droupGroupArray;
         }
-        public static Ability[] GetAbilityArray()
+        public static SkillData[] GetSkillArray()
         {
-            return abilityArray;
+            return skillDataArray;
         }
         public static AssetsItemData[] GetAssetsItemArray()
         {
@@ -872,6 +945,10 @@ namespace EditorTool {
         {
             return buffDatas;
         }
+        public static AbilityData[] GetAbilityDataArray()
+        {
+            return abilityDatas;
+        }
         public static IdealData[] GetIdealArray()
         {
             return idealDatas;
@@ -880,7 +957,10 @@ namespace EditorTool {
         {
             return relicGroupDatas;
         }
-
+        public static ReformData[] GetReformArray()
+        {
+            return reformDatas;
+        }
         /// <summary>
         /// 读取excel文件内容
         /// </summary>

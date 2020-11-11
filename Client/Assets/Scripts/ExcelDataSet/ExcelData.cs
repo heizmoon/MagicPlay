@@ -10,49 +10,55 @@ public class DropGroup {
     
 }
 [System.Serializable]
-public class Ability{
+public class AbilityData
+{
     public int id;
     public string name;
-    public string discribe;
+    public string describe;
+    public string icon;
+    public int price;
+}
+[System.Serializable]
+public class SkillData{
+    public int id;
+    public string name;
+    public string describe;
     public string icon;
     public string spellEffect;
     public string castEffect;
     public string hitEffect;
     public float spelllTime;
     public float CD;
-    public bool isChannel;
-    public float maxChannelTime;
     public bool ifActive;
-    public int genre;
+    public int color;
+    public int amount;
     public int manaCost;
-    public float manaCostPercent;
+    
     public int damage;
+    public int basicAttack;
     public string damageDistribution;
     public float damagePercent;
     public bool targetSelf;
-    public int fast;
-    public int hit;
-    public int crit;
-    public int seep;
-    public int manaProduce;
-    public float manaProducePercent;
-    public int manaCostGrow;
-    public int damageGrow;
-    public int hitGrow;
-    public int fastGrow;
-    public int critGrow;
-    public int seepGrow;
     
-    public int manaProduceGrow;
+    public int manaProduce;
+    
     public int buffID;
-    public bool ifNoDamage;
+    ///<summry>使用后从本场战斗中移除</summary>
+    public bool usedToRemove;
+    ///<summary>使用后从牌堆堆抽N张牌</summary>
+    public int usedChooseCard;
+    ///<summary>使用后从手牌丢弃N张牌</summary>
+    public int usedThrowCard;
+    
+    public int updateID;
+
 }
 [System.Serializable]
 public class AssetsItemData
 {            
     public int id;
     public string name;
-    public string discribe;
+    public string describe;
     public string icon;
     public int type;
     public int equipType;
@@ -87,7 +93,7 @@ public struct AbyssGroupData
 {            
     public int id;
     public string groupName;
-    public string discribe;
+    public string describe;
     public string icon;
     public string background;
     public int timeCost;
@@ -106,54 +112,38 @@ public struct AbyssGroupData
     public int monsterBasicLevel;
 }
 [System.Serializable]
-public struct CharacterData
+public class CharacterData
 {            
     public int id;
     public string name;
-    public int gender;
-    public string birthday;
-    public string deathday;
-    //如果到结婚日，其对玩家的好感度未达到爱慕以上，则角色会结婚
-    //如果达到爱慕以上，则结婚日会推后1年，等待玩家
-    public string marriageDay;
-    public string describe1;
-    public string describe2;
-    public string describe3;
+    public string describe;
     public string prefab;
-    public string rank;
-    public string traitList;
-    public string skillList;
-    public string assetsList;
-    public string gold;
-    public string updateTime;
-    public int skillGrow;
-    public int hpGrow;
-    public int mpGrow;
-    public int resistanceGrow;
-    public string resistances;
+    public int hp;
+    public int mp;
+    public int attack;
+    public string skills;
     public string portrait;
-    public bool _Alive;
-    public int _age;
-    public bool _marriage;
-    public int _state;
-    public int _nowRank;
-    public int _nowGold;
-    // public List<AssetsItem> _nowAssets;
-    public List<int> _nowSkill;
-    public int _nowSkillLevel;
-    public int _hp;
-    public int _mp;
-    public List<int> _resistance;
-    public Date _birthday;
-    public Date _deathday;
-    public Date _marriageDay;
-    public bool _waitingForMarriage;
-    public int _like;
-    ///<summary>好感度等级 0=平淡，1=友好，2=爱慕，-1=反感，-2=厌恶</summary>
-    public int _likeState;
-    ///<summary>情报等级</summary>
-    public int _infoLevel;
-    public List<int> _traitList;
+    public float reMp;
+    public float crit;
+    public string allSkills;
+    public List<int> allSkillsList;
+
+}
+[System.Serializable]
+public class ReformData
+{  
+    public int id;
+    public string name;
+    public string describe;
+    public string icon;
+    public int price;
+    public int rewardPool;
+    public string perfect;
+    public string common;
+    public string fail;
+    public float percentP;
+    public float percentC;
+    public float percentF;
 
 }
 [System.Serializable]
@@ -199,26 +189,60 @@ public struct MonsterTypeData
     public string monsterName;
     public string prefab;
     public int type;
-    public string skills;
     public int hp;
-    public int mp;
-    public int dodge;
-    public int tough;
-    public int aiType;
-    public int resistance0;
-    public int resistance1;
-    public int resistance2;
-    public int resistance3;
-    public int resistance4;
-    public int resistance5;
-    public int resistance6;
-    public int resistance7;
-    public int skillGrow;
-    public int hpGrow;
-    public int mpGrow;
-    public int dodgeGrow;
-    public int toughGrow;
-    public int resistanceGrow;
+    public int attack;
+    public int crit;
+    public int switchCondition1;
+    public float speed1;
+    public string AIType1;
+    public string listAttack1;
+    public string listDefend1;
+    public string listBuff1;
+    public string listNerf1;
+    public int switchCondition2;
+    public float speed2;
+    public string AIType2;
+    public string listAttack2;
+    public string listDefend2;
+    public string listBuff2;
+    public string listNerf2;
+    public int switchCondition3;
+    public int speed3;
+    public string AIType3;
+    public string listAttack3;
+    public string listDefend3;
+    public string listBuff3;
+    public string listNerf3;
+    public List<int> m_attackSkills1;
+    public List<int> m_weightAttackSkills1;
+    public List<int> m_attackSkills2;
+    public List<int> m_weightAttackSkills2;
+    public List<int> m_attackSkills3;
+    public List<int> m_weightAttackSkills3;
+    public List<int> m_defendSkills1;
+    public List<int> m_weightDefendSkills1;
+    public List<int> m_defendSkills2;
+    public List<int> m_weightDefendSkills2;
+    public List<int> m_defendSkills3;
+    public List<int> m_weightDefendSkills3;
+    public List<int> m_buffSkills1;
+    public List<int> m_weightBuffSkills1;
+    public List<int> m_buffSkills2;
+    public List<int> m_weightBuffSkills2;
+    public List<int> m_buffSkills3;
+    public List<int> m_weightBuffSkills3;
+    public List<int> m_nerfSkills1;
+    public List<int> m_weightNerfSkills1;
+    public List<int> m_nerfSkills2;
+    public List<int> m_weightNerfSkills2;
+    public List<int> m_nerfSkills3;
+    public List<int> m_weightNerfSkills3;
+    public List<int> m_aitype1;
+    public List<int> m_aitype2;
+    public List<int> m_aitype3;
+    public List<int> m_aitype4;
+
+
 }
 [System.Serializable]
 public struct MonsterGroupData
@@ -282,7 +306,7 @@ public class TriggerEventsData
 {            
     public int id;
     public string eventName;
-    public string discribe;
+    public string describe;
     public string scene;
     public int timeLimit;
     public int timeInterval;  
@@ -365,7 +389,7 @@ public class TaskEventsData
 {            
     public int id;
     public string eventName;
-    public string discribe;
+    public string describe;
     public string icon;
     ///<summary>0=常驻事件,1=世界事件,2=引出事件</summary>
     public int type;

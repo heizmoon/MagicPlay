@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
+public class BarEventArgs:EventArgs
+{
+    public bool IFComplete;
+}
 public class HPBar : MonoBehaviour
 {
     public int HpMax;
-    public int HpCurrent;
+    public float HpCurrent;
     public Image ImgMax;
     public Image ImgCurrent;
     public Text HpText;
@@ -14,10 +19,19 @@ public class HPBar : MonoBehaviour
     public bool CastingBar;
     public bool LikeBar;
     Skill skill;
+    BarEventArgs barEventTrue;
+    BarEventArgs barEventFalse;
+
 
     private int changeValue;//每次变化的值
     Timer timer;
     private Actor actor;//此条的拥有者
+    public bool playerActerMPBar;
+    float mpchangeInterval =0;
+
+    public event EventHandler onBarEvent;
+    
+      
     void Awake()
     {
         timer =gameObject.AddComponent<Timer>();
@@ -28,6 +42,10 @@ public class HPBar : MonoBehaviour
     void Start()
     {
         setHpBarNormal();
+        barEventTrue =new BarEventArgs();
+        barEventTrue.IFComplete =true;
+        barEventFalse =new BarEventArgs();
+        barEventFalse.IFComplete =false;
     }
 
     public void initHpBar(int Current,int Max)
@@ -47,7 +65,15 @@ public class HPBar : MonoBehaviour
     }
     void Update()
     {
-    
+        if(playerActerMPBar)
+        {
+            mpchangeInterval+= Time.deltaTime;
+            if(mpchangeInterval>Player.instance.playerActor.autoReduceMPAmount)
+            {
+                changeHPBar(Player.instance.playerActor.MpCurrent,Player.instance.playerActor.MpMax);
+                mpchangeInterval =0;
+            }
+        }
     }
     public void BindHPBar(Actor actor)//绑定HP条与角色
     {
@@ -75,7 +101,7 @@ public class HPBar : MonoBehaviour
     /// <summary> 改变血条 </summary>
     /// <param name="current">当前值</param>
     /// <param name="way">最大值</param>
-    public void changeHPBar(int current,int max)
+    public void changeHPBar(float current,int max)
     {
         HpMax =max;
         HpCurrent =current;
@@ -89,7 +115,7 @@ public class HPBar : MonoBehaviour
         }
         if(!LikeBar)
         {
-            HpText.text =string.Format("{0}/{1}",HpCurrent,HpMax);
+            HpText.text =string.Format("{0}/{1}",Mathf.FloorToInt(HpCurrent),HpMax);
         }
         float percent =((float)HpCurrent)/((float)HpMax);
         ImgCurrent.fillAmount=percent;
@@ -126,6 +152,7 @@ public class HPBar : MonoBehaviour
         // Debug.LogFormat("动作条开始了,间隔为{0}",changeValue);
         timer.start(0.16f,Mathf.CeilToInt(time/0.16f),onTimerInterval,onTimerComplete);        
     }
+
     public void stopChanging(bool immediately)
     // immediately=true：立即停止血条变化，数值停留在当前值；
     // immediately=false:数值停留在变化的最终值；
@@ -135,8 +162,10 @@ public class HPBar : MonoBehaviour
 
         }
         timer.stop();
+        onChangeStop();
         HpCurrent =0;
         setHpBarNormal();
+        
         timer.onCompleteEvent =null;
         timer.onIntervalEvent =null;
     }
@@ -145,12 +174,22 @@ public class HPBar : MonoBehaviour
         HpCurrent+=changeValue;
         setHpBarNormal();
     }
+    void onChangeEnd()
+    {
+        onBarEvent(this,barEventTrue);
+    }
+    void onChangeStop()
+    {
+        onBarEvent(this,barEventFalse);
+    }
     void onTimerComplete(Timer timer)
     {
         // Debug.LogFormat("动作条到了");
-        timer.gameObject.GetComponent<Skill>();
+        
+        // timer.gameObject.GetComponent<Skill>();
         HpCurrent =100;
         setHpBarNormal();
+        onChangeEnd();
         StartCoroutine(WaitForResetBar());
         
     }
@@ -159,6 +198,6 @@ public class HPBar : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         HpCurrent =0;
         setHpBarNormal();
-        actor.OnTimerComplete(skill);
+        // actor.OnTimerComplete(skill);
     }
 }

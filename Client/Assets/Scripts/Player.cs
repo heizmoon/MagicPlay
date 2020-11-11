@@ -6,16 +6,9 @@ public class Player : MonoBehaviour
 {
 
 	public static Player instance;
-	public int gold
-	{
-		set;
-		get;
-	}
-	public int influence
-	{
-		set;
-		get;	
-	}
+	public int Gold{get;set;}
+	public int Transistor{get;set;}
+	
 	//各种技能的等级，存储方式：技能ID，对应等级
 	private Dictionary<int,int> skillLevel =new Dictionary<int, int>();
 	private Dictionary<int,int> buffSkillLevel =new Dictionary<int, int>();
@@ -30,26 +23,10 @@ public class Player : MonoBehaviour
 	public List<int> buffList =new List<int>();
 	List<int> usedBattleSkillList =new List<int>();
 	public string playerName ="妮口小璐茶";
-	public int age =16;
-	public int sex =0;
-	public bool marriaged;
+	
 	///<summary>玩家的级别</summary>
 	public int rank;
 	///<summary>由资产加成，不会受到理想影响的部分</summary>
-	public int hp;
-	///<summary>会受到理想影响的部分</summary>
-	public int basicHp=100;
-	///<summary>由资产加成，不会受到理想影响的部分</summary>
-	public int mp;
-	///<summary>会受到理想影响的部分</summary>
-	public int basicMp=10;
-	///<summary>由技能提供的MP加成</summary>
-	public int dodge;//闪避
-	public int basicDodge;
-	public int tough;//韧性
-	public int basicTough;
-	public int[] resistance =new int[8];//0~7:水，火，风，土，心灵，能量，物质，时空 (真理魔法无法抵抗)
-	public int[] basicResistance = new int[8];
 	public Actor playerActor;
 	public string playerNow="";//玩家正在做的事，进入各个界面时会发生改变
 	public List<int> playerAssests =new List<int>();//玩家拥有的资产
@@ -57,37 +34,41 @@ public class Player : MonoBehaviour
 	public int playerAbyss =1;//玩家进入深渊的层数
 	public List<int> playerProfessions =new List<int>();//玩家获得的职业称号
 	public List<int> unlockSkills =new List<int>();
+	//玩家已经解锁了哪些角色
+	//玩家目前拥有多少晶体
+	//玩家拥有哪些改造箱
+	//玩家拥有哪些护符
+	//玩家打通了多少关卡
+	//玩家开启了哪些场景
 	void Awake()
 	{
 		instance =this;
-		for (int i = 0; i < 8; i++)
-		{	
-			resistance[i] =0;
-		}
+		
 		// playerActor =GameObject.Find("Girl_01").GetComponent<Actor>();
 	}
 
 	public void Init()
 	{
-		string avaterName ="";
-		if(PlayerPrefs.GetString("playerAvatar")=="")
-		{
-			avaterName ="Girl_01";
-		}
-		else
-		{
-			avaterName =PlayerPrefs.GetString("playerAvatar");
-		}
+		string avaterName =CharacterManager.instance.GetInfo(1,"prefab");
+		// if(PlayerPrefs.GetString("playerAvatar")=="")
+		// {
+		// 	avaterName ="Girl_01";
+		// }
+		// else
+		// {
+		// 	avaterName =PlayerPrefs.GetString("playerAvatar");
+		// }
 		playerActor = Instantiate((GameObject)Resources.Load("Prefabs/"+avaterName)).GetComponent<Actor>();
-		playerAbyss = PlayerPrefs.GetInt("abyssLevel")==0?1:PlayerPrefs.GetInt("abyssLevel");
-		gold = PlayerPrefs.GetInt("gold");
-		InputBasicProperty();
-		LoadTraitList();
-		GetUnlockSkills();
-		InputSkillLevel();
-		InputSkillProficiency();
+		playerActor.InitPlayerActor(CharacterManager.instance.GetCharacter(1));
+		// playerAbyss = PlayerPrefs.GetInt("abyssLevel")==0?1:PlayerPrefs.GetInt("abyssLevel");
+		Gold = PlayerPrefs.GetInt("gold");
+		// InputBasicProperty();
+		// LoadTraitList();
+		// GetUnlockSkills();
+		// InputSkillLevel();
+		// InputSkillProficiency();
 		// ModifierTraitProperty();
-		GetUsedBattleSkillListOnOpen();
+		// GetUsedBattleSkillListOnOpen();
 	}
 	// Update is called once per frame
 	void Update () 
@@ -114,14 +95,7 @@ public class Player : MonoBehaviour
 			return;
 		}
 		//如果没有数值则初始化
-		for (int i = 0; i < 8; i++)
-		{
-			basicResistance[i] =0;
-		}
-		basicDodge=0;
-		basicTough =0;
-		basicHp=100;
-		basicMp =10;
+		
 	}
 	public int GetSkillLevel(int key)
 	{
@@ -160,7 +134,7 @@ public class Player : MonoBehaviour
 		if(key ==1116)//炽热刺激
 		{
 			int level1116 =GetSkillLevel(1116);
-			SkillAddBasicProperty(SkillManager.instance.GetInfo(1116).seep,"resis",1);
+			// SkillAddBasicProperty(SkillManager.instance.GetInfo(1116).seep,"resis",1);
 		}
 		//刷新技能显示等级
 		if(UISkillTree.instance)
@@ -305,10 +279,7 @@ public class Player : MonoBehaviour
 	{
 		playerEquipItems.Add(assetsItem);
 		//角色的属性会加上
-		hp+=assetsItem._hpBuffer;
-		mp+=assetsItem._mpBuffer;
-		dodge+=assetsItem._dodgeBuffer;
-		tough+=assetsItem._toughBuffer;
+		
 		//角色的技能等级会加上
 		if(assetsItem._skillBufferLevel>0)
 		{
@@ -316,7 +287,7 @@ public class Player : MonoBehaviour
 			TryAddLevelFromAssets(assetsItem._skillBuffer,assetsItem._skillBufferLevel);
 		}
 		SavePlayerEquipAssets();
-		playerActor.InitPlayerActor();
+		// playerActor.InitPlayerActor();
 	}
 
 	///<summary>卸下某个资产</summary>
@@ -324,17 +295,14 @@ public class Player : MonoBehaviour
 	{
 		playerEquipItems.Remove(assetsItem);
 		//角色属性下降
-		hp-=assetsItem._hpBuffer;
-		mp-=assetsItem._mpBuffer;
-		dodge-=assetsItem._dodgeBuffer;
-		tough-=assetsItem._toughBuffer;
+		
 		//角色等级下降
 		if(assetsItem._skillBufferLevel>0)
 		{
 			AddSkillLevel(assetsItem._skillBuffer,-assetsItem._skillBufferLevel);
 			TryAddLevelFromAssets(assetsItem._skillBuffer,-assetsItem._skillBufferLevel);
 		}
-		playerActor.InitPlayerActor();
+		// playerActor.InitPlayerActor();
 	}
 	void TryAddLevelFromAssets(int skillid,int level)
 	{
@@ -466,7 +434,7 @@ public class Player : MonoBehaviour
 	}
 	public void SkillAddBasicMp(int value)
 	{
-		basicMp += value;
+		
 		if(UIPlayer.instance)
 		{
 			UIPlayer.instance.RefreashUI();
@@ -478,19 +446,19 @@ public class Player : MonoBehaviour
 		switch(property)
 		{
 			case "hP":
-			basicHp += value;
+			// basicHp += value;
 			break;
 			case "mp":
-			basicMp += value;
+			// basicMp += value;
 			break;
 			case "dodge":
-			basicDodge += value;
+			// basicDodge += value;
 			break;
 			case "tough":
-			basicTough += value;
+			// basicTough += value;
 			break;
 			case "reisi":
-			basicResistance[genre] += value;
+			// basicResistance[genre] += value;
 			break;
 		}
 		if(UIPlayer.instance)
@@ -500,13 +468,13 @@ public class Player : MonoBehaviour
 	}
 	public void SaveBasicProperty()
 	{
-		string s =basicHp+","+basicMp+","+basicDodge+","+basicTough;
-		foreach (var item in basicResistance)
-		{
-			s=s+","+item;
-		}
+		// string s =basicHp+","+basicMp+","+basicDodge+","+basicTough;
+		// foreach (var item in basicResistance)
+		// {
+		// 	s=s+","+item;
+		// }
 		
-		PlayerPrefs.SetString("basicProperty",s);
+		// PlayerPrefs.SetString("basicProperty",s);
 	}
 	bool LoadBasicProperty()
 	{
@@ -517,18 +485,7 @@ public class Player : MonoBehaviour
 		}
 		else
 		{
-			basicHp =int.Parse(s.Split(',')[0]);
-			basicMp =int.Parse(s.Split(',')[1]);
-			basicDodge =int.Parse(s.Split(',')[2]);
-			basicTough =int.Parse(s.Split(',')[3]);
-			basicResistance[0] =int.Parse(s.Split(',')[4]);
-			basicResistance[1] =int.Parse(s.Split(',')[5]);
-			basicResistance[2] =int.Parse(s.Split(',')[6]);
-			basicResistance[3] =int.Parse(s.Split(',')[7]);
-			basicResistance[4] =int.Parse(s.Split(',')[8]);
-			basicResistance[5] =int.Parse(s.Split(',')[9]);
-			basicResistance[6] =int.Parse(s.Split(',')[10]);
-			basicResistance[7] =int.Parse(s.Split(',')[11]);
+			
 
 			return true;
 		}
@@ -548,6 +505,10 @@ public class Player : MonoBehaviour
 	}
 	public void SaveUnlockSkill()
 	{
+		if(unlockSkills.Count<1)
+		{
+			return;
+		}
 		string unlock ="";
 		foreach (var item in unlockSkills)
 		{

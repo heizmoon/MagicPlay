@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using System;
 public enum ActorType
 {
     玩家角色 =0,
@@ -13,7 +15,8 @@ public enum AnimState
     idle =0,
     casting=1,
     dizzy=2,
-    dead =3
+    dead =3,
+    dodge =4
 }
 public class Actor : MonoBehaviour
 {
@@ -22,20 +25,21 @@ public class Actor : MonoBehaviour
     public int HpMax;//最大HP
 	public int MpMax;
 	public int HpCurrent;//当前HP
-    public int MpCurrent;
+    public float MpCurrent;
+    public float Crit;
     public Transform spellPoint;
     public Transform castPoint;
     public Transform hitPoint;
-	public int[] UsingSkillsID;//角色的技能列表（需要填写的）
+	public List<int> UsingSkillsID;//角色的主动技能列表（需要填写的）
     ///<summary>0=玩家角色；1=敌人；2=NPC</summary>
     public ActorType actorType;
-    public int dodge;//闪避
-    public int tough;//韧性
-    public List<int> resistance =new List<int>();//0~7:水，火，风，土，心灵，物质，能量，时空 (真理魔法无法抵抗) 
-
-    public Skill[] skills=new Skill[4];//读取后的技能列表 ，其中第一个为自动释放的技能
+    [HideInInspector]
+    public List<int> abilities =new List<int>();
+    [HideInInspector]
+    public List<Skill> skills;//读取后的技能列表 
+    [HideInInspector]
     public List<Buff> buffs =new List<Buff>();
-
+    [HideInInspector]
     public Animator animator;//角色身上的Animator
     HPBar castingbar;//角色的施法条
     HPBar hpBar;
@@ -43,26 +47,53 @@ public class Actor : MonoBehaviour
     public BattleText bt;
 
     public AnimState animState ;
+
     ///<summary>角色将要改变成的动作状态 0=idle,1=spell,2=casting,3=castEnd,4=dizzy,5=dead</summary>
     int NextState;
     Timer timer;//角色泛用计时器
     Transform pool;
     // int TempSkillNumber =0;
     ///<summary>用于敌人和NPC的数值成长判断</summary>
-    public int level;
-    public int skillGrow;
+    public int level =1;
     public Actor target;
     float autoReduceHpInterval=5;
-    float autoReduceMpInterval=5;
-    float currentAutoReduceHPTime;
+    public const float autoReduceMpInterval=0.2f;
+    // float currentAutoReduceHPTime;
     float currentAutoReduceMPTime;
-    private Skill channelSkill;
+    [HideInInspector]
+    public float autoReduceHPAmount =0;
+    [HideInInspector]
+    public float autoReduceMPAmount =0;
+
+//---------------已经无用--------------
+    [HideInInspector]
+    ///<summary>公共冷却时间</summary>
+    public float commonCD;
+//-----------------------------------   
+    
+    int basicAttack;
+    // [HideInInspector]
+    public int bufferAttack;
+
+    [HideInInspector]
+    public Character character;
+
+    [HideInInspector]
+    public MonsterTypeData monsterData;
+    
+    int state;
+    int behaviour;
+    ///<summary>手牌列表</summary>
+    public List<SkillCard> handCards;
+
+
 
     void Start()
     {
         
         
     }
+    #region  初始化角色
     public void InitActor()
     {
         pool = GameObject.Find("Pool").transform;
@@ -74,73 +105,44 @@ public class Actor : MonoBehaviour
         bt = gameObject.GetComponentInChildren<BattleText>();
         timer =gameObject.GetComponent<Timer>();
     }
-    public void InitPlayerActor()
+    public void InitPlayerActor(Character character)
     {
-        HpMax =Player.instance.hp+Player.instance.basicHp;
-        MpMax =Player.instance.mp+Player.instance.basicMp;
-        dodge =Player.instance.dodge+Player.instance.basicDodge;
-        tough =Player.instance.tough+Player.instance.basicTough;
-        for (int i = 0; i < resistance.Count; i++)
+        this.character =character;
+        HpMax =character.HPMax;
+        MpMax =character.MPMax;
+        autoReduceMPAmount =character.reMP;
+        Crit = character.crit;
+        SetBufferAttack();
+        // UsingSkillsID =data.skills;
+        string[] str =character.data.skills.Split(',');
+        UsingSkillsID =new List<int>();
+        for (int i = 0; i < str.Length; i++)
         {
-            resistance[i] =Player.instance.resistance[i];
-        }
-        
+            UsingSkillsID.Add(int.Parse(str[i]));
+        }   
     }
     public void InitEnemy(MonsterTypeData data)
     {
+        monsterData =data;
         actorName =data.monsterName;
-        HpMax =data.hp+data.hpGrow*level;
+        HpMax =data.hp;
         HpCurrent =HpMax;
-        MpMax =data.mp+data.mpGrow*level;
-        MpCurrent =MpMax;
-        dodge =data.dodge+data.dodgeGrow*level;
-        tough =data.tough+data.toughGrow*level;
-        resistance.Add(data.resistance0+data.resistanceGrow*level);
-        resistance.Add(data.resistance1+data.resistanceGrow*level);
-        resistance.Add(data.resistance2+data.resistanceGrow*level);
-        resistance.Add(data.resistance3+data.resistanceGrow*level);
-        resistance.Add(data.resistance4+data.resistanceGrow*level);
-        resistance.Add(data.resistance5+data.resistanceGrow*level);
-        resistance.Add(data.resistance6+data.resistanceGrow*level);
-        resistance.Add(data.resistance7+data.resistanceGrow*level);
-        skillGrow =data.skillGrow;
-        for(int i =0;i<data.skills.Split(',').Length;i++)
-        {
-            UsingSkillsID[i] =int.Parse(data.skills.Split(',')[i]);
-        }
-    }
+        SetBufferAttack();
+        Crit =data.crit;
+        UsingSkillsID =new List<int>();
+        UsingSkillsID = data.m_attackSkills1.Union(data.m_attackSkills2).ToList(); 
+        UsingSkillsID = UsingSkillsID.Union(data.m_attackSkills3).ToList(); 
+        UsingSkillsID = UsingSkillsID.Union(data.m_defendSkills1).ToList(); 
+        UsingSkillsID = UsingSkillsID.Union(data.m_defendSkills2).ToList(); 
+        UsingSkillsID = UsingSkillsID.Union(data.m_defendSkills3).ToList(); 
+        UsingSkillsID = UsingSkillsID.Union(data.m_buffSkills1).ToList(); 
+        UsingSkillsID = UsingSkillsID.Union(data.m_buffSkills2).ToList(); 
+        UsingSkillsID = UsingSkillsID.Union(data.m_buffSkills3).ToList(); 
+        UsingSkillsID = UsingSkillsID.Union(data.m_nerfSkills1).ToList(); 
+        UsingSkillsID = UsingSkillsID.Union(data.m_nerfSkills2).ToList(); 
+        UsingSkillsID = UsingSkillsID.Union(data.m_nerfSkills3).ToList(); 
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(UIBattle.Instance!=null&& !UIBattle.Instance.isBattleOver&& animState!= AnimState.dead)
-        {
-            currentAutoReduceHPTime+=Time.deltaTime;
-            if(currentAutoReduceHPTime>=autoReduceHpInterval)
-            {
-                AutoReduceHP();
-            }
-            if(currentAutoReduceMPTime>=autoReduceMpInterval)
-            {
-                AutoReduceMP();
-            }
-        }
-    }
-
-    void AutoReduceHP()
-    {
-        AddHp(1);
-        currentAutoReduceHPTime =0;
-    }
-    void AutoReduceMP()
-    {
-        AddMp(1);
-        currentAutoReduceMPTime =0;
-
-    }
-    public void SetSkillList(int[] skills)
-    {
-        UsingSkillsID =skills;
+        
     }
     public void InitMagic()//初始化技能数值
     {
@@ -150,38 +152,296 @@ public class Actor : MonoBehaviour
             // return;
         }
         //1.读取角色技能列表
-        
-        for(int i =0;i<UsingSkillsID.Length;i++)
+        skills = new List<Skill>();
+        for(int i =0;i<UsingSkillsID.Count;i++)
         {
             Skill sk =SkillManager.TryGetFromPool(UsingSkillsID[i],this);
-            skills[i] =sk;
-            // if(UIPractice.instance !=null)
-            // {
-            //     Debug.LogWarningFormat("练习状态下新建技能：{0}",sk.skillName);
-            // }
-            // else if(sk!=null)
-            // {
-            //     Debug.LogWarningFormat("新建技能：{0}，目标是{1}",sk.skillName,sk.target.name);
-
-            // }
-            // else
-            // {
-            //     Debug.LogWarningFormat("没有创建技能：{0}",UsingSkillsID[i]);
-            // }
-        }        
+            skills.Add(sk);
+        }
     }
+    #endregion
+
+    // Update is called once per frame
+
+
+    private void Update() 
+    {
+        if(UIBattle.Instance!=null&&!UIBattle.Instance.isBattleOver&& animState!= AnimState.dead)
+        {
+            
+            // currentAutoReduceHPTime+=Time.deltaTime;
+            currentAutoReduceMPTime+=Time.deltaTime;
+            // if(currentAutoReduceHPTime>=autoReduceHpInterval)
+            // {
+            //     AutoReduceHP();
+            // }
+            if(currentAutoReduceMPTime>=autoReduceMpInterval)
+            {
+                AutoReduceMP();
+            }
+        }
+    }
+    // void AutoReduceHP()
+    // {
+    //     AddHp(Mathf.FloorToInt(autoReduceHPAmount));
+    //     currentAutoReduceHPTime =0;
+    // }
+    void AutoReduceMP()
+    {
+        AddMp(autoReduceMPAmount);
+        currentAutoReduceMPTime =0;
+
+    }
+    public void AddMaxHP(int number)
+    {
+        HpMax+=number;
+    }
+    public void AddMaxMP(int number)
+    {
+        MpMax+=number;
+
+    }
+    public void AddBasicAttack(int number)
+    {
+        basicAttack+=number;
+    }
+    public void AddBufferAttack(int number)
+    {
+        bufferAttack+=number;
+    }
+    public void SetBufferAttack()
+    {
+        if(actorType ==ActorType.玩家角色)
+        basicAttack = character.attack;
+        else if(actorType ==ActorType.敌人)
+        basicAttack = monsterData.attack;
+
+        bufferAttack =basicAttack;
+    }
+
+    //在牌堆中增加一张牌(本局游戏永久)
+    public void AddSkillCard(SkillData data)
+    {
+        UsingSkillsID.Add(data.id);
+    }
+    
+    
+    
+    //敌人AI
+    #region
     public void RunAI()
     {
-        //开始自动攻击
-        AutoAttack();
-        //AI类别1：无限使用技能1
-        //AI类别2：每隔X秒，使用一次技能2
-        //AI类别3：当魔力满时，使用一次技能2
-        //AI类别4：当生命低于X时，使用技能Y
+        //玩家角色不执行AI
+        if(actorType ==ActorType.玩家角色)
+        {
+            return;
+        }
+        //判断当前是否会切换阶段
+        state = EnemyState();
+        //随机出一项当前要进行的行为
+        behaviour =GetBehaviour(state);
+        castingbar.changeHPBar(3f);
+        UIBattle.Instance.SetEnemyBarText(behaviour);
+        
+    } 
+    void OnBehaviourComplete(object sender, EventArgs e)
+    {
+        //决策条读完了
+        BarEventArgs eventArgs = e as BarEventArgs;
+        if(eventArgs.IFComplete)
+        //从当前行为中随机出一个要释放的技能
+        WanaSpell(GetSpecialSkill(state,behaviour));
+
     }
+    int EnemyState()
+    {
+        int state =1;
+        
+        
+        if(monsterData.switchCondition1==1)
+        {
+            state  =1;
+        }
+        if(monsterData.switchCondition2==2)
+        {
+            if(HpCurrent<=Mathf.FloorToInt(HpMax/2))
+            state  =2;
+        }
+        if(monsterData.switchCondition3!=0)
+        {
+            state  =3;
+        }
+        return state;
+    }
+    int GetBehaviour(int state)
+    {
+        switch(state)
+        {
+            case 1: return 1 + GetRandomFromList(monsterData.m_aitype1);
+            case 2: return 1 + GetRandomFromList(monsterData.m_aitype2);
+            case 3: return 1 + GetRandomFromList(monsterData.m_aitype3); 
+        }
+        return 1;
+    }
+    Skill GetSpecialSkill(int state,int behaviour)
+    {
+        int skillId =0;
+        switch(state)
+        {
+            case 1:
+                switch(behaviour)
+                {
+                    case 1:
+                        skillId = monsterData.m_attackSkills1[GetRandomFromIntList(monsterData.m_weightAttackSkills1)];
+                    break;
+                    case 2:
+                        skillId = monsterData.m_defendSkills1[GetRandomFromIntList(monsterData.m_weightDefendSkills1)];
+                    break;
+                    case 3:
+                        skillId = monsterData.m_buffSkills1[GetRandomFromIntList(monsterData.m_weightBuffSkills1)];    
+                    break;
+                    case 4:
+                        skillId = monsterData.m_nerfSkills1[GetRandomFromIntList(monsterData.m_weightNerfSkills1)];
+                    break;
+                }
+            break;
+
+            case 2:
+                switch(behaviour)
+                {
+                    case 1:
+                        skillId = monsterData.m_attackSkills2[GetRandomFromIntList(monsterData.m_weightAttackSkills2)];
+                    break;
+                    case 2:
+                        skillId = monsterData.m_defendSkills2[GetRandomFromIntList(monsterData.m_weightDefendSkills2)];
+                    break;
+                    case 3:
+                        skillId = monsterData.m_buffSkills2[GetRandomFromIntList(monsterData.m_weightBuffSkills2)];    
+                    break;
+                    case 4:
+                        skillId = monsterData.m_nerfSkills2[GetRandomFromIntList(monsterData.m_weightNerfSkills2)];
+                    break;
+                }
+
+            break;
+
+            case 3: 
+                switch(behaviour)
+                {
+                    case 1:
+                        skillId = monsterData.m_attackSkills3[GetRandomFromIntList(monsterData.m_weightAttackSkills3)];
+                    break;
+                    case 2:
+                        skillId = monsterData.m_defendSkills3[GetRandomFromIntList(monsterData.m_weightDefendSkills3)];
+                    break;
+                    case 3:
+                        skillId = monsterData.m_buffSkills3[GetRandomFromIntList(monsterData.m_weightBuffSkills3)];    
+                    break;
+                    case 4:
+                        skillId = monsterData.m_nerfSkills3[GetRandomFromIntList(monsterData.m_weightNerfSkills3)];
+                    break;
+                } 
+
+            break;
+
+        }
+        foreach (var item in skills)
+        {
+            if(item.id == skillId)
+            {
+                return item;
+            }
+        }
+        return skills[0];
+
+    }
+    ///<summary>从一个List<int>中随机获取一个位置数</summray>
+    int GetRandomFromIntList(List<int> listW)
+    {
+        if(listW.Count <2)
+        {
+            return 0;
+        }
+
+        int max =0;
+        List<int> weights =new List<int>();
+        //5,10,0,5
+        //5,15,15,20
+        //r=18
+        // 15<=r<=15 15<=r<=20
+        foreach (var item in listW)
+        {
+            weights.Add(max+item);
+            max+=item;
+        }
+        // Debug.LogWarning("MAX="+max);
+        int r = UnityEngine.Random.Range(0,max+1);
+        // Debug.LogWarning("随机到"+r);
+        if(r<weights[0])
+        {
+            return 0;
+        }
+        for(int i =1;i<weights.Count;i++)
+        {
+            if (r>=weights[i-1]&&r<=weights[i])
+            {
+                // Debug.LogWarning("顺序是"+i);
+                return i;
+            }
+        }
+        Debug.LogWarning("出现奇怪的问题");
+        return 0;
+    }
+    int GetRandomFromList(List<int> listW)
+    {
+        List<int> listww =new List<int>();
+        for (int i = 0; i < listW.Count; i++)
+        {
+            if(listW[i] != 0)
+            {
+                listww.Add(i);
+            }
+        }
+        int max =0;
+        List<int> weights =new List<int>();
+        foreach (var item in listW)
+        {
+            weights.Add(max+item);
+            max+=item;
+        }
+        int r = UnityEngine.Random.Range(0,max+1);
+        if(r<weights[0])
+        {
+            return 0;
+        }
+        for(int i =1;i<weights.Count;i++)
+        {
+            if (r>=weights[i-1]&&r<=weights[i])
+            {
+                // Debug.LogWarning("顺序是"+i);
+                return listww[i];
+            }
+        }
+        return 0;
+    }
+    public void AutoAttack()
+    {
+        // WanaSpell(skills[TempSkillNumber]);
+        // if(TempSkillNumber ==UsingSkillsID.Length-1)
+        // {
+        //     TempSkillNumber = 0;
+        //     return;
+        // }
+        // TempSkillNumber++;
+        if(skills[0]!=null)
+        WanaSpell(skills[0]);
+    }
+    #endregion
+
+
     public Skill GetSkills(int id)
     {
-        return skills[id];
+        return skills[id+1];
     }
     public void GetActorSpellBar()
     {
@@ -193,24 +453,21 @@ public class Actor : MonoBehaviour
             {
                 hpBar = GameObject.Find("HP_Player").GetComponent<HPBar>();
                 mpBar = GameObject.Find("MP_Player").GetComponent<HPBar>();
-                mpBar.initHpBar(MpCurrent,MpMax);
+                mpBar.initHpBar((int)MpCurrent,MpMax);
                     
             }
-
-            castingbar= GameObject.Find("CastingBar_Player").GetComponent<HPBar>();
-            
+            // castingbar= GameObject.Find("CastingBar_Player").GetComponent<HPBar>();
         }
         else
         {
             castingbar =GameObject.Find("CastingBar_Enemy").GetComponent<HPBar>();
             hpBar = GameObject.Find("HP_Enemy").GetComponent<HPBar>();
-            mpBar = GameObject.Find("MP_Enemy").GetComponent<HPBar>();
-            mpBar.initHpBar(MpCurrent,MpMax);
+            // mpBar = GameObject.Find("MP_Enemy").GetComponent<HPBar>();
+            // mpBar.initHpBar((int)MpCurrent,MpMax);
             // Debug.Log("HPBAR");
-        }
-        
-        castingbar.BindHPBar(this);
-            
+            castingbar.BindHPBar(this);
+            castingbar.onBarEvent+= OnBehaviourComplete;
+        }        
     }
     // void GetTarget()
     // {
@@ -239,16 +496,27 @@ public class Actor : MonoBehaviour
             
             return false;
         }
-        // if((int)animState>1)
+        #region 宝珠相关,已无用
+        //如果需要消耗宝珠，先检查宝珠的数量是否足够
+        // if(skill.needBallAmount>0)
         // {
-        //     Debug.Log("当前角色状态无法施法");
-        //     return false;
+        //     if(skill.dontNeedColor)
+        //     {
+        //         if(!BallManager.instance.CheckBallNumber(skill.needBallAmount))
+        //         {
+        //             return false;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         if(!BallManager.instance.CheckBallNumber(skill.needBallColor,skill.needBallAmount))
+        //         {
+        //             return false;
+        //         }
+        //     }
         // }
-        if(UIPractice.instance.enable ==true)
-        {
-
-        }
-        if(UIPractice.instance.enable ==false&&skill.realManaCost>MpCurrent)//法力值不足
+        #endregion
+        if(skill.realManaCost>MpCurrent)//法力值不足
         {
             // Debug.LogFormat("魔法值不足,需要{0},当前为{1}",skill.realManaCost,MpCurrent);
             return false;
@@ -265,10 +533,11 @@ public class Actor : MonoBehaviour
     }
     IEnumerator WaitForBeginSpell(Skill skill)
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForEndOfFrame();
         
         if(animState!=AnimState.dead&&animState!=AnimState.dizzy)
         BeginSpell(skill);
+        RunAI();
     }
     void BeginSpell(Skill skill)//开始施放X技能,需要传入一个技能
     {
@@ -278,46 +547,72 @@ public class Actor : MonoBehaviour
             return;
         }
         //1.切换Animator到1，开始循环播放施法动作spell
-        ChangeAnimatorInteger(1);
-        //如果不在练习状态
-        // if(Player.instance.playerNow!=""&&Player.instance.playerNow.Substring(0,1) =="A")
-        if(Main.instance.UIState <=0)
-        {
-            //调整施法时间
-            skill.ModiferCastSpeed();
-            //2.消耗MP，数值为技能所需
+        // ChangeAnimatorInteger(1);
+        
+        //消耗MP，数值为技能所需
+        AddMp(-skill.realManaCost);
+        #region 宝珠相关，以及其他废弃部分
+        // int costAmount =0;
+        // if(skill.needBallAmount>0)
+        // {
+        //     if(skill.dontNeedColor)
+        //     {
+                
+        //     }
+        //     else
+        //     {
+        //         costAmount =BallManager.instance.CostBalls(skill.needBallColor);
+        //     }
+        // }
+        // BallManager.instance.CreateNewBall(skill.amount,(BallColor)skill.color);
+        // costAmount+=BallManager.instance.CostBalls();
+        // Debug.Log("costAmout:"+costAmount);
+        
+        //检查消耗宝珠能力
+
+        // if(Main.instance.UIState <=0)
+        // {
+        //     //调整施法时间
+        //     // skill.ModiferCastSpeed();
+        //     //2.消耗MP，数值为技能所需
             
-            AddMp(-skill.realManaCost);
             
-            //3.施法条开始自行运动
-            castingbar.changeHPBar(skill.spelllTime+0f);
-        }
-        else
-        {
-            timer.start(skill.spelllTime,OnPracticeTimerComplete);
-        }
+        //     //3.施法条开始自行运动
+        //     // castingbar.changeHPBar(skill.spelllTime+0f);
+        // }
+        // else
+        // {
+        //     timer.start(skill.spelllTime,OnPracticeTimerComplete);
+        // }
         //4.设置角色状态为casting
-        animState=AnimState.casting;
+        // animState=AnimState.casting;
+        #endregion
         //5.创建施法特效
-        CreateSpellEffect(skill);
+        // CreateSpellEffect(skill);
+        CreateCastEffect(skill);
+        animator.Play("attack");
+        if(skill.damage!=0)
+        skill.ComputeDamage();
+        //执行技能释放完毕事件
+        OnSkillSpellFinish(skill);
         //6.绑定技能和施法条
-        if(castingbar)
-        castingbar.BindHPBar(skill);
-        //如果是引导类技能
-        if(skill.isChannel)
-        {
-            channelSkill =skill;
-        }
-        else
-        {
-            channelSkill =null;
-        }
+        // if(castingbar)
+        // castingbar.BindHPBar(skill);
+
     }
-    //引导类技能，从可扩展性考虑，spell→casting→ channeling(循环)→ castEnd
-    //每次channeling，需要进行一次施法判定，如果当前状态不能施法，则停止
-    //castEnd动作来代替channel动作
-    //那么每当castEnd动作播放完毕，就进行一次判定
     
+    bool CheckAbility(Skill skill,int costAmount)
+    {
+        if(costAmount>=3)
+        {
+            // if(abilities.Contains(101))
+            {
+                return true;
+            }
+        }
+        return false;
+
+    }
     void CreateSpellEffect(Skill skill)
     {
         if(skill.spellEffect=="")
@@ -358,7 +653,11 @@ public class Actor : MonoBehaviour
     //    animator.Play("idle");
        //施法条停止运动
        if(castingbar)
-        castingbar.stopChanging(true);
+       {
+            castingbar.stopChanging(true);
+            UIBattle.Instance.SetEnemyBarText(0);
+       }
+        
        
     //    if((int)animState<2)
     //    {
@@ -367,23 +666,9 @@ public class Actor : MonoBehaviour
         //移除施法特效
        EffectManager.TryThrowInPool(spellPoint);
        EffectManager.ClearChannelEffect(castPoint);
-       if(UIPractice.instance.enable)
-       {
-           timer.stop();
-       }
+       
     }
-    public void AutoAttack()
-    {
-        // WanaSpell(skills[TempSkillNumber]);
-        // if(TempSkillNumber ==UsingSkillsID.Length-1)
-        // {
-        //     TempSkillNumber = 0;
-        //     return;
-        // }
-        // TempSkillNumber++;
-        if(skills[0]!=null)
-        WanaSpell(skills[0]);
-    }
+    #region 动画控制部分
     void AnimationState(int i)//从关键帧获取当前播放到哪个动画片段,并根据逻辑切换到下一个动画
     {
         if(animState ==AnimState.dead)
@@ -408,22 +693,7 @@ public class Actor : MonoBehaviour
             break;
             case 3:
             //castEnd动作播放完毕
-            if(channelSkill!=null)
-            {
-                //判定是否能够再次播放castEnd
-                if(UIPractice.instance.enable)
-                {
-                    OnTimerComplete(channelSkill);
-                    break;
-                }
-                else if(channelSkill.realManaCost<=MpCurrent)
-                {
-                    AddMp(-channelSkill.realManaCost);
-                    OnTimerComplete(channelSkill);
-                    break;
-                }
-
-            }
+            
 
             NextState =0;
             if((int)animState<2)
@@ -431,7 +701,7 @@ public class Actor : MonoBehaviour
                 animState =AnimState.idle; 
             }
             
-            StartCoroutine(NextTurn());
+            // StartCoroutine(NextTurn());
 
             break;
         }
@@ -439,35 +709,6 @@ public class Actor : MonoBehaviour
         {
             ChangeAnimatorInteger(NextState);
         }
-    }
-    //执行下一轮动作逻辑
-    IEnumerator NextTurn()
-    {
-        yield return new WaitForFixedUpdate();
-
-       RunAI();
-    }
-    public void OnTimerComplete(Skill skill)
-    {
-        // timer.stop();
-        //播放cast动作
-        animState =AnimState.casting;
-        ChangeAnimatorInteger(3);
-        //移除施法特效
-        EffectManager.TryThrowInPool(spellPoint);
-        //添加投射物特效
-        CreateCastEffect(skill);
-        //如果不在练习状态
-        // if(Player.instance.playerNow!=""&&Player.instance.playerNow.Substring(0,1) =="A")
-        // {
-        // }
-        if(UIPractice.instance==null)
-        {
-            skill.ComputeDamage();
-        }
-        //执行技能释放完毕事件
-        
-        OnSkillSpellFinish(skill);
     }
     public void ChangeAnimatorInteger(int i)
     {
@@ -484,25 +725,45 @@ public class Actor : MonoBehaviour
         // if(this != Player.instance.playerActor)
         // Debug.LogWarningFormat("当前animator为：{0}",animator.GetInteger("anim"));
     }
+      //执行下一轮动作逻辑
+    // IEnumerator NextTurn()
+    // {
+    //     yield return new WaitForFixedUpdate();
+
+    //    RunAI();
+    // }
+    #endregion
+  
+    
+    public void OnTimerComplete(Skill skill)
+    {
+        // timer.stop();
+        //播放cast动作
+        animState =AnimState.casting;
+        ChangeAnimatorInteger(3);
+        //移除施法特效
+        EffectManager.TryThrowInPool(spellPoint);
+        //添加投射物特效
+        CreateCastEffect(skill);
+        //如果不在练习状态
+        // if(Player.instance.playerNow!=""&&Player.instance.playerNow.Substring(0,1) =="A")
+        // {
+        // }
+        
+        // skill.ComputeDamage();
+        //执行技能释放完毕事件
+        
+        OnSkillSpellFinish(skill);
+    }
+    
     void CreateCastEffect(Skill skill)
     {
         if(skill.castEffect=="")
         {
             return;
         }
-         //如果引导类技能已经有了特效，不再再次创建特效
-        if(skill.isChannel)
-        {
-            for (int i = 0; i < castPoint.childCount; i++)
-            {
-                Debug.LogWarning(castPoint.GetChild(i).name);
-                if(castPoint.GetChild(i).name == skill.castEffect+"(Clone)")
-                {
-                    
-                    return;
-                }
-            }    
-        }
+        
+        
         Transform f = EffectManager.TryGetFromPool(skill.castEffect);
         if(f!=null)
         {
@@ -512,27 +773,17 @@ public class Actor : MonoBehaviour
             // f.localScale =Vector3.one;
             if(target!=null)
             {
-                if(skill.isChannel)
-                {
-                    f.localScale =Vector3.one;
-                    EffectManager.CastEffect(f);
-                }
-                else
-                {
-                    EffectManager.CastEffect(f,target.hitPoint,skill.damageDelay,skill.hitEffect);
-                }
+                
+                EffectManager.CastEffect(f,target.hitPoint,skill.damageDelay,skill.hitEffect);
+                
             }
             else
             {
-                if(skill.isChannel)
-                {
-                    f.localScale =Vector3.one;
-                    EffectManager.CastEffect(f);
-                }
-                else
-                {
-                    EffectManager.CastEffect(f,UIPractice.instance.targetPoint,skill.damageDelay,skill.hitEffect);
-                }
+                
+                // else
+                // {
+                //     // EffectManager.CastEffect(f,UIPractice.instance.targetPoint,skill.damageDelay,skill.hitEffect);
+                // }
             }
             // if(skill.caster.actorType==0)
             // {
@@ -584,11 +835,16 @@ public class Actor : MonoBehaviour
         if(num>0)
         Debug.LogWarningFormat("{0}的生命值变化{1},最终为{2}",this.name,num,HpCurrent);
     }
+
+    #region --------------------------技能命中，暴击，受到伤害等等角色反应,BUFF相关，复活--------------------
     public void OnSkillHasCrit(Skill skill, int damage)//通知角色技能暴击，暴击伤害为damage
     {
         //执行当技能产生暴击时就xxx这类效果
         //暴击检查点燃Buff 和 燃爆 等级,满足条件造成燃爆伤害
-        SkillManager.CheckSkillToTriggerNewSkill(skill,1112,null,new List<int>(){1},null,new List<int>(){4},false);
+        // SkillManager.CheckSkillToTriggerNewSkill(skill,1112,null,new List<int>(){1},null,new List<int>(){4},false);
+        //添加点燃buff
+        // if(skills.
+        SkillManager.CheckSkillOnHitToAddBuff(skill,1110,4,new List<int>(){1110},null,null);
     }
     public void OnSkillHasHit(bool ifHit ,Skill skill)
     {
@@ -597,18 +853,18 @@ public class Actor : MonoBehaviour
             //执行当技能命中目标时就xxx这类效果
             if(skill.buffID>0&&!skill.targetSelf)
             {
-                BuffManager.instance.CreateBuffForActor(skill.buffID,skill.level,skill.target);
+                BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);
             }
             // Check1110(skill);
             //火系技能添加点燃buff
-            SkillManager.CheckSkillOnHitToAddBuff(skill,1110,4,new List<int>(){1110},new List<int>(){1},null);
+            // SkillManager.CheckSkillOnHitToAddBuff(skill,1110,4,new List<int>(){1110},new List<int>(){1},null);
             //冻结
             SkillManager.CheckSkillOnHitToAddBuff(skill,1011,6,new List<int>(){1112},new List<int>(){0},new List<int>(){7});
             //引火烧身
             SkillManager.instance.Check1117(skill);
             
             // Check1011(skill);
-
+            Main.instance.ShakeCamera();
         }
         else
         {
@@ -864,22 +1120,32 @@ public class Actor : MonoBehaviour
     public void OnSkillSpellFinish(Skill skill)
     {
         //技能释放完毕事件
+        //有buff的技能加buff
         if(skill.buffID>0&&skill.targetSelf)
         {
-            BuffManager.instance.CreateBuffForActor(skill.buffID,skill.level,skill.target);
+            BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);
         }
-        //如果在练习状态
-        if(UIPractice.instance.enable)
+        //弃牌的技能弃牌
+        if(skill.usedThrowCard>0)
+        UIBattle.Instance.ThrowHandCardsToPool(skill.usedThrowCard);
+        //抽卡的技能抽卡
+        if(skill.usedChooseCard>0)
+        UIBattle.Instance.SelectCard(skill.usedChooseCard);
+        //移除的技能移除
+        if(skill.usedToRemove)
+        //获取使用的skillCard
+        foreach (var item in UIBattle.Instance.usedCardsList)
         {
-            //提升技能熟练度
-
-        }else
-        {
-            //魔力回复
-            skill.caster.AddMp(skill.manaProduce);
-        }    
+            if(item.skill = skill)
+            {
+                item.RemoveCard();
+            }
+        }
+        //魔力回复
+        skill.caster.AddMp(skill.manaProduce);
+           
     }
-    public void AddMp(int num)
+    public void AddMp(float num)
     {
         if(MpCurrent+num>=MpMax)
         {
@@ -896,7 +1162,7 @@ public class Actor : MonoBehaviour
         }
         if(mpBar!=null)
         {
-            mpBar.changeHPBar(MpCurrent,true);
+            mpBar.changeHPBar((int)MpCurrent,true);
         }
         if(this.actorType ==ActorType.玩家角色)
         {
@@ -912,7 +1178,7 @@ public class Actor : MonoBehaviour
     public void OnHitResistance()
     {
         //显示文字 抵抗
-        bt.SetText("抵抗");
+        bt.SetText("0");
         //执行当角色抵抗技能时就xxx这类效果
     }
     void Die()
@@ -943,7 +1209,7 @@ public class Actor : MonoBehaviour
         if(hpBar)
         hpBar.initHpBar(HpCurrent,HpMax);
         if(mpBar)
-        mpBar.initHpBar(MpCurrent,MpMax);
+        mpBar.initHpBar((int)MpCurrent,MpMax);
     }
     IEnumerator WaitForRelive(int hp)
     {
@@ -963,7 +1229,7 @@ public class Actor : MonoBehaviour
         if(hpBar)
         hpBar.initHpBar(HpCurrent,HpMax);
         if(mpBar)
-        mpBar.initHpBar(MpCurrent,MpMax);
+        mpBar.initHpBar((int)MpCurrent,MpMax);
     }
     void OnPracticeTimerComplete(Timer timer)
     {
@@ -1035,5 +1301,6 @@ public class Actor : MonoBehaviour
             BuffManager.instance.OnBuffMax(buff);
         }
     }
+    #endregion
     
 }

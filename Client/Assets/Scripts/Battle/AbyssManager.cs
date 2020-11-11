@@ -27,8 +27,8 @@ public class AbyssManager : MonoBehaviour
                     case "name":
                     // Debug.LogFormat("内容:{0}",item.name);
                     return item.groupName;
-                    case "discribe":
-                    // Debug.LogFormat("内容:{0}",item.discribe);
+                    case "describe":
+                    // Debug.LogFormat("内容:{0}",item.describe);
                     break;
                     case "reward":
                     return item.eventDistribution.ToString();

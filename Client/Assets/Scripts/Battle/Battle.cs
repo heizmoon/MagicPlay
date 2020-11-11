@@ -50,6 +50,7 @@ public class Battle : MonoBehaviour
         yield return new WaitForSeconds(delay);
         ReceiveSkillDamage(skill, damage,ifRebound);
     }
+    
     ///<summray>一般性技能伤害</summary>
     public void ReceiveSkillDamage(Skill skill,int damage,bool ifRebound)
     {
@@ -62,14 +63,13 @@ public class Battle : MonoBehaviour
         {
             damage = ComputeDamageBuffStepOne(skill,damage);
             skill.caster.OnSkillHasHit(true,skill);
-            if(ComputeCrit(skill))
+            if(playerActor.Crit>=Random.Range(0,101))
             {
-                damage=(damage+ComputeCritDamageAdd(skill))*2;
+                damage=Mathf.CeilToInt(damage*1.5f);
                 crit =true;
                 //通知施法者已经暴击,暴击伤害为damage(未经削减的)
                 skill.caster.OnSkillHasCrit(skill,damage);
             }
-            damage = Mathf.CeilToInt(damage*ComputeResDamage(skill));
             damage = ComputeDamageBuffStepTwo(skill,damage);
             if(!skill.targetSelf && damage<=0)
             {
@@ -80,7 +80,7 @@ public class Battle : MonoBehaviour
                 return;
             }
             Statistic(skill,damage);//伤害统计
-            ExportDamage(damage,skill.target,crit,skill.genre,ifRebound);
+            ExportDamage(damage,skill.target,crit,skill.color,ifRebound);
             if(ifRebound)
             {
                 // Debug.LogWarningFormat("{0}反弹伤害：{1}点,目标是：{2}",skill.skillName,damage,skill.target.name);
@@ -125,14 +125,14 @@ public class Battle : MonoBehaviour
         damage +=tempd;
         foreach (var item in skill.caster.buffs)
         {
-            if(item.buffData._type == BuffType.数值增减附加的伤害 && item.buffData._genreList.Contains(skill.genre))
+            if(item.buffData._type == BuffType.数值增减附加的伤害 && item.buffData._genreList.Contains(skill.color))
             {
                 damage+=Mathf.CeilToInt(item.currentValue);
             }
         }
         foreach (var item in skill.caster.buffs)
         {
-            if(item.buffData._type == BuffType.百分比增减附加的伤害 && item.buffData._genreList.Contains(skill.genre))
+            if(item.buffData._type == BuffType.百分比增减附加的伤害 && item.buffData._genreList.Contains(skill.color))
             {
                 damage*=Mathf.CeilToInt(1+item.currentValue);
             }
@@ -148,14 +148,14 @@ public class Battle : MonoBehaviour
         
         foreach (var item in skill.target.buffs)
         {
-            if(item.buffData._type == BuffType.数值增减受到的伤害 && item.buffData._genreList.Contains(skill.genre))
+            if(item.buffData._type == BuffType.数值增减受到的伤害 && item.buffData._genreList.Contains(skill.color))
             {
                 damage+=Mathf.CeilToInt(item.currentValue);
             }
         }
         foreach (var item in skill.target.buffs)
         {
-            if(item.buffData._type == BuffType.百分比增减受到的伤害 && item.buffData._genreList.Contains(skill.genre))
+            if(item.buffData._type == BuffType.百分比增减受到的伤害 && item.buffData._genreList.Contains(skill.color))
             {
                 damage+=Mathf.CeilToInt(item.currentValue);
             }
@@ -174,256 +174,20 @@ public class Battle : MonoBehaviour
         {
             return true;
         }
-        float percent;
-        int p =ComputeSkillsHit(skill)-ComputeTargetsDodge(skill);
-        if(p==1)
+        if(skill.target.animState ==AnimState.dodge)
         {
-            percent =90;
-        }
-        else if(p==0)
-        {
-            percent =90;
-        }
-        else if(p>1)
-        {
-            percent =(Mathf.Log(p,constanceHitT)+90);
-        }
-        else
-        {
-            float i =Mathf.Log(-p,constanceHitB);
-            percent =90-(i);
-        }
-        
-        if(Random.Range(0,100)<percent)
-        {
-            // Debug.Log("命中了");
-            return true;
-        }
-        else
-        {
-            // Debug.LogWarningFormat("没命中:{0}",percent);
             return false;
         }
+        else
+        return true;
     }
     bool ComputeCrit(Skill skill)//判断是否暴击
     {   
-        int p =ComputeSkillsCirt(skill)-ComputeTargetsTough(skill);
-        if(p<1)
-        {
-            return false;
-        }
-        float percent = (Mathf.Log(p,constanceCrit));
-        if(Random.Range(0,100)<percent)
-        {
-            // Debug.LogWarningFormat("暴击了");
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }  
-    int ComputeTargetsDodge(Skill skill)//计算目标的闪避
-    {
-        int _dodge =skill.target.dodge;
-        foreach (var item in skill.target.buffs)
-        {
-            if(item.buffData._type == BuffType.影响闪避 && item.buffData._genreList.Contains(skill.genre))
-            {
-                _dodge+=Mathf.CeilToInt(item.currentValue);
-            }
-        }
-        foreach (var item in skill.caster.buffs)
-        {
-            if(item.buffData._type == BuffType.百分比影响闪避 && item.buffData._genreList.Contains(skill.genre))
-            {
-                if(_dodge>0)
-                {
-                    _dodge=Mathf.CeilToInt(_dodge*(1+item.currentValue));
-                }
-                else if(_dodge<0)
-                {
-                    _dodge+=Mathf.CeilToInt(-_dodge*item.currentValue);
-                }
-            }
-        }
-        return _dodge;
-    }
-    int ComputeSkillsHit(Skill skill)//计算法术命中
-    {
-        int _hit =skill.hit;
-        //判断技能的caster是否拥有增加技能命中的buff
-        foreach (var item in skill.caster.buffs)
-        {
-            if(item.buffData._type == BuffType.影响命中 && item.buffData._genreList.Contains(skill.genre))
-            {
-                _hit+=Mathf.CeilToInt(item.currentValue);
-            }
-        }
-        foreach (var item in skill.caster.buffs)
-        {
-            if(item.buffData._type == BuffType.百分比影响命中 && item.buffData._genreList.Contains(skill.genre))
-            {
-                if(_hit>0)
-                {
-                    _hit=Mathf.CeilToInt(_hit*(1+item.currentValue));
-                }
-                else if(_hit<0)
-                {
-                    _hit+=Mathf.CeilToInt(-_hit*item.currentValue);
-                }
-            }
-        }
-         
         
-        return _hit;
-    }
-    int ComputeSkillsCirt(Skill skill)//计算法术暴击
-    {
-        int _crit =skill.crit;
-        foreach (var item in skill.caster.buffs)
-        {
-            if(item.buffData._type == BuffType.影响暴击 && item.buffData._genreList.Contains(skill.genre))
-            {
-                _crit+=Mathf.CeilToInt(item.currentValue);
-            }
-        }
-        foreach (var item in skill.caster.buffs)
-        {
-            if(item.buffData._type == BuffType.百分比影响暴击 && item.buffData._genreList.Contains(skill.genre))
-            {
-                if(_crit>0)
-                {
-                    _crit=Mathf.CeilToInt(_crit*(1+item.currentValue));
-                }
-                else if(_crit<0)
-                {
-                    _crit+=Mathf.CeilToInt(-_crit*item.currentValue);
-                }
-            }
-        }
-        //死亡霜寒
-        _crit += SkillManager.CheckSkillOnComputeToGiveAdd(skill,1014,new List<int>(){7},false,new List<int>(){1012},new List<int>(){0,1,2,3,4,5,6,7,8},null,SkillBuffType.暴击); 
-        //凯撒技艺
-        _crit += SkillManager.CheckSkillOnComputeToGiveAdd(skill,1113,new List<int>(){4},false,new List<int>(){1110},new List<int>(){0,1,2,3,4,5,6,7,8},null,SkillBuffType.暴击);
-        return _crit;
-    }
-    int ComputeTargetsTough(Skill skill)//计算目标韧性
-    {
-        int _tough =1;
-        foreach (var item in skill.target.buffs)
-        {
-            if(item.buffData._type == BuffType.影响韧性 && item.buffData._genreList.Contains(skill.genre))
-            {
-                _tough+=Mathf.CeilToInt(item.currentValue);
-            }
-        }
-        foreach (var item in skill.caster.buffs)
-        {
-            if(item.buffData._type == BuffType.百分比影响韧性 && item.buffData._genreList.Contains(skill.genre))
-            {
-                if(_tough>0)
-                {
-                    _tough=Mathf.CeilToInt(_tough*(1+item.currentValue));
-                }
-                else if(_tough<0)
-                {
-                    _tough+=Mathf.CeilToInt(-_tough*item.currentValue);
-                }
-            }
-        }
-        return _tough;
-    }
-    int ComputeTargetsResistance(Skill skill)//计算目标抗性
-    {
-        //1.判断技能类别
-        //2.获取目标该类别抗性
-        int _resistance =skill.target.resistance[skill.genre];
-        foreach (var item in skill.target.buffs)
-        {
-            if(item.buffData._type == BuffType.影响抗性 && item.buffData._genreList.Contains(skill.genre))
-            {
-                _resistance+=Mathf.CeilToInt(item.currentValue);
-            }
-        }
-        foreach (var item in skill.caster.buffs)
-        {
-            if(item.buffData._type == BuffType.百分比影响抗性 && item.buffData._genreList.Contains(skill.genre))
-            {
-                if(_resistance>0)
-                {
-                    _resistance=Mathf.CeilToInt(_resistance*(1+item.currentValue));
-                }
-                else if(_resistance<0)
-                {
-                    _resistance+=Mathf.CeilToInt(-_resistance*item.currentValue);
-                }
-            }
-        }
-
-        return _resistance;
-    }
-    int ComputeSkillsSeep(Skill skill)//计算法术穿透
-    {
-        int _seep =skill.seep;
-        foreach (var item in skill.caster.buffs)
-        {
-            if(item.buffData._type == BuffType.影响穿透 && item.buffData._genreList.Contains(skill.genre))
-            {
-                _seep+=Mathf.CeilToInt(item.currentValue);
-            }
-        }
-        foreach (var item in skill.caster.buffs)
-        {
-            if(item.buffData._type == BuffType.百分比影响穿透 && item.buffData._genreList.Contains(skill.genre))
-            {
-                if(_seep>0)
-                {
-                    _seep=Mathf.CeilToInt(_seep*(1+item.currentValue));
-                }
-                else if(_seep<0)
-                {
-                    _seep+=Mathf.CeilToInt(-_seep*item.currentValue);
-                }
-            }
-        }
-        return _seep;
-    }
-    int ComputeCritDamageAdd(Skill skill)//计算暴击增益效果
-    {
-        int _add =1;
-        // for(int i=0;i<skill.caster.buffs.Count;i++)
-        // {
-        // }
-        foreach (var item in skill.caster.buffs)
-        {
-            if(item.buffData._type == BuffType.影响暴击增益 && item.buffData._genreList.Contains(skill.genre))
-            {
-                _add+=Mathf.CeilToInt(item.currentValue);
-            }
-        }
-
-        return _add;
-    }
-    ///<summary>输入穿透与抗性，取得实际伤害的百分比</summray>
-    float ComputeResDamage(Skill skill)
-    {
-        if(skill.targetSelf)
-        {
-            return 1f;
-        }
-        float p =ComputeSkillsSeep(skill)-ComputeTargetsResistance(skill);
-        if(p>=-1)
-        {
-            return 1f;
-        }
-        float percent =(100-Mathf.Log(-p,constanceResis))/100;
-        if(percent<=0)
-        {
-            return 0;
-        }
-        return percent;
-    }
+        return skill.ifCrit;
+        
+    }  
+    
     public void Statistic(Skill skill,int damage)//传入一次伤害以及伤害来源
     {
         if(damage<=0)

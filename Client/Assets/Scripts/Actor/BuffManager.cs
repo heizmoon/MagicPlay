@@ -101,7 +101,7 @@ public class BuffManager : MonoBehaviour
     {
 
     }
-    public Buff CreateBuffForActor(int id,int level,Actor target)
+    public Buff CreateBuffForActor(int id,Actor target)
     {
         if(target ==null)
         {
@@ -114,8 +114,8 @@ public class BuffManager : MonoBehaviour
             {
                 buff.buffData =item;
                 // Debug.LogWarningFormat("错误检测：{0}",buff.buffData.name);
-                buff.level =level;
-                buff.currentValue =item.value+item.valueGrow*level;
+                buff.level =1;
+                buff.currentValue =item.value+item.valueGrow;
                 buff.target =target;
                 if(buff.buffData.delay>0)
                 {
@@ -238,7 +238,7 @@ public class BuffManager : MonoBehaviour
             {
                 return;
             }
-            for (int i = 0; i < temp.Length; i++)
+            for (int i = 0; i < temp.Count; i++)
             {
                 if(temp[i]!=null&&temp[i].id==needSkill)
                 {

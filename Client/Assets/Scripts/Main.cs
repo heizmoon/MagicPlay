@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using Data;
+using DG.Tweening;
 
 public class Main : MonoBehaviour {
 
@@ -49,15 +50,13 @@ public class Main : MonoBehaviour {
 	{
 		// 
 		// CovertHoursToDate();
-		PlayerPrefs.SetString("playerAvatar","Girl_01");
-		PlayerPrefs.SetString("skillTrees","0,1");
 		Debug.LogFormat("保存的游戏时间为gameDate:{0}",PlayerPrefs.GetString("gameDate"));
 		// PlayerPrefs.SetString("AssetsItems","1001,1,,10,0|1002,2,小家,1,0|1003,1,大法杖,10,0");
 		// PlayerPrefs.SetString("playerAssets","1001,1002,1003");
 
 
 		//初始化
-		player.Init();
+		
 		gameObject.AddComponent<DateManager>();
 		StartLoadingUI();
 		//加载表格
@@ -69,13 +68,14 @@ public class Main : MonoBehaviour {
 
 		
 		gameObject.AddComponent<AssetsManager>();
+		gameObject.AddComponent<CharacterManager>();
+		gameObject.AddComponent<ReformManager>();
 		gameObject.AddComponent<SkillManager>();
 		gameObject.AddComponent<MonsterManager>();
 		gameObject.AddComponent<EventManager>();
 		gameObject.AddComponent<AbyssManager>();
 		gameObject.AddComponent<TraitManager>();
 		gameObject.AddComponent<BuffManager>();
-
 		//判断玩家离线前的状态
 		InitBasicListUI();
 		//根据离线前的状态恢复UI界面
@@ -105,7 +105,7 @@ public class Main : MonoBehaviour {
 		yield return new WaitForSeconds(0.5f);
 		int offLineTime =getTimeSpan ();
 		//加载资产
-		AssetsManager.instance.LoadPlayerAssets();
+		// AssetsManager.instance.LoadPlayerAssets();
 		
 		StartCoroutine(LoadBasicUIs());
 		yield return new WaitForSeconds(3f);
@@ -122,18 +122,18 @@ public class Main : MonoBehaviour {
 	public IEnumerator LoadBasicUIs()
 	{
 		Debug.LogFormat("开始加载---");
-		InitUISkillTree();//加载图像数量最多
+		// InitUISkillTree();//加载图像数量最多
 		//一个一个加载
-		yield return new WaitForSeconds(0.4f);
-		InitUIPlayer();
 		yield return new WaitForSeconds(0.2f);
+		// InitUIPlayer();
+		yield return new WaitForSeconds(3f);
 		
 		//等到全部加载完毕，全部隐藏
 		
-		
+		CharacterManager.instance.CreateCharacters();
 		CloseOhterUIs();
-		JudgeWhatsDoing();
-		player.playerActor.InitPlayerActor();
+		player.Init();
+		// player.playerActor.InitPlayerActor();
 		Debug.LogFormat("加载完毕---");
 		if(!dateEventStopWorld)
 		{
@@ -141,9 +141,11 @@ public class Main : MonoBehaviour {
 			GetComponent<DateManager>().StartTheWorld();
 		}
 		awakeFinish =true;
+		JudgeWhatsDoing();
 	}
-	void Update () 
+	public void ShakeCamera()
 	{
+		allScreenUI.DOShakePosition(0.5f,5,10,90,false,true);
 	}
 	IEnumerator WaitForBattleBegin()
 	{
@@ -153,41 +155,11 @@ public class Main : MonoBehaviour {
 	}
 	void JudgeWhatsDoing()
 	{
-		//根据玩家正在做的事件进行判断
-		string[] ss;
-		if(PlayerPrefs.GetString("nowDoing")=="")
-		{
-			ss =new string [] {"P","3"};
-		}
-		else
-		{
-			ss=PlayerPrefs.GetString("nowDoing").Split(',');
-		}
-		
-		Debug.LogFormat("nowDoing:{0}",PlayerPrefs.GetString("nowDoing"));
-		int[] skills =new int[1]{int.Parse(ss[1])};
-		toggleWorld.isOn =true;
-		if(ss[0] =="")
-		{
-			return;
-		}
-		switch(ss[0])
-		{
-			case "P":
-			Debug.Log("正在练习技能"); 
-			player.playerActor.SetSkillList(skills);
-			StartPractice(skills[0]);
-			break;
-			case "A":
-			//正在进行冒险
-			break;
-			case "L":
-			//正在学习
-			break;
-		}
-			
+		//直接选择角色完毕，进入战斗流程
+		BattleScene.instance.ChangeMap("Map_01");
 		
 	}
+	
 	public void startLoadBasicUIs()
 	{
 		StartCoroutine(Main.instance.LoadBasicUIs());
@@ -215,7 +187,6 @@ public class Main : MonoBehaviour {
 		UIState =0;
 		player.playerActor.transform.SetParent(BottomUI);
 		// Destroy(UIPlayer.instance.gameObject);
-		Destroy(UIPractice.instance.gameObject);
 		SkillManager.ClearPool();
 		Destroy(UISkillTree.instance.gameObject);
 		// Destroy(UIEvents.instance.gameObject);
@@ -281,7 +252,7 @@ public class Main : MonoBehaviour {
 			break;
 			case "Toggle_Practice":
 			CloseOhterUIs();
-			StartPractice();
+			// StartPractice();
 			break;
 			case "Toggle_Player":
 			CloseOhterUIs();
@@ -298,27 +269,7 @@ public class Main : MonoBehaviour {
 	}
 	///<summary>传入一个技能ID，然后开始练习这个技能</summary>
 	///<param name ="skillID">技能ID</param>
-	public void StartPractice(params int[] skillID)
-	{
-		if(UIPractice.instance==null)
-		{
-			GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UIPractice"));
-			go.transform.SetParent(middleUI);
-			go.transform.localScale =Vector3.one;
-			go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-			// go.transform.localPosition =Vector3.zero;
-			go.GetComponent<UIPractice>().StartPractice(skillID);
-		}
-		else
-		{
-			UIPractice.instance.transform.SetParent(middleUI);
-			UIPractice.instance.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			UIPractice.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-			UIPractice.instance.StartPractice(skillID);
-		}
-		UIState =1;
-	}
+	
 	void InitUISkillTree()
 	{
 		if(UISkillTree.instance==null)
@@ -438,13 +389,7 @@ public class Main : MonoBehaviour {
 	void CloseOhterUIs()
 	{
 		UIState =0;
-		if(UIPractice.instance)
-		{
-			UIPractice.instance.HidePracitce();
-			UIPractice.instance.transform.SetParent(BottomUI);
-			UIPractice.instance.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			UIPractice.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-		}
+		
 
 		if(UISkillTree.instance)
 		{
@@ -460,14 +405,7 @@ public class Main : MonoBehaviour {
 			UIPlayer.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
 		}
 		
-		
-		
-		
 
-		// if(UILoading.activeSelf)
-		// {
-		// 	UILoading.SetActive(false);
-		// }
 	}
 	
 
@@ -507,7 +445,7 @@ public class Main : MonoBehaviour {
 		//保存玩家拥有的资产列表
 		AssetsManager.instance.SavePlayerAssetsItem();
 		//保存玩家拥有的特质列表
-		player.SaveTraitList();
+		// player.SaveTraitList();
 		
 		//保存玩家解锁的技能
 		Player.instance.SaveUnlockSkill();
@@ -518,7 +456,7 @@ public class Main : MonoBehaviour {
 		_lastTime =System.DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss");
 		PlayerPrefs.SetString ("lastTime",_lastTime);
 		// Debug.Log (_lastTime);
-		PlayerPrefs.SetInt("gold",Player.instance.gold);
+		PlayerPrefs.SetInt("gold",Player.instance.Gold);
 		PlayerPrefs.Save();
 	}
 }

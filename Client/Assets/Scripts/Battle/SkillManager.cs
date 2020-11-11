@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Data;
+using System;
 ///<summary>被动技能加成类型</summary>
 public enum SkillBuffType
 {
@@ -17,15 +18,16 @@ public class SkillManager : MonoBehaviour
 {
     public static SkillManager instance;
     static Transform ts;
-    AbilityDataSet manager;
+    SkillDataSet manager;
     //每一系的总等级
     //0-8:水，火，风，土，心灵，能量，物质,时空，真理
     public int[] totalLevel=new int[]{0,0,0,0,0,0,0,0,0};
+    public List<int> unlockSkills =new List<int>();
     void Awake()
     {
         instance =this;
         ts = GameObject.Find("SkillPool").transform;
-        manager = Resources.Load<AbilityDataSet>("DataAssets/Ability");
+        manager = Resources.Load<SkillDataSet>("DataAssets/Skill");
     }
     public static Skill TryGetFromPool(int id,Actor actor)
     {
@@ -34,15 +36,15 @@ public class SkillManager : MonoBehaviour
         {
             return skill;
         }
-        Skill[] skills = ts.GetComponentsInChildren<Skill>();
-        foreach (var item in skills)
-        {
-            if(item.id ==id&&item.caster==actor)
-            {
-                skill =item;
-                return skill;
-            }
-        }
+        // Skill[] skills = ts.GetComponentsInChildren<Skill>();
+        // foreach (var item in skills)
+        // {
+        //     if(item.id ==id&&item.caster==actor)
+        //     {
+        //         skill =item;
+        //         return skill;
+        //     }
+        // }
         skill =((GameObject)Instantiate(Resources.Load("Prefabs/Skill"))).GetComponent<Skill>();
         skill.transform.SetParent(ts);
         skill.InitSkill(id,actor);
@@ -60,7 +62,7 @@ public class SkillManager : MonoBehaviour
         // Debug.LogWarningFormat("!!!ClearSkillPool:剩余数目{0}",ts.childCount);
     }
     ///<summary>获取技能</summary>
-    public  Ability GetInfo(int id)
+    public SkillData GetInfo(int id)
     {
         foreach (var item in manager.dataArray)
         {
@@ -71,6 +73,75 @@ public class SkillManager : MonoBehaviour
         }
         return null;
     }
+    
+    public delegate List<int> Mydegete();
+    public delegate List<int> skillDelegate(int i);
+    public List<int> GetLockedPassiveSkills()
+    {
+        return null;
+    }
+    public List<int> GetUnlockPassiveSkills()
+    {
+        return null;
+    }
+    public List<int> GetLockedActiveSkills()
+    {
+        return null;
+    }
+    public List<int> GetUnlockActiveSkills()
+    {
+        return null;
+    }
+    public List<int> GetActerNumberSkills(int actorNumber)
+    {
+
+        return null;
+    }
+    void USE()
+    {
+        
+    }
+    ///<summary>随机获得N个符合条件的技能，可重复</summary>
+    // public SkillData[] GetRandomSkills(int N,Mydegete mydegete)
+    // {
+    //     SkillData[] skillDatas =new SkillData[N];
+    //     List<int> list = mydegete.Invoke();
+    //     if(N<1)
+    //     return null;
+    //     for(int i =0;i<list.Count;i++)
+    //     {
+    //         int r =UnityEngine.Random.Range(0,list.Count);
+    //         skillDatas[i] =GetInfo(r);
+    //     }
+    //     return skillDatas;
+    // }
+    public SkillData[] GetRandomSkills(int N)
+    {
+        SkillData[] skillDatas =new SkillData[N];
+        List<int> list = Player.instance.playerActor.character.allSkillsList;
+        if(N<1)
+        return null;
+        for(int i =0;i<list.Count;i++)
+        {
+            int r =UnityEngine.Random.Range(0,list.Count);
+            skillDatas[i] =GetInfo(r);
+        }
+        return skillDatas;
+    }
+
+    // public Ability[] GetRandomUnlockPassiveSkills(int N)
+    // {
+    //     Ability[] abilities =new Ability[N];
+    //     if(N<1)
+    //     return null;
+    //     for(int i =0;i<unlockSkills.Count;i++)
+    //     {
+    //         int r =UnityEngine.Random.Range(0,unlockSkills.Count-1);
+    //         abilities[i] =GetInfo(r);
+    //     }
+    //     return abilities;
+    // }
+  
     public string GetInfo(int id ,string content)
     {
         foreach(var item in manager.dataArray)
@@ -82,11 +153,11 @@ public class SkillManager : MonoBehaviour
                     case "name":
                     // Debug.LogFormat("内容:{0}",item.name);
                     return item.name;
-                    case "discribe":
-                    // Debug.LogFormat("内容:{0}",item.discribe);
+                    case "describe":
+                    // Debug.LogFormat("内容:{0}",item.describe);
                     break;
                     case "genre":
-                    return item.genre.ToString();
+                    return item.color.ToString();
                     case "icon":
                     return item.icon;
                     case "ifActive":
@@ -113,7 +184,7 @@ public class SkillManager : MonoBehaviour
             return;
         }
         //必须是X系技能
-        if(needGenres!=null &&!needGenres.Contains(skill.genre))
+        if(needGenres!=null &&!needGenres.Contains(skill.color))
         {
             return;
         }
@@ -161,33 +232,22 @@ public class SkillManager : MonoBehaviour
                 }
             }
         }
-        if(skill.target.actorType==ActorType.敌人)
+        
+        var tempskills =skill.caster.skills;
+        if(tempskills==null)
         {
-            //检测技能等级
-            int level = Player.instance.GetSkillLevel(skillID);
-            if(level>0)
+            return;
+        }
+        for (int i = 0; i < tempskills.Count; i++)
+        {
+            if(tempskills[i]!=null&&tempskills[i].id ==skillID)
             {
                 Skill sk = TryGetFromPool(skillID,skill.caster);
                 SkillManager.instance.SimulateCastSkill(sk,sk.damage,false,true);
-            }
-        }
-        if(skill.target.actorType ==ActorType.玩家角色)
-        {
-            var tempskills =skill.target.skills;
-            if(tempskills==null)
-            {
                 return;
             }
-            for (int i = 0; i < tempskills.Length; i++)
-            {
-                if(tempskills[i]!=null&&tempskills[i].id ==skillID)
-                {
-                    Skill sk = TryGetFromPool(skillID,skill.caster);
-                    SkillManager.instance.SimulateCastSkill(sk,sk.damage,false,true);
-                    return;
-                }
-            }
         }
+        
     }
     ///<summary>当技能命中时，检查是否可以触发某个特定技能的buff</summary>
     ///<param name ="skill">命中的技能</param>
@@ -205,7 +265,7 @@ public class SkillManager : MonoBehaviour
             return;
         }
         //必须是X系技能
-        if(needGenres!=null &&!needGenres.Contains(skill.genre))
+        if(needGenres!=null &&!needGenres.Contains(skill.color))
         {
             return;
         }
@@ -224,34 +284,21 @@ public class SkillManager : MonoBehaviour
                 
             }
         }
-        if(skill.target.actorType==ActorType.敌人)
+        
+        var tempskills =skill.caster.skills;
+        if(tempskills==null)
         {
-            //检测技能等级
-            int level = Player.instance.GetSkillLevel(skillID);
-            if(level>0)
-            {
-                //给技能目标添加效果
-                Buff buff = BuffManager.instance.CreateBuffForActor(buffID,level,skill.target);
-                Debug.LogWarningFormat("{0}技能附加buff:{1}",skill.skillName,buff.buffData.name);
-            }
-
+            return;
         }
-        if(skill.target.actorType ==ActorType.玩家角色)
+        for (int i = 0; i < tempskills.Count; i++)
         {
-            var tempskills =skill.target.skills;
-            if(tempskills==null)
+            if(tempskills[i]!=null&&tempskills[i].id ==skillID)
             {
+                BuffManager.instance.CreateBuffForActor(buffID,skill.target);
                 return;
             }
-            for (int i = 0; i < tempskills.Length; i++)
-            {
-                if(tempskills[i]!=null&&tempskills[i].id ==skillID)
-                {
-                    BuffManager.instance.CreateBuffForActor(buffID,tempskills[i].level,skill.target);
-                    return;
-                }
-            }
         }
+        
         
     }
     ///<summary>在计算伤害时，检查某个技能是否可以获得另一个被动技能的加成</summary>
@@ -271,7 +318,7 @@ public class SkillManager : MonoBehaviour
             return 0;
         }
         //必须是X系技能
-        if(needGenres!=null &&!needGenres.Contains(skill.genre))
+        if(needGenres!=null &&!needGenres.Contains(skill.color))
         {
             return 0;
         }
@@ -319,50 +366,22 @@ public class SkillManager : MonoBehaviour
             }
             
         }
-        if(skill.target.actorType==ActorType.敌人)
+        
+        var tempskills =skill.target.skills;
+        if(tempskills==null)
         {
-            //检测技能等级
-            int level = Player.instance.GetSkillLevel(skillID);
-            if(level>0)
+            return 0;
+        }
+        for (int i = 0; i < tempskills.Count; i++)
+        {
+            if(tempskills[i]!=null&&tempskills[i].id ==skillID)
             {
-               Skill sk = TryGetFromPool(skillID,skill.caster);
-            //    Debug.LogWarningFormat("-------{0}:",sk.skillName);
-            //    Battle.Instance.ReceiveSkillDamage(sk,sk.damage,false);
-                switch(skillBuffType)
-                {
-                    case SkillBuffType.伤害:
-                    return sk.damage;
-                    case SkillBuffType.命中:
-                    return sk.hit;
-                    case SkillBuffType.急速:
-                    return sk.fast;
-                    case SkillBuffType.暴击:
-                    return sk.crit;
-                    case SkillBuffType.穿透:
-                    return sk.seep;
-                    case SkillBuffType.暴击加成:
-                    return sk.damage;
-                }
-                
+                Skill sk = TryGetFromPool(skillID,skill.caster);
+                // Battle.Instance.ReceiveSkillDamage(sk,sk.damage,false);
+                return sk.damage;
             }
         }
-        if(skill.target.actorType ==ActorType.玩家角色)
-        {
-            var tempskills =skill.target.skills;
-            if(tempskills==null)
-            {
-                return 0;
-            }
-            for (int i = 0; i < tempskills.Length; i++)
-            {
-                if(tempskills[i]!=null&&tempskills[i].id ==skillID)
-                {
-                    Skill sk = TryGetFromPool(skillID,skill.caster);
-                    // Battle.Instance.ReceiveSkillDamage(sk,sk.damage,false);
-                    return sk.damage;
-                }
-            }
-        }
+        
         return 0;
     }
     ///<summary>用于模拟触发一次额外技能</summary>
@@ -408,15 +427,16 @@ public class SkillManager : MonoBehaviour
         //给目标添加层数*2的点燃
         for (int i = 0; i < num*2; i++)
         {
-            BuffManager.instance.CreateBuffForActor(buffID,skill.level,skill.target);
+            BuffManager.instance.CreateBuffForActor(buffID,skill.target);
         }
         //给自己添加层数的点燃
         for (int i = 0; i < num; i++)
         {
-            BuffManager.instance.CreateBuffForActor(buffID,skill.level,skill.caster);  
+            BuffManager.instance.CreateBuffForActor(buffID,skill.caster);  
         }
         Debug.LogWarningFormat("----------引火烧身附加目标点燃{0}层，自身{1}层--------",num*2,num);
 
     }
+    
     
 }

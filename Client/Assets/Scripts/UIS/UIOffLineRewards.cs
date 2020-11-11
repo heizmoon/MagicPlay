@@ -32,7 +32,7 @@ public class UIOffLineRewards : MonoBehaviour
         {
             //插播广告
         }
-        UIPractice.instance.AddSkillProficiency(skillId,num*i);
+        // UIPractice.instance.AddSkillProficiency(skillId,num*i);
         gameObject.SetActive(false);
         enable =false;
     }

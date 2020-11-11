@@ -69,21 +69,21 @@ namespace EditorTool {
             AssetDatabase.Refresh();
         }
     }
-    public class AbilityBuild : Editor {
+    public class SkillBuild : Editor {
  
-        [MenuItem("生成表格数据/Ability表")]
+        [MenuItem("生成表格数据/Skill表")]
         public static void CreateItemAsset() {
-            AbilityDataSet manager = ScriptableObject.CreateInstance<AbilityDataSet>();
+            SkillDataSet manager = ScriptableObject.CreateInstance<SkillDataSet>();
             //赋值
-            ExcelTool.CreateItemArrayWithExcel(ExcelConfig.excelsFolderPath + "Ability.xlsx","Ability");
-            manager.dataArray = ExcelTool.GetAbilityArray();
+            ExcelTool.CreateItemArrayWithExcel(ExcelConfig.excelsFolderPath + "Skill.xlsx","Skill");
+            manager.dataArray = ExcelTool.GetSkillArray();
             //确保文件夹存在
             if(!Directory.Exists(ExcelConfig.assetPath)) {
                 Directory.CreateDirectory(ExcelConfig.assetPath);
             }
  
             //asset文件的路径 要以"Assets/..."开始，否则CreateAsset会报错
-            string assetPath = string.Format("{0}{1}.asset", ExcelConfig.assetPath, "Ability");
+            string assetPath = string.Format("{0}{1}.asset", ExcelConfig.assetPath, "Skill");
             //生成一个Asset文件
             AssetDatabase.CreateAsset(manager, assetPath);
             AssetDatabase.SaveAssets();
@@ -398,6 +398,29 @@ namespace EditorTool {
             AssetDatabase.Refresh();
         }
     }
+    public class AbilityBuild : Editor 
+    {
+ 
+        [MenuItem("生成表格数据/Ability表")]
+        public static void CreateItemAsset() 
+        {
+            AbilityDataSet manager = ScriptableObject.CreateInstance<AbilityDataSet>();
+            //赋值
+            ExcelTool.CreateItemArrayWithExcel(ExcelConfig.excelsFolderPath + "Ability.xlsx","Ability");
+            manager.dataArray = ExcelTool.GetAbilityDataArray();
+            //确保文件夹存在
+            if(!Directory.Exists(ExcelConfig.assetPath)) {
+                Directory.CreateDirectory(ExcelConfig.assetPath);
+            }
+ 
+            //asset文件的路径 要以"Assets/..."开始，否则CreateAsset会报错
+            string assetPath = string.Format("{0}{1}.asset", ExcelConfig.assetPath, "Ability");
+            //生成一个Asset文件
+            AssetDatabase.CreateAsset(manager, assetPath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+    }
     public class IdealBuild : Editor 
     {
  
@@ -444,6 +467,27 @@ namespace EditorTool {
             AssetDatabase.Refresh();
         }
     }
+    public class ReformDataBuild : Editor {
+ 
+        [MenuItem("生成表格数据/Reform表")]
+        public static void CreateItemAsset() {
+            ReformDataSet manager = ScriptableObject.CreateInstance<ReformDataSet>();
+            //赋值
+            ExcelTool.CreateItemArrayWithExcel(ExcelConfig.excelsFolderPath + "Reform.xlsx","Reform");
+            manager.dataArray = ExcelTool.GetReformArray();
+            //确保文件夹存在
+            if(!Directory.Exists(ExcelConfig.assetPath)) {
+                Directory.CreateDirectory(ExcelConfig.assetPath);
+            }
+ 
+            //asset文件的路径 要以"Assets/..."开始，否则CreateAsset会报错
+            string assetPath = string.Format("{0}{1}.asset", ExcelConfig.assetPath, "Reform");
+            //生成一个Asset文件
+            AssetDatabase.CreateAsset(manager, assetPath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+    }
     public class AllBuild : Editor 
     {
  
@@ -454,7 +498,7 @@ namespace EditorTool {
         AssetsItemBuild.CreateItemAsset();
         CharacterBuild.CreateItemAsset();
         AbyssGroupBuild.CreateItemAsset();
-        AbilityBuild.CreateItemAsset();
+        SkillBuild.CreateItemAsset();
         DropGroupBuild.CreateItemAsset();
         DialogueBuild.CreateItemAsset();
         QuestionDataBuild.CreateItemAsset();
@@ -470,8 +514,8 @@ namespace EditorTool {
         BuffBuild.CreateItemAsset();
         IdealBuild.CreateItemAsset();
         RelicGroupBuild.CreateItemAsset();
-
-
+        ReformDataBuild.CreateItemAsset();
+        AbilityBuild.CreateItemAsset();
         Debug.Log("-----所有表格生成完毕----");
     }
     }

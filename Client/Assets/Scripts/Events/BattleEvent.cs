@@ -105,7 +105,7 @@ public class BattleEvent : MonoBehaviour
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-        UIBattle.Instance.Init(enemy,battleData.scene);
+        // UIBattle.Instance.Init(enemy,battleData.scene);
         yield return new WaitForSeconds(1f);
         UIBattle.Instance.BattleBegin();
         stageUI.SetActive(false);

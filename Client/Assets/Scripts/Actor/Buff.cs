@@ -25,7 +25,7 @@ public class Buff
         // Debug.LogWarningFormat("检查childrenbuff：{0}",buffData.name);
         foreach (var item in buffData._childrenBuff)
         {
-            BuffManager.instance.CreateBuffForActor(item,level,target);
+            BuffManager.instance.CreateBuffForActor(item,target);
             Debug.LogFormat("尝试添加buffID：{0}",item);
         }
     }
@@ -65,7 +65,7 @@ public class Buff
             {
                 target.animState = AnimState.idle;
                 target.ChangeAnimatorInteger(0);
-                target.AutoAttack();
+                target.RunAI();
             }
         }        
         int num =1;

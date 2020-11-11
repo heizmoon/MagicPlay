@@ -234,7 +234,7 @@ public class Abyss : MonoBehaviour
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-        UIBattle.Instance.Init(enemy,abyssScene);
+        // UIBattle.Instance.Init(enemy,abyssScene);
         yield return new WaitForSeconds(1f);
         UIBattle.Instance.BattleBegin();
         stageUI.SetActive(false);
@@ -283,7 +283,7 @@ public class Abyss : MonoBehaviour
         go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
         go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         go.transform.localScale =Vector3.one;
-        go.GetComponent<UIAbyssChooseRelic>().CreateUIs(abyssGroupData.relicGroupDistribution);
+        // go.GetComponent<UIAbyssChooseRelic>().CreateUIs(abyssGroupData.relicGroupDistribution);
 
     }
     void CreateEnemy(int id,int level)
@@ -409,7 +409,7 @@ public class Abyss : MonoBehaviour
        //金钱奖励
        int goldReward = abyssGroupData.goldReward;
        goldRewardText.text =goldReward.ToString();
-       Player.instance.gold+=goldReward;
+       Player.instance.Gold+=goldReward;
     }
     
 }

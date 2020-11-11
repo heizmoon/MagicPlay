@@ -40,13 +40,13 @@ public class UISkillButton : MonoBehaviour
     }
     public void CommonCD()
     {
-        if(intoCD&&CD- currentTime>=0.5f)
+        if(intoCD&&CD- currentTime>=Player.instance.playerActor.commonCD)
         {
             return;
         }
         else
         {
-            BeginCD(0.5f);
+            BeginCD(Player.instance.playerActor.commonCD);
         }    
     }
     public void InitButton(int id)
@@ -70,7 +70,7 @@ public class UISkillButton : MonoBehaviour
             return;
         }
         BeginCD(skill.CD);
-        UIBattle.Instance.CommonCD();
+        // UIBattle.Instance.CommonCD();
     }
     void InitMpBar()
     {
@@ -114,6 +114,22 @@ public class UISkillButton : MonoBehaviour
         CD =cd;
         ChangeCDText(CD);
         //所有其他技能进入公共CD
+    }
+    public void PlusCD(Skill skill,float cd)
+    {
+        if(skill.id!=this.skill.id)
+        {
+            return;
+        }
+        if(CD>=cd)
+        {
+            currentTime+=cd;
+        }
+        else
+        {
+            currentTime=CD;
+        }
+
     }
     ///<summary>控制按钮可用性</summary>
     ///<param name ="state">按钮是否可用</param>

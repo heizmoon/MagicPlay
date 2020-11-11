@@ -198,8 +198,8 @@ public class AssetsManager : MonoBehaviour
                     case "name":
                     // Debug.LogFormat("内容:{0}",item.name);
                     return item.name;
-                    case "discribe":
-                    // Debug.LogFormat("内容:{0}",item.discribe);
+                    case "describe":
+                    // Debug.LogFormat("内容:{0}",item.describe);
                     break;
                     case "type":
                     return item.type.ToString();

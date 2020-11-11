@@ -52,6 +52,7 @@
      <Compile Include="Assets\Anima2D\Scripts\SpriteMesh.cs" />
      <Compile Include="Assets\Anima2D\Scripts\SpriteMeshAnimation.cs" />
      <Compile Include="Assets\Anima2D\Scripts\SpriteMeshInstance.cs" />
+     <Compile Include="Assets\Scripts\Actor\AbilityManager.cs" />
      <Compile Include="Assets\Scripts\Actor\Actor.cs" />
      <Compile Include="Assets\Scripts\Actor\ActorController.cs" />
      <Compile Include="Assets\Scripts\Actor\AssetsItem.cs" />
@@ -59,7 +60,12 @@
      <Compile Include="Assets\Scripts\Actor\Buff.cs" />
      <Compile Include="Assets\Scripts\Actor\BuffIcon.cs" />
      <Compile Include="Assets\Scripts\Actor\BuffManager.cs" />
+     <Compile Include="Assets\Scripts\Actor\Character.cs" />
+     <Compile Include="Assets\Scripts\Actor\CharacterManager.cs" />
+     <Compile Include="Assets\Scripts\Actor\ReformManager.cs" />
      <Compile Include="Assets\Scripts\Actor\TraitManager.cs" />
+     <Compile Include="Assets\Scripts\Ball.cs" />
+     <Compile Include="Assets\Scripts\BallManager.cs" />
      <Compile Include="Assets\Scripts\Battle\Abyss.cs" />
      <Compile Include="Assets\Scripts\Battle\AbyssManager.cs" />
      <Compile Include="Assets\Scripts\Battle\Battle.cs" />
@@ -70,7 +76,9 @@
      <Compile Include="Assets\Scripts\Battle\Relic.cs" />
      <Compile Include="Assets\Scripts\Battle\RelicManager.cs" />
      <Compile Include="Assets\Scripts\Battle\Skill.cs" />
+     <Compile Include="Assets\Scripts\Battle\SkillCard.cs" />
      <Compile Include="Assets\Scripts\Battle\SkillManager.cs" />
+     <Compile Include="Assets\Scripts\BattleScene.cs" />
      <Compile Include="Assets\Scripts\DateManager.cs" />
      <Compile Include="Assets\Scripts\Events\BattleData.cs" />
      <Compile Include="Assets\Scripts\Events\BattleEvent.cs" />
@@ -90,14 +98,19 @@
      <Compile Include="Assets\Scripts\ExcelDataSet\MonsterTypeSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\QuestionDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\QuestionDatabaseSet.cs" />
+     <Compile Include="Assets\Scripts\ExcelDataSet\ReformDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\RelicDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\RelicGroupDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\SceneDataSet.cs" />
+     <Compile Include="Assets\Scripts\ExcelDataSet\SkillDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\TaskEventDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\TraitDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\TriggerEventDataSet.cs" />
      <Compile Include="Assets\Scripts\Main.cs" />
+     <Compile Include="Assets\Scripts\Map.cs" />
+     <Compile Include="Assets\Scripts\MapPoint.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\Prepare.cs" />
      <Compile Include="Assets\Scripts\TextTool.cs" />
      <Compile Include="Assets\Scripts\Timer.cs" />
      <Compile Include="Assets\Scripts\UIS\ItemBox.cs" />
@@ -108,10 +121,10 @@
      <Compile Include="Assets\Scripts\UIS\TraitCasket.cs" />
      <Compile Include="Assets\Scripts\UIS\UIAbyssChooseRelic.cs" />
      <Compile Include="Assets\Scripts\UIS\UIBattle.cs" />
+     <Compile Include="Assets\Scripts\UIS\UIBattleShop.cs" />
      <Compile Include="Assets\Scripts\UIS\UIOffLineRewards.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayer.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayerAssets.cs" />
-     <Compile Include="Assets\Scripts\UIS\UIPractice.cs" />
      <Compile Include="Assets\Scripts\UIS\UISkillButton.cs" />
      <Compile Include="Assets\Scripts\UIS\UISkillChoose.cs" />
      <Compile Include="Assets\Scripts\UIS\UISkillTree.cs" />
@@ -311,6 +324,15 @@
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
         <HintPath>C:/Users/snowm/Documents/GitHub/MagicPlay/Client/Assets/Plugins/ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="DemiLib">
+        <HintPath>C:/Users/snowm/Documents/GitHub/MagicPlay/Client/Assets/Plugins/Demigiant/DemiLib/Core/DemiLib.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween">
+        <HintPath>C:/Users/snowm/Documents/GitHub/MagicPlay/Client/Assets/Plugins/Demigiant/DOTween/DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTweenPro">
+        <HintPath>C:/Users/snowm/Documents/GitHub/MagicPlay/Client/Assets/Plugins/Demigiant/DOTweenPro/DOTweenPro.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.2f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -698,6 +720,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{8e399d07-fc4a-7ecd-7881-f923d075ebd1}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

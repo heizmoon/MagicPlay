@@ -8,7 +8,7 @@ public class Relic : MonoBehaviour
     public Text textName;
     public Text textDescribe;
     
-    public RelicData data;
+    public SkillData data;
     void Start()
     {
         
@@ -19,9 +19,9 @@ public class Relic : MonoBehaviour
     {
         
     }
-    public void CreateRelic(RelicData relicData)
+    public void CreateRelic(SkillData skillData)
     {
-        data =relicData;
+        data =skillData;
         textName.text =data.name;
         textDescribe.text =data.describe;
     }

@@ -21,9 +21,7 @@ public class DateManager : MonoBehaviour
     //游戏内时间
     //现实1小时 = 游戏内1个月,//1s =1/120day =0.2hours;
     private int addSkillProficiency =0;//每10秒增加一次技能额外熟练度
-    public int createTriggerInterval=5;
-    int currentTriggerInterval=0;
-    bool ifTriggerInterval =false;
+
     void Awake()
     {
         instance =this;

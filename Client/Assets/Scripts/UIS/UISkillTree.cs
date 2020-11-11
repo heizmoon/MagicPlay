@@ -151,19 +151,15 @@ public class UISkillTree : MonoBehaviour
         {
             skillSpellTime.text =string.Format("施法时间：{0}",skill.spelllTime);
         }
-        skillDescribe.text =skill.discribe;
-        skillFast.text= string.Format("急速：{0}",skill.fast);
-        skillHit.text=string.Format("命中：{0}",skill.hit);
-        skillSeep.text=string.Format("穿透：{0}",skill.seep);
-        skillCrit.text = string.Format("暴击：{0}",skill.crit);
+        skillDescribe.text =skill.describe;
         //如果选中的技能是正在练习的技能
-        if(UIPractice.instance.skillID==skillID)
-        {
-            buttonLean.GetComponentInChildren<Text>().text ="学习中";
-            buttonLean.interactable=true;
+        // if(UIPractice.instance.skillID==skillID)
+        // {
+        //     buttonLean.GetComponentInChildren<Text>().text ="学习中";
+        //     buttonLean.interactable=true;
             
-            return;         
-        }
+        //     return;         
+        // }
         //根据技能状态，改变按钮状态
         if(cb.skillState==0)
         {
@@ -188,7 +184,7 @@ public class UISkillTree : MonoBehaviour
         //1.主动技能，进入UIPractice进行练习
         if(cube.mscene==0)
         {
-            Main.instance.StartPractice(skillID);
+            // Main.instance.StartPractice(skillID);
         }
         //2.被动技能，进入UIReading进行学习
 

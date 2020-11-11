@@ -22,34 +22,55 @@ public class UIAbyssChooseRelic : MonoBehaviour
     {
         
     }
-    IEnumerator CreateRelic(int id,float delay)
+    // IEnumerator CreateRelic(int id,float delay)
+    // {
+    //     yield return new WaitForSeconds(delay);
+    //     Debug.LogWarningFormat("随机到的id是{0}",id);
+    //     RelicData data =RelicManager.instance.GetRelic(id);
+    //     GameObject go = (GameObject)Instantiate(Resources.Load("Prefabs/Relic"));
+    //     go.transform.SetParent(content);
+    //     go.transform.localScale =Vector3.one;
+    //     Relic relic = go.GetComponent<Relic>();
+    //     relic.CreateRelic(data);
+    //     Toggle toggle = go.GetComponent<Toggle>();
+    //     toggle.onValueChanged.AddListener(IsOn=>OnChoose(IsOn,relic));
+    // }
+    IEnumerator CreateRelic(SkillData skillData,float delay)
     {
         yield return new WaitForSeconds(delay);
-        Debug.LogWarningFormat("随机到的id是{0}",id);
-        RelicData data =RelicManager.instance.GetRelic(id);
+        Debug.LogWarningFormat("随机到的技能名是{0}",skillData.name);
+        // RelicData data =RelicManager.instance.GetRelic(id);
         GameObject go = (GameObject)Instantiate(Resources.Load("Prefabs/Relic"));
         go.transform.SetParent(content);
         go.transform.localScale =Vector3.one;
         Relic relic = go.GetComponent<Relic>();
-        relic.CreateRelic(data);
+        relic.CreateRelic(skillData);
         Toggle toggle = go.GetComponent<Toggle>();
         toggle.onValueChanged.AddListener(IsOn=>OnChoose(IsOn,relic));
     }
     
     //创建UI
-    public void CreateUIs(string distribution)
-    {
-        Debug.LogWarningFormat("distribution ={0}",distribution);
+    // public void CreateUIs(string distribution)
+    // {
+    //     Debug.LogWarningFormat("distribution ={0}",distribution);
 
+    //     for (int i = 0; i < 3; i++)
+    //     {
+    //         int groupID =ChooseGruop(distribution);
+    //         Debug.LogWarningFormat("groupID={0}",groupID);
+    //         List<int> relicList =RelicManager.instance.GetRelicGroup(groupID);
+    //         int id =ChooseOne(relicList);
+    //         StartCoroutine(CreateRelic(id,i*0.2f));
+    //     }
+        
+    // }
+    public void CreateUIs(int number)
+    {
+        SkillData[] skillDatas = SkillManager.instance.GetRandomSkills(number);
         for (int i = 0; i < 3; i++)
         {
-            int groupID =ChooseGruop(distribution);
-            Debug.LogWarningFormat("groupID={0}",groupID);
-            List<int> relicList =RelicManager.instance.GetRelicGroup(groupID);
-            int id =ChooseOne(relicList);
-            StartCoroutine(CreateRelic(id,i*0.2f));
+            StartCoroutine(CreateRelic(skillDatas[i],i*0.2f));
         }
-        
     }
     int ChooseGruop(string str)
     {
@@ -64,7 +85,7 @@ public class UIAbyssChooseRelic : MonoBehaviour
             GroupsWeight.Add(int.Parse(item.Split(',')[1])+totalWeight);
             totalWeight += int.Parse(item.Split(',')[1]);
         }
-        int r =Random.Range(0,totalWeight);
+        int r =Random.Range(0,totalWeight+1);
         if(r<=GroupsWeight[0])
         {
             groupID =GroupsID[0];
@@ -84,7 +105,7 @@ public class UIAbyssChooseRelic : MonoBehaviour
     {
         int itemId =0;
         int total =list.Count-1;
-        itemId =Random.Range(0,total);
+        itemId =Random.Range(0,total+1);
         Debug.LogWarningFormat("总数为{0},随机到第{1}个",total,itemId);
 
         itemId =list[itemId];
@@ -99,25 +120,26 @@ public class UIAbyssChooseRelic : MonoBehaviour
         // Debug.LogWarningFormat("选择:{0}",relic.data.id);
         //选择了一个Relic,为玩家添加这个Relic的buff
         
-        if(relic.data.id ==1)
-        {
-            //深渊泉水直接回血
-            int hp =Mathf.FloorToInt(Player.instance.playerActor.HpMax*0.5f);
-            // Debug.LogWarningFormat("深渊泉水恢复{0}",hp);
-            Player.instance.playerActor.AddHp(hp);
-            CloseUI();
-            return;
-        }
-        if(relic.data.buff=="")
-        {
-            CloseUI();
-            return;
-        }
-        string[] s = relic.data.buff.Split(',');
-        foreach (var item in s)
-        {
-            BuffManager.instance.CreateBuffForActor(int.Parse(item),1,Player.instance.playerActor);
-        }
+        // if(relic.data.id ==1)
+        // {
+        //     //深渊泉水直接回血
+        //     int hp =Mathf.FloorToInt(Player.instance.playerActor.HpMax*0.5f);
+        //     // Debug.LogWarningFormat("深渊泉水恢复{0}",hp);
+        //     Player.instance.playerActor.AddHp(hp);
+        //     CloseUI();
+        //     return;
+        // }
+        // if(relic.data.buff=="")
+        // {
+        //     CloseUI();
+        //     return;
+        // }
+        // string[] s = relic.data.buff.Split(',');
+        // foreach (var item in s)
+        // {
+        //     // BuffManager.instance.CreateBuffForActor(int.Parse(item),Player.instance.playerActor);
+        // }
+        Player.instance.playerActor.AddSkillCard(relic.data);
         CloseUI();
     }
     void CloseUI()

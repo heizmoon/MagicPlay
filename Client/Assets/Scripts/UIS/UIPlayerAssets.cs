@@ -77,7 +77,7 @@ public class UIPlayerAssets : MonoBehaviour
         //调整List的高度
         SetUIListHeight();
         infomation.gameObject.SetActive(false);
-        goldText.text =string.Format(goldText.text,Player.instance.gold);
+        goldText.text =string.Format(goldText.text,Player.instance.Gold);
         // totalText.text =string.Format(totalText.text);
     }
     void PutAssetsItemsInList(List<AssetsItem> at)

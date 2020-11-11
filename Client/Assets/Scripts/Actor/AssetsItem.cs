@@ -94,7 +94,7 @@ public class AssetsItem : MonoBehaviour
         _hpGrow =itemData.hpGrow;
         _mpGrow =itemData.mpGrow;
         _type =itemData.type;
-        _describe =itemData.discribe;
+        _describe =itemData.describe;
         _value =itemData.value;
         _equipType =itemData.equipType;
         _dodgeBuffer =itemData.dodgeBuffer;
