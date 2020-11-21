@@ -25,6 +25,7 @@ public class Actor : MonoBehaviour
     public int HpMax;//最大HP
 	public int MpMax;
 	public int HpCurrent;//当前HP
+    public int armor;//护甲
     public float MpCurrent;
     public float Crit;
     public Transform spellPoint;

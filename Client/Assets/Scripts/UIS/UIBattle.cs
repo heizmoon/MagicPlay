@@ -85,6 +85,13 @@ public class UIBattle : MonoBehaviour
         InitSkillCards();
         CreateScene(scene);
         this.isBoss = isBoss;
+        //清理手牌
+        cardPos.Clear();
+        for (int i = 0; i < 6; i++)
+        {
+            cardPos.Add(i,false);
+        }
+        
     }
     void InitBattle()
     {
@@ -340,13 +347,16 @@ public class UIBattle : MonoBehaviour
         
         return buffIcon;
     }
-    //抽齐4张手牌
+    //抽齐4张手牌(发牌)
     public void SelectCard()
     {
         for (int i = 0; i < 4 ; i++)
         {
             if(cardsList.Count<1)
-            Reshuffle();
+            Reshuffle();//洗牌
+            if(cardsList.Count<1)
+            return;//--------洗牌也没牌了，那就不抽了
+
             int r = Random.Range(0,cardsList.Count);
             if(playerActor.handCards.Count<8)
             StartCoroutine(IESelectCard(cardsList[r],i));
@@ -360,24 +370,35 @@ public class UIBattle : MonoBehaviour
     IEnumerator IESelectCard(SkillCard skillCard,int delayNumber)
     {
         yield return new WaitForSeconds(0.5f+delayNumber*0.2f);
-        skillCard.posID =GetCardPos()+1;
+        skillCard.posID =GetCardPos();
         skillCard.GiveToHand();
-        SetCardPos(skillCard.posID);
+        AddCardPos(skillCard.posID);
+        // Debug.Log("posID ="+skillCard.posID);
     }
+    //用于给技能卡定位
     int GetCardPos()
     {
+        Debug.LogWarning(cardPos.Count);
+        
         foreach (var item in cardPos)
         {
+            // Debug.LogWarning("GetCardPos.cardPos ="+item.Key+",posValue="+item.Value);
             if(!item.Value)
-            {
+            { 
                 return item.Key;
             }
         }
         return 0;
+        
     }
-    void SetCardPos(int num)
+    void AddCardPos(int num)
     {
         cardPos[num] = true;
+        // Debug.Log("cardPos["+num+"]="+cardPos[num]);
+    }
+    public void RemoveCardPos(int num)
+    {
+        cardPos[num] = false;
     }
     //将所有手牌丢入弃牌堆
     public void ThrowAllHandCardsToPool()
@@ -437,8 +458,12 @@ public class UIBattle : MonoBehaviour
         for (int i = 0; i < number ; i++)
         {
             if(cardsList.Count<1)
-            Reshuffle();
+            Reshuffle();//洗牌
+            if(cardsList.Count<1)
+            return;//洗牌也还是没牌，那就不抽了
+
             int r = Random.Range(0,cardsList.Count);
+            Debug.Log("r="+r);
             if(playerActor.handCards.Count<8)
             StartCoroutine(IESelectCard(cardsList[r],i));
             else

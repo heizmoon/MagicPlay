@@ -67,12 +67,14 @@ public class HPBar : MonoBehaviour
     {
         if(playerActerMPBar)
         {
-            mpchangeInterval+= Time.deltaTime;
-            if(mpchangeInterval>Player.instance.playerActor.autoReduceMPAmount)
-            {
-                changeHPBar(Player.instance.playerActor.MpCurrent,Player.instance.playerActor.MpMax);
-                mpchangeInterval =0;
-            }
+            // mpchangeInterval+= Time.deltaTime;
+            // if(mpchangeInterval>Player.instance.playerActor.autoReduceMPAmount)
+            // {
+            //     changeHPBar(Player.instance.playerActor.MpCurrent,Player.instance.playerActor.MpMax);
+            //     mpchangeInterval =0;
+            // }
+            changeHPBar(Player.instance.playerActor.MpCurrent,Player.instance.playerActor.MpMax);
+
         }
     }
     public void BindHPBar(Actor actor)//绑定HP条与角色

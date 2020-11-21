@@ -22,7 +22,7 @@ public class Skill : MonoBehaviour
     
     
     public int color;//法术类系
-    public int amount;
+    public bool ifHeal;
     
     public bool targetSelf;//目标是自己还是对方
 
@@ -45,13 +45,6 @@ public class Skill : MonoBehaviour
     public bool usedToRemove;
     public bool ifCrit;
     public int updateID;
-    
-    
-    
-    
-    
-    
-    
 
     //考虑将读取表格和类写在一起？
     void Start()
@@ -88,7 +81,7 @@ public class Skill : MonoBehaviour
         damagePercent =data.damagePercent;
         damageDistribution = data.damageDistribution;
         color =data.color;
-        amount = data.amount;
+        ifHeal = data.ifHeal;
         
         targetSelf =data.targetSelf;
         manaProduce =data.manaProduce;

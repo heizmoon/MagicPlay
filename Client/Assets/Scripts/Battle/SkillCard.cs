@@ -50,6 +50,7 @@ public class SkillCard : MonoBehaviour
         if(!UIBattle.Instance.usedCardsList.Contains(this))
         UIBattle.Instance.usedCardsList.Add(this);
 
+        UIBattle.Instance.RemoveCardPos(this.posID);
         StartCoroutine(ThrowCardToUsedPool());
     }
     ///<summary>进入弃牌堆(延迟)</summary>
@@ -101,8 +102,8 @@ public class SkillCard : MonoBehaviour
     void SetCardPosition()
     {
         transform.localScale =Vector3.one;
-        float _x =80+(posID-1)*180;
-        float _y =posID>4?200:-100;
+        float _x =posID<4?80+(posID)*180:80+(posID-4)*180;
+        float _y =posID>3?-320:-100;
         GetComponent<RectTransform>().anchoredPosition3D =new Vector3(_x,_y,0);
     }
     public void MaskCard(bool ifmask)

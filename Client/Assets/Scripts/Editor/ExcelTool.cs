@@ -760,7 +760,7 @@ namespace EditorTool {
                 
                 skillData.ifActive = collect[i][9].ToString()=="1"?true:false;
                 skillData.color =collect[i][10].ToString()==""?0: int.Parse(collect[i][10].ToString());
-                skillData.amount =collect[i][11].ToString()==""?0: int.Parse(collect[i][11].ToString());
+                skillData.ifHeal =collect[i][11].ToString()=="1"?true:false;
 
                 skillData.manaCost =collect[i][12].ToString()==""?0: int.Parse(collect[i][12].ToString());
                 skillData.damage =collect[i][13].ToString()==""?0: int.Parse(collect[i][13].ToString());

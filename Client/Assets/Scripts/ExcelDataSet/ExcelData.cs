@@ -31,7 +31,7 @@ public class SkillData{
     public float CD;
     public bool ifActive;
     public int color;
-    public int amount;
+    public bool ifHeal;
     public int manaCost;
     
     public int damage;
