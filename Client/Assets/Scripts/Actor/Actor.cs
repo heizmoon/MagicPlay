@@ -66,14 +66,9 @@ public class Actor : MonoBehaviour
     [HideInInspector]
     public float autoReduceMPAmount =0;
 
-//---------------已经无用--------------
-    [HideInInspector]
-    ///<summary>公共冷却时间</summary>
-    public float commonCD;
-//-----------------------------------   
-    
+
     int basicAttack;
-    // [HideInInspector]
+    [HideInInspector]
     public int bufferAttack;
 
     [HideInInspector]
@@ -81,11 +76,20 @@ public class Actor : MonoBehaviour
 
     [HideInInspector]
     public MonsterTypeData monsterData;
+    [HideInInspector]
     
     int state;
     int behaviour;
     ///<summary>手牌列表</summary>
     public List<SkillCard> handCards;
+
+#region 已经无用的属性
+//---------------已经无用--------------
+    [HideInInspector]
+    ///<summary>公共冷却时间</summary>
+    public float commonCD;
+//-----------------------------------   
+#endregion 
 
 
 
@@ -218,6 +222,12 @@ public class Actor : MonoBehaviour
         basicAttack = monsterData.attack;
 
         bufferAttack =basicAttack;
+    }
+    public void AddArmor(int number)
+    {
+        armor +=number;
+        if(armor<0)
+        armor =0;
     }
 
     //在牌堆中增加一张牌(本局游戏永久)
@@ -455,7 +465,7 @@ public class Actor : MonoBehaviour
                 hpBar = GameObject.Find("HP_Player").GetComponent<HPBar>();
                 mpBar = GameObject.Find("MP_Player").GetComponent<HPBar>();
                 mpBar.initHpBar((int)MpCurrent,MpMax);
-                    
+                hpBar.BindHPBar(this);    
             }
             // castingbar= GameObject.Find("CastingBar_Player").GetComponent<HPBar>();
         }
@@ -463,6 +473,7 @@ public class Actor : MonoBehaviour
         {
             castingbar =GameObject.Find("CastingBar_Enemy").GetComponent<HPBar>();
             hpBar = GameObject.Find("HP_Enemy").GetComponent<HPBar>();
+            hpBar.BindHPBar(this);  
             // mpBar = GameObject.Find("MP_Enemy").GetComponent<HPBar>();
             // mpBar.initHpBar((int)MpCurrent,MpMax);
             // Debug.Log("HPBAR");
@@ -592,8 +603,7 @@ public class Actor : MonoBehaviour
         // CreateSpellEffect(skill);
         CreateCastEffect(skill);
         animator.Play("attack");
-        if(skill.damage!=0)
-        skill.ComputeDamage();
+        
         //执行技能释放完毕事件
         OnSkillSpellFinish(skill);
         //6.绑定技能和施法条
@@ -877,13 +887,13 @@ public class Actor : MonoBehaviour
     {
         //执行当技能被抵抗时就xxx这类效果
     }
-    public void TakeDamage(int num,bool crit,int genre,bool ifRebound)//传入技能伤害,是否暴击,是否为反弹伤害
+    public int TakeDamage(int num,bool crit,int genre,bool ifRebound,bool ifSeep)//传入技能伤害,是否暴击,是否为反弹伤害 【增加是否为穿透伤害】【返回最终造成的伤害数值】
     {
         //如果角色已经死亡，则不会再承受伤害
         if(animState ==AnimState.dead)
         {
             target.StopCasting();
-            return;
+            return 0;
         }
         
         //反弹伤害不能被反弹
@@ -913,7 +923,7 @@ public class Actor : MonoBehaviour
                     {
                         skill.target =target;
                     }
-                    Battle.Instance.ReceiveSkillDamage(skill,skill.damage,true);
+                    Battle.Instance.ReceiveSkillDamage(skill,skill.damage,true,false);
                     skill.target =this;    
                 }
             }
@@ -936,82 +946,109 @@ public class Actor : MonoBehaviour
                         if(skill.targetSelf)
                         {
                             skill.target =target;
-                            Battle.Instance.ReceiveSkillDamage(skill,Mathf.CeilToInt(buffs[i].currentValue),true);
+                            Battle.Instance.ReceiveSkillDamage(skill,Mathf.CeilToInt(buffs[i].currentValue),true,false);
                             skill.target =this;
                         }
                     }
                     else
                     {
-                        Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(buffs[i].currentValue),target,genre);
+                        Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(buffs[i].currentValue),target,genre,false);
                     }
                     
                     // Debug.LogFormat("百分比反弹buff名为：{0},效果类型为：{1},影响派系为：{2}",buffs[i].buffData.name,buffs[i].buffData._type,buffs[i].buffData.genreList);
                 }
             }
         }
+        #region 吸收伤害相关
         ///<summary>是否吸收伤害</summary>
         bool ifAbsorb =false;
         int tempNum =0;
         //治疗不会被吸收
-        if(num>=0)
+        if(num>=0&&!ifSeep)
         {
         //吸收伤害在受到伤害之前执行
-            for (int i = 0; i < buffs.Count; i++)
-            {
-                if(buffs[i].buffData._type == BuffType.数值吸收伤害 && buffs[i].buffData._genreList.Contains(genre))
-                {
-                    //显示特效
-                    Transform e = EffectManager.TryGetFromPool(buffs[i].buffData.triggerEffect);
-                    if(e!=null)
-                        {
-                            e.SetParent(target.hitPoint);
-                            e.localPosition =Vector3.zero;
-                            e.localScale =Vector3.one;
-                        }
-                    //伤害减少
-                    //护盾被打爆
-                    if(num>=buffs[i].currentValue)
-                    {
-                        num-=Mathf.CeilToInt(buffs[i].currentValue);
-                        tempNum =Mathf.CeilToInt(buffs[i].currentValue);
-                        Debug.LogFormat("由于{2}的buff效果，吸收了{0}点伤害,护盾剩余值为{1}",buffs[i].currentValue,0,buffs[i].buffData.name);
-                        // item.currentValue =0;
-                        buffs[i].buffIcon.OnEffectEnd();
-                        //执行护盾被打爆事件
+        #region 旧版吸收伤害
+            // for (int i = 0; i < buffs.Count; i++)
+            // {
+            //     if(buffs[i].buffData._type == BuffType.数值吸收伤害 && buffs[i].buffData._genreList.Contains(genre))
+            //     {
+            //         //显示特效
+            //         Transform e = EffectManager.TryGetFromPool(buffs[i].buffData.triggerEffect);
+            //         if(e!=null)
+            //             {
+            //                 e.SetParent(target.hitPoint);
+            //                 e.localPosition =Vector3.zero;
+            //                 e.localScale =Vector3.one;
+            //             }
+            //         //伤害减少
+            //         //护盾被打爆
+            //         if(num>=buffs[i].currentValue)
+            //         {
+            //             num-=Mathf.CeilToInt(buffs[i].currentValue);
+            //             tempNum =Mathf.CeilToInt(buffs[i].currentValue);
+            //             Debug.LogFormat("由于{2}的buff效果，吸收了{0}点伤害,护盾剩余值为{1}",buffs[i].currentValue,0,buffs[i].buffData.name);
+            //             // item.currentValue =0;
+            //             buffs[i].buffIcon.OnEffectEnd();
+            //             //执行护盾被打爆事件
 
-                    }
-                    //护盾没被打爆
-                    else
-                    {
-                        buffs[i].currentValue-=num;
-                        tempNum =num;
-                        Debug.LogFormat("由于{2}的buff效果，吸收了{0}点伤害,,护盾剩余值为{1}",num,buffs[i].currentValue,buffs[i].buffData.name);
-                        num =0;
-                    }
-                    ifAbsorb =true;
-                }
-            }
+            //         }
+            //         //护盾没被打爆
+            //         else
+            //         {
+            //             buffs[i].currentValue-=num;
+            //             tempNum =num;
+            //             Debug.LogFormat("由于{2}的buff效果，吸收了{0}点伤害,,护盾剩余值为{1}",num,buffs[i].currentValue,buffs[i].buffData.name);
+            //             num =0;
+            //         }
+            //         ifAbsorb =true;
+            //     }
+            // }
             
-            for (int i = 0; i < buffs.Count; i++)
+            // for (int i = 0; i < buffs.Count; i++)
             
+            // {
+            //     if(buffs[i].buffData._type == BuffType.百分比吸收伤害 && buffs[i].buffData._genreList.Contains(genre))
+            //     {
+            //         //显示特效
+            //         Transform e = EffectManager.TryGetFromPool(buffs[i].buffData.triggerEffect);
+            //         if(e!=null)
+            //             {
+            //                 e.SetParent(target.hitPoint);
+            //                 e.localPosition =Vector3.zero;
+            //                 e.localScale =Vector3.one;
+            //             }
+            //         //伤害减少
+                    
+            //         num = Mathf.CeilToInt( num*(1-buffs[i].currentValue));
+                    
+            //     }
+            // }
+            #endregion
+            
+            //法力护盾：减少能量值来吸收伤害，当能量值空时，不再吸收伤害,法力护盾吸收的优先级低于普通护甲
+
+
+            //改变角色当前护甲数值
+            //如何计算当前角色拥有的所有护甲值？
+            //1.增加护甲的buff将直接增加护甲值
+            //2.buff时间到或层数改变时，将直接修改护甲值
+        if(armor>0)
+        ifAbsorb =true;
+            // tempNum =Math.Abs(num-armor);
+            if(armor>=num)
             {
-                if(buffs[i].buffData._type == BuffType.百分比吸收伤害 && buffs[i].buffData._genreList.Contains(genre))
-                {
-                    //显示特效
-                    Transform e = EffectManager.TryGetFromPool(buffs[i].buffData.triggerEffect);
-                    if(e!=null)
-                        {
-                            e.SetParent(target.hitPoint);
-                            e.localPosition =Vector3.zero;
-                            e.localScale =Vector3.one;
-                        }
-                    //伤害减少
-                    
-                    num = Mathf.CeilToInt( num*(1-buffs[i].currentValue));
-                    
-                }
+                tempNum =num;
+                AddArmor(-num);
+                num = 0;
+            }
+            else
+            {
+                tempNum =armor;
+                num-=armor;
+                armor =0;
             }
         }
+        #endregion
         //执行{受到伤害时就xxx这类效果}
         
         //执行 {受到暴击时就xxx}
@@ -1024,14 +1061,15 @@ public class Actor : MonoBehaviour
         //先改变生命再判断
         int tempHP = HpCurrent;
         AddHp(-num);
-        bool ifDie =false;;
+        bool ifDie =false;
         //3.伤害文字
+        
         if(ifAbsorb)
         {
-            if(tempNum!=0)
-            {
-                bt.SetText("吸收"+tempNum);
-            }
+            if(num<=0)
+            bt.SetText("吸收"+tempNum);
+            else
+            bt.SetText(-num+"("+tempNum+"吸收)");
         }
         else
         {
@@ -1039,8 +1077,9 @@ public class Actor : MonoBehaviour
         }
         
         Debug.LogFormat("角色：{0}的当前生命值：{1}",name,HpCurrent);
-            
-        //如果是掉血效果
+        if(num<=0)
+        return 0;   
+        //如果最终判断掉血了
         if(num>0)
         {
             //执行当角色生命值低于50%，就xxx这类效果
@@ -1055,12 +1094,7 @@ public class Actor : MonoBehaviour
             }
             
         }
-        //如果是加血效果
-        else
-        {
-            
-        }
-                
+        
         
         //如果要死了
         if(HpCurrent==0)
@@ -1116,11 +1150,37 @@ public class Actor : MonoBehaviour
            //如果拥有数值受伤回血的buff
             BuffManager.CheckBuffOnReceiveSkillDamageToTriggerSkillDamage(this,genre,BuffType.数值受伤回复,false);
         }
+        return num;
         
+    }
+    public int TakeHeal(int num)
+    {
+       if(animState ==AnimState.dead)
+        {
+            target.StopCasting();
+            return 0;
+        }
+        //如果身上有减少治疗的buff，那么治疗降低
+        // if(buffs[i].buffData.id)
+        AddHp(num);
+        OnTakeHeal(num);
+        return num;
+
+    }
+    public void OnTakeHeal(int num)//受到治疗的效果
+    {
+
     }
     public void OnSkillSpellFinish(Skill skill)
     {
         //技能释放完毕事件
+        //有伤害的技能输出伤害
+        if(skill.damage!=0)
+        skill.ComputeDamage();
+        //有治疗的技能产生治疗
+        //........
+        if(skill.heal!=0)
+        skill.ComputeHeal();
         //有buff的技能加buff
         if(skill.buffID>0&&skill.targetSelf)
         {

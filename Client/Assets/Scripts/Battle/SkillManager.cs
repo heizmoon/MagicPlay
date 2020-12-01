@@ -391,7 +391,7 @@ public class SkillManager : MonoBehaviour
         {
            StartCoroutine(WaitForSimulateEffect(skill.orginSpellTime,skill.hitEffect,skill.target));
         }
-        Battle.Instance.ReceiveSkillDamage(skill,damage,ifRebound,skill.orginSpellTime);
+        Battle.Instance.ReceiveSkillDamage(skill,damage,ifRebound,skill.orginSpellTime,skill.ifSeep);
     }
     IEnumerator WaitForSimulateEffect(float delay,string effectName,Actor actor)
     {

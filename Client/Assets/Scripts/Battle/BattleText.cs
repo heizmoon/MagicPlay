@@ -40,6 +40,10 @@ public class BattleText : MonoBehaviour
                 // }
             }
         }
+        else if(num == 0)
+        {
+            t.text ="";
+        }
         else
         {
             t.color =Color.green;

@@ -465,6 +465,7 @@ namespace EditorTool {
                 item.abilityID =collect[i][14].ToString()==""?0:int.Parse(collect[i][14].ToString());
                 item.delay =collect[i][15].ToString()==""?0:float.Parse(collect[i][15].ToString());
                 item.groupType =collect[i][16].ToString()==""?0:int.Parse(collect[i][16].ToString());
+                item.removeType =collect[i][17].ToString()==""?0:int.Parse(collect[i][17].ToString());
                 item._type =(BuffType)item.type;
                 item._genreList =GetListIntFromString(item.genreList);
                 item._childrenBuff =GetListIntFromString(item.childrenBuff);
@@ -760,7 +761,7 @@ namespace EditorTool {
                 
                 skillData.ifActive = collect[i][9].ToString()=="1"?true:false;
                 skillData.color =collect[i][10].ToString()==""?0: int.Parse(collect[i][10].ToString());
-                skillData.ifHeal =collect[i][11].ToString()=="1"?true:false;
+                skillData.heal =collect[i][11].ToString()==""?0: int.Parse(collect[i][11].ToString());
 
                 skillData.manaCost =collect[i][12].ToString()==""?0: int.Parse(collect[i][12].ToString());
                 skillData.damage =collect[i][13].ToString()==""?0: int.Parse(collect[i][13].ToString());
@@ -777,6 +778,8 @@ namespace EditorTool {
                 skillData.usedToRemove = collect[i][20].ToString()=="1"?true:false;
                 skillData.usedChooseCard =collect[i][21].ToString()==""?0:int.Parse(collect[i][21].ToString());
                 skillData.usedThrowCard =collect[i][22].ToString()==""?0:int.Parse(collect[i][22].ToString());
+
+                skillData.ifSeep =collect[i][23].ToString()=="1"?true:false;
 
                 array[i - 2] = skillData;
             }

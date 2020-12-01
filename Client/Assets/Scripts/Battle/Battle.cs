@@ -41,18 +41,18 @@ public class Battle : MonoBehaviour
         playerActor = Player.instance.playerActor;
         
     }
-    public void ReceiveSkillDamage(Skill skill,int damage,bool ifRebound,float delay)
+    public void ReceiveSkillDamage(Skill skill,int damage,bool ifRebound,float delay,bool ifSeep)
     {
-        StartCoroutine(WaitForReceiveSkillDamage(skill,damage,ifRebound,delay));
+        StartCoroutine(WaitForReceiveSkillDamage(skill,damage,ifRebound,delay,ifSeep));
     }
-    IEnumerator WaitForReceiveSkillDamage(Skill skill,int damage,bool ifRebound,float delay)
+    IEnumerator WaitForReceiveSkillDamage(Skill skill,int damage,bool ifRebound,float delay,bool ifSeep)
     {
         yield return new WaitForSeconds(delay);
-        ReceiveSkillDamage(skill, damage,ifRebound);
+        ReceiveSkillDamage(skill, damage,ifRebound,ifSeep);
     }
     
     ///<summray>一般性技能伤害</summary>
-    public void ReceiveSkillDamage(Skill skill,int damage,bool ifRebound)
+    public void ReceiveSkillDamage(Skill skill,int damage,bool ifRebound,bool ifSeep)
     {
         if(skill.target.animState==AnimState.dead||skill.caster.animState==AnimState.dead)
         {
@@ -80,7 +80,7 @@ public class Battle : MonoBehaviour
                 return;
             }
             Statistic(skill,damage);//伤害统计
-            ExportDamage(damage,skill.target,crit,skill.color,ifRebound);
+            ExportDamage(damage,skill.target,crit,skill.color,ifRebound,ifSeep);
             if(ifRebound)
             {
                 // Debug.LogWarningFormat("{0}反弹伤害：{1}点,目标是：{2}",skill.skillName,damage,skill.target.name);
@@ -96,9 +96,9 @@ public class Battle : MonoBehaviour
     ///<summary>buff伤害</summary>
     //持续伤害可暴击，不受急速影响，独立判断命中，独立判断减伤
     ///<summray>用于反弹伤害</summary>
-    public void ReceiveSkillDamage(int damage,Actor target,int genre)
+    public void ReceiveSkillDamage(int damage,Actor target,int genre,bool ifSeep)
     {
-        ExportDamage(damage,target,false,genre,true);
+        ExportDamage(damage,target,false,genre,true,ifSeep);
     }
     //第一步：技能输出伤害 = （技能原本伤害+buff数值附加伤害）*（1+buff百分比附加）
     //第二步：如果暴击 技能输出伤害 = (技能输出伤害 + 暴击数值附加)* （2+暴击伤害百分比附加） 
@@ -163,9 +163,9 @@ public class Battle : MonoBehaviour
         return damage;
         
     }
-    void ExportDamage(int damage,Actor target,bool crit,int genre,bool ifRebound)//计算后传递伤害给目标
+    void ExportDamage(int damage,Actor target,bool crit,int genre,bool ifRebound,bool ifSeep)//计算后传递伤害给目标
     {
-        target.TakeDamage(damage,crit,genre,ifRebound);
+        target.TakeDamage(damage,crit,genre,ifRebound,ifSeep);
         Debug.LogFormat("目标是：{0}，伤害为：{1}",target.name,damage);
     }
     bool ComputeHit(Skill skill)//判断是否命中

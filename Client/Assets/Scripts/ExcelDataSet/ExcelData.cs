@@ -31,7 +31,7 @@ public class SkillData{
     public float CD;
     public bool ifActive;
     public int color;
-    public bool ifHeal;
+    public int heal;
     public int manaCost;
     
     public int damage;
@@ -51,6 +51,7 @@ public class SkillData{
     public int usedThrowCard;
     
     public int updateID;
+    public bool ifSeep;
 
 }
 [System.Serializable]
@@ -515,6 +516,7 @@ public class BuffData
     public int abilityID;
     public float delay;
     public int groupType;
+    public int removeType;
     public List<int> _genreList;
     public List<int> _childrenBuff;
     public BuffType _type;

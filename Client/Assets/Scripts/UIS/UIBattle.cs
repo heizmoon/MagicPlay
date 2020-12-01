@@ -400,7 +400,7 @@ public class UIBattle : MonoBehaviour
     {
         cardPos[num] = false;
     }
-    //将所有手牌丢入弃牌堆
+    ///<summary>将所有手牌丢入弃牌堆</summary>
     public void ThrowAllHandCardsToPool()
     {
         foreach (var item in playerActor.handCards)
@@ -410,6 +410,7 @@ public class UIBattle : MonoBehaviour
         }
         SelectCard();
     }
+    ///<summary>将一定数量的手牌丢入弃牌堆</summary>
     public void ThrowHandCardsToPool(int num)
     {
         for (int i = 0; i < num; i++)
@@ -424,8 +425,8 @@ public class UIBattle : MonoBehaviour
             SkillCard skillCard =RandomSelectACard();
             cardPos[skillCard.posID] =false;
             skillCard.ThrowCard();
-
         }
+        SkillCard.CheckIfNeedSelectCard();
     }
     SkillCard RandomSelectACard()
     {

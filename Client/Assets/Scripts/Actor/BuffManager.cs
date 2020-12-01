@@ -228,7 +228,7 @@ public class BuffManager : MonoBehaviour
         {
             buff.buffIcon.OnEffectEnd();
             Skill skill = SkillManager.TryGetFromPool(needSkill,Player.instance.playerActor);
-            Battle.Instance.ReceiveSkillDamage(skill,skill.damage,false);
+            Battle.Instance.ReceiveSkillDamage(skill,skill.damage,false,false);
             Debug.LogWarningFormat("{0}造成伤害为：{1}",skill.skillName,skill.damage);
         }
         else if(buff.target.actorType ==ActorType.玩家角色)
@@ -244,7 +244,7 @@ public class BuffManager : MonoBehaviour
                 {
                     buff.buffIcon.OnEffectEnd();
                     Skill skill = SkillManager.TryGetFromPool(needSkill,Battle.Instance.enemy);
-                    Battle.Instance.ReceiveSkillDamage(skill,skill.damage,false);
+                    Battle.Instance.ReceiveSkillDamage(skill,skill.damage,false,false);
                     return;
                 }
             }
@@ -271,7 +271,7 @@ public class BuffManager : MonoBehaviour
                     {
                         skill.target =skill.target.target;   
                     }
-                    Battle.Instance.ReceiveSkillDamage(skill,skill.damage,true,actor.buffs[i].buffData.delay);
+                    Battle.Instance.ReceiveSkillDamage(skill,skill.damage,true,actor.buffs[i].buffData.delay,false);
                     if(revertTarget)
                     {
                         skill.target =skill.target.target;

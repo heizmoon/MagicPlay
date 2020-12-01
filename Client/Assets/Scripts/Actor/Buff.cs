@@ -54,6 +54,10 @@ public class Buff
             target.StopCasting();
             target.ChangeAnimatorInteger(4);
         }
+        if(buffData._type == BuffType.数值吸收伤害)
+        {
+            target.armor+=Mathf.FloorToInt(buffData.value);
+        }
     }
     public void OnBuffEnd()
     {
@@ -67,17 +71,30 @@ public class Buff
                 target.ChangeAnimatorInteger(0);
                 target.RunAI();
             }
-        }        
-        int num =1;
-        //移除所有同类buff
-        for (int i = 0; i < target.buffs.Count; i++)
+        }
+        //如果身上没有id为xxx的buff（护甲持续时间变永久），那么护甲类buff时间到之后将会移除护甲
+        
+        if(buffData._type == BuffType.数值吸收伤害)
         {
+            target.AddArmor(-Mathf.FloorToInt(buffData.value));
+        }
+        int num =1;
+        if(buffData.removeType ==1)//只移除自己
+        {
+
+        }
+        else  if(buffData.removeType ==0)//移除所有同类buff
+        {
+            for (int i = 0; i < target.buffs.Count; i++)
+            {
             if(target.buffs[i]!=this && target.buffs[i].buffData.id ==buffData.id)
             {
                 BuffManager.RemoveBuffFromActor(target.buffs[i],target);
                 num++;    
             }
         }
+        }
+        
         //引发技能
         //若技能的数值与层数相关，则使用num
 
@@ -100,7 +117,7 @@ public class Buff
             Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target); 
             
             // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(currentValue),target,buffData._genreList[0]);
-            Battle.Instance.ReceiveSkillDamage(skill,skill.damage*num,false);
+            Battle.Instance.ReceiveSkillDamage(skill,skill.damage*num,false,false);
             
         }
         

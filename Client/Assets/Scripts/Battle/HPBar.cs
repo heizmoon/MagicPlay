@@ -22,11 +22,14 @@ public class HPBar : MonoBehaviour
     BarEventArgs barEventTrue;
     BarEventArgs barEventFalse;
 
+    public Text armorText;
+
 
     private int changeValue;//每次变化的值
     Timer timer;
     private Actor actor;//此条的拥有者
     public bool playerActerMPBar;
+    public bool showArmor;
     float mpchangeInterval =0;
 
     public event EventHandler onBarEvent;
@@ -38,6 +41,10 @@ public class HPBar : MonoBehaviour
         timer.autoDestory =false;
         timer.autoStart =false;
         timer.interval=0.1f;
+        if(showArmor)
+        {
+            armorText.transform.parent.gameObject.SetActive(true);
+        }
     }
     void Start()
     {
@@ -75,6 +82,10 @@ public class HPBar : MonoBehaviour
             // }
             changeHPBar(Player.instance.playerActor.MpCurrent,Player.instance.playerActor.MpMax);
 
+        }
+        if(showArmor&&actor)
+        {
+            armorText.text = actor.armor+"";
         }
     }
     public void BindHPBar(Actor actor)//绑定HP条与角色

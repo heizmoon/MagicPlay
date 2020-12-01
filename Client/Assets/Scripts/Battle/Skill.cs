@@ -22,7 +22,7 @@ public class Skill : MonoBehaviour
     
     
     public int color;//法术类系
-    public bool ifHeal;
+    public int heal;
     
     public bool targetSelf;//目标是自己还是对方
 
@@ -45,6 +45,7 @@ public class Skill : MonoBehaviour
     public bool usedToRemove;
     public bool ifCrit;
     public int updateID;
+    public bool ifSeep;//是否造成穿透伤害
 
     //考虑将读取表格和类写在一起？
     void Start()
@@ -81,7 +82,7 @@ public class Skill : MonoBehaviour
         damagePercent =data.damagePercent;
         damageDistribution = data.damageDistribution;
         color =data.color;
-        ifHeal = data.ifHeal;
+        heal = data.heal;
         
         targetSelf =data.targetSelf;
         manaProduce =data.manaProduce;
@@ -96,6 +97,7 @@ public class Skill : MonoBehaviour
         usedThrowCard =data.usedThrowCard;
         usedChooseCard =data.usedChooseCard;
         updateID =data.updateID;
+        ifSeep = data.ifSeep;
         if(!actor)
         {
             caster=Player.instance.playerActor;
@@ -156,22 +158,43 @@ public class Skill : MonoBehaviour
         {
             float _time = distribution[i]==""?0:float.Parse(distribution[i].Split(',')[0]);
             float _percent = float.Parse(distribution[i].Split(',')[1]);
-            StartCoroutine(WaitForDamage(_time,_percent));
+            StartCoroutine(WaitForDamage(_time,_percent,ifSeep));
             totalTime+=_time;
         }
         
     }
-    IEnumerator WaitForDamage(float _time,float _percent)
+    IEnumerator WaitForDamage(float _time,float _percent,bool ifSeep)
     {
         yield return new WaitForSeconds(_time);
-        ExportDamage(_percent);
+        ExportDamage(_percent,ifSeep);
     }
-    void ExportDamage(float _percent)//技能输出的最终伤害→没有计算减免和加成
+    void ExportDamage(float _percent,bool ifSeep)//技能输出的最终伤害→没有计算减免和加成
     {
         int realDamage = damage+basicAttack*caster.bufferAttack+Mathf.FloorToInt(target.HpMax*damagePercent);
         realDamage =Mathf.FloorToInt(realDamage*_percent);
-        Battle.Instance.ReceiveSkillDamage(this,realDamage,false);
+        Battle.Instance.ReceiveSkillDamage(this,realDamage,false,ifSeep);
     }
-    
+    public void ComputeHeal()
+    {
+        string[] distribution = damageDistribution.Split(';');
+        float totalTime =0;
+        for(int i =0;i<distribution.Length;i++)
+        {
+            float _time = distribution[i]==""?0:float.Parse(distribution[i].Split(',')[0]);
+            float _percent = float.Parse(distribution[i].Split(',')[1]);
+            StartCoroutine(WaitForHeal(_time,_percent));
+            totalTime+=_time;
+        }
+    }
+    IEnumerator WaitForHeal(float _time,float _percent)
+    {
+        yield return new WaitForSeconds(_time);
+        ExportHeal(_percent);
+    }
+    void ExportHeal(float _percent)
+    {
+        int realHeal = Mathf.FloorToInt(heal*_percent);
+        target.TakeHeal(realHeal);
+    }
 
 }
