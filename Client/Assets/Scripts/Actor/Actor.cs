@@ -67,9 +67,7 @@ public class Actor : MonoBehaviour
     public float autoReduceMPAmount =0;
 
 
-    int basicAttack;
-    [HideInInspector]
-    public int bufferAttack;
+    public int basicAttack;
 
     [HideInInspector]
     public Character character;
@@ -77,7 +75,7 @@ public class Actor : MonoBehaviour
     [HideInInspector]
     public MonsterTypeData monsterData;
     [HideInInspector]
-    
+    public int dealCardsNumber =4;//发牌数
     int state;
     int behaviour;
     ///<summary>手牌列表</summary>
@@ -117,14 +115,14 @@ public class Actor : MonoBehaviour
         MpMax =character.MPMax;
         autoReduceMPAmount =character.reMP;
         Crit = character.crit;
-        SetBufferAttack();
+        SetBasicAttack();
         // UsingSkillsID =data.skills;
         string[] str =character.data.skills.Split(',');
         UsingSkillsID =new List<int>();
         for (int i = 0; i < str.Length; i++)
         {
             UsingSkillsID.Add(int.Parse(str[i]));
-        }   
+        }
     }
     public void InitEnemy(MonsterTypeData data)
     {
@@ -132,7 +130,7 @@ public class Actor : MonoBehaviour
         actorName =data.monsterName;
         HpMax =data.hp;
         HpCurrent =HpMax;
-        SetBufferAttack();
+        SetBasicAttack();
         Crit =data.crit;
         UsingSkillsID =new List<int>();
         UsingSkillsID = data.m_attackSkills1.Union(data.m_attackSkills2).ToList(); 
@@ -210,18 +208,13 @@ public class Actor : MonoBehaviour
     {
         basicAttack+=number;
     }
-    public void AddBufferAttack(int number)
-    {
-        bufferAttack+=number;
-    }
-    public void SetBufferAttack()
+    
+    public void SetBasicAttack()
     {
         if(actorType ==ActorType.玩家角色)
         basicAttack = character.attack;
         else if(actorType ==ActorType.敌人)
         basicAttack = monsterData.attack;
-
-        bufferAttack =basicAttack;
     }
     public void AddArmor(int number)
     {
@@ -236,7 +229,10 @@ public class Actor : MonoBehaviour
         UsingSkillsID.Add(data.id);
     }
     
-    
+    //复制数据用于战后回复
+    //哪些数据在战后会恢复为原始？怎样标记
+    //战斗开始前，先备份原始数据，当在战斗中发生永久属性变化时，同时操纵备份数据。
+    //战斗结束后，将备份数据还原到当前数据
     
     //敌人AI
     #region

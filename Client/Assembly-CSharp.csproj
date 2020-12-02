@@ -54,6 +54,7 @@
      <Compile Include="Assets\Anima2D\Scripts\SpriteMeshInstance.cs" />
      <Compile Include="Assets\Scripts\Actor\AbilityManager.cs" />
      <Compile Include="Assets\Scripts\Actor\Actor.cs" />
+     <Compile Include="Assets\Scripts\Actor\ActorBackUp.cs" />
      <Compile Include="Assets\Scripts\Actor\ActorController.cs" />
      <Compile Include="Assets\Scripts\Actor\AssetsItem.cs" />
      <Compile Include="Assets\Scripts\Actor\AssetsManager.cs" />

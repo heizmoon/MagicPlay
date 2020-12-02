@@ -170,7 +170,7 @@ public class Skill : MonoBehaviour
     }
     void ExportDamage(float _percent,bool ifSeep)//技能输出的最终伤害→没有计算减免和加成
     {
-        int realDamage = damage+basicAttack*caster.bufferAttack+Mathf.FloorToInt(target.HpMax*damagePercent);
+        int realDamage = damage+basicAttack*caster.basicAttack+Mathf.FloorToInt(target.HpMax*damagePercent);
         realDamage =Mathf.FloorToInt(realDamage*_percent);
         Battle.Instance.ReceiveSkillDamage(this,realDamage,false,ifSeep);
     }

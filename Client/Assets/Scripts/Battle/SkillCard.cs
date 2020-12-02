@@ -115,7 +115,7 @@ public class SkillCard : MonoBehaviour
         Debug.Log("手牌数量："+Player.instance.playerActor.handCards.Count); 
         if(Player.instance.playerActor.handCards.Count ==0)
         {
-            UIBattle.Instance.SelectCard();
+            UIBattle.Instance.DealCards();
         }
     }
 

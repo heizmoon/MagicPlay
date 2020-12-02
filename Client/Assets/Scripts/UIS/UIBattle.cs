@@ -115,6 +115,7 @@ public class UIBattle : MonoBehaviour
         playerActor.transform.localScale =Vector3.one;
         playerActor.target =Enemy;
         Enemy.target =playerActor;
+        BackUpActor();//备份角色数据
         playerActor.InitActor();
         // playerActor.InitPlayerActor();
         playerActor.GetActorSpellBar();
@@ -124,6 +125,11 @@ public class UIBattle : MonoBehaviour
         SetEnemyBarText(0);
         Enemy.InitMagic();
 
+    }
+    void BackUpActor()
+    {
+        ActorBackUp backUp = gameObject.AddComponent<ActorBackUp>();
+        backUp.BackUp(playerActor);
     }
     void ShowPropertys()
     {
@@ -145,7 +151,7 @@ public class UIBattle : MonoBehaviour
             skillCard.Init(playerActor.skills[i]);
             cardsList.Add(skillCard);
         }
-        SelectCard();
+        DealCards();
     }
     
     public void SetEnemyBarText(int state)
@@ -269,6 +275,7 @@ public class UIBattle : MonoBehaviour
         playerActor.target =null;
         gameObject.SetActive(false);
         SkillManager.ClearPool();
+        RecoverActor();//还原角色备份
         //通知main，以下为测试效果
         if(Abyss.instance!=null)
         {
@@ -283,6 +290,10 @@ public class UIBattle : MonoBehaviour
         BattleScene.instance.BattleEnd(isBoss);
         CreateRelic();
         Destroy(this.gameObject);
+    }
+    void RecoverActor()
+    {
+        GetComponent<ActorBackUp>().Recover(playerActor);
     }
 
     public BuffIcon CreateBuffIcon(Buff buff,bool ifHasIcon)
@@ -348,14 +359,19 @@ public class UIBattle : MonoBehaviour
         return buffIcon;
     }
     //抽齐4张手牌(发牌)
-    public void SelectCard()
+    public void DealCards()
     {
-        for (int i = 0; i < 4 ; i++)
+        for (int i = 0; i < playerActor.dealCardsNumber ; i++)
         {
             if(cardsList.Count<1)
             Reshuffle();//洗牌
             if(cardsList.Count<1)
-            return;//--------洗牌也没牌了，那就不抽了
+            {
+                //--------洗牌也没牌了，那就不抽了
+                Debug.Log("没牌了");
+                return;
+            }
+            
 
             int r = Random.Range(0,cardsList.Count);
             if(playerActor.handCards.Count<8)
@@ -408,7 +424,7 @@ public class UIBattle : MonoBehaviour
             cardPos[item.posID] =false;
             item.ThrowCard();
         }
-        SelectCard();
+        DealCards();
     }
     ///<summary>将一定数量的手牌丢入弃牌堆</summary>
     public void ThrowHandCardsToPool(int num)
@@ -418,7 +434,7 @@ public class UIBattle : MonoBehaviour
             //如果已经没有手牌，则停止，并抽卡
             if(playerActor.handCards.Count==0)
             {
-                SelectCard();
+                DealCards();
                 return;
             }
             //随机一张手牌；丢入弃牌堆
