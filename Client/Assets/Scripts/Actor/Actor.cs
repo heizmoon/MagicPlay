@@ -37,7 +37,7 @@ public class Actor : MonoBehaviour
     [HideInInspector]
     public List<int> abilities =new List<int>();
     [HideInInspector]
-    public List<Skill> skills;//读取后的技能列表 
+    public List<Skill> skills;//读取后的技能列表
     [HideInInspector]
     public List<Buff> buffs =new List<Buff>();
     [HideInInspector]

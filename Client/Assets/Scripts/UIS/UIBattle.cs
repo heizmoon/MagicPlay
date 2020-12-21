@@ -364,7 +364,7 @@ public class UIBattle : MonoBehaviour
         for (int i = 0; i < playerActor.dealCardsNumber ; i++)
         {
             if(cardsList.Count<1)
-            Reshuffle();//洗牌
+            ReloadCards();//洗牌
             if(cardsList.Count<1)
             {
                 //--------洗牌也没牌了，那就不抽了
@@ -373,14 +373,14 @@ public class UIBattle : MonoBehaviour
             }
             
 
-            int r = Random.Range(0,cardsList.Count);
+            // int r = Random.Range(0,cardsList.Count);
             if(playerActor.handCards.Count<8)
-            StartCoroutine(IESelectCard(cardsList[r],i));
+            StartCoroutine(IESelectCard(cardsList[0],i));
             else
-            cardsList[r].ThrowCard();
+            cardsList[0].ThrowCard();
 
-            cardsList.RemoveAt(r);
-            Debug.Log("本次抽到的是第 "+r +" 张");
+            cardsList.RemoveAt(0);
+            // Debug.Log("本次抽到的是第 "+0 +" 张");
         }
     }
     IEnumerator IESelectCard(SkillCard skillCard,int delayNumber)
@@ -475,29 +475,41 @@ public class UIBattle : MonoBehaviour
         for (int i = 0; i < number ; i++)
         {
             if(cardsList.Count<1)
-            Reshuffle();//洗牌
+            ReloadCards();//重装牌堆
             if(cardsList.Count<1)
             return;//洗牌也还是没牌，那就不抽了
 
-            int r = Random.Range(0,cardsList.Count);
-            Debug.Log("r="+r);
+            // int r = Random.Range(0,cardsList.Count);
+            // Debug.Log("r="+r);
             if(playerActor.handCards.Count<8)
-            StartCoroutine(IESelectCard(cardsList[r],i));
+            StartCoroutine(IESelectCard(cardsList[0],i));
             else
-            cardsList[r].ThrowCard();
+            cardsList[0].ThrowCard();
 
-            cardsList.RemoveAt(r);
-            Debug.Log("本次抽到的是第 "+r +" 张");
+            // cardsList.RemoveAt(r);
+            // Debug.Log("本次抽到的是第 "+r +" 张");
         }
     }
-    //将弃牌堆中的所有牌加入牌堆
-    public void Reshuffle()
+    //将弃牌堆中的所有牌加入牌堆:重装牌堆
+    public void ReloadCards()
     {
         for (int i = 0; i < usedCardsList.Count; i++)
         {
             cardsList.Add(usedCardsList[i]);
         }
         usedCardsList.Clear();
+        Shuffle();
+    }
+    //洗牌,运用洗牌算法，将牌堆洗牌
+    void  Shuffle()
+    {
+        for (int i = 0; i < cardsList.Count; i++)
+        {
+            int r =Random.Range(i,cardsList.Count);
+            SkillCard temp = cardsList[r];
+            cardsList[r] =cardsList[i];
+            cardsList[i] = temp;
+        }
     }
     //技能牌因手牌过多而无法加入手牌
 
