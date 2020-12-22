@@ -28,10 +28,11 @@ public class Actor : MonoBehaviour
     public int armor;//护甲
     public float MpCurrent;
     public float Crit;
+    public float dodge;
     public Transform spellPoint;
     public Transform castPoint;
     public Transform hitPoint;
-	public List<int> UsingSkillsID;//角色的主动技能列表（需要填写的）
+	public List<int> UsingSkillsID;//角色携带的卡牌列表
     ///<summary>0=玩家角色；1=敌人；2=NPC</summary>
     public ActorType actorType;
     [HideInInspector]
@@ -247,7 +248,20 @@ public class Actor : MonoBehaviour
         state = EnemyState();
         //随机出一项当前要进行的行为
         behaviour =GetBehaviour(state);
-        castingbar.changeHPBar(3f);
+        float speed =3f;
+        switch (state)
+        {
+            case 1:
+            speed =monsterData.speed1;
+            break;
+            case 2:
+            speed =monsterData.speed2;
+            break;
+            case 3:
+            speed =monsterData.speed3;
+            break;
+        }
+        castingbar.changeHPBar(speed);
         UIBattle.Instance.SetEnemyBarText(behaviour);
         
     } 
@@ -536,6 +550,8 @@ public class Actor : MonoBehaviour
             return false;
         }
         StartCoroutine(WaitForBeginSpell(skill));
+        // BeginSpell(skill);
+        // RunAI();
         return true;
         
     }
@@ -544,16 +560,19 @@ public class Actor : MonoBehaviour
         yield return new WaitForEndOfFrame();
         
         if(animState!=AnimState.dead&&animState!=AnimState.dizzy)
-        BeginSpell(skill);
-        RunAI();
+        {
+            BeginSpell(skill);
+            RunAI();
+        }
+        
     }
     void BeginSpell(Skill skill)//开始施放X技能,需要传入一个技能
     {
-        if(Main.instance.UIState>0&&!DateManager.instance.timer.enabled)
-        {
-            StopCasting();
-            return;
-        }
+        // if(Main.instance.UIState>0&&!DateManager.instance.timer.enabled)
+        // {
+        //     StopCasting();
+        //     return;
+        // }
         //1.切换Animator到1，开始循环播放施法动作spell
         // ChangeAnimatorInteger(1);
         
@@ -1182,22 +1201,7 @@ public class Actor : MonoBehaviour
         {
             BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);
         }
-        //弃牌的技能弃牌
-        if(skill.usedThrowCard>0)
-        UIBattle.Instance.ThrowHandCardsToPool(skill.usedThrowCard);
-        //抽卡的技能抽卡
-        if(skill.usedChooseCard>0)
-        UIBattle.Instance.SelectCard(skill.usedChooseCard);
-        //移除的技能移除
-        if(skill.usedToRemove)
-        //获取使用的skillCard
-        foreach (var item in UIBattle.Instance.usedCardsList)
-        {
-            if(item.skill = skill)
-            {
-                item.RemoveCard();
-            }
-        }
+        
         //魔力回复
         skill.caster.AddMp(skill.manaProduce);
            

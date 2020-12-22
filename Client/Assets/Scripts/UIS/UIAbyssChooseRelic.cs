@@ -145,7 +145,8 @@ public class UIAbyssChooseRelic : MonoBehaviour
     void CloseUI()
     {
         Debug.LogWarning("关闭");
-        Abyss.instance.EndChooseRelic();
+        // Abyss.instance.EndChooseRelic();
+        UIBattle.Instance.OnBattleGoOn();
         Destroy(gameObject);
     }
 }

@@ -31,10 +31,8 @@ public class UIBattle : MonoBehaviour
     public Transform t_handCards;
     public GameObject g_settingPannel;
 
-    [HideInInspector]
     ///<summary>牌堆列表</summary>
     public List<SkillCard> cardsList;
-    [HideInInspector]
     ///<summary>弃牌堆列表</summary>
     public List<SkillCard> usedCardsList;
     [HideInInspector]
@@ -75,6 +73,11 @@ public class UIBattle : MonoBehaviour
     ///<summary>//初始化UI</summary>
     public void Init(Actor enemy,int scene,bool isBoss)
     {
+        cardPos.Clear();
+        for (int i = 0; i < 7; i++)
+        {
+            cardPos.Add(i,false);
+        }
         //1.显示敌我双方角色
         //2.显示敌我双方的生命值，魔法值
         //3.显示我方技能列表
@@ -86,11 +89,7 @@ public class UIBattle : MonoBehaviour
         CreateScene(scene);
         this.isBoss = isBoss;
         //清理手牌
-        cardPos.Clear();
-        for (int i = 0; i < 6; i++)
-        {
-            cardPos.Add(i,false);
-        }
+        
         
     }
     void InitBattle()
@@ -235,6 +234,7 @@ public class UIBattle : MonoBehaviour
         // Battle.Instance.ShowStatisticDamage(0);
         // Battle.Instance.ShowStatisticDamage(1);
         //选择能力奖励
+        CreateRelic();
     }
     ///<summary>创建一条结算数据信息</summary>
     ///<param name ="type">区分是造成伤害还是受到伤害</param>
@@ -288,7 +288,7 @@ public class UIBattle : MonoBehaviour
         Player.instance.playerActor.transform.SetParent(Main.instance.BottomUI);
         Player.instance.playerActor.transform.localPosition =Vector3.zero;
         BattleScene.instance.BattleEnd(isBoss);
-        CreateRelic();
+        
         Destroy(this.gameObject);
     }
     void RecoverActor()
@@ -358,9 +358,10 @@ public class UIBattle : MonoBehaviour
         
         return buffIcon;
     }
-    //抽齐4张手牌(发牌)
+    ///<summary>抽齐4张手牌(发牌)</summary>
     public void DealCards()
     {
+        Debug.Log("开始发牌");
         for (int i = 0; i < playerActor.dealCardsNumber ; i++)
         {
             if(cardsList.Count<1)
@@ -368,14 +369,14 @@ public class UIBattle : MonoBehaviour
             if(cardsList.Count<1)
             {
                 //--------洗牌也没牌了，那就不抽了
-                Debug.Log("没牌了");
+                Debug.LogError("没牌了!");
                 return;
             }
             
 
             // int r = Random.Range(0,cardsList.Count);
             if(playerActor.handCards.Count<8)
-            StartCoroutine(IESelectCard(cardsList[0],i));
+            SelectCard(cardsList[0],i);
             else
             cardsList[0].ThrowCard();
 
@@ -383,12 +384,15 @@ public class UIBattle : MonoBehaviour
             // Debug.Log("本次抽到的是第 "+0 +" 张");
         }
     }
-    IEnumerator IESelectCard(SkillCard skillCard,int delayNumber)
+    ///<summary>抽到某张牌,并在延迟时间后将其加入手牌中</summary>
+    void SelectCard(SkillCard skillCard,int delayNumber)
     {
-        yield return new WaitForSeconds(0.5f+delayNumber*0.2f);
         skillCard.posID =GetCardPos();
-        skillCard.GiveToHand();
         AddCardPos(skillCard.posID);
+        skillCard.GiveToHand(0.5f+delayNumber*0.2f);
+
+        // yield return new WaitForSeconds();
+        
         // Debug.Log("posID ="+skillCard.posID);
     }
     //用于给技能卡定位
@@ -429,6 +433,7 @@ public class UIBattle : MonoBehaviour
     ///<summary>将一定数量的手牌丢入弃牌堆</summary>
     public void ThrowHandCardsToPool(int num)
     {
+        Debug.Log("将 "+num +" 张手牌丢入弃牌堆");
         for (int i = 0; i < num; i++)
         {
             //如果已经没有手牌，则停止，并抽卡
@@ -464,35 +469,40 @@ public class UIBattle : MonoBehaviour
     public void CreateNewCardAndGiveToHand(int id)
     {
         if(playerActor.handCards.Count<8)
-        StartCoroutine(IESelectCard(CreateNewCardTemp(id),0));
+        SelectCard(CreateNewCardTemp(id),0);
         else
         CreateNewCardTemp(id).ThrowCard();
     }
 
     //从卡堆中抽N张手牌
-    public void SelectCard(int number)
+    public void SelectSomeCards(int number)
     {
+        Debug.Log("从牌堆中抽 "+number +" 张牌");
         for (int i = 0; i < number ; i++)
         {
             if(cardsList.Count<1)
             ReloadCards();//重装牌堆
             if(cardsList.Count<1)
-            return;//洗牌也还是没牌，那就不抽了
+            {
+                Debug.LogError("洗牌后依然没牌，无法抽牌了！");
+                return;//洗牌也还是没牌，那就不抽了
+            }
 
             // int r = Random.Range(0,cardsList.Count);
             // Debug.Log("r="+r);
             if(playerActor.handCards.Count<8)
-            StartCoroutine(IESelectCard(cardsList[0],i));
+            SelectCard(cardsList[0],i);
             else
             cardsList[0].ThrowCard();
 
-            // cardsList.RemoveAt(r);
-            // Debug.Log("本次抽到的是第 "+r +" 张");
+            cardsList.RemoveAt(0);
+            // 
         }
     }
     //将弃牌堆中的所有牌加入牌堆:重装牌堆
     public void ReloadCards()
     {
+        Debug.Log("将弃牌堆中的所有牌加入牌堆");
         for (int i = 0; i < usedCardsList.Count; i++)
         {
             cardsList.Add(usedCardsList[i]);
@@ -503,6 +513,7 @@ public class UIBattle : MonoBehaviour
     //洗牌,运用洗牌算法，将牌堆洗牌
     void  Shuffle()
     {
+        Debug.Log("洗牌~");
         for (int i = 0; i < cardsList.Count; i++)
         {
             int r =Random.Range(i,cardsList.Count);
@@ -515,7 +526,7 @@ public class UIBattle : MonoBehaviour
 
     void CreateRelic()
     {
-        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIAbyssChooseRelic"));
+        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIChooseAbility"));
         go.transform.SetParent(Main.instance.allScreenUI);
         go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
         go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;

@@ -166,7 +166,7 @@ public class Battle : MonoBehaviour
     void ExportDamage(int damage,Actor target,bool crit,int genre,bool ifRebound,bool ifSeep)//计算后传递伤害给目标
     {
         target.TakeDamage(damage,crit,genre,ifRebound,ifSeep);
-        Debug.LogFormat("目标是：{0}，伤害为：{1}",target.name,damage);
+        // Debug.LogFormat("目标是：{0}，伤害为：{1}",target.name,damage);
     }
     bool ComputeHit(Skill skill)//判断是否命中
     {

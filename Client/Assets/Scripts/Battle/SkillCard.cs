@@ -37,13 +37,26 @@ public class SkillCard : MonoBehaviour
     {
         if(Player.instance.playerActor.WanaSpell(skill))
         {
+            //移除的技能移除
+            if(skill.usedToRemove)
+            RemoveCard();
+            else
             ThrowCard();
+            //抽卡的技能抽卡
+            if(skill.usedChooseCard>0)
+            UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+            //弃牌的技能弃牌:弃牌数量不包含自身
+            if(skill.usedThrowCard>0)
+            UIBattle.Instance.ThrowHandCardsToPool(skill.usedThrowCard);
+            
+
             CheckIfNeedSelectCard();
         }
     }
     ///<summary>卡牌进入弃牌堆</summary>
     public void ThrowCard()
     {
+        Debug.Log(skill.skillName+"进入弃牌堆");
         if(Player.instance.playerActor.handCards.Contains(this))
         Player.instance.playerActor.handCards.Remove(this);
 
@@ -51,14 +64,14 @@ public class SkillCard : MonoBehaviour
         UIBattle.Instance.usedCardsList.Add(this);
 
         UIBattle.Instance.RemoveCardPos(this.posID);
-        StartCoroutine(ThrowCardToUsedPool());
+        StartCoroutine(IEThrowCardToUsedPool());
     }
     ///<summary>进入弃牌堆(延迟)</summary>
-    IEnumerator ThrowCardToUsedPool()
+    IEnumerator IEThrowCardToUsedPool()
     {
-        transform.SetParent(UIBattle.Instance.t_cardsPool);
-        yield return new WaitForSeconds(0.3f);
         
+        yield return new WaitForSeconds(0.3f);
+        transform.SetParent(UIBattle.Instance.t_cardsPool);
         transform.localPosition =Vector3.zero;
         transform.localScale =Vector3.one;
     }
@@ -74,33 +87,34 @@ public class SkillCard : MonoBehaviour
 
         UIBattle.Instance.removeCarsList.Add(this);
 
-        StartCoroutine(ThrowCardToUsedPool());
+        StartCoroutine(IEThrowCardToUsedPool());
 
     }
     //把这张技能卡加入手牌
-    public void GiveToHand()
+    public void GiveToHand(float delay)
     {
         Player.instance.playerActor.handCards.Add(this);
         // StartCoroutine(ThrowCardToHand());
-        transform.SetParent(UIBattle.Instance.t_handCards);
-        SetCardPosition();
+        
+        StartCoroutine(SetCardPosition(delay));
 
     }
-    IEnumerator ThrowCardToHand()
-    {
-        transform.SetParent(UIBattle.Instance.t_handCards);
-        yield return new WaitForSeconds(0.3f);
+    // IEnumerator IEThrowCardToHand()
+    // {
+    //     yield return new WaitForSeconds(0.3f);
         
-        
-        transform.localPosition =Vector3.zero;
-        transform.localScale =Vector3.one;
-    }
+    //     transform.SetParent(UIBattle.Instance.t_handCards);
+    //     transform.localPosition =Vector3.zero;
+    //     transform.localScale =Vector3.one;
+    // }
     void JudgeMP()
     {
         MaskCard(Player.instance.playerActor.MpCurrent<skill.manaCost);    
     }
-    void SetCardPosition()
+    IEnumerator SetCardPosition(float time)
     {
+        yield return new WaitForSeconds(time);
+        transform.SetParent(UIBattle.Instance.t_handCards);
         transform.localScale =Vector3.one;
         float _x =posID<4?80+(posID)*180:80+(posID-4)*180;
         float _y =posID>3?-320:-100;
