@@ -978,7 +978,8 @@ public class Actor : MonoBehaviour
         ///<summary>是否吸收伤害</summary>
         bool ifAbsorb =false;
         int tempNum =0;
-        //治疗不会被吸收
+        
+        //如果不是穿透伤害
         if(num>=0&&!ifSeep)
         {
         //吸收伤害在受到伤害之前执行

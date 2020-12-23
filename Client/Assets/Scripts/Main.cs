@@ -67,14 +67,15 @@ public class Main : MonoBehaviour {
         // }
 
 		
-		gameObject.AddComponent<AssetsManager>();
+		// gameObject.AddComponent<AssetsManager>();
+		gameObject.AddComponent<AbilityManager>();
 		gameObject.AddComponent<CharacterManager>();
 		gameObject.AddComponent<ReformManager>();
 		gameObject.AddComponent<SkillManager>();
 		gameObject.AddComponent<MonsterManager>();
 		gameObject.AddComponent<EventManager>();
-		gameObject.AddComponent<AbyssManager>();
-		gameObject.AddComponent<TraitManager>();
+		// gameObject.AddComponent<AbyssManager>();
+		// gameObject.AddComponent<TraitManager>();
 		gameObject.AddComponent<BuffManager>();
 		//判断玩家离线前的状态
 		InitBasicListUI();
@@ -426,24 +427,24 @@ public class Main : MonoBehaviour {
 		PlayerPrefs.SetString("playerSkillLevel",Player.instance.OutputSkillLevel());
 		// Debug.LogFormat("playerSkillLevel:{0}",PlayerPrefs.GetString("playerSkillLevel"));
 		//保存玩家技能熟练度
-		PlayerPrefs.SetString("playerSkillProficiency",Player.instance.OutputSkillProficiency());
+		// PlayerPrefs.SetString("playerSkillProficiency",Player.instance.OutputSkillProficiency());
 		// Debug.LogFormat("playerSkillProficiency:{0}",PlayerPrefs.GetString("playerSkillProficiency"));
 		//保存玩家基础属性
 		player.SaveBasicProperty();
 		//保存玩家正在做的事
-		if(Player.instance.playerNow=="")
-		{
-			Player.instance.playerNow ="P,3";
-		}
-		else if(Player.instance.playerNow.Substring(0,1) =="A")
-		{
-			Player.instance.playerNow =Player.instance.playerNow.Remove(0,1);
-		}
-		PlayerPrefs.SetString("nowDoing",Player.instance.playerNow);
+		// if(Player.instance.playerNow=="")
+		// {
+		// 	Player.instance.playerNow ="P,3";
+		// }
+		// else if(Player.instance.playerNow.Substring(0,1) =="A")
+		// {
+		// 	Player.instance.playerNow =Player.instance.playerNow.Remove(0,1);
+		// }
+		// PlayerPrefs.SetString("nowDoing",Player.instance.playerNow);
 		//保存玩家已开启的技能树
-		PlayerPrefs.SetString("skillTrees","0,1");
+		// PlayerPrefs.SetString("skillTrees","0,1");
 		//保存玩家拥有的资产列表
-		AssetsManager.instance.SavePlayerAssetsItem();
+		// AssetsManager.instance.SavePlayerAssetsItem();
 		//保存玩家拥有的特质列表
 		// player.SaveTraitList();
 		

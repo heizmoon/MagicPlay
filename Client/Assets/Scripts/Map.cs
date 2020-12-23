@@ -47,7 +47,7 @@ public class Map : MonoBehaviour
     }
     public void MoveLocal(MapPoint point)
     {
-        local.DOLocalMove(point.transform.localPosition,1.5f,false);
+        local.DOLocalMove(point.transform.localPosition,0.75f,false);
         Refresh();
         StartCoroutine(WaitForPoint(point));
     }

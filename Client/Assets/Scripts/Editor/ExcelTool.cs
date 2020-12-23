@@ -104,7 +104,7 @@ namespace EditorTool {
                 case "Reform":
                 CreateReformArray(filePath);
                 break;
-                case "Abiltiy":
+                case "Ability":
                 CreateAbilityArray(filePath);
                 break;
 
@@ -879,6 +879,7 @@ namespace EditorTool {
             array[i - 2] = data;
             }
             abilityDatas =array;
+            Debug.Log("abilityDatas="+abilityDatas.Length);
         }
         public static DropGroup[] GetItemArray()
         {

@@ -229,12 +229,20 @@ public class UIBattle : MonoBehaviour
     IEnumerator WaitForShowBattleOver()
     {
         yield return new WaitForSeconds(1f);
-        battleOver.SetActive(true);
+        // battleOver.SetActive(true);
         //显示结算
         // Battle.Instance.ShowStatisticDamage(0);
         // Battle.Instance.ShowStatisticDamage(1);
         //选择能力奖励
         CreateRelic();
+        BuffManager.RemovePlayerActorTempBuff();
+        playerActor.handCards =new List<SkillCard>();
+        Player.instance.playerActor.transform.SetParent(Main.instance.BottomUI);
+        Player.instance.playerActor.transform.localPosition =Vector3.zero;
+        playerActor.target =null;
+        RecoverActor();//还原角色备份
+        Enemy.gameObject.SetActive(false);
+
     }
     ///<summary>创建一条结算数据信息</summary>
     ///<param name ="type">区分是造成伤害还是受到伤害</param>
@@ -268,25 +276,23 @@ public class UIBattle : MonoBehaviour
     public void OnBattleGoOn()
     {
         //移除所有临时buff
-        BuffManager.RemovePlayerActorTempBuff();
+        
         EffectManager.TryThrowInPool(playerActor.castPoint);
         EffectManager.TryThrowInPool(playerActor.spellPoint);
         EffectManager.TryThrowInPool(playerActor.hitPoint);
-        playerActor.target =null;
         gameObject.SetActive(false);
         SkillManager.ClearPool();
-        RecoverActor();//还原角色备份
+        
         //通知main，以下为测试效果
-        if(Abyss.instance!=null)
-        {
-            Abyss.instance.GetBattleResult(result);
-        }
-        if(BattleEvent.instance!=null)
-        {
-            BattleEvent.instance.GetBattleResult(result);
-        }
-        Player.instance.playerActor.transform.SetParent(Main.instance.BottomUI);
-        Player.instance.playerActor.transform.localPosition =Vector3.zero;
+        // if(Abyss.instance!=null)
+        // {
+        //     Abyss.instance.GetBattleResult(result);
+        // }
+        // if(BattleEvent.instance!=null)
+        // {
+        //     BattleEvent.instance.GetBattleResult(result);
+        // }
+        
         BattleScene.instance.BattleEnd(isBoss);
         
         Destroy(this.gameObject);

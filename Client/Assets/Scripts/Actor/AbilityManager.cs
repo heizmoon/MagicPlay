@@ -44,21 +44,40 @@ public class AbilityManager : MonoBehaviour
     {
         List<int> list =new List<int>();
         AbilityData[] datas = new AbilityData[number];
-
-        foreach (var outer in ids)
+        //排除传入的ids中已有的id
+        if(ids.Count>0)
         {
-            foreach (var inner in manager.dataArray)
+            foreach (var outer in ids)
             {
-                if(outer != inner.id)
+                foreach (var inner in manager.dataArray)
                 {
-                    list.Add(inner.id);
+                    if(outer != inner.id)
+                    {
+                        list.Add(inner.id);
+                    }
                 }
             }
         }
+        else
+        {
+            foreach (var inner in manager.dataArray)
+                {
+                    list.Add(inner.id);
+                }
+        }
+        
         for (int i = 0; i < number; i++)
         {
             int r = Random.Range(0,list.Count);
+            List<int> temp =new List<int>();
+            while(temp.Contains(r))
+            {
+                r = Random.Range(0,list.Count);
+            }
+            temp.Add(r);
+            Debug.Log("I="+i+",number="+number+",r="+r+",list.count="+list.Count);
             datas[i] =GetInfo(list[r]);
+            
         }
 
         return datas;

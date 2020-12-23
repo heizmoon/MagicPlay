@@ -61,7 +61,7 @@ public class BattleScene : MonoBehaviour
 		//商店不会出售玩家身上已经拥有的能力
 		//从所有能力中随机出N个能力，排除List
         AbilityData[] datas = AbilityManager.instance.GetRandomAbility(4,Player.instance.playerActor.abilities);
-        GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/UIs/UIBattleShop"));
+        GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/UIBattleShop"));
         go.transform.SetParent(Main.instance.allScreenUI);
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;

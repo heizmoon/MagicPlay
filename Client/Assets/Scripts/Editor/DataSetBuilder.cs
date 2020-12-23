@@ -404,10 +404,13 @@ namespace EditorTool {
         [MenuItem("生成表格数据/Ability表")]
         public static void CreateItemAsset() 
         {
+            // Debug.Log("什么问题？");
             AbilityDataSet manager = ScriptableObject.CreateInstance<AbilityDataSet>();
             //赋值
             ExcelTool.CreateItemArrayWithExcel(ExcelConfig.excelsFolderPath + "Ability.xlsx","Ability");
             manager.dataArray = ExcelTool.GetAbilityDataArray();
+            // Debug.Log("长度？"+manager.dataArray.Length);
+
             //确保文件夹存在
             if(!Directory.Exists(ExcelConfig.assetPath)) {
                 Directory.CreateDirectory(ExcelConfig.assetPath);

@@ -25,7 +25,7 @@ public class UIBattleShop : MonoBehaviour
         //1个随机技能
         
         //1个技能升级
-        ShowUpdateSkill(RandomUpdateSkill());
+        // ShowUpdateSkill(RandomUpdateSkill());
         sureButton.onClick.AddListener(OnButtonBuy);
         cannelButton.onClick.AddListener(OnButtonReturn);
         sureButton.interactable =false;
@@ -97,6 +97,7 @@ public class UIBattleShop : MonoBehaviour
     void OnButtonReturn()
     {
         gameObject.SetActive(false);
+        Debug.Log("关闭商店");
         Destroy(gameObject);
     }
 }

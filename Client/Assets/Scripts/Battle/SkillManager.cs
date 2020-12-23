@@ -71,6 +71,7 @@ public class SkillManager : MonoBehaviour
                 return item;
             }
         }
+        Debug.LogWarning("没有随到合适的技能");
         return null;
     }
     
@@ -121,9 +122,15 @@ public class SkillManager : MonoBehaviour
         List<int> list = Player.instance.playerActor.character.allSkillsList;
         if(N<1)
         return null;
-        for(int i =0;i<list.Count;i++)
+        List<int> temp =new List<int>();
+        for(int i =0;i<N;i++)
         {
-            int r =UnityEngine.Random.Range(0,list.Count);
+            int r =UnityEngine.Random.Range(1,list.Count);
+            while (temp.Contains(r))
+            {
+                r =UnityEngine.Random.Range(1,list.Count);
+            }
+            temp.Add(r);
             skillDatas[i] =GetInfo(r);
         }
         return skillDatas;

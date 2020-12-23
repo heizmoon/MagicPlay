@@ -21,6 +21,7 @@ public class MapPoint : MonoBehaviour
     }
     void Start()
     {
+
         RandomID();
     }
     // Update is called once per frame
