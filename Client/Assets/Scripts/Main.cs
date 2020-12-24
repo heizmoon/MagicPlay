@@ -95,11 +95,12 @@ public class Main : MonoBehaviour {
 
 	void InitBasicListUI()
 	{
-		Transform ts =GameObject.Find("BottomToggleList").transform;
+		Transform ts =GameObject.Find("BottomToggleList_Main").transform;
 		foreach(var item in ts.GetComponentsInChildren<Toggle>())
 		{
 			item.onValueChanged.AddListener((bool isOn) => OnMarkChanged(item,isOn));
 		}
+		ts.gameObject.SetActive(false);
 	}
 	IEnumerator WaitForUIInit()
 	{

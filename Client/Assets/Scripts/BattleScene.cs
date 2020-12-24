@@ -62,11 +62,30 @@ public class BattleScene : MonoBehaviour
 		//从所有能力中随机出N个能力，排除List
         AbilityData[] datas = AbilityManager.instance.GetRandomAbility(4,Player.instance.playerActor.abilities);
         GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/UIBattleShop"));
-        go.transform.SetParent(Main.instance.allScreenUI);
+        go.transform.SetParent(Main.instance.middleUI);
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         go.GetComponent<UIBattleShop>().Init(datas);
+	}
+    public void InitCamp()
+	{
+        GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/UICamp"));
+        go.transform.SetParent(Main.instance.middleUI);
+		go.transform.localScale =Vector3.one;
+		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        go.GetComponent<UICamp>().Init();
+	}
+    public void InitTreasure()
+	{
+        GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/UITreasure"));
+        go.transform.SetParent(Main.instance.middleUI);
+		go.transform.localScale =Vector3.one;
+		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        go.GetComponent<UITreasure>().Init();
+        // Debug.Log("生成一个宝箱");
 	}
     public void OpenMap()
     {
@@ -81,7 +100,7 @@ public class BattleScene : MonoBehaviour
             Map.instance.DestoryMap();
         }
         GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/Maps/"+mapName));
-        go.transform.SetParent(Main.instance.allScreenUI);
+        go.transform.SetParent(Main.instance.middleUI);
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;

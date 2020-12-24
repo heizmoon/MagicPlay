@@ -98,6 +98,7 @@ public class UIBattleShop : MonoBehaviour
     {
         gameObject.SetActive(false);
         Debug.Log("关闭商店");
+        BattleScene.instance.OpenMap();
         Destroy(gameObject);
     }
 }
