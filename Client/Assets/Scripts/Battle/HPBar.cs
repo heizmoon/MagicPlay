@@ -18,6 +18,7 @@ public class HPBar : MonoBehaviour
     public bool colorful;
     public bool CastingBar;
     public bool LikeBar;
+    public bool hasShadow;
     Skill skill;
     BarEventArgs barEventTrue;
     BarEventArgs barEventFalse;
@@ -33,7 +34,8 @@ public class HPBar : MonoBehaviour
     float mpchangeInterval =0;
 
     public event EventHandler onBarEvent;
-    
+
+    Image shadowImage;
       
     void Awake()
     {
@@ -45,6 +47,16 @@ public class HPBar : MonoBehaviour
         {
             armorText.transform.parent.gameObject.SetActive(true);
         }
+        if(hasShadow)
+        {
+            shadowImage =transform.Find("Shadow").GetComponent<Image>();
+        }
+
+        // if(!hasShadow)
+        // {
+        //     shadowImage.gameObject.SetActive(false);
+        // }
+        
     }
     void Start()
     {
@@ -86,6 +98,22 @@ public class HPBar : MonoBehaviour
         if(showArmor&&actor)
         {
             armorText.text = actor.armor+"";
+        }
+        if(hasShadow)
+        {
+            StartCoroutine(MoveShadow());
+            if(shadowImage.fillAmount<ImgCurrent.fillAmount)
+            {
+                shadowImage.fillAmount = ImgCurrent.fillAmount;
+            }
+        }
+    }
+    IEnumerator MoveShadow()
+    {
+        while(shadowImage.fillAmount>ImgCurrent.fillAmount)
+        {
+            shadowImage.fillAmount-=0.001f;
+            yield return null;
         }
     }
     public void BindHPBar(Actor actor)//绑定HP条与角色
@@ -213,4 +241,5 @@ public class HPBar : MonoBehaviour
         setHpBarNormal();
         // actor.OnTimerComplete(skill);
     }
+
 }

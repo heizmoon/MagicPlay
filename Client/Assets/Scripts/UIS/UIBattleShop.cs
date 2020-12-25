@@ -6,34 +6,57 @@ using UnityEngine.UI;
 public class UIBattleShop : MonoBehaviour
 {
     public Text describe;
-    public List<ItemBox> itemBoxes;
+    public List<ItemBox> abilityItemBoxes;
+    public List<ItemBox> skillItemBoxes;
+
     public Button sureButton;
     public Button cannelButton;
     ItemBox choosenItemBox;
-    public void Init(AbilityData[] datas)
+    public Button retryButton;
+    private void Start() 
     {
-        foreach (var item in itemBoxes)
-        {
-            item.toggle.onValueChanged.AddListener(isOn=>OnToggle(item));
-        }
-        for (int i = 0; i < datas.Length; i++)
-        {
-            itemBoxes[i].Init(datas[i]);
-        }
-        //随机1个能力打折
-        RandomDiscountAbility(Random.Range(0,4));
-        //1个随机技能
-        
-        //1个技能升级
-        // ShowUpdateSkill(RandomUpdateSkill());
+        Init();
+    }
+    public void Init()
+    {
         sureButton.onClick.AddListener(OnButtonBuy);
         cannelButton.onClick.AddListener(OnButtonReturn);
-        sureButton.interactable =false;
+        retryButton.onClick.AddListener(OnRetry);
+        sureButton.interactable =false;   
+        foreach (var item in abilityItemBoxes)
+        {
+            item.toggle.onValueChanged.AddListener(isOn=>OnToggle(item));
+        } 
     }
+    void Refreash()
+    {
+        AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,Player.instance.playerActor.abilities);
+        SkillData[] Sdatas = SkillManager.instance.GetRandomSkills(3);
+        for (int i = 0; i < Adatas.Length; i++)
+        {
+            abilityItemBoxes[i].Init(Adatas[i]);
+        }
+        for (int i = 0; i < Sdatas.Length; i++)
+        {
+            skillItemBoxes[i].Init(Sdatas[i]);
+        }
+        //随机1个能力打折
+        RandomDiscountAbility(Random.Range(0,3));
+        //随机1个技能卡打折
+        RandomDiscountSkill(Random.Range(0,3));
 
+    }
+    void DiscountItem()
+    {
+        //根据角色拥有的折扣buff，降低所有物品的价格
+    }
     void RandomDiscountAbility(int number)
     {        
-        itemBoxes[number].itemName.text = "半价："+Mathf.FloorToInt(itemBoxes[number].price)/2;
+        abilityItemBoxes[number].itemName.text = "半价："+Mathf.FloorToInt(abilityItemBoxes[number].price)/2;
+    }
+    void RandomDiscountSkill(int number)
+    {        
+        skillItemBoxes[number].itemName.text = "半价："+Mathf.FloorToInt(skillItemBoxes[number].price)/2;
     }
     //决定升级哪个技能
     int RandomUpdateSkill()
@@ -56,14 +79,14 @@ public class UIBattleShop : MonoBehaviour
         r =skills[r].updateID;
         return r;
     }
-    public void ShowUpdateSkill(int id)
+    public void RandomUpdateSkill(int id)
     {
         if(id == 0)
         {
             //显示为空
             return;
         }
-        itemBoxes[5].Init(SkillManager.instance.GetInfo(id));
+        skillItemBoxes[2].Init(SkillManager.instance.GetInfo(id));
     }
     public void OnToggle(ItemBox item)
     {
@@ -100,5 +123,9 @@ public class UIBattleShop : MonoBehaviour
         Debug.Log("关闭商店");
         BattleScene.instance.OpenMap();
         Destroy(gameObject);
+    }
+    void OnRetry()
+    {
+        //播放广告，重置货品
     }
 }

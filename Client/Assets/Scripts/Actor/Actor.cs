@@ -89,12 +89,14 @@ public class Actor : MonoBehaviour
     public float commonCD;
 //-----------------------------------   
 #endregion 
-
-
+    ///<summary>提升召唤物伤害事件，可传入伤害值</summary>
+    public event Action<int> OnUpdateSummonedAttack;//
+    ///<summary>提升召唤物攻击速度事件，可传入速度提升值</summary>
+    public event Action<float> OnUpdateSummonedSpeed;//
+    
 
     void Start()
     {
-        
         
     }
     #region  初始化角色

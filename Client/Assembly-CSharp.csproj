@@ -79,6 +79,7 @@
      <Compile Include="Assets\Scripts\Battle\Skill.cs" />
      <Compile Include="Assets\Scripts\Battle\SkillCard.cs" />
      <Compile Include="Assets\Scripts\Battle\SkillManager.cs" />
+     <Compile Include="Assets\Scripts\Battle\Summoned.cs" />
      <Compile Include="Assets\Scripts\BattleScene.cs" />
      <Compile Include="Assets\Scripts\DateManager.cs" />
      <Compile Include="Assets\Scripts\Events\BattleData.cs" />
