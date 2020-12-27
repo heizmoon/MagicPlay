@@ -66,7 +66,7 @@ public class UIAbyssChooseRelic : MonoBehaviour
     // }
     public void CreateUIs(int number)
     {
-        SkillData[] skillDatas = SkillManager.instance.GetRandomSkills(number);
+        SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkills(number);
         for (int i = 0; i < 3; i++)
         {
             StartCoroutine(CreateRelic(skillDatas[i],i*0.2f));

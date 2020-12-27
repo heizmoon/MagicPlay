@@ -32,6 +32,8 @@ public class Actor : MonoBehaviour
     public Transform spellPoint;
     public Transform castPoint;
     public Transform hitPoint;
+    public Transform summonPoint;
+
 	public List<int> UsingSkillsID;//角色携带的卡牌列表
     ///<summary>0=玩家角色；1=敌人；2=NPC</summary>
     public ActorType actorType;
@@ -89,11 +91,15 @@ public class Actor : MonoBehaviour
     public float commonCD;
 //-----------------------------------   
 #endregion 
+    
     ///<summary>提升召唤物伤害事件，可传入伤害值</summary>
     public event Action<int> OnUpdateSummonedAttack;//
     ///<summary>提升召唤物攻击速度事件，可传入速度提升值</summary>
     public event Action<float> OnUpdateSummonedSpeed;//
-    
+    ///<summary>提升召唤物攻击速度事件，可传入速度提升值</summary>
+    public event Action<int> OnUpdateSummonedDamage;//
+    ///<summary>命令召唤物立即进行一次攻击,可传入附加的伤害</summary>
+    public event Action<int> OnOrderSummonedAttack;//
 
     void Start()
     {
@@ -110,6 +116,7 @@ public class Actor : MonoBehaviour
         }
         bt = gameObject.GetComponentInChildren<BattleText>();
         timer =gameObject.GetComponent<Timer>();
+        summonPoint =transform.Find("SummonPoint");
     }
     public void InitPlayerActor(Character character)
     {
@@ -1203,10 +1210,26 @@ public class Actor : MonoBehaviour
         if(skill.buffID>0&&skill.targetSelf)
         {
             BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);
+            Debug.LogWarning("添加的buffid="+skill.buffID);
         }
         
         //魔力回复
         skill.caster.AddMp(skill.manaProduce);
+        //召唤类技能进行召唤
+        if(skill.summonNum>0)
+        {
+            SummonManager.instance.CreateSummon(skill.summonType,skill.summonNum,this);
+        }
+        //如果有圣剑buff，那么命令圣剑攻击
+        for (int i = 0; i < buffs.Count; i++)
+        {
+            if(buffs[i].buffData.id == 1001)
+            {
+                Debug.LogWarning("攻击！");
+                if(OnOrderSummonedAttack!=null)
+                OnOrderSummonedAttack.Invoke(0);
+            }
+        }
            
     }
     public void AddMp(float num)

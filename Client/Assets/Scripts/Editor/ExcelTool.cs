@@ -31,6 +31,8 @@ namespace EditorTool {
         static RelicGroupData[] relicGroupDatas;
         static ReformData[] reformDatas;
         static AbilityData[] abilityDatas;
+        static SummonData[] summonDatas;
+
 
 
 
@@ -106,6 +108,9 @@ namespace EditorTool {
                 break;
                 case "Ability":
                 CreateAbilityArray(filePath);
+                break;
+                case "Summon":
+                CreateSummonArray(filePath);
                 break;
 
             }
@@ -778,8 +783,12 @@ namespace EditorTool {
                 skillData.usedToRemove = collect[i][20].ToString()=="1"?true:false;
                 skillData.usedChooseCard =collect[i][21].ToString()==""?0:int.Parse(collect[i][21].ToString());
                 skillData.usedThrowCard =collect[i][22].ToString()==""?0:int.Parse(collect[i][22].ToString());
-
-                skillData.ifSeep =collect[i][23].ToString()=="1"?true:false;
+                skillData.updateID =collect[i][23].ToString()==""?0:int.Parse(collect[i][23].ToString());
+                skillData.ifSeep =collect[i][24].ToString()=="1"?true:false;
+                skillData.rank =collect[i][25].ToString()==""?0:int.Parse(collect[i][25].ToString());
+                skillData.summonType =collect[i][26].ToString()==""?0:int.Parse(collect[i][26].ToString());
+                skillData.summonNum =collect[i][27].ToString()==""?0:int.Parse(collect[i][27].ToString());
+                
 
                 array[i - 2] = skillData;
             }
@@ -875,11 +884,36 @@ namespace EditorTool {
             data.describe = collect[i][2].ToString();
             data.icon = collect[i][3].ToString();
             data.price =collect[i][4].ToString()==""?0:int.Parse(collect[i][4].ToString());
+            data.level =collect[i][5].ToString()==""?0:int.Parse(collect[i][5].ToString());
+
 
             array[i - 2] = data;
             }
             abilityDatas =array;
             Debug.Log("abilityDatas="+abilityDatas.Length);
+        }
+        public static void CreateSummonArray(string filePath) {
+            //获得表数据
+            int columnNum = 0, rowNum = 0;
+            DataRowCollection collect = ReadExcel(filePath, ref columnNum, ref rowNum);
+ 
+            //根据excel的定义，第二行开始才是数据
+            SummonData[] array = new SummonData[rowNum - 2];
+            for(int i = 2; i < rowNum; i++) {
+            SummonData data = new SummonData();
+            //解析每列的数据
+            data.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
+            data.name = collect[i][1].ToString();
+            data.prefab = collect[i][2].ToString();
+
+            data.lifeTime = collect[i][3].ToString()==""?0:float.Parse(collect[i][3].ToString());
+            data.power = collect[i][4].ToString()==""?0:int.Parse(collect[i][4].ToString());
+            data.speed =collect[i][5].ToString()==""?0:float.Parse(collect[i][5].ToString());
+            data.skill = collect[i][6].ToString()==""?0:int.Parse(collect[i][6].ToString());
+
+            array[i - 2] = data;
+            }
+            summonDatas =array;
         }
         public static DropGroup[] GetItemArray()
         {
@@ -964,6 +998,10 @@ namespace EditorTool {
         public static ReformData[] GetReformArray()
         {
             return reformDatas;
+        }
+        public static SummonData[] GetSummonDataArray()
+        {
+            return summonDatas;
         }
         /// <summary>
         /// 读取excel文件内容

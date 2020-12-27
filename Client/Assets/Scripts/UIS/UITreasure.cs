@@ -9,12 +9,14 @@ public class UITreasure : MonoBehaviour
     public Button BTNOK;
     public Button BTNReTry;
     public Button BTNReturn;
+    public ItemBox item;
     void Start()
     {
         BTNOK.onClick.AddListener(OnOK);
         BTNOpen.onClick.AddListener(OnOpen);
         BTNReturn.onClick.AddListener(OnReturn);
         BTNReTry.onClick.AddListener(OnRetry);
+        Init();
     }
 
     // Update is called once per frame
@@ -25,6 +27,20 @@ public class UITreasure : MonoBehaviour
     public void Init()
     {
         //根据情况随机出宝物
+        int level = BattleScene.instance.steps;
+        //先确定随机出道具还是技能卡
+        if(Random.Range(0,5)>3)
+        {
+            //随机出技能卡
+            
+        }
+        else
+        {
+            //随机出道具
+            AbilityData[] datas = AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            item.Init(datas[0]);
+        }
+        
     }
     void OnOpen()
     {

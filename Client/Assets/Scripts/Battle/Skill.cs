@@ -46,6 +46,9 @@ public class Skill : MonoBehaviour
     public bool ifCrit;
     public int updateID;
     public bool ifSeep;//是否造成穿透伤害
+    public int rank;
+    public int summonType;
+    public int summonNum;
 
     //考虑将读取表格和类写在一起？
     void Start()
@@ -98,6 +101,9 @@ public class Skill : MonoBehaviour
         usedChooseCard =data.usedChooseCard;
         updateID =data.updateID;
         ifSeep = data.ifSeep;
+        rank =data.rank;
+        summonNum =data.summonNum;
+        summonType =data.summonType;
         if(!actor)
         {
             caster=Player.instance.playerActor;

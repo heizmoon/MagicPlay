@@ -31,7 +31,7 @@ public class UIBattleShop : MonoBehaviour
     void Refreash()
     {
         AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,Player.instance.playerActor.abilities);
-        SkillData[] Sdatas = SkillManager.instance.GetRandomSkills(3);
+        SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkills(3);
         for (int i = 0; i < Adatas.Length; i++)
         {
             abilityItemBoxes[i].Init(Adatas[i]);

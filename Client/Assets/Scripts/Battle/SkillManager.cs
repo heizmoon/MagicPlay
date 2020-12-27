@@ -23,11 +23,41 @@ public class SkillManager : MonoBehaviour
     //0-8:水，火，风，土，心灵，能量，物质,时空，真理
     public int[] totalLevel=new int[]{0,0,0,0,0,0,0,0,0};
     public List<int> unlockSkills =new List<int>();
+    struct CharSkillList
+    {
+        int rank;
+        List<int> skills;
+    }
+    Dictionary<int,CharSkillList> charSkillList =new Dictionary<int, CharSkillList>();
     void Awake()
     {
         instance =this;
         ts = GameObject.Find("SkillPool").transform;
         manager = Resources.Load<SkillDataSet>("DataAssets/Skill");
+    }
+    void Start()
+    {
+        SeparateSkillFromLevel();
+    }
+        //将各个角色的技能按照级别分列表储存
+
+    void SeparateSkillFromLevel()
+    {
+        for (int i = 0; i < CharacterManager.instance.characters.Count; i++)
+        {
+            
+            foreach (var item in manager.dataArray)
+            {
+                if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )
+                {
+                    if(item.updateID==0)
+                    {
+                        
+                    }
+                }
+            }
+        }
+        
     }
     public static Skill TryGetFromPool(int id,Actor actor)
     {
@@ -102,7 +132,7 @@ public class SkillManager : MonoBehaviour
     {
         
     }
-    ///<summary>随机获得N个符合条件的技能，可重复</summary>
+    
     // public SkillData[] GetRandomSkills(int N,Mydegete mydegete)
     // {
     //     SkillData[] skillDatas =new SkillData[N];
@@ -116,9 +146,30 @@ public class SkillManager : MonoBehaviour
     //     }
     //     return skillDatas;
     // }
-    public SkillData[] GetRandomSkills(int N)
+    ///<summary>随机获得N个不重复的本职业技能</summary>
+    public SkillData[] GetRandomSelfSkills(int N)
     {
         SkillData[] skillDatas =new SkillData[N];
+        List<int> list = Player.instance.playerActor.character.allSkillsList;
+        if(N<1)
+        return null;
+        List<int> temp =new List<int>();
+        for(int i =0;i<N;i++)
+        {
+            int r =UnityEngine.Random.Range(1,list.Count);
+            while (temp.Contains(r))
+            {
+                r =UnityEngine.Random.Range(1,list.Count);
+            }
+            temp.Add(r);
+            skillDatas[i] =GetInfo(r);
+        }
+        return skillDatas;
+    }
+    //随机获得N个不重复的本职业级别A的技能
+    public SkillData[] GetRandomSelfSkillsLevelLimit(int N,int rank)
+    {
+       SkillData[] skillDatas =new SkillData[N];
         List<int> list = Player.instance.playerActor.character.allSkillsList;
         if(N<1)
         return null;

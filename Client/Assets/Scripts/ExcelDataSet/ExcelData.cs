@@ -17,6 +17,7 @@ public class AbilityData
     public string describe;
     public string icon;
     public int price;
+    public int level;
 }
 [System.Serializable]
 public class SkillData{
@@ -52,6 +53,23 @@ public class SkillData{
     
     public int updateID;
     public bool ifSeep;
+    public int rank;
+    public int summonType;
+    public int summonNum;
+
+}
+[System.Serializable]
+public class SummonData
+{
+    public int id;
+    public string name;
+    public string prefab;
+    public float lifeTime;
+    public int power;
+    public float speed;
+    public int skill;
+    
+    
 
 }
 [System.Serializable]

@@ -79,6 +79,7 @@
      <Compile Include="Assets\Scripts\Battle\Skill.cs" />
      <Compile Include="Assets\Scripts\Battle\SkillCard.cs" />
      <Compile Include="Assets\Scripts\Battle\SkillManager.cs" />
+     <Compile Include="Assets\Scripts\Battle\SummonManager.cs" />
      <Compile Include="Assets\Scripts\Battle\Summoned.cs" />
      <Compile Include="Assets\Scripts\BattleScene.cs" />
      <Compile Include="Assets\Scripts\DateManager.cs" />
@@ -105,6 +106,7 @@
      <Compile Include="Assets\Scripts\ExcelDataSet\RelicGroupDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\SceneDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\SkillDataSet.cs" />
+     <Compile Include="Assets\Scripts\ExcelDataSet\SummonDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\TaskEventDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\TraitDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\TriggerEventDataSet.cs" />

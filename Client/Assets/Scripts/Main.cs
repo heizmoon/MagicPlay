@@ -74,6 +74,8 @@ public class Main : MonoBehaviour {
 		gameObject.AddComponent<SkillManager>();
 		gameObject.AddComponent<MonsterManager>();
 		gameObject.AddComponent<EventManager>();
+		gameObject.AddComponent<SummonManager>();
+
 		// gameObject.AddComponent<AbyssManager>();
 		// gameObject.AddComponent<TraitManager>();
 		gameObject.AddComponent<BuffManager>();

@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
 	public int rank;
 	///<summary>由资产加成，不会受到理想影响的部分</summary>
 	public Actor playerActor;
-	public string playerNow="";//玩家正在做的事，进入各个界面时会发生改变
+	public string playerNow="";//玩家正在做的事，进入各个界面时会发生改变#无用
 	public List<int> playerAssests =new List<int>();//玩家拥有的资产
 	public List<AssetsItem> playerEquipItems =new List<AssetsItem>(); //玩家装备的资产
 	public int playerAbyss =1;//玩家进入深渊的层数
@@ -37,7 +37,10 @@ public class Player : MonoBehaviour
 	//玩家已经解锁了哪些角色
 	//玩家目前拥有多少晶体
 	//玩家拥有哪些改造箱
-	//玩家拥有哪些护符
+	//玩家拥有哪些护符  护符 = 可以带进关卡，或者在关卡外也可以发挥效果的道具
+	//玩家解锁了哪些遗物（能力/道具） 此处的遗物用ability  
+	public List<int> unlockAbility =new List<int>();
+
 	//玩家打通了多少关卡
 	//玩家开启了哪些场景
 	void Awake()
@@ -64,7 +67,9 @@ public class Player : MonoBehaviour
 		Gold = PlayerPrefs.GetInt("gold");
 		// InputBasicProperty();
 		// LoadTraitList();
-		// GetUnlockSkills();
+		GetUnlockSkills();
+		GetUnlockAbility();
+
 		// InputSkillLevel();
 		// InputSkillProficiency();
 		// ModifierTraitProperty();
@@ -528,6 +533,33 @@ public class Player : MonoBehaviour
 		foreach (var item in unlock)
 		{
 			unlockSkills.Add(int.Parse(item));
+		}
+	}
+	public void SaveUnlockAbility()
+	{
+		if(unlockAbility.Count<1)
+		{
+			return;
+		}
+		string unlock ="";
+		foreach (var item in unlockAbility)
+		{
+			unlock=unlock+","+item;
+		}
+		unlock = unlock.Remove(0,1);
+		PlayerPrefs.SetString("unlockAbility",unlock);
+	}
+	void GetUnlockAbility()
+	{
+		string[] unlock =PlayerPrefs.GetString("unlockAbility").Split(',');
+		if(unlock[0] =="")
+		{
+			unlockAbility =new List<int>{1,2,3,4,5,6,7};
+			return;
+		}
+		foreach (var item in unlock)
+		{
+			unlockAbility.Add(int.Parse(item));
 		}
 	}
 	void LoadTraitList()

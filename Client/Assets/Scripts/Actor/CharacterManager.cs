@@ -10,7 +10,7 @@ public class CharacterManager : MonoBehaviour
     ///<summary>已解锁的角色列表</summary>
     List<int> unlockCharacters =new List<int>();
 
-    List<Character> characters =new List<Character>();
+    public List<Character> characters =new List<Character>();
     CharacterDataSet manager;
     void Awake()
     {

@@ -50,11 +50,12 @@ public class Map : MonoBehaviour
     {
         local.DOLocalMove(point.transform.localPosition,0.75f,false);
         Refresh();
+        BattleScene.instance.steps++;
         StartCoroutine(WaitForPoint(point));
     }
     IEnumerator WaitForPoint(MapPoint point)
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         
         switch(point.mapPointType)
         {

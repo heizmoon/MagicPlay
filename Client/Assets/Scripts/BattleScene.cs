@@ -5,6 +5,7 @@ using UnityEngine;
 public class BattleScene : MonoBehaviour
 {
     public static BattleScene instance;
+    public int steps{get;set;}//行走步数，用于决定难度等
     void Awake()
     {
         instance = this;
@@ -16,7 +17,7 @@ public class BattleScene : MonoBehaviour
     public void Init()
     {
         //选择角色结束后，playerActer = 选定的character
-        //如果不是第一次游戏：3选1初始能力
+        
         //如果是第一次游戏：新手流程
         
         
@@ -84,7 +85,6 @@ public class BattleScene : MonoBehaviour
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-        go.GetComponent<UITreasure>().Init();
         // Debug.Log("生成一个宝箱");
 	}
     public void OpenMap()

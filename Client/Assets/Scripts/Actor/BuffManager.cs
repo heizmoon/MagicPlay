@@ -211,6 +211,7 @@ public class BuffManager : MonoBehaviour
     //         }
     //     }    
     // }
+    ///<summary>检查特殊buff</summary>
     public static void CheckSpecialBuff( Buff buff, int needSkill,List<int> needBuff,List<int> refuseBuff)
     {
         //buff必须是什么buff
