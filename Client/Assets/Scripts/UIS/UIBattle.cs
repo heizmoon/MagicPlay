@@ -43,7 +43,7 @@ public class UIBattle : MonoBehaviour
     public bool isBattleOver =true;
     Animation anim;
     bool isBoss;
-
+    [SerializeField]
     Dictionary<int,bool> cardPos =new Dictionary<int, bool>();
     void Awake()
     {
@@ -280,6 +280,7 @@ public class UIBattle : MonoBehaviour
         EffectManager.TryThrowInPool(playerActor.castPoint);
         EffectManager.TryThrowInPool(playerActor.spellPoint);
         EffectManager.TryThrowInPool(playerActor.hitPoint);
+        playerActor.ClearSummon();
         gameObject.SetActive(false);
         SkillManager.ClearPool();
         

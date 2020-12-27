@@ -86,7 +86,8 @@ public class SkillCard : MonoBehaviour
         UIBattle.Instance.usedCardsList.Remove(this);
 
         UIBattle.Instance.removeCarsList.Add(this);
-
+        
+        UIBattle.Instance.RemoveCardPos(this.posID);
         StartCoroutine(IEThrowCardToUsedPool());
 
     }

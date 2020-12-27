@@ -1389,5 +1389,12 @@ public class Actor : MonoBehaviour
         }
     }
     #endregion
+    public void ClearSummon()
+    {
+        for (int i = summonPoint.childCount-1; i >=0 ; i--)
+        {
+            Destroy(summonPoint.GetChild(i));
+        }
+    }
     
 }
