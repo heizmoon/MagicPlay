@@ -1393,7 +1393,7 @@ public class Actor : MonoBehaviour
     {
         for (int i = summonPoint.childCount-1; i >=0 ; i--)
         {
-            Destroy(summonPoint.GetChild(i));
+            Destroy(summonPoint.GetChild(i).gameObject);
         }
     }
     

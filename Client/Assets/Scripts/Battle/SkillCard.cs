@@ -6,22 +6,69 @@ using UnityEngine.UI;
 public class SkillCard : MonoBehaviour
 {
     public Skill skill;
-    public Text textSkillName;
-    public Image icon;
+    Text textSkillName;
+    Image icon;
+    Image rank;
+    Image backgroud;
     public GameObject mask;
     public Button button;
     float innerTime =0;
     public int posID;
+    Text textSkillDescribe;
+    Text textSkillCost;
+    
     void Awake()
     {
         button =GetComponent<Button>();
+        backgroud =GetComponent<Image>();
         button.onClick.AddListener(UseSkillCard);
+        textSkillName =transform.Find("cardName").GetComponent<Text>();
+        textSkillDescribe =transform.Find("cardDescribe").GetComponent<Text>();
+        textSkillCost =transform.Find("cardCost").GetComponent<Text>();
+        icon = transform.Find("icon").GetComponent<Image>();
+        rank =transform.Find("rank").GetComponent<Image>();
     }
     public void Init(Skill skill)
     {
         this.skill =skill;
         textSkillName.text =skill.skillName;
+        textSkillDescribe.text =skill.describe;
+        textSkillCost.text =skill.manaCost.ToString();
+        if(skill.color ==0)
+        {
+            backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Attack");
+        }
+        else if(skill.color ==1)
+        {
+            backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Defence");
+        }
+        else if(skill.color ==2)
+        {
+            backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Equipment");
+        }
+        else if(skill.color ==3)
+        {
+            backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Special");
+        }
+        icon.sprite = Resources.Load<Sprite>("Texture/Skills"+skill.icon);
+        if(skill.rank <2)
+        {
+            rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Normal");
+        }
+        else if(skill.rank <4)
+        {
+            rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Good");
+        }
+        else if(skill.rank <6)
+        {
+            rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Epic");
+        }
+        else
+        {
+            rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Legend");
+        }
     }
+
 
     void Update()
     {
@@ -118,7 +165,7 @@ public class SkillCard : MonoBehaviour
         transform.SetParent(UIBattle.Instance.t_handCards);
         transform.localScale =Vector3.one;
         float _x =posID<4?80+(posID)*180:80+(posID-4)*180;
-        float _y =posID>3?-320:-100;
+        float _y =posID>3?-375:-100;
         GetComponent<RectTransform>().anchoredPosition3D =new Vector3(_x,_y,0);
     }
     public void MaskCard(bool ifmask)
