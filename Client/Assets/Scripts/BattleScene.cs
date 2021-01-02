@@ -13,6 +13,7 @@ public class BattleScene : MonoBehaviour
     void Start()
     {
         
+        
     }
     public void Init()
     {

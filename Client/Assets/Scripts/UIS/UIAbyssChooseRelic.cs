@@ -10,7 +10,7 @@ public class UIAbyssChooseRelic : MonoBehaviour
     void Awake()
     {
         instance =this;
-        gameObject.AddComponent<RelicManager>();
+        // gameObject.AddComponent<RelicManager>();
     }
     void Start()
     {

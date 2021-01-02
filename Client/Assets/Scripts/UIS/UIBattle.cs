@@ -233,8 +233,10 @@ public class UIBattle : MonoBehaviour
         //显示结算
         // Battle.Instance.ShowStatisticDamage(0);
         // Battle.Instance.ShowStatisticDamage(1);
-        //选择能力奖励
+        //如果不是最终BOSS，选择能力奖励
         CreateRelic();
+        //如果事BOSS，选择道具奖励
+        
         BuffManager.RemovePlayerActorTempBuff();
         playerActor.handCards =new List<SkillCard>();
         Player.instance.playerActor.transform.SetParent(Main.instance.BottomUI);

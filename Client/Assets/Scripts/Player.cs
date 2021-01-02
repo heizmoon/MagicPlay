@@ -64,7 +64,9 @@ public class Player : MonoBehaviour
 		playerActor = Instantiate((GameObject)Resources.Load("Prefabs/"+avaterName)).GetComponent<Actor>();
 		playerActor.InitPlayerActor(CharacterManager.instance.GetCharacter(1));
 		// playerAbyss = PlayerPrefs.GetInt("abyssLevel")==0?1:PlayerPrefs.GetInt("abyssLevel");
-		Gold = PlayerPrefs.GetInt("gold");
+		// Gold = PlayerPrefs.GetInt("gold");
+		Gold =100;//========================================================临时数值
+		UIBasicBanner.instance.ChangeGoldText();
 		// InputBasicProperty();
 		// LoadTraitList();
 		GetUnlockSkills();

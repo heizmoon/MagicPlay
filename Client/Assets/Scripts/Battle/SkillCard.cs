@@ -21,7 +21,12 @@ public class SkillCard : MonoBehaviour
     {
         button =GetComponent<Button>();
         backgroud =GetComponent<Image>();
+
+        if(UIBattle.Instance)
         button.onClick.AddListener(UseSkillCard);
+        else
+        button.onClick.AddListener(ExploreSkillCard);
+
         textSkillName =transform.Find("cardName").GetComponent<Text>();
         textSkillDescribe =transform.Find("cardDescribe").GetComponent<Text>();
         textSkillCost =transform.Find("cardCost").GetComponent<Text>();
@@ -68,10 +73,52 @@ public class SkillCard : MonoBehaviour
             rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Legend");
         }
     }
-
+    public void Init(SkillData skillData)
+    {
+        textSkillName.text =skillData.name;
+        textSkillDescribe.text =string.Format(skillData.describe,skillData.damage,skillData.manaCost,skillData.manaProduce);
+        textSkillCost.text =skillData.manaCost.ToString();
+        if(skillData.color ==0)
+        {
+            backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Attack");
+        }
+        else if(skillData.color ==1)
+        {
+            backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Defence");
+        }
+        else if(skillData.color ==2)
+        {
+            backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Equipment");
+        }
+        else if(skillData.color ==3)
+        {
+            backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Special");
+        }
+        icon.sprite = Resources.Load<Sprite>("Texture/Skills"+skillData.icon);
+        if(skillData.rank <2)
+        {
+            rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Normal");
+        }
+        else if(skillData.rank <4)
+        {
+            rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Good");
+        }
+        else if(skillData.rank <6)
+        {
+            rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Epic");
+        }
+        else
+        {
+            rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Legend");
+        }
+    }
 
     void Update()
     {
+        if(UIBattle.Instance==null)
+        {
+            return;
+        }
         innerTime+=Time.deltaTime;
         if(innerTime>=Player.instance.playerActor.autoReduceMPAmount)
         {
@@ -99,6 +146,10 @@ public class SkillCard : MonoBehaviour
 
             CheckIfNeedSelectCard();
         }
+    }
+    void ExploreSkillCard()
+    {
+        //放大卡牌看
     }
     ///<summary>卡牌进入弃牌堆</summary>
     public void ThrowCard()
@@ -165,7 +216,7 @@ public class SkillCard : MonoBehaviour
         transform.SetParent(UIBattle.Instance.t_handCards);
         transform.localScale =Vector3.one;
         float _x =posID<4?80+(posID)*180:80+(posID-4)*180;
-        float _y =posID>3?-375:-100;
+        float _y =posID>3?-375:-120;
         GetComponent<RectTransform>().anchoredPosition3D =new Vector3(_x,_y,0);
     }
     public void MaskCard(bool ifmask)

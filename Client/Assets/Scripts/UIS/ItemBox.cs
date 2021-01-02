@@ -12,13 +12,14 @@ public class ItemBox : MonoBehaviour
     public string describe;
     public int id;
     public int price;
+    Transform Titem;
+    public int type;
+    GameObject skillMark;
     void Awake()
     {
         toggle =GetComponent<Toggle>();
-    }
-    void Start()
-    {
-        
+        Titem=transform.Find("Item");
+        skillMark = transform.Find("SkillMark").gameObject;
     }
 
     // Update is called once per frame
@@ -37,15 +38,28 @@ public class ItemBox : MonoBehaviour
     }
     public void Init(SkillData item)
     {
-        icon.sprite = Resources.Load("Texture/Skills/"+item.icon,typeof(Sprite)) as Sprite;
-        itemName.text ="500";
-        describe =item.describe;
-        price =500;
+        type =1;
+        icon.gameObject.SetActive(false);
+        SkillCard card= Instantiate((GameObject)Resources.Load("Prefabs/SkillCard")).GetComponent<SkillCard>();
+        card.Init(item);
+        card.transform.SetParent(Titem);
+        card.transform.localPosition =Vector3.zero;
+        card.transform.localScale=Vector3.one;
+        
+        toggle.targetGraphic = card.GetComponent<Image>();
+        toggle.graphic = skillMark.GetComponent<Image>();
+
+        // describe =item.describe;
+        price =(item.rank+1)*25;
+        itemName.text =price.ToString();
         id =item.id;
     }
     public void Init(AbilityData item)
     {
-        icon.sprite = Resources.Load("Texture/Ability/"+item.icon,typeof(Sprite)) as Sprite;
+        skillMark.SetActive(false);
+        
+        type =2;
+        icon.sprite = Resources.Load<Sprite>("Texture/Ability/"+item.icon);
         itemName.text =item.price.ToString();
         describe =item.describe;
         price =item.price;
@@ -90,9 +104,26 @@ public class ItemBox : MonoBehaviour
     }
     public void Disable()
     {
-        icon.color =Color.gray;
+        skillMark.SetActive(false);
+        if(Titem.childCount>0)
+        Destroy(Titem.GetChild(0).gameObject);
+        icon.gameObject.SetActive(false);
         toggle.interactable =false;
         itemName.text ="已购买";
         itemName.color = Color.white;
+    }
+    public void Reset()
+    {
+        if(Titem.childCount>0)
+        Destroy(Titem.GetChild(0).gameObject);
+        skillMark.SetActive(true);
+        itemName.color = Color.black;
+        toggle.interactable =true;
+        toggle.isOn = false;
+        icon.gameObject.SetActive(true);
+        toggle.targetGraphic =icon;
+        price =0;
+        id =0;
+        type=0;
     }
 }
