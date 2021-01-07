@@ -8,6 +8,8 @@ public class UIBasicBanner : MonoBehaviour
     public static UIBasicBanner instance;
     public Toggle T_BattleCharacter;
     public Toggle T_CardGroup;
+    public Toggle T_Map;
+
 
     Text goldText;
     void Awake()

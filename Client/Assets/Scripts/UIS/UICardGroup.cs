@@ -45,6 +45,7 @@ public class UICardGroup : MonoBehaviour
             skillCard.transform.localScale = Vector3.one;
             skillCard.Init(SkillManager.instance.GetInfo(item));
         }
+        content.GetComponent<RectTransform>().sizeDelta =new Vector2(0,256*((int)(cardList.Count/4)+1));
     }
     void DestoryCards()
     {
