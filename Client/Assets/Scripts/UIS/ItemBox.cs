@@ -56,6 +56,7 @@ public class ItemBox : MonoBehaviour
     }
     public void Init(AbilityData item)
     {
+        if(skillMark)
         skillMark.SetActive(false);
         
         type =2;

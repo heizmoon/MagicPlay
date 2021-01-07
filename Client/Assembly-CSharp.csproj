@@ -126,8 +126,10 @@
      <Compile Include="Assets\Scripts\UIS\UIAbyssChooseRelic.cs" />
      <Compile Include="Assets\Scripts\UIS\UIBasicBanner.cs" />
      <Compile Include="Assets\Scripts\UIS\UIBattle.cs" />
+     <Compile Include="Assets\Scripts\UIS\UIBattleCharacter.cs" />
      <Compile Include="Assets\Scripts\UIS\UIBattleShop.cs" />
      <Compile Include="Assets\Scripts\UIS\UICamp.cs" />
+     <Compile Include="Assets\Scripts\UIS\UICardGroup.cs" />
      <Compile Include="Assets\Scripts\UIS\UIOffLineRewards.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayer.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayerAssets.cs" />
