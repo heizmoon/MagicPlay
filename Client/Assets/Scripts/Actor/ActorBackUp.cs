@@ -13,6 +13,8 @@ public class ActorBackUp : MonoBehaviour
     public List<int> abilities =new List<int>();
     public float autoReduceMPAmount =0;
     public int basicAttack;
+    public int basicDefence;
+
     public int dealCardsNumber;
 
 //开战前进行backUp
@@ -25,7 +27,8 @@ public class ActorBackUp : MonoBehaviour
         UsingSkillsID = actor.UsingSkillsID;
         abilities =actor.abilities;
         autoReduceMPAmount =actor.autoReduceMPAmount;
-        // basicAttack
+        basicAttack =actor.basicAttack;
+        basicDefence =actor.basicDefence;
         dealCardsNumber =actor.dealCardsNumber;
     }
 //战斗结束后进行recover
@@ -43,5 +46,7 @@ public class ActorBackUp : MonoBehaviour
         actor.HpCurrent =actor.HpMax;
         if(actor.MpCurrent>MpMax)
         actor.MpCurrent =actor.MpMax;
+        actor.basicAttack = basicAttack;
+        actor.basicDefence = basicDefence;
     }
 }

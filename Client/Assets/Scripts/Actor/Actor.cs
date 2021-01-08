@@ -71,6 +71,7 @@ public class Actor : MonoBehaviour
 
 
     public int basicAttack;
+    public int basicDefence;
 
     [HideInInspector]
     public Character character;
@@ -222,9 +223,15 @@ public class Actor : MonoBehaviour
     public void SetBasicAttack()
     {
         if(actorType ==ActorType.玩家角色)
-        basicAttack = character.attack;
+        {
+            basicAttack = character.attack;
+            // basicDefence = character.attack;
+        }
         else if(actorType ==ActorType.敌人)
-        basicAttack = monsterData.attack;
+        {
+            basicAttack = monsterData.attack;
+
+        }
     }
     public void AddArmor(int number)
     {
@@ -919,7 +926,12 @@ public class Actor : MonoBehaviour
             target.StopCasting();
             return 0;
         }
-        
+        //基础防御力减免
+        if(num-basicDefence>0)
+        num-=basicDefence;
+        else
+        num = 0;
+
         //反弹伤害不能被反弹
         //治疗不能被反弹
         if(!ifRebound&&num>0)
@@ -1103,7 +1115,11 @@ public class Actor : MonoBehaviour
         
         Debug.LogFormat("角色：{0}的当前生命值：{1}",name,HpCurrent);
         if(num<=0)
-        return 0;   
+        {
+            bt.SetText("0");
+            return 0;
+        }
+        
         //如果最终判断掉血了
         if(num>0)
         {

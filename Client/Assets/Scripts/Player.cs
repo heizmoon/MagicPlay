@@ -529,7 +529,7 @@ public class Player : MonoBehaviour
 		string[] unlock =PlayerPrefs.GetString("unlockSkills").Split(',');
 		if(unlock[0] =="")
 		{
-			unlockSkills =new List<int>{1001,1002,1003,1021};
+			unlockSkills =new List<int>{1001,1002,1003,1021};//---------------------------初始解锁的
 			return;
 		}
 		foreach (var item in unlock)
@@ -556,7 +556,7 @@ public class Player : MonoBehaviour
 		string[] unlock =PlayerPrefs.GetString("unlockAbility").Split(',');
 		if(unlock[0] =="")
 		{
-			unlockAbility =new List<int>{1,2,3,4,5,6,7};
+			unlockAbility =new List<int>{1,2,3,4,5,6,7};//---------------------------初始解锁的
 			return;
 		}
 		foreach (var item in unlock)

@@ -174,6 +174,11 @@ public class Battle : MonoBehaviour
         {
             return true;
         }
+        float r =Random.Range(0,100);
+        if(skill.target.dodge>=r)
+        {
+            return false;
+        }
         if(skill.target.animState ==AnimState.dodge)
         {
             return false;

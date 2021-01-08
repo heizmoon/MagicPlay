@@ -13,6 +13,7 @@ public class UIBattleCharacter : MonoBehaviour
     Text charAtt;
     Text charDef;
     Text charDeal;
+    Text charCrit;
     Actor playerActor;
     private void Awake() 
     {
@@ -25,6 +26,8 @@ public class UIBattleCharacter : MonoBehaviour
         charAtt =transform.Find("CharacterAttack").gameObject.GetComponent<Text>();
         charDef =transform.Find("CharacterDefence").gameObject.GetComponent<Text>();
         charDeal =transform.Find("CharacterDealNumber").gameObject.GetComponent<Text>();
+        charCrit =transform.Find("CharacterCrit").gameObject.GetComponent<Text>();
+
         playerActor=Player.instance.playerActor;
     }
 
@@ -42,7 +45,9 @@ public class UIBattleCharacter : MonoBehaviour
         charHP.text =string.Format("能量值：{0}",playerActor.MpMax); 
         charHP.text =string.Format("每秒能量回复：{0}",playerActor.autoReduceMPAmount*5);
         charAtt.text =string.Format("攻击力：{0}",playerActor.basicAttack); 
-        // charHP.text =string.Format("防御力：{0}",playerActor.); 
+        charHP.text =string.Format("发牌数：{0}",playerActor.dealCardsNumber);
+        charCrit.text =string.Format("暴击率：{0}%",playerActor.Crit*100); 
+
     }
 
     // Update is called once per frame

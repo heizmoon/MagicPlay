@@ -58,6 +58,11 @@ public class Buff
         {
             target.armor+=Mathf.FloorToInt(buffData.value);
         }
+        if(buffData._type == BuffType.影响闪避)
+        {
+            target.dodge+=Mathf.FloorToInt(buffData.value);
+        }
+
     }
     public void OnBuffEnd()
     {
@@ -78,6 +83,21 @@ public class Buff
         {
             target.AddArmor(-Mathf.FloorToInt(buffData.value));
         }
+
+        if(buffData._type == BuffType.影响闪避)
+        {
+            if(target.dodge-Mathf.FloorToInt(buffData.value) > 0)
+            {
+                target.dodge-=Mathf.FloorToInt(buffData.value);
+            }
+            else
+            {
+                target.dodge =0;
+            }
+        }
+
+
+
         int num =1;
         if(buffData.removeType ==1)//只移除自己
         {

@@ -162,7 +162,8 @@ public class SkillManager : MonoBehaviour
                 r =UnityEngine.Random.Range(1,list.Count);
             }
             temp.Add(r);
-            skillDatas[i] =GetInfo(r);
+            skillDatas[i] =GetInfo(list[r]);
+            Debug.Log("随机到的技能ID是："+skillDatas[i].id+",技能名是:"+skillDatas[i].name);
         }
         return skillDatas;
     }
@@ -182,7 +183,7 @@ public class SkillManager : MonoBehaviour
                 r =UnityEngine.Random.Range(1,list.Count);
             }
             temp.Add(r);
-            skillDatas[i] =GetInfo(r);
+            skillDatas[i] =GetInfo(list[r]);
         }
         return skillDatas;
     }
