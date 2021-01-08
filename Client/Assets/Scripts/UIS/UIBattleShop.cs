@@ -62,8 +62,9 @@ public class UIBattleShop : MonoBehaviour
         //根据角色拥有的折扣buff，降低所有物品的价格
     }
     void RandomDiscountAbility(int number)
-    {        
-        abilityItemBoxes[number].itemName.text = "半价："+Mathf.FloorToInt(abilityItemBoxes[number].price)/2;
+    {   
+        abilityItemBoxes[number].price =Mathf.FloorToInt(abilityItemBoxes[number].price)/2;      
+        abilityItemBoxes[number].itemName.text = "半价："+abilityItemBoxes[number].price;
     }
     void RandomDiscountSkill(int number)
     {

@@ -179,10 +179,10 @@ public class Battle : MonoBehaviour
         {
             return false;
         }
-        if(skill.target.animState ==AnimState.dodge)
-        {
-            return false;
-        }
+        // if(skill.target.animState ==AnimState.dodge)
+        // {
+        //     return false;
+        // }
         else
         return true;
     }

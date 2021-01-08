@@ -17,6 +17,7 @@ public class UITreasure : MonoBehaviour
         BTNReturn.onClick.AddListener(OnReturn);
         BTNReTry.onClick.AddListener(OnRetry);
         Init();
+        Gframe.SetActive(false);
     }
 
     // Update is called once per frame
@@ -32,7 +33,8 @@ public class UITreasure : MonoBehaviour
         if(Random.Range(0,5)>3)
         {
             //随机出技能卡
-            
+            SkillData[] datas =SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,0);
+            item.Init(datas[0]);
         }
         else
         {
@@ -54,7 +56,9 @@ public class UITreasure : MonoBehaviour
     }
     void OnRetry()
     {
-
+        item.Reset();
+        Gframe.SetActive(false);
+        Init();
     }
     void OnReturn()
     {
@@ -62,4 +66,5 @@ public class UITreasure : MonoBehaviour
         BattleScene.instance.OpenMap();
         Destroy(gameObject);
     }
+    
 }

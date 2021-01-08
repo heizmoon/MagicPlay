@@ -62,6 +62,8 @@ public class ItemBox : MonoBehaviour
         type =2;
         icon.sprite = Resources.Load<Sprite>("Texture/Ability/"+item.icon);
         itemName.text =item.price.ToString();
+        textChange.text = item.describe;
+        textChange.gameObject.SetActive(false);
         describe =item.describe;
         price =item.price;
         id =item.id;
@@ -127,4 +129,33 @@ public class ItemBox : MonoBehaviour
         id =0;
         type=0;
     }
+    public void ShowDetail()
+    {
+        //显示优先级为最高
+        //出现一个黑色遮罩
+        //显示放大的itemBox
+        //如果是卡牌，不显示文字描述
+        //如果是能力，显示文字描述
+        //点击黑色遮罩区域，会退出显示
+        //词条会有额外说明
+        
+    }
+    public void HideToggleSelect()
+    {
+        toggle.graphic =null;
+        skillMark.SetActive(false);
+        toggle.onValueChanged.RemoveAllListeners();
+        toggle.onValueChanged.AddListener(isOn => OpenDetail(isOn));
+        itemName.gameObject.SetActive(false);
+
+    }
+    void OpenDetail(bool isOn)
+    {
+        UICardDetail.CreateUI().Init(this);
+        if(type==2)
+        {
+            textChange.gameObject.SetActive(true);
+        }
+    }
+
 }

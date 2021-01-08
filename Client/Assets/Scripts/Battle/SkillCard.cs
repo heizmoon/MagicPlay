@@ -16,16 +16,14 @@ public class SkillCard : MonoBehaviour
     public int posID;
     Text textSkillDescribe;
     Text textSkillCost;
+    public bool canShow;
     
     void Awake()
     {
         button =GetComponent<Button>();
         backgroud =GetComponent<Image>();
 
-        if(UIBattle.Instance)
         button.onClick.AddListener(UseSkillCard);
-        else
-        button.onClick.AddListener(ExploreSkillCard);
 
         textSkillName =transform.Find("cardName").GetComponent<Text>();
         textSkillDescribe =transform.Find("cardDescribe").GetComponent<Text>();
@@ -72,6 +70,9 @@ public class SkillCard : MonoBehaviour
         {
             rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Legend");
         }
+        
+        
+        
     }
     public void Init(SkillData skillData)
     {
@@ -111,6 +112,7 @@ public class SkillCard : MonoBehaviour
         {
             rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Legend");
         }
+        canShow = true;
     }
 
     void Update()
@@ -129,6 +131,11 @@ public class SkillCard : MonoBehaviour
     }
     void UseSkillCard()
     {
+        if(canShow)
+        {
+            ExploreSkillCard();
+            return;
+        }
         if(Player.instance.playerActor.WanaSpell(skill))
         {
             //移除的技能移除
@@ -150,6 +157,10 @@ public class SkillCard : MonoBehaviour
     void ExploreSkillCard()
     {
         //放大卡牌看
+        UICardDetail cardDetail = UICardDetail.CreateUI();
+        cardDetail.Init(this);
+        canShow =false;
+
     }
     ///<summary>卡牌进入弃牌堆</summary>
     public void ThrowCard()

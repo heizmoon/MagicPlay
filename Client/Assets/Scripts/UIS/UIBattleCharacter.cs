@@ -42,11 +42,12 @@ public class UIBattleCharacter : MonoBehaviour
         playerActor.transform.localPosition=Vector3.zero;
         charName.text = playerActor.character.data.name;
         charHP.text =string.Format("生命值：{0}/{1}",playerActor.HpCurrent,playerActor.HpMax);
-        charHP.text =string.Format("能量值：{0}",playerActor.MpMax); 
-        charHP.text =string.Format("每秒能量回复：{0}",playerActor.autoReduceMPAmount*5);
-        charAtt.text =string.Format("攻击力：{0}",playerActor.basicAttack); 
-        charHP.text =string.Format("发牌数：{0}",playerActor.dealCardsNumber);
-        charCrit.text =string.Format("暴击率：{0}%",playerActor.Crit*100); 
+        charMP.text =string.Format("能量值：{0}",playerActor.MpMax); 
+        charReMp.text =string.Format("每秒能量回复：{0}",playerActor.autoReduceMPAmount*5);
+        charAtt.text =string.Format("攻击力：{0}",playerActor.basicAttack);
+        charDef.text =string.Format("防御力：{0}",playerActor.basicDefence);
+        charDeal.text =string.Format("发牌数：{0}",playerActor.dealCardsNumber);
+        charCrit.text =string.Format("暴击率：{0}%",playerActor.Crit); 
 
     }
 

@@ -150,6 +150,7 @@ public class UIBattle : MonoBehaviour
             skillCard.Init(playerActor.skills[i]);
             cardsList.Add(skillCard);
         }
+        Shuffle();
         DealCards();
     }
     

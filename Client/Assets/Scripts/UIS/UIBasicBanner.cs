@@ -8,7 +8,7 @@ public class UIBasicBanner : MonoBehaviour
     public static UIBasicBanner instance;
     public Toggle T_BattleCharacter;
     public Toggle T_CardGroup;
-    public Toggle T_Map;
+    public Toggle T_AbilityGroup;
 
 
     Text goldText;
@@ -37,6 +37,8 @@ public class UIBasicBanner : MonoBehaviour
         T_BattleCharacter.onValueChanged.AddListener(isOn => OpenUIBattleCharacter(T_BattleCharacter.isOn));
 
         T_CardGroup.onValueChanged.AddListener(isOn => OpenUICardGroup(T_CardGroup.isOn));
+        T_AbilityGroup.onValueChanged.AddListener(isOn => OpenUIAbilityGroup(T_AbilityGroup.isOn));
+
 
     }
     void OpenUICardGroup(bool IsOn)
@@ -98,6 +100,36 @@ public class UIBasicBanner : MonoBehaviour
                 Player.instance.playerActor.transform.localPosition =Vector3.zero;
                 Player.instance.playerActor.transform.localScale =Vector3.one;
                 UIBattleCharacter.instance.gameObject.SetActive(false);
+            }
+        }
+    }
+    void OpenUIAbilityGroup(bool IsOn)
+    {
+        if(IsOn)
+        {
+            if(UIAbilityGroup.instance)
+            {
+                UIAbilityGroup.instance.gameObject.SetActive(true);
+                UIAbilityGroup.instance.Refeash();
+            }
+            else
+            {
+                GameObject g =(GameObject)Instantiate(Resources.Load("Prefabs/UIAbilityGroup"));
+                g.transform.SetParent(Main.instance.middleUI);
+                g.transform.localPosition =Vector3.zero;
+                g.transform.localScale = Vector3.one;
+                g.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+                g.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+                UIAbilityGroup.instance.Refeash();
+
+            }
+        }
+        else
+        {
+            if(UIAbilityGroup.instance)
+            {
+                UIAbilityGroup.instance.gameObject.SetActive(false);
+
             }
         }
     }
