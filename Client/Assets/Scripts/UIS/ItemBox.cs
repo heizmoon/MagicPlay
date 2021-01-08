@@ -149,7 +149,7 @@ public class ItemBox : MonoBehaviour
         toggle.onValueChanged.RemoveAllListeners();
         toggle.onValueChanged.AddListener(isOn => OpenDetail(isOn));
         itemName.gameObject.SetActive(false);
-
+        textChange.gameObject.SetActive(false);
     }
     void OpenDetail(bool isOn)
     {

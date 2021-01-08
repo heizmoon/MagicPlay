@@ -56,7 +56,7 @@ public class Timer : MonoBehaviour {
             lastTime = currentTime;
             if (repeatCount <= 0) {
                 // 无限重复
-                if (currentCount == int.MaxValue) reset();
+                if (currentCount >= int.MaxValue) reset();
                 if (onIntervalCall != null) onIntervalCall(this);
                 if (onIntervalEvent != null) onIntervalEvent.Invoke();
             } else {
@@ -113,10 +113,12 @@ public class Timer : MonoBehaviour {
     public void stop() {
         enabled = autoStart = false;
     }
-
+    // int temp =0;
     /// <summary> 停止Timer并重置数据 </summary>
     public void reset(){
         lastTime = currentTime = currentCount = 0;
+        // temp++;
+        // Debug.LogWarning("计时器重置"+temp+"次");
     }
 
     /// <summary> 重置数据并重新开始计时 </summary>

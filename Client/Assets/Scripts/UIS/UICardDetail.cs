@@ -8,6 +8,7 @@ public class UICardDetail : MonoBehaviour
     Transform point ;
     Transform tempParent;
     Transform target;
+    Vector3 tempVector;
     int type;
     void Awake()
     {
@@ -19,6 +20,7 @@ public class UICardDetail : MonoBehaviour
     {
         target = skillCard.transform;
         tempParent =target.parent;
+        tempVector =target.localPosition;
         target.SetParent(point);
         target.localPosition =Vector3.zero;
         target.localScale = new Vector3(2.5f,2.5f,2.5f);
@@ -29,6 +31,7 @@ public class UICardDetail : MonoBehaviour
     {
         target = itemBox.transform;
         tempParent =target.parent;
+        tempVector =target.localPosition;
         target.SetParent(point);
         target.localPosition =Vector3.zero;
         target.localScale = new Vector3(2.5f,2.5f,2.5f);
@@ -46,7 +49,7 @@ public class UICardDetail : MonoBehaviour
     void CloseUI()
     {
         target.SetParent(tempParent);
-        target.localPosition =Vector3.zero;
+        target.localPosition =tempVector;
         target.localScale = Vector3.one;
         if(type == 0&&!UIBattle.Instance)
         {

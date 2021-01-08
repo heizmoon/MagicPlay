@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 using System.Linq;
 
 public class UICardGroup : MonoBehaviour
@@ -35,6 +37,13 @@ public class UICardGroup : MonoBehaviour
         cardList.Sort((x,y)=>x.CompareTo(y));
         Debug.Log(cardList);
         CreateCards();
+        StartCoroutine(WaitForDisableGridLayout());
+    }
+    IEnumerator WaitForDisableGridLayout()
+    {
+        yield return new WaitForSeconds(0.5f);
+        content.GetComponent<GridLayoutGroup>().enabled = false;
+
     }
     void Update()
     {

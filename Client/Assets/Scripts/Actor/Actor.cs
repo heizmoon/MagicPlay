@@ -291,6 +291,7 @@ public class Actor : MonoBehaviour
     void OnBehaviourComplete(object sender, EventArgs e)
     {
         //决策条读完了
+        Debug.LogWarning("决策条读完了!");
         BarEventArgs eventArgs = e as BarEventArgs;
         if(eventArgs.IFComplete)
         //从当前行为中随机出一个要释放的技能
