@@ -26,7 +26,7 @@ public class UIAbilityGroup : MonoBehaviour
         SortList();
         foreach (var item in abilityList)
         {
-            temp.Add(item);   
+            temp.Add(item);
         }
     }
     void SortList()

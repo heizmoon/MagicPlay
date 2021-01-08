@@ -102,6 +102,12 @@ public class Actor : MonoBehaviour
     ///<summary>命令召唤物立即进行一次攻击,可传入附加的伤害</summary>
     public event Action<int> OnOrderSummonedAttack;//
 
+
+
+    //怪物AI相关
+    Skill wanaSkill;
+
+
     void Start()
     {
         
@@ -278,7 +284,8 @@ public class Actor : MonoBehaviour
             break;
         }
         castingbar.changeHPBar(speed);
-        UIBattle.Instance.SetEnemyBarText(behaviour);
+        wanaSkill = GetSpecialSkill(state,behaviour);
+        UIBattle.Instance.SetEnemyBarText(behaviour,wanaSkill.damage);
         
     } 
     void OnBehaviourComplete(object sender, EventArgs e)
@@ -287,7 +294,7 @@ public class Actor : MonoBehaviour
         BarEventArgs eventArgs = e as BarEventArgs;
         if(eventArgs.IFComplete)
         //从当前行为中随机出一个要释放的技能
-        WanaSpell(GetSpecialSkill(state,behaviour));
+        WanaSpell(wanaSkill);
 
     }
     int EnemyState()
@@ -697,7 +704,7 @@ public class Actor : MonoBehaviour
        if(castingbar)
        {
             castingbar.stopChanging(true);
-            UIBattle.Instance.SetEnemyBarText(0);
+            UIBattle.Instance.SetEnemyBarText(0,0);
        }
         
        

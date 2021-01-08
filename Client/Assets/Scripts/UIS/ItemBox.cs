@@ -142,6 +142,8 @@ public class ItemBox : MonoBehaviour
     }
     public void HideToggleSelect()
     {
+        if(toggle.graphic)
+        toggle.graphic.gameObject.SetActive(false);
         toggle.graphic =null;
         skillMark.SetActive(false);
         toggle.onValueChanged.RemoveAllListeners();

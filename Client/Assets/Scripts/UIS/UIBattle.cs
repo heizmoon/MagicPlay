@@ -121,7 +121,7 @@ public class UIBattle : MonoBehaviour
         playerActor.InitMagic();
         Enemy.InitActor();
         Enemy.GetActorSpellBar();
-        SetEnemyBarText(0);
+        SetEnemyBarText(0,0);
         Enemy.InitMagic();
 
     }
@@ -154,7 +154,7 @@ public class UIBattle : MonoBehaviour
         DealCards();
     }
     
-    public void SetEnemyBarText(int state)
+    public void SetEnemyBarText(int state,int damage)
     {
         Debug.LogWarning("敌人的状态是"+state);
         switch(state)
@@ -163,16 +163,16 @@ public class UIBattle : MonoBehaviour
             enemyBarText.text ="";
             break;
             case 1:
-            enemyBarText.text ="敌人准备<color=#f22223>攻击</color>";
+            enemyBarText.text =string.Format("准备<color=#f22223>攻击:{0}</color>",damage+Enemy.basicAttack);
             break;
             case 2:
-            enemyBarText.text ="敌人准备<color=#f22223>防御</color>";
+            enemyBarText.text ="准备<color=#f22223>防御</color>";
             break;
             case 3:
-            enemyBarText.text ="敌人准备<color=#f22223>强化</color>";
+            enemyBarText.text ="准备<color=#f22223>强化</color>";
             break;
             case 4:
-            enemyBarText.text ="敌人准备<color=#f22223>削弱</color>";
+            enemyBarText.text ="准备<color=#f22223>削弱</color>";
             break;
         }
     }

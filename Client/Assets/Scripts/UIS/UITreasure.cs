@@ -10,6 +10,8 @@ public class UITreasure : MonoBehaviour
     public Button BTNReTry;
     public Button BTNReturn;
     public ItemBox item;
+    int type;
+    int id;
     void Start()
     {
         BTNOK.onClick.AddListener(OnOK);
@@ -35,12 +37,16 @@ public class UITreasure : MonoBehaviour
             //随机出技能卡
             SkillData[] datas =SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,0);
             item.Init(datas[0]);
+            type =0;
+            id = datas[0].id;
         }
         else
         {
             //随机出道具
             AbilityData[] datas = AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
             item.Init(datas[0]);
+            type =1;
+            id = datas[0].id;
         }
         
     }
@@ -51,6 +57,14 @@ public class UITreasure : MonoBehaviour
     void OnOK()
     {
         gameObject.SetActive(false);
+        if(type==0)
+        {
+            Player.instance.playerActor.UsingSkillsID.Add(id);
+        }
+        if(type==1)
+        {
+            Player.instance.playerActor.abilities.Add(id);
+        }
         BattleScene.instance.OpenMap();
         Destroy(gameObject);
     }
