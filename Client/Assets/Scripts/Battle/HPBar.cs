@@ -202,7 +202,7 @@ public class HPBar : MonoBehaviour
         {
 
         }
-        Debug.LogError("动作条被打断了");
+        // Debug.LogError("动作条被打断了");
         timer.stop();
         onChangeStop();
         HpCurrent =0;
@@ -226,7 +226,7 @@ public class HPBar : MonoBehaviour
     }
     void onTimerComplete(Timer timer)
     {
-        Debug.LogFormat("动作条到了");
+        // Debug.LogError("动作条到了");
         
         // timer.gameObject.GetComponent<Skill>();
         HpCurrent =100;
