@@ -41,9 +41,9 @@ public class UICardGroup : MonoBehaviour
     }
     IEnumerator WaitForDisableGridLayout()
     {
+        content.GetComponent<GridLayoutGroup>().enabled = true;
         yield return new WaitForSeconds(0.5f);
         content.GetComponent<GridLayoutGroup>().enabled = false;
-
     }
     void Update()
     {

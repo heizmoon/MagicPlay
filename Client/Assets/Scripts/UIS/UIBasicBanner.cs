@@ -9,7 +9,10 @@ public class UIBasicBanner : MonoBehaviour
     public Toggle T_BattleCharacter;
     public Toggle T_CardGroup;
     public Toggle T_AbilityGroup;
+    public Toggle T_Map;
 
+    Transform T_up;
+    Transform T_down;
 
     Text goldText;
     void Awake()
@@ -35,11 +38,9 @@ public class UIBasicBanner : MonoBehaviour
     void RegisterButton()
     {
         T_BattleCharacter.onValueChanged.AddListener(isOn => OpenUIBattleCharacter(T_BattleCharacter.isOn));
-
         T_CardGroup.onValueChanged.AddListener(isOn => OpenUICardGroup(T_CardGroup.isOn));
         T_AbilityGroup.onValueChanged.AddListener(isOn => OpenUIAbilityGroup(T_AbilityGroup.isOn));
-
-
+        T_Map.onValueChanged.AddListener(isOn => OpenUIMap(T_Map.isOn));
     }
     void OpenUICardGroup(bool IsOn)
     {
@@ -131,6 +132,19 @@ public class UIBasicBanner : MonoBehaviour
                 UIAbilityGroup.instance.gameObject.SetActive(false);
 
             }
+        }
+    }
+    void OpenUIMap(bool IsOn)
+    {
+        if(IsOn)
+        {
+            Map.instance.gameObject.SetActive(true);
+
+        }
+        else
+        {
+            Map.instance.gameObject.SetActive(false);
+
         }
     }
 }

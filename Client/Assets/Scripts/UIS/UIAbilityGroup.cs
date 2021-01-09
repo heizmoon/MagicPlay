@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class UIAbilityGroup : MonoBehaviour
 {
@@ -34,6 +35,13 @@ public class UIAbilityGroup : MonoBehaviour
         abilityList.Sort((x,y)=>x.CompareTo(y));
         Debug.Log(abilityList);
         CreateItems();
+        StartCoroutine(WaitForDisableGridLayout());
+    }
+    IEnumerator WaitForDisableGridLayout()
+    {
+        content.GetComponent<GridLayoutGroup>().enabled = true;
+        yield return new WaitForSeconds(0.5f);
+        content.GetComponent<GridLayoutGroup>().enabled = false;
     }
     void Update()
     {

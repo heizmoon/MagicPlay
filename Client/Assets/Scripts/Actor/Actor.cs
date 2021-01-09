@@ -72,6 +72,7 @@ public class Actor : MonoBehaviour
 
     public int basicAttack;
     public int basicDefence;
+    public float initialMP=0;
 
     [HideInInspector]
     public Character character;
@@ -291,11 +292,13 @@ public class Actor : MonoBehaviour
     void OnBehaviourComplete(object sender, EventArgs e)
     {
         //决策条读完了
-        Debug.LogWarning("决策条读完了!");
+        // Debug.LogWarning("决策条读完了!");
         BarEventArgs eventArgs = e as BarEventArgs;
         if(eventArgs.IFComplete)
         //从当前行为中随机出一个要释放的技能
         WanaSpell(wanaSkill);
+        else
+        Debug.LogWarning("决策条被打断!");
 
     }
     int EnemyState()
@@ -531,6 +534,9 @@ public class Actor : MonoBehaviour
     // }
     public bool WanaSpell(Skill skill)//想要施法一个法术，判断是否可以施放该法术
     {
+        // Debug.LogWarning("wanaSpell");
+        // Debug.LogWarning("animState="+(int)animState);
+
         //角色自身状态不为dizzy，dead
         if(animState ==AnimState.dead)
         {
@@ -567,12 +573,14 @@ public class Actor : MonoBehaviour
             // Debug.LogFormat("魔法值不足,需要{0},当前为{1}",skill.realManaCost,MpCurrent);
             return false;
         }
+        if(actorType ==ActorType.玩家角色)
         StopCasting();
         //如果目标已经死了
         if(target!=null&&target.animState ==AnimState.dead)
         {
             return false;
         }
+        
         StartCoroutine(WaitForBeginSpell(skill));
         // BeginSpell(skill);
         // RunAI();
@@ -582,7 +590,8 @@ public class Actor : MonoBehaviour
     IEnumerator WaitForBeginSpell(Skill skill)
     {
         yield return new WaitForEndOfFrame();
-        
+        // Debug.LogWarning("WaitForBeginSpell");
+        // Debug.LogWarning("animState="+(int)animState);
         if(animState!=AnimState.dead&&animState!=AnimState.dizzy)
         {
             BeginSpell(skill);
@@ -1283,7 +1292,7 @@ public class Actor : MonoBehaviour
     public void OnHitMiss()
     {
         //显示文字 未命中
-        bt.SetText("未命中");
+        bt.SetText("闪避");
         //执行当角色闪避攻击时就xxx这类效果
     }
     public void OnHitResistance()
@@ -1417,7 +1426,8 @@ public class Actor : MonoBehaviour
     {
         for (int i = summonPoint.childCount-1; i >=0 ; i--)
         {
-            Destroy(summonPoint.GetChild(i).gameObject);
+            summonPoint.GetChild(i).GetComponent<Summoned>().Death();
+            // Destroy(summonPoint.GetChild(i).gameObject);
         }
     }
     

@@ -164,10 +164,11 @@ public class Main : MonoBehaviour {
 		
 	}
 	
-	public void startLoadBasicUIs()
+	public void StartLoadBasicUIs()
 	{
 		StartCoroutine(Main.instance.LoadBasicUIs());
 	}
+	///显示读条界面，3秒后自动移除读条界面
 	public void StartLoadingUI()
 	{
 		UILoading.SetActive(true);

@@ -81,11 +81,13 @@ public class Summoned : MonoBehaviour
     {
         Attack(num);
     }
-    void Death()
+    public void Death()
     {
         //解除订阅
         Player.instance.playerActor.OnUpdateSummonedAttack-=OnExtendLifeTime;
         Player.instance.playerActor.OnUpdateSummonedSpeed-=OnExtendAttackSpeed;
+        Player.instance.playerActor.OnUpdateSummonedDamage-=OnExtendPower;
+        Player.instance.playerActor.OnOrderSummonedAttack-=OnOrderAttack;
         Destroy(gameObject);
         
     }

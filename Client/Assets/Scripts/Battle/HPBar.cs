@@ -25,8 +25,12 @@ public class HPBar : MonoBehaviour
 
     public Text armorText;
 
+    float timeInterval;
+    float timeCurrentInterval;
+    float intervalPercent;
 
     private int changeValue;//每次变化的值
+    float changeInterval;
     Timer timer;
     private Actor actor;//此条的拥有者
     public bool playerActerMPBar;
@@ -36,6 +40,7 @@ public class HPBar : MonoBehaviour
     public event EventHandler onBarEvent;
 
     Image shadowImage;
+    bool isChanging;
       
     void Awake()
     {
@@ -84,6 +89,25 @@ public class HPBar : MonoBehaviour
     }
     void Update()
     {
+        if(isChanging)
+        {
+            if(timeCurrentInterval>=timeInterval)
+            {
+                ImgCurrent.fillAmount+=changeInterval;
+                timeCurrentInterval=0;
+
+                if(ImgCurrent.fillAmount>=1)
+                {
+                    isChanging = false;
+                    
+                    HpCurrent =100;
+                    setHpBarNormal();
+                    onChangeEnd();
+                    StartCoroutine(WaitForResetBar());
+                }
+            }
+            timeCurrentInterval+=Time.deltaTime;
+        }
         if(playerActerMPBar)
         {
             // mpchangeInterval+= Time.deltaTime;
@@ -190,8 +214,11 @@ public class HPBar : MonoBehaviour
     public void changeHPBar(float time)//每0.05秒执行一次变化，共执行time秒
     {
         changeValue =100/Mathf.CeilToInt(time/0.16f);
+        changeInterval = 0.16f/time;
         // Debug.LogFormat("动作条开始了,间隔为{0}",changeValue);
-        timer.start(0.16f,Mathf.CeilToInt(time/0.16f),onTimerInterval,onTimerComplete);        
+        // timer.start(0.16f,Mathf.CeilToInt(time/0.16f),onTimerInterval,onTimerComplete); 
+        isChanging=true;
+        timeInterval = 0.16f;
     }
 
     public void stopChanging(bool immediately)
@@ -203,13 +230,15 @@ public class HPBar : MonoBehaviour
 
         }
         // Debug.LogError("动作条被打断了");
-        timer.stop();
+        // timer.stop();
+        isChanging=false;
+        timeCurrentInterval=0;
         onChangeStop();
         HpCurrent =0;
         setHpBarNormal();
         
-        timer.onCompleteEvent =null;
-        timer.onIntervalEvent =null;
+        // timer.onCompleteEvent =null;
+        // timer.onIntervalEvent =null;
     }
     void onTimerInterval(Timer timer)
     {
@@ -235,6 +264,7 @@ public class HPBar : MonoBehaviour
         StartCoroutine(WaitForResetBar());
         
     }
+    
     IEnumerator WaitForResetBar()
     {
         yield return new WaitForSeconds(0.1f);

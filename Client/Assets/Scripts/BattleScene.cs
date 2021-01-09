@@ -6,6 +6,12 @@ public class BattleScene : MonoBehaviour
 {
     public static BattleScene instance;
     public int steps{get;set;}//行走步数，用于决定难度等
+    public int beatEnemyNumber{get;set;}
+    public int beatBossNumber{get;set;}
+    int currentMonsterId;
+    int currentSceneId;
+    bool isBoss;
+
     void Awake()
     {
         instance = this;
@@ -35,6 +41,11 @@ public class BattleScene : MonoBehaviour
     }
     public void InitBattle(int monsterID,int sceneID,bool isBoss)
 	{
+        //备份当前战斗信息；
+        currentMonsterId=monsterID;
+        currentSceneId = sceneID;
+        this.isBoss =isBoss;
+
 		Actor enemy =CreateEnemy(monsterID,1);
 		GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UIBattle"));
 		go.transform.SetParent(Main.instance.allScreenUI);
@@ -45,6 +56,10 @@ public class BattleScene : MonoBehaviour
         
         UIBattle.Instance.BattleBegin();
 	}
+    public void ReturnToBattle()
+    {
+        InitBattle(currentMonsterId,currentSceneId,isBoss);
+    }
 	Actor CreateEnemy(int id,int level)
     {
         MonsterTypeData monster = MonsterManager.instance.GetInfo(id);
@@ -109,6 +124,8 @@ public class BattleScene : MonoBehaviour
     }
     public void BattleEnd(bool isBoss)
     {
+        beatEnemyNumber++;
+
         //如果不是BOSS结束，打开当前地图，
         //如果是BOSS结束，尝试打开新地图，
         //如果没有新地图，则整个场景完结
@@ -118,17 +135,18 @@ public class BattleScene : MonoBehaviour
         }
         else
         {
+            beatBossNumber++;
             if(Map.instance.nextMap!="")
             ChangeMap(Map.instance.nextMap);
             else
-            BattleSceneOver();
+            UIBattleFail.CreateUI().ShowStatisticUI();//1.显示结算
         }
     }
     public void BattleSceneOver()
     {
-        //1.显示结算
-        //+++++++++++++++++++++++++++++++++++
         //2.摧毁自身
         Destroy(gameObject);
+        Main.instance.StartLoadingUI();
     }
+    
 }

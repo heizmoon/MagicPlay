@@ -135,6 +135,7 @@ public class UIBattle : MonoBehaviour
         EnemyHP.initHpBar(Enemy.HpCurrent,Enemy.HpMax);
         
         PlayerHP.initHpBar(playerActor.HpCurrent,playerActor.HpMax);
+        playerActor.MpCurrent = playerActor.initialMP;
         // Debug.LogFormat("角色当前生命值为：{0}",playerActor.HpCurrent);
         
     }
@@ -225,20 +226,44 @@ public class UIBattle : MonoBehaviour
         // BTNSkill[1].ContrlButton(false);
         // BTNSkill[2].ContrlButton(false);
         // BTNSkill[3].ContrlButton(false);
-        StartCoroutine(WaitForShowBattleOver());
+        StartCoroutine(WaitForShowBattleOver(result));
     }
-    IEnumerator WaitForShowBattleOver()
+    IEnumerator WaitForShowBattleOver(int result)
     {
         yield return new WaitForSeconds(1f);
         // battleOver.SetActive(true);
         //显示结算
         // Battle.Instance.ShowStatisticDamage(0);
         // Battle.Instance.ShowStatisticDamage(1);
-        //如果不是最终BOSS，选择能力奖励
-        CreateRelic();
-        //如果事BOSS，选择道具奖励
-        
-        BuffManager.RemovePlayerActorTempBuff();
+        if(result==1)
+        {
+            //胜利了
+            //如果不是最终BOSS，选择能力奖励
+            //怎样判断是否是最终BOSS？
+            if(BattleScene.instance.beatBossNumber>1&&isBoss)
+            {
+                //最终BOSS，跳过
+            }
+            else
+            {
+                CreateRelic();
+            }
+            //如果是BOSS，选择道具奖励
+            if(isBoss)
+            {
+                // CreateRelic();
+            }
+            BattleScene.instance.BattleEnd(isBoss);
+        }
+        else
+        {
+            //失败了
+            //显示失败UI
+            UIBattleFail.CreateUI();
+        }
+
+        // BuffManager.RemovePlayerActorTempBuff();
+        BuffManager.RemovePlayerActorAllBuff();//------------移除所有buff
         playerActor.handCards =new List<SkillCard>();
         Player.instance.playerActor.transform.SetParent(Main.instance.BottomUI);
         Player.instance.playerActor.transform.localPosition =Vector3.zero;
@@ -297,7 +322,7 @@ public class UIBattle : MonoBehaviour
         //     BattleEvent.instance.GetBattleResult(result);
         // }
         
-        BattleScene.instance.BattleEnd(isBoss);
+        
         
         Destroy(this.gameObject);
     }

@@ -154,20 +154,22 @@ public class BuffManager : MonoBehaviour
         //EffectManager.TryThrowInPool(buff.buffData.prefab,actor.castPoint);
         
     }
+    ///<summary>移除角色身上所有buff</summary>
     public static void RemovePlayerActorAllBuff()
     {
         for (int i = Player.instance.playerActor.buffs.Count-1; i >=0 ; i--)
         {
             BuffManager.RemoveBuffFromActor(Player.instance.playerActor.buffs[i],Player.instance.playerActor);
         }
+        Debug.LogWarning("剩余buff数量："+Player.instance.playerActor.buffs.Count);
     }
+    ///<summary>移除角色身上所有持续时间大于0的buff</summary>
     public static void RemovePlayerActorTempBuff()
     {
         for (int i = Player.instance.playerActor.buffs.Count-1; i >=0 ; i--)
         {
             if(Player.instance.playerActor.buffs[i].buffData.time!=0)
-            BuffManager.RemoveBuffFromActor(Player.instance.playerActor.buffs[i],Player.instance.playerActor);
-            
+            BuffManager.RemoveBuffFromActor(Player.instance.playerActor.buffs[i],Player.instance.playerActor);    
         }
     }
     public void OnBuffMax(Buff buff)
