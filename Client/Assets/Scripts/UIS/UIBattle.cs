@@ -31,6 +31,10 @@ public class UIBattle : MonoBehaviour
     public Transform t_handCards;
     public GameObject g_settingPannel;
 
+    public Button btn_pause;
+    public Button btn_play;
+    bool ifPause;
+
     ///<summary>牌堆列表</summary>
     public List<SkillCard> cardsList;
     ///<summary>弃牌堆列表</summary>
@@ -50,6 +54,10 @@ public class UIBattle : MonoBehaviour
         Instance = this;
         timer =gameObject.GetComponent<Timer>();
         anim =gameObject.GetComponent<Animation>();
+        btn_pause.onClick.AddListener(PauseBattle);
+        btn_play.onClick.AddListener(ResumeBattle);
+
+
     }
     public void OnPressSetting()
     {
@@ -154,7 +162,21 @@ public class UIBattle : MonoBehaviour
         Shuffle();
         DealCards();
     }
-    
+    void PauseBattle()
+    {
+        ifPause = true;
+        btn_play.gameObject.SetActive(true);
+        btn_pause.gameObject.SetActive(false);
+        Time.timeScale = 0f;
+    }
+    void ResumeBattle()
+    {
+        ifPause = false;
+        btn_play.gameObject.SetActive(false);
+        btn_pause.gameObject.SetActive(true);
+        Time.timeScale = 1f;
+
+    }
     public void SetEnemyBarText(int state,int damage)
     {
         Debug.LogWarning("敌人的状态是"+state);

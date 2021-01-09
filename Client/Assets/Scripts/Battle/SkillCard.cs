@@ -136,6 +136,11 @@ public class SkillCard : MonoBehaviour
             ExploreSkillCard();
             return;
         }
+        if(Time.timeScale==0)
+        {
+            ExploreSkillCard();
+            return;
+        }
         if(Player.instance.playerActor.WanaSpell(skill))
         {
             //移除的技能移除
