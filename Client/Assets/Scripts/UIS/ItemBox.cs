@@ -117,12 +117,32 @@ public class ItemBox : MonoBehaviour
     }
     public void Reset()
     {
+        // try
+        // {
+        //     toggle.onValueChanged.RemoveListener(OpenDetail);
+        // }
+        // catch (System.Exception)
+        // {
+            
+        //     throw;
+        // }
         if(Titem.childCount>0)
         Destroy(Titem.GetChild(0).gameObject);
-        skillMark.SetActive(true);
         itemName.color = Color.black;
         toggle.interactable =true;
-        toggle.isOn = false;
+
+        if(toggle.graphic)
+        {
+            toggle.isOn = false;
+            Debug.LogWarning("正确的刷新");
+        }
+        else
+        {
+            Debug.LogWarning("错误的刷新");
+
+            skillMark.SetActive(true);
+        }
+
         icon.gameObject.SetActive(true);
         toggle.targetGraphic =icon;
         price =0;
@@ -153,6 +173,7 @@ public class ItemBox : MonoBehaviour
     }
     void OpenDetail(bool isOn)
     {
+        // Debug.LogWarning("点到了");
         UICardDetail.CreateUI().Init(this);
         if(type==2)
         {

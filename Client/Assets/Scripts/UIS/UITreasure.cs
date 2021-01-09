@@ -20,6 +20,9 @@ public class UITreasure : MonoBehaviour
         BTNReTry.onClick.AddListener(OnRetry);
         Init();
         Gframe.SetActive(false);
+        
+
+        
     }
 
     // Update is called once per frame
@@ -48,7 +51,8 @@ public class UITreasure : MonoBehaviour
             type =1;
             id = datas[0].id;
         }
-        
+        item.HideToggleSelect();
+
     }
     void OnOpen()
     {
