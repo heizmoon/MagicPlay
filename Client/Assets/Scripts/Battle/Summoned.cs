@@ -23,7 +23,7 @@ public class Summoned : MonoBehaviour
         Player.instance.playerActor.OnUpdateSummonedDamage+=OnExtendPower;
         Player.instance.playerActor.OnOrderSummonedAttack+=OnOrderAttack;
         animator =GetComponent<Animator>();
-        castPoint =transform.Find("castPoint");
+        castPoint =transform.Find("Image/castPoint");
         
     }
     public void Init(Actor master,SummonData summonData)

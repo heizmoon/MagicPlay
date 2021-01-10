@@ -189,6 +189,22 @@ public class EffectManager : MonoBehaviour
         e.speed =distance/delay;
         e.childEffect =hitEffect;
         e.fly =true;
+        if(hitPoint.parent.GetComponent<Actor>().actorType == ActorType.敌人)
+        {
+            e.transform.localScale = Vector3.one;
+            for (int i = 0; i < e.transform.childCount-1; i++)
+            {
+                e.transform.GetChild(i).localScale =Vector3.one;
+            }
+        }
+        else
+        {
+            e.transform.localScale = new Vector3(-1,1,1);
+            for (int i = 0; i < e.transform.childCount-1; i++)
+            {
+                e.transform.GetChild(i).localScale =new Vector3(-1,1,1);
+            }
+        }
         
     }
     public static void CastEffect(Transform effect)
