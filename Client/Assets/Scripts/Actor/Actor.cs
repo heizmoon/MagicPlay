@@ -1374,6 +1374,7 @@ public class Actor : MonoBehaviour
                 tempList.Add(item);
             }
         }
+        
         //maxNum =0 代表可以叠无限层
         if(buff.buffData.maxNum==0)
         {
@@ -1382,14 +1383,14 @@ public class Actor : MonoBehaviour
             buffNum++;
         }
         //未叠加到最大层
-        else if(buff.buffData.maxNum!=0&&buffNum<buff.buffData.maxNum)
+        else if(buff.buffData.maxNum>0&&buffNum<buff.buffData.maxNum)
         {
             buffs.Add(buff);
             tempList.Add(buff);
             buffNum++;
         }
         //已叠加到最大层
-        else if(buff.buffData.maxNum!=0&&buffNum==buff.buffData.maxNum)
+        else if(buff.buffData.maxNum>0&&buffNum==buff.buffData.maxNum)
         {
             //去掉一层，再重新添加一层
             
@@ -1399,6 +1400,13 @@ public class Actor : MonoBehaviour
             tempList.Add(buff);
             ifMax =true;
         }
+        else//不能叠层，当有新的相同IDbuff时，会额外生成一个buff图标
+        {
+            buffs.Add(buff);
+            tempList.Add(buff);
+            buffNum =1;
+        }
+
         if(UIBattle.Instance ==null)
         {
             return;
@@ -1413,7 +1421,6 @@ public class Actor : MonoBehaviour
             }
             tempList[i].buffIcon.buffNum=buffNum;
             tempList[i].buffIcon.ResetTime();
-            
         }
         if(ifMax)
         {

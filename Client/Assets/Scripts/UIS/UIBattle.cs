@@ -20,6 +20,9 @@ public class UIBattle : MonoBehaviour
     public GameObject battleOver;
     public GameObject statisticLine;
     public Button BTN_BattleOverGoOn;
+    public Button BTN_shieldTip_1;
+    public Button BTN_shieldTip_2;
+
     public Text enemyBarText;
     public Text battleResult;
     public Transform t_playerPosition;
@@ -33,7 +36,7 @@ public class UIBattle : MonoBehaviour
 
     public Button btn_pause;
     public Button btn_play;
-    bool ifPause;
+    public bool ifPause;
 
     ///<summary>牌堆列表</summary>
     public List<SkillCard> cardsList;
@@ -56,7 +59,8 @@ public class UIBattle : MonoBehaviour
         anim =gameObject.GetComponent<Animation>();
         btn_pause.onClick.AddListener(PauseBattle);
         btn_play.onClick.AddListener(ResumeBattle);
-
+        BTN_shieldTip_1.onClick.AddListener(OnShieldTips);
+        BTN_shieldTip_2.onClick.AddListener(OnShieldTips);
 
     }
     public void OnPressSetting()
@@ -355,37 +359,41 @@ public class UIBattle : MonoBehaviour
 
     public BuffIcon CreateBuffIcon(Buff buff,bool ifHasIcon)
     {
-        //查找是否已经拥有bufficon
-        if(buff.target.actorType==ActorType.玩家角色)
+        if(buff.buffData.maxNum>=0)
         {
-            if(t_playerBuffPosition.childCount>0)
+            //查找是否已经拥有bufficon
+            if(buff.target.actorType==ActorType.玩家角色)
             {
-                foreach (var item in t_playerBuffPosition.GetComponentsInChildren<BuffIcon>())
+                if(t_playerBuffPosition.childCount>0)
                 {
-                    if(item.buffID ==buff.buffData.id)
+                    foreach (var item in t_playerBuffPosition.GetComponentsInChildren<BuffIcon>())
                     {
-                        //已经有了
-                        item.buffs.Add(buff);
-                        return item;
+                        if(item.buffID ==buff.buffData.id)
+                        {
+                            //已经有了
+                            item.buffs.Add(buff);
+                            return item;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if(t_enemyBuffPosition.childCount>0)
+                {
+                    foreach (var item in t_enemyBuffPosition.GetComponentsInChildren<BuffIcon>())
+                    {
+                        if(item.buffID ==buff.buffData.id)
+                        {
+                            //已经有了
+                            item.buffs.Add(buff);
+                            return item;
+                        }
                     }
                 }
             }
         }
-        else
-        {
-            if(t_enemyBuffPosition.childCount>0)
-            {
-                foreach (var item in t_enemyBuffPosition.GetComponentsInChildren<BuffIcon>())
-                {
-                    if(item.buffID ==buff.buffData.id)
-                    {
-                        //已经有了
-                        item.buffs.Add(buff);
-                        return item;
-                    }
-                }
-            }
-        }
+        
         //没有的情况，创建一个prefab
         BuffIcon buffIcon = ((GameObject)Instantiate(Resources.Load("Prefabs/BuffIcon"))).GetComponent<BuffIcon>();
         buffIcon.buffs.Add(buff);
@@ -590,6 +598,10 @@ public class UIBattle : MonoBehaviour
         go.transform.localScale =Vector3.one;
         go.GetComponent<UIAbyssChooseRelic>().CreateUIs(3);
 
+    }
+    void OnShieldTips()
+    {
+        UIBuffDetail.CreateUIBuffDetail("每1点护甲可以减少1点伤害,但无法减少穿透伤害");
     }
 
 }

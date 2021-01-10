@@ -130,6 +130,7 @@
      <Compile Include="Assets\Scripts\UIS\UIBattleCharacter.cs" />
      <Compile Include="Assets\Scripts\UIS\UIBattleFail.cs" />
      <Compile Include="Assets\Scripts\UIS\UIBattleShop.cs" />
+     <Compile Include="Assets\Scripts\UIS\UIBuffDetail.cs" />
      <Compile Include="Assets\Scripts\UIS\UICamp.cs" />
      <Compile Include="Assets\Scripts\UIS\UICardDetail.cs" />
      <Compile Include="Assets\Scripts\UIS\UICardGroup.cs" />

@@ -22,6 +22,12 @@ public class BuffIcon : MonoBehaviour
     Transform triggerEffect;
     string triggerEffectString;
     bool ifInit;
+    Button button;
+    private void Awake() 
+    {
+        button =GetComponent<Button>();
+        button.onClick.AddListener(ShowDetail);
+    }
     void Start()
     {
         if(!ifInit)
@@ -186,6 +192,17 @@ public class BuffIcon : MonoBehaviour
         {
             effect.gameObject.SetActive(true);
         }
+    }
+    void ShowDetail()
+    {
+        //点击后在屏幕中间显示一个buff的说明文字，再次点击任意区域，说明文字消失
+        //仅在时间停止时点击有效
+        // if(Time.timeScale ==0)
+        // {
+            
+        // }
+        UIBuffDetail.CreateUIBuffDetail(buff);
+        
     }
     
 }
