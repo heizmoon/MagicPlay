@@ -11,7 +11,7 @@ public class Summoned : MonoBehaviour
     float attackSpeed =3f; 
     float attackInterval;
     Transform castPoint;
-    Actor master;
+    public Actor master;
     Actor target;
     Skill skill;
     Animator animator;
@@ -88,6 +88,7 @@ public class Summoned : MonoBehaviour
         Player.instance.playerActor.OnUpdateSummonedSpeed-=OnExtendAttackSpeed;
         Player.instance.playerActor.OnUpdateSummonedDamage-=OnExtendPower;
         Player.instance.playerActor.OnOrderSummonedAttack-=OnOrderAttack;
+        SummonManager.instance.DecreaseSummonedNum(this);
         Destroy(gameObject);
         
     }
