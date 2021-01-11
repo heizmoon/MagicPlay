@@ -56,6 +56,13 @@ public class SkillData{
     public int rank;
     public int summonType;
     public int summonNum;
+    
+    ///<summary>每次使用自身伤害改变</summary>
+    public int EUSDamage;
+    ///<summary>每次使用消耗改变</summary>
+    public int EUSMP;
+    ///<summary>每次使用治疗改变</summary>
+    public int EUSHeal;
 
 }
 [System.Serializable]

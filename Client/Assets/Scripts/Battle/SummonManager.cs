@@ -39,7 +39,7 @@ public class SummonManager : MonoBehaviour
         summoned.transform.SetParent(Player.instance.playerActor.summonPoint);
         summoned.transform.localPosition =Vector3.zero;
         summoned.transform.localScale =Vector3.one;
-        summoned.Init(master,summonData);
+        summoned.Init(master,summonData,master.SummonedLifeTimePlus);
         if(master == Player.instance.playerActor)
         {
             playerSummoneds.Add(summoned);

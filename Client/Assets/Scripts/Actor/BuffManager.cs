@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Data;
 using Anima2D;
+using System;
 public enum BuffType
 {
     昏迷 =1,
@@ -18,17 +19,17 @@ public enum BuffType
     数值反弹受到的伤害=11,
     死亡后复活并恢复百分比生命=12,
     吸收一定数量的伤害=13,
-    影响韧性 =14,
-    影响抗性 =15,
-    影响穿透=16,
+    影响召唤物持续时间 =14,
+    影响召唤物强度 =15,
+    影响召唤物攻速=16,
     影响暴击增益 =17,
     影响闪避 =18,
     数值吸收伤害 =19,
     百分比吸收伤害 =20,
     数值受伤回复 =21,
-    百分比影响急速=22,
+    影响全局能量消耗=22,
     百分比影响暴击 =23,
-    百分比影响命中 =24,
+    影响单技能能量消耗 =24,
     百分比影响韧性 =25,
     百分比影响抗性 =26,
     百分比影响穿透 =27,
@@ -46,6 +47,8 @@ public class BuffManager : MonoBehaviour
         冰冻 =2
     }
     BuffData[] buffDatas;
+    public event Action<Buff> OnSummonedAddBuff;//
+    public event Action<Buff> OnSummonedRemoveBuff;//
     void Awake()
     {
         instance = this;
@@ -281,6 +284,16 @@ public class BuffManager : MonoBehaviour
                     }
                 }
             }
+    }
+    public void SummonedAddBuff(Buff buff)
+    {
+        if(OnSummonedAddBuff!=null)
+        OnSummonedAddBuff(buff);
+    }
+        public void SummonedRemoveBuff(Buff buff)
+    {
+        if(OnSummonedRemoveBuff!=null)
+        OnSummonedRemoveBuff(buff);
     }
     
 }

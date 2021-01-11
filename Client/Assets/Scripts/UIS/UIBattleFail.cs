@@ -75,7 +75,7 @@ public class UIBattleFail : MonoBehaviour
         //显示统计界面
         statisticUI.SetActive(true);
         //统计内容：获得的卡牌数量，获得的道具数量，战胜的敌人数量，走过的步数，换算的分数
-        text_cardNumber.text = string.Format("获得卡牌数:{0}",Player.instance.playerActor.UsingSkillsID.Count-7);//--------------初始卡牌數量是否為7
+        text_cardNumber.text = string.Format("获得卡牌数:{0}",Player.instance.playerActor.UsingSkillsID.Count-Player.instance.playerActor.character.data.skills.Split(',').Length);//初始卡牌數量
         text_abilityNumber.text = string.Format("获得道具数:{0}",Player.instance.playerActor.abilities.Count);
         text_enemyNumber.text = string.Format("击败敌人数:{0}",BattleScene.instance.beatEnemyNumber);
         text_stepNumber.text = string.Format("走过的步数:{0}",BattleScene.instance.steps);

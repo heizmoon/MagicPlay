@@ -34,9 +34,9 @@ public class SkillCard : MonoBehaviour
     public void Init(Skill skill)
     {
         this.skill =skill;
+        skill.skillCard =this;
         textSkillName.text =skill.skillName;
-        textSkillDescribe.text =skill.describe;
-        textSkillCost.text =skill.manaCost.ToString();
+        RefeashCardShow();
         if(skill.color ==0)
         {
             backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Attack");
@@ -114,6 +114,28 @@ public class SkillCard : MonoBehaviour
         }
         canShow = true;
     }
+    public void RefeashCardShow()
+    {
+
+        textSkillDescribe.text =skill.describe;
+
+        if(Player.instance.playerActor.basicAttack>0||skill.damage>skill.skillData.damage)
+        skill.describe =string.Format(skill.skillData.describe,"<color=cyan>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost),Mathf.Abs(skill.manaProduce));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=crit;{4}=hit;{5}=seep;{6}=fast
+        else if(Player.instance.playerActor.basicAttack==0||skill.damage==skill.skillData.damage)
+        skill.describe =string.Format(skill.skillData.describe,"<color=white>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost),Mathf.Abs(skill.manaProduce));
+        else
+        skill.describe =string.Format(skill.skillData.describe,"<color=red>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost),Mathf.Abs(skill.manaProduce));
+
+
+
+        textSkillCost.text =skill.realManaCost.ToString();
+        if(skill.realManaCost==skill.skillData.manaCost)
+        textSkillCost.color = Color.white;
+        else if(skill.realManaCost>skill.skillData.manaCost)
+        textSkillCost.color = Color.red;
+        else
+        textSkillCost.color = Color.green;
+    }
 
     void Update()
     {
@@ -154,11 +176,17 @@ public class SkillCard : MonoBehaviour
             //弃牌的技能弃牌:弃牌数量不包含自身
             if(skill.usedThrowCard>0)
             UIBattle.Instance.ThrowHandCardsToPool(skill.usedThrowCard);
+           
             
 
             CheckIfNeedSelectCard();
         }
     }
+    // IEnumerator WaitForUseCard()
+    // {
+    //     yield return new WaitForSeconds(0.1f);
+        
+    // }
     void ExploreSkillCard()
     {
         //放大卡牌看
@@ -224,7 +252,7 @@ public class SkillCard : MonoBehaviour
     // }
     void JudgeMP()
     {
-        MaskCard(Player.instance.playerActor.MpCurrent<skill.manaCost);    
+        MaskCard(Player.instance.playerActor.MpCurrent<skill.realManaCost);    
     }
     IEnumerator SetCardPosition(float time)
     {
@@ -246,6 +274,33 @@ public class SkillCard : MonoBehaviour
         {
             UIBattle.Instance.DealCards();
         }
+    }
+    //1.全局降低/增加卡牌能量消耗
+    //生效时机：第一次使用，新卡牌出现，效果结束时
+    //2.降低/增加 某类卡牌消耗
+    //
+    //3.降低/增加 自身的消耗
+    public void ReduceMPCost(int num)
+    {
+        skill.realManaCost -=num;
+        if(skill.realManaCost<0)
+        skill.realManaCost =0;
+        RefeashCardShow();
+    }
+    public void IncreaseDamage(int num)
+    {
+        Debug.Log("增加了攻击");
+        skill.damage +=num;
+        if(skill.damage<0)
+        skill.damage =0;
+        RefeashCardShow();
+    }
+    public void IncreaseHeal(int num)
+    {
+        skill.heal +=num;
+        if(skill.heal<0)
+        skill.heal =0;
+        // RefeashCardShow();
     }
 
 }

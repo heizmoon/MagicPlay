@@ -1,12 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Summoned : MonoBehaviour
 {
     SummonData summonData;
+    [SerializeField]
     float LifeTime =15f;
+    [SerializeField]
     int Power =2;
+    [SerializeField]
     //每隔多长时间攻击一次
     float attackSpeed =3f; 
     float attackInterval;
@@ -15,23 +19,25 @@ public class Summoned : MonoBehaviour
     Actor target;
     Skill skill;
     Animator animator;
+    List<Buff> buffs =new List<Buff>();
     void Start()
     {
         //事件订阅
-        Player.instance.playerActor.OnUpdateSummonedAttack+=OnExtendLifeTime;
-        Player.instance.playerActor.OnUpdateSummonedSpeed+=OnExtendAttackSpeed;
-        Player.instance.playerActor.OnUpdateSummonedDamage+=OnExtendPower;
+        Player.instance.playerActor.OnUpdateSummonedLifeTime+=OnExtendLifeTime;
+        // Player.instance.playerActor.OnUpdateSummonedSpeed+=OnExtendAttackSpeed;
+        // Player.instance.playerActor.OnUpdateSummonedPower+=OnExtendPower;
+        BuffManager.instance.OnSummonedAddBuff += OnAddBuff;
         Player.instance.playerActor.OnOrderSummonedAttack+=OnOrderAttack;
         animator =GetComponent<Animator>();
         castPoint =transform.Find("Image/castPoint");
         
     }
-    public void Init(Actor master,SummonData summonData)
+    public void Init(Actor master,SummonData summonData,float lifeTimePlus)
     {
         this.master =master;
         this.summonData =summonData;
         target = master.target;
-        LifeTime =summonData.lifeTime;
+        LifeTime =summonData.lifeTime+lifeTimePlus;
         Power =summonData.power;
         attackSpeed =summonData.speed;
         
@@ -64,17 +70,52 @@ public class Summoned : MonoBehaviour
             }
         }
     }
+    void OnAddBuff(Buff buff)
+    {
+        buffs.Add(buff); 
+        buffs.Remove(buff);
+        if(buff.buffData._type == BuffType.影响召唤物强度)
+        {
+            OnExtendPower(Mathf.FloorToInt(buff.buffData.value));
+        }
+        if(buff.buffData._type == BuffType.影响召唤物攻速)
+        {
+            OnExtendAttackSpeed(buff.buffData.value);
+        }
+    }
+    void OnRemoveBuff(Buff buff)
+    {
+        if(buffs.Contains(buff))
+        {
+            buffs.Remove(buff);
+            if(buff.buffData._type == BuffType.影响召唤物强度)
+            {
+                OnExtendPower(-Mathf.FloorToInt(buff.buffData.value));
+            }
+            if(buff.buffData._type == BuffType.影响召唤物攻速)
+            {
+                OnExtendAttackSpeed(-buff.buffData.value);
+            }
+        }
+    }
     void OnExtendLifeTime(int num)
     {
         LifeTime+=num;
     }
     void OnExtendAttackSpeed(float num)
     {
-        attackSpeed*=num;
+        if(num>0)
+        attackSpeed=attackSpeed*(1-num);
+        else
+        attackSpeed=attackSpeed/(1+num);
     }
     void OnExtendPower(int num)
     {
         Power+=num;
+        if(num>0)
+        transform.DOScale(1.5f*Vector3.one,0.5f);
+        else
+        transform.DOScale(Vector3.one,0.5f);
 
     }
     void OnOrderAttack(int num)
@@ -84,9 +125,10 @@ public class Summoned : MonoBehaviour
     public void Death()
     {
         //解除订阅
-        Player.instance.playerActor.OnUpdateSummonedAttack-=OnExtendLifeTime;
-        Player.instance.playerActor.OnUpdateSummonedSpeed-=OnExtendAttackSpeed;
-        Player.instance.playerActor.OnUpdateSummonedDamage-=OnExtendPower;
+        Player.instance.playerActor.OnUpdateSummonedLifeTime-=OnExtendLifeTime;
+        // Player.instance.playerActor.OnUpdateSummonedSpeed-=OnExtendAttackSpeed;
+        // Player.instance.playerActor.OnUpdateSummonedPower-=OnExtendPower;
+        BuffManager.instance.OnSummonedAddBuff -= OnAddBuff;
         Player.instance.playerActor.OnOrderSummonedAttack-=OnOrderAttack;
         SummonManager.instance.DecreaseSummonedNum(this);
         Destroy(gameObject);

@@ -149,6 +149,7 @@ public class Main : MonoBehaviour {
 	}
 	public void ShakeCamera()
 	{
+		allScreenUI.localPosition =Vector3.zero;
 		allScreenUI.DOShakePosition(0.5f,5,10,90,false,true);
 	}
 	IEnumerator WaitForBattleBegin()

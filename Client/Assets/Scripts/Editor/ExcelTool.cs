@@ -788,7 +788,9 @@ namespace EditorTool {
                 skillData.rank =collect[i][25].ToString()==""?0:int.Parse(collect[i][25].ToString());
                 skillData.summonType =collect[i][26].ToString()==""?0:int.Parse(collect[i][26].ToString());
                 skillData.summonNum =collect[i][27].ToString()==""?0:int.Parse(collect[i][27].ToString());
-                
+                skillData.EUSDamage =collect[i][28].ToString()==""?0:int.Parse(collect[i][28].ToString());
+                skillData.EUSMP =collect[i][29].ToString()==""?0:int.Parse(collect[i][29].ToString());
+                skillData.EUSHeal =collect[i][30].ToString()==""?0:int.Parse(collect[i][30].ToString());
 
                 array[i - 2] = skillData;
             }

@@ -73,6 +73,8 @@ public class Actor : MonoBehaviour
     public int basicAttack;
     public int basicDefence;
     public float initialMP=0;
+    public int cardMpReduce =0;
+    public float SummonedLifeTimePlus=0;
 
     [HideInInspector]
     public Character character;
@@ -95,16 +97,12 @@ public class Actor : MonoBehaviour
 #endregion 
     
     ///<summary>提升召唤物伤害事件，可传入伤害值</summary>
-    public event Action<int> OnUpdateSummonedAttack;//
-    ///<summary>提升召唤物攻击速度事件，可传入速度提升值</summary>
-    public event Action<float> OnUpdateSummonedSpeed;//
-    ///<summary>提升召唤物攻击速度事件，可传入速度提升值</summary>
-    public event Action<int> OnUpdateSummonedDamage;//
+    public event Action<int> OnUpdateSummonedLifeTime;//
+
     ///<summary>命令召唤物立即进行一次攻击,可传入附加的伤害</summary>
     public event Action<int> OnOrderSummonedAttack;//
 
-
-
+    
     //怪物AI相关
     Skill wanaSkill;
 
@@ -1101,6 +1099,17 @@ public class Actor : MonoBehaviour
                 num-=armor;
                 armor =0;
             }
+            if(armor == 0)
+            {
+                //当护甲归零时，移除护甲BUFF
+                for (int i = buffs.Count-1; i >=0 ; i--)
+                {
+                    if(buffs[i].buffData._type == BuffType.吸收一定数量的伤害)
+                    {
+                        BuffManager.RemoveBuffFromActor(buffs[i],this);
+                    }
+                }
+            }
         }
         #endregion
         //执行{受到伤害时就xxx这类效果}
@@ -1263,6 +1272,17 @@ public class Actor : MonoBehaviour
                 OnOrderSummonedAttack.Invoke(0);
             }
         }
+         //每次使用改变自身伤害的技能
+        if(skill.skillData.EUSDamage!=0)
+        {
+            skill.skillCard.IncreaseDamage(skill.skillData.EUSDamage);
+        }
+        //每次使用改变自身消耗的技能
+        if(skill.skillData.EUSMP!= 0)
+        {
+            skill.skillCard.ReduceMPCost(skill.skillData.EUSMP);
+        }
+        
            
     }
     public void AddMp(float num)
@@ -1436,6 +1456,12 @@ public class Actor : MonoBehaviour
             summonPoint.GetChild(i).GetComponent<Summoned>().Death();
             // Destroy(summonPoint.GetChild(i).gameObject);
         }
+    }
+
+    public void InvokeSummonedLifeTimeUpdate(int num)
+    {
+        if(OnUpdateSummonedLifeTime!=null)
+        OnUpdateSummonedLifeTime(num);
     }
     
 }

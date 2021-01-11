@@ -46,6 +46,8 @@ public class UIBattle : MonoBehaviour
     ///<summary>移除牌堆列表</summary>
     public List<SkillCard> removeCarsList;
 
+    ///<summary>当前拥有的所有卡</summary>
+    public List<SkillCard> allCards;
     int result;
     public bool isBattleOver =true;
     Animation anim;
@@ -162,6 +164,7 @@ public class UIBattle : MonoBehaviour
             go.transform.SetParent(t_cardsPool);
             skillCard.Init(playerActor.skills[i]);
             cardsList.Add(skillCard);
+            allCards.Add(skillCard);
         }
         Shuffle();
         DealCards();
@@ -290,10 +293,13 @@ public class UIBattle : MonoBehaviour
 
         // BuffManager.RemovePlayerActorTempBuff();
         BuffManager.RemovePlayerActorAllBuff();//------------移除所有buff
+        playerActor.cardMpReduce =0;
+        playerActor.SummonedLifeTimePlus =0;
         playerActor.handCards =new List<SkillCard>();
         Player.instance.playerActor.transform.SetParent(Main.instance.BottomUI);
         Player.instance.playerActor.transform.localPosition =Vector3.zero;
         playerActor.target =null;
+        playerActor.ClearSummon();
         RecoverActor();//还原角色备份
         Enemy.gameObject.SetActive(false);
 
@@ -334,7 +340,6 @@ public class UIBattle : MonoBehaviour
         EffectManager.TryThrowInPool(playerActor.castPoint);
         EffectManager.TryThrowInPool(playerActor.spellPoint);
         EffectManager.TryThrowInPool(playerActor.hitPoint);
-        playerActor.ClearSummon();
         gameObject.SetActive(false);
         SkillManager.ClearPool();
         
@@ -519,7 +524,7 @@ public class UIBattle : MonoBehaviour
         int r = Random.Range(0,playerActor.handCards.Count);
         return playerActor.handCards[r];
     }
-    ///<summary>临时创建一张牌</summary>
+    ///<summary>临时创建一张特殊ID的牌</summary>
     public SkillCard CreateNewCardTemp(int id)
     {
         Skill skill = SkillManager.TryGetFromPool(id,playerActor);
@@ -528,7 +533,9 @@ public class UIBattle : MonoBehaviour
         SkillCard skillCard = go.GetComponent<SkillCard>();
         go.transform.SetParent(t_cardsPool);
         skillCard.Init(skill);
-        // cardsList.Add(skillCard);
+        skill.realManaCost -=Player.instance.playerActor.cardMpReduce;
+        skillCard.RefeashCardShow();
+        allCards.Add(skillCard);
         return skillCard;
     }
     public void CreateNewCardAndGiveToHand(int id)
@@ -603,5 +610,11 @@ public class UIBattle : MonoBehaviour
     {
         UIBuffDetail.CreateUIBuffDetail("每1点护甲可以减少1点伤害,但无法减少穿透伤害");
     }
-
+    public void ReduceAllCardCost(int num)
+    {
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            allCards[i].ReduceMPCost(num);
+        }
+    }
 }

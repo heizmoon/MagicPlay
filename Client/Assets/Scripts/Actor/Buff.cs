@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 
 
 public class Buff
@@ -13,7 +13,7 @@ public class Buff
     public Actor target;
     public List<Buff> childrenBuffs;
     public BuffIcon buffIcon;
-    
+
     
     // Update is called once per frame
     void Update()
@@ -62,6 +62,26 @@ public class Buff
         {
             target.dodge+=Mathf.FloorToInt(buffData.value);
         }
+        if(buffData._type == BuffType.影响全局能量消耗)
+        {
+            Debug.Log("影响全局能量消耗");
+            UIBattle.Instance.playerActor.cardMpReduce+=Mathf.FloorToInt(buffData.value);
+            UIBattle.Instance.ReduceAllCardCost(Mathf.FloorToInt(buffData.value));
+        }
+        if(buffData._type == BuffType.影响召唤物强度)
+        {
+            BuffManager.instance.SummonedAddBuff(this);
+        }
+        if(buffData._type == BuffType.影响召唤物攻速)
+        {
+            BuffManager.instance.SummonedAddBuff(this);
+        }
+        if(buffData._type == BuffType.影响召唤物持续时间)
+        {
+            Debug.Log("影响召唤物持续时间");
+            target.SummonedLifeTimePlus+=buffData.value;
+            target.InvokeSummonedLifeTimeUpdate(Mathf.FloorToInt(buffData.value));
+        }
 
     }
     public void OnBuffEnd()
@@ -95,7 +115,24 @@ public class Buff
                 target.dodge =0;
             }
         }
-
+        if(buffData._type == BuffType.影响全局能量消耗)
+        {
+            UIBattle.Instance.playerActor.cardMpReduce-=Mathf.FloorToInt(buffData.value);
+            UIBattle.Instance.ReduceAllCardCost(Mathf.FloorToInt(-buffData.value));
+        }
+        if(buffData._type == BuffType.影响召唤物强度)
+        {
+            BuffManager.instance.SummonedRemoveBuff(this);
+        }
+        if(buffData._type == BuffType.影响召唤物攻速)
+        {
+            BuffManager.instance.SummonedRemoveBuff(this);
+        }
+        if(buffData._type == BuffType.影响召唤物持续时间)
+        {
+            target.SummonedLifeTimePlus-=buffData.value;
+            target.InvokeSummonedLifeTimeUpdate(-Mathf.FloorToInt(buffData.value));
+        }
 
 
         int num =1;

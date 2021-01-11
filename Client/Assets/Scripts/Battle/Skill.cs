@@ -49,6 +49,8 @@ public class Skill : MonoBehaviour
     public int rank;
     public int summonType;
     public int summonNum;
+    public SkillData skillData;
+    public SkillCard skillCard;
 
     //考虑将读取表格和类写在一起？
     void Start()
@@ -64,46 +66,46 @@ public class Skill : MonoBehaviour
     public void InitSkill(int _id,Actor actor)//根据ID从技能表中读取技能,获取技能释放者
     {
         id =_id;
-        SkillData data = SkillManager.instance.GetInfo(_id);
-        if(data == null)
+        skillData = SkillManager.instance.GetInfo(_id);
+        if(skillData == null)
         {
             Debug.Log("技能数据为空！");
             return;
         }
-        skillName = data.name;
-        describe = data.describe;
-        icon =data.icon;
-        spellEffect =data.spellEffect;
-        castEffect =data.castEffect;
-        spelllTime = data.spelllTime;
+        skillName = skillData.name;
+        describe = skillData.describe;
+        icon =skillData.icon;
+        spellEffect =skillData.spellEffect;
+        castEffect =skillData.castEffect;
+        spelllTime = skillData.spelllTime;
         
-        manaCost = data.manaCost;
+        manaCost = skillData.manaCost;
         
         
-        damage = data.damage;
-        basicAttack =data.basicAttack;
-        damagePercent =data.damagePercent;
-        damageDistribution = data.damageDistribution;
-        color =data.color;
-        heal = data.heal;
+        damage = skillData.damage;
+        basicAttack =skillData.basicAttack;
+        damagePercent =skillData.damagePercent;
+        damageDistribution = skillData.damageDistribution;
+        color =skillData.color;
+        heal = skillData.heal;
         
-        targetSelf =data.targetSelf;
-        manaProduce =data.manaProduce;
+        targetSelf =skillData.targetSelf;
+        manaProduce =skillData.manaProduce;
         
-        buffID =data.buffID;
-        CD= data.CD;
-        ifActive =data.ifActive;
+        buffID =skillData.buffID;
+        CD= skillData.CD;
+        ifActive =skillData.ifActive;
         damageDelay =damageDistribution.Split(',')[0]==""?0: float.Parse(damageDistribution.Split(',')[0]);
         orginSpellTime =spelllTime;
-        hitEffect =data.hitEffect;
-        usedToRemove =data.usedToRemove;
-        usedThrowCard =data.usedThrowCard;
-        usedChooseCard =data.usedChooseCard;
-        updateID =data.updateID;
-        ifSeep = data.ifSeep;
-        rank =data.rank;
-        summonNum =data.summonNum;
-        summonType =data.summonType;
+        hitEffect =skillData.hitEffect;
+        usedToRemove =skillData.usedToRemove;
+        usedThrowCard =skillData.usedThrowCard;
+        usedChooseCard =skillData.usedChooseCard;
+        updateID =skillData.updateID;
+        ifSeep = skillData.ifSeep;
+        rank =skillData.rank;
+        summonNum =skillData.summonNum;
+        summonType =skillData.summonType;
         if(!actor)
         {
             caster=Player.instance.playerActor;
@@ -164,21 +166,29 @@ public class Skill : MonoBehaviour
         {
             float _time = distribution[i]==""?0:float.Parse(distribution[i].Split(',')[0]);
             float _percent = float.Parse(distribution[i].Split(',')[1]);
-            StartCoroutine(WaitForDamage(_time,_percent,ifSeep));
+            int realDamage = damage+basicAttack*caster.basicAttack+Mathf.FloorToInt(target.HpMax*damagePercent);
+            realDamage =Mathf.FloorToInt(realDamage*_percent);
+            StartCoroutine(WaitForDamage(_time,realDamage,ifSeep));
             totalTime+=_time;
+            if(id ==105)
+            {
+            Debug.Log("STEP1:狂风攻击的realDamage="+realDamage+",damage="+damage);
+            }
         }
         
     }
-    IEnumerator WaitForDamage(float _time,float _percent,bool ifSeep)
+    IEnumerator WaitForDamage(float _time,int realDamage,bool ifSeep)
     {
         yield return new WaitForSeconds(_time);
-        ExportDamage(_percent,ifSeep);
+        ExportDamage(realDamage,ifSeep);
     }
-    void ExportDamage(float _percent,bool ifSeep)//技能输出的最终伤害→没有计算减免和加成
+    void ExportDamage(int realDamage,bool ifSeep)//技能输出的最终伤害→没有计算减免和加成
     {
-        int realDamage = damage+basicAttack*caster.basicAttack+Mathf.FloorToInt(target.HpMax*damagePercent);
-        realDamage =Mathf.FloorToInt(realDamage*_percent);
         Battle.Instance.ReceiveSkillDamage(this,realDamage,false,ifSeep);
+        if(id ==105)
+        {
+            Debug.Log("STEP2:狂风攻击的realDamage="+realDamage+",damage="+damage);
+        }
     }
     public void ComputeHeal()
     {
