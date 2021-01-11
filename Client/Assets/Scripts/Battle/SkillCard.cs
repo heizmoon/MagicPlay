@@ -238,7 +238,7 @@ public class SkillCard : MonoBehaviour
     {
         Player.instance.playerActor.handCards.Add(this);
         // StartCoroutine(ThrowCardToHand());
-        
+        RefeashCardShow();
         StartCoroutine(SetCardPosition(delay));
 
     }
@@ -284,8 +284,7 @@ public class SkillCard : MonoBehaviour
     {
         skill.realManaCost -=num;
         if(skill.realManaCost<0)
-        skill.realManaCost =0;
-        RefeashCardShow();
+        skill.realManaCost =0;    
     }
     public void IncreaseDamage(int num)
     {
@@ -293,7 +292,6 @@ public class SkillCard : MonoBehaviour
         skill.damage +=num;
         if(skill.damage<0)
         skill.damage =0;
-        RefeashCardShow();
     }
     public void IncreaseHeal(int num)
     {

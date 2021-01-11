@@ -615,6 +615,8 @@ public class UIBattle : MonoBehaviour
         for (int i = 0; i < allCards.Count; i++)
         {
             allCards[i].ReduceMPCost(num);
+            allCards[i].RefeashCardShow();
+
         }
     }
 }
