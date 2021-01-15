@@ -153,6 +153,29 @@ public class UIBattle : MonoBehaviour
         // Debug.LogFormat("角色当前生命值为：{0}",playerActor.HpCurrent);
         
     }
+    void StartBattle()
+    {
+        //开战物品生效
+        StartCoroutine(IEWaitForOpenAbility());
+        Shuffle();//洗牌
+        DealCards();//发牌
+    }
+    IEnumerator IEWaitForOpenAbility()
+    {
+        yield return new WaitForSeconds(0.1f);
+        if(playerActor.abilities.Contains(5))//充能护符
+        {
+            playerActor.AddMp(100);
+        }
+        if(playerActor.abilities.Contains(7))//樱桃罐头
+        {
+            BuffManager.instance.CreateBuffForActor(1012,playerActor);    
+        }
+        if(playerActor.abilities.Contains(9))//震撼登场
+        {
+            BuffManager.instance.CreateBuffForActor(1011,Enemy);    
+        }
+    }
     //抽4张卡
     void InitSkillCards()
     {
@@ -166,8 +189,7 @@ public class UIBattle : MonoBehaviour
             cardsList.Add(skillCard);
             allCards.Add(skillCard);
         }
-        Shuffle();
-        DealCards();
+        
     }
     void PauseBattle()
     {
@@ -226,7 +248,7 @@ public class UIBattle : MonoBehaviour
         playerActor.animator.Play("idle");
         isBattleOver =false;
         Enemy.RunAI();
-        
+        StartBattle();       
     }
     public void CheckButtonMP()
     {
@@ -450,8 +472,12 @@ public class UIBattle : MonoBehaviour
     public void DealCards()
     {
         Debug.Log("开始补牌");
+        //检测当补牌时就触发的buff，道具
+        if(playerActor.abilities.Contains(7))
         {
-            //检测当补牌时就触发的buff，道具
+            // playerActor.AddHp(5);
+            Skill skill =SkillManager.TryGetFromPool(26,playerActor);
+            skill.ComputeHeal();
         }
         int maxNum = playerActor.dealCardsNumber;
         if(maxNum>8)

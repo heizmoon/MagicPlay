@@ -886,21 +886,24 @@ public class Actor : MonoBehaviour
         
         // go.SetActive(true);
     }
-    public void AddHp(int num)
+    public int AddHp(int num)
     {
         // if(this.actorType == ActorType.玩家角色)
         // Debug.LogWarningFormat("{0}的生命值变化{1},最终为{2}",this.name,num,HpCurrent);
-        
+        int changeNum =0;
         if(HpCurrent+num>=HpMax)
         {
+            changeNum = HpMax-HpCurrent;
             HpCurrent =HpMax;
         }
         else if(HpCurrent+num <= 0)
         {
+            changeNum = -HpCurrent;
             HpCurrent = 0;
         }
         else
         {
+            changeNum = num;
             HpCurrent =HpCurrent+num;
         }
         if(hpBar!=null)
@@ -910,6 +913,8 @@ public class Actor : MonoBehaviour
         // if(this.actorType == ActorType.敌人)
         if(num>0)
         Debug.LogWarningFormat("{0}的生命值变化{1},最终为{2}",this.name,num,HpCurrent);
+
+        return changeNum;
     }
 
     #region --------------------------技能命中，暴击，受到伤害等等角色反应,BUFF相关，复活--------------------
@@ -1234,7 +1239,10 @@ public class Actor : MonoBehaviour
                 Debug.Log("移除的技能："+_skill.id);
                 UIBattle.Instance.gameObject.GetComponent<ActorBackUp>().UsingSkillsID.Add(_skill.updateID);
                 Debug.Log("添加的技能："+_skill.updateID);
-
+            }
+            if(TakenSkill.id ==109)//斩杀，恢复10点生命值
+            {
+                AddHp(10);
             }
             
             Die();
@@ -1259,8 +1267,9 @@ public class Actor : MonoBehaviour
         }
         //如果身上有减少治疗的buff，那么治疗降低
         // if(buffs[i].buffData.id)
-        AddHp(num);
+        int realNum = -AddHp(num);
         OnTakeHeal(num);
+        bt.SetText(realNum,false);
         return num;
 
     }
