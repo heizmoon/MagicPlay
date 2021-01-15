@@ -68,7 +68,9 @@ public class Actor : MonoBehaviour
     public float autoReduceHPAmount =0;
     [HideInInspector]
     public float autoReduceMPAmount =0;
-
+    public float constArmorDecayTime =2;
+    public float ArmorAutoDecayTime =0;
+    bool ifArmorAutoDecay =true;
 
     public int basicAttack;
     public int basicDefence;
@@ -199,17 +201,34 @@ public class Actor : MonoBehaviour
                 AutoReduceMP();
             }
         }
+        if(ifArmorAutoDecay&&armor>0)
+        {
+            ArmorAutoDecayTime+=Time.deltaTime;
+            if(ArmorAutoDecayTime>=constArmorDecayTime)
+            {
+                armor =0;
+                ArmorAutoDecayTime =0;
+            }
+        }
     }
     // void AutoReduceHP()
     // {
     //     AddHp(Mathf.FloorToInt(autoReduceHPAmount));
     //     currentAutoReduceHPTime =0;
     // }
+    public void CloseArmorAutoDecay()
+    {
+         ifArmorAutoDecay =false;
+         ArmorAutoDecayTime =2;
+    }
+    public void RefeashArmorAutoDecayTime()
+    {
+        ArmorAutoDecayTime =0;
+    }
     void AutoReduceMP()
     {
         AddMp(autoReduceMPAmount);
         currentAutoReduceMPTime =0;
-
     }
     public void AddMaxHP(int number)
     {
@@ -933,7 +952,7 @@ public class Actor : MonoBehaviour
     {
         //执行当技能被抵抗时就xxx这类效果
     }
-    public int TakeDamage(int num,bool crit,int genre,bool ifRebound,bool ifSeep)//传入技能伤害,是否暴击,是否为反弹伤害 【增加是否为穿透伤害】【返回最终造成的伤害数值】
+    public int TakeDamage(int num,bool crit,int genre,bool ifRebound,bool ifSeep,Skill TakenSkill)//传入技能伤害,是否暴击,是否为反弹伤害 【增加是否为穿透伤害】【返回最终造成的伤害数值】
     {
         //如果角色已经死亡，则不会再承受伤害
         if(animState ==AnimState.dead)
@@ -1207,6 +1226,17 @@ public class Actor : MonoBehaviour
             ifDie =true;
             // HpCurrent =0;
             // hpBar.changeHPBar(HpCurrent,true);
+            if(TakenSkill.skillName =="圣剑攻击")
+            {
+                Skill _skill = TakenSkill.casterSummon.skillCard.skill;
+                //移除该技能对应的技能卡，然后创造一张该技能卡的升级卡给玩家
+                UIBattle.Instance.gameObject.GetComponent<ActorBackUp>().UsingSkillsID.Remove(_skill.id);
+                Debug.Log("移除的技能："+_skill.id);
+                UIBattle.Instance.gameObject.GetComponent<ActorBackUp>().UsingSkillsID.Add(_skill.updateID);
+                Debug.Log("添加的技能："+_skill.updateID);
+
+            }
+            
             Die();
         }    
         }
@@ -1260,7 +1290,7 @@ public class Actor : MonoBehaviour
         //召唤类技能进行召唤
         if(skill.summonNum>0)
         {
-            SummonManager.instance.CreateSummon(skill.summonType,skill.summonNum,this);
+            SummonManager.instance.CreateSummon(skill);
         }
         //如果有圣剑buff，那么命令圣剑攻击
         for (int i = 0; i < buffs.Count; i++)
@@ -1271,6 +1301,11 @@ public class Actor : MonoBehaviour
                 if(OnOrderSummonedAttack!=null)
                 OnOrderSummonedAttack.Invoke(0);
             }
+        }
+        if(skill.id == 111)
+        {
+            Debug.Log("不屈之盾");
+            CloseArmorAutoDecay();
         }
          //每次使用改变自身伤害的技能
         if(skill.skillData.EUSDamage!=0)
@@ -1392,6 +1427,7 @@ public class Actor : MonoBehaviour
                 buffNum++;
                 // tempBUff =item;
                 tempList.Add(item);
+                
             }
         }
         
@@ -1438,9 +1474,11 @@ public class Actor : MonoBehaviour
             if(tempList[i].buffIcon==null)
             {
                 tempList[i].CheckBuffIcon();
+                
             }
             tempList[i].buffIcon.buffNum=buffNum;
             tempList[i].buffIcon.ResetTime();
+            
         }
         if(ifMax)
         {

@@ -24,22 +24,22 @@ public class SummonManager : MonoBehaviour
     {
         
     }
-    public void CreateSummon(int id, int num,Actor master)
+    public void CreateSummon(Skill skill)
     {
-        for (int i = 0; i < num; i++)
+        for (int i = 0; i < skill.skillData.summonNum; i++)
         {
-            CreateSummon(id,master);
+            CreateSummon(skill,skill.caster);
         }
 
     }
-    public void CreateSummon(int id, Actor master)
+    public void CreateSummon(Skill skill, Actor master)
     {
-        SummonData summonData = GetInfo(id);
+        SummonData summonData = GetInfo(skill.skillData.summonType);
         Summoned summoned =((GameObject)Instantiate(Resources.Load("Prefabs/Summoned/"+summonData.prefab))).GetComponent<Summoned>();
         summoned.transform.SetParent(Player.instance.playerActor.summonPoint);
         summoned.transform.localPosition =Vector3.zero;
         summoned.transform.localScale =Vector3.one;
-        summoned.Init(master,summonData,master.SummonedLifeTimePlus);
+        summoned.Init(master,summonData,master.SummonedLifeTimePlus,skill);
         if(master == Player.instance.playerActor)
         {
             playerSummoneds.Add(summoned);

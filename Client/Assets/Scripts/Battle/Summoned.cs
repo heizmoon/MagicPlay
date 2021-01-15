@@ -20,6 +20,7 @@ public class Summoned : MonoBehaviour
     Skill skill;
     Animator animator;
     List<Buff> buffs =new List<Buff>();
+    public SkillCard skillCard;
     void Start()
     {
         //事件订阅
@@ -32,16 +33,17 @@ public class Summoned : MonoBehaviour
         castPoint =transform.Find("Image/castPoint");
         
     }
-    public void Init(Actor master,SummonData summonData,float lifeTimePlus)
+    public void Init(Actor master,SummonData summonData,float lifeTimePlus,Skill summonSkill)
     {
         this.master =master;
         this.summonData =summonData;
+        this.skillCard =summonSkill.skillCard;
         target = master.target;
         LifeTime =summonData.lifeTime+lifeTimePlus;
         Power =summonData.power;
         attackSpeed =summonData.speed;
         
-        skill = SkillManager.TryGetFromPool(summonData.skill,master);
+        skill = SkillManager.TryGetFromPool(summonData.skill,this);
         if(skill.targetSelf)
         {
             skill.target =master;

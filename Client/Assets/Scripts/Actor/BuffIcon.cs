@@ -57,6 +57,7 @@ public class BuffIcon : MonoBehaviour
     }
     void InintBuffIcon()
     {
+        ifInit = true;
         buff = buffs[0];
         buffID =buff.buffData.id;
         lastTime =buff.buffData.time;
@@ -87,7 +88,7 @@ public class BuffIcon : MonoBehaviour
             effect.gameObject.SetActive(false);
         }
         triggerEffectString=buff.buffData.triggerEffect;
-        ifInit = true;
+        
     }
     void OnEffectInterval()
     {
@@ -181,6 +182,7 @@ public class BuffIcon : MonoBehaviour
     }
     void OnEffectBegin()
     {
+
         for (int i = 0; i < buffs.Count; i++)
         {
             if(buffs[i]!=null)

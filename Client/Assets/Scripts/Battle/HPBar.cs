@@ -24,6 +24,7 @@ public class HPBar : MonoBehaviour
     BarEventArgs barEventFalse;
 
     public Text armorText;
+    public Image armorImage;
 
     float timeInterval;
     float timeCurrentInterval;
@@ -44,10 +45,10 @@ public class HPBar : MonoBehaviour
       
     void Awake()
     {
-        timer =gameObject.AddComponent<Timer>();
-        timer.autoDestory =false;
-        timer.autoStart =false;
-        timer.interval=0.1f;
+        // timer =gameObject.AddComponent<Timer>();
+        // timer.autoDestory =false;
+        // timer.autoStart =false;
+        // timer.interval=0.1f;
         if(showArmor)
         {
             armorText.transform.parent.gameObject.SetActive(true);
@@ -122,6 +123,10 @@ public class HPBar : MonoBehaviour
         if(showArmor&&actor)
         {
             armorText.text = actor.armor+"";
+            if(actor.armor>0)
+            armorImage.fillAmount = (actor.constArmorDecayTime-actor.ArmorAutoDecayTime)/actor.constArmorDecayTime;
+            else
+            armorImage.fillAmount = 0;
         }
         if(hasShadow)
         {

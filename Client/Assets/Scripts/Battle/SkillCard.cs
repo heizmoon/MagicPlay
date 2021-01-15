@@ -175,12 +175,32 @@ public class SkillCard : MonoBehaviour
             UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
             //弃牌的技能弃牌:弃牌数量不包含自身
             if(skill.usedThrowCard>0)
-            UIBattle.Instance.ThrowHandCardsToPool(skill.usedThrowCard);
-           
-            
-
+            {
+                int throwNum = UIBattle.Instance.ThrowHandCardsToPool(skill.usedThrowCard);
+                Debug.Log("弃牌数="+throwNum);
+                if(throwNum>0)
+                {
+                    //执行每当弃牌时就XX的事件
+                    if(skill.id == 107)//技能--质能转换
+                    {
+                        skill.target.AddMp(throwNum);//每弃一张牌回复1点能量
+                    }
+                    if(skill.id == 110)//技能--破釜沉舟
+                    {
+                        //每弃一张牌获得4点护甲
+                        skill.target.armor+= 4*(throwNum+1);
+                    }
+                }
+            }
             CheckIfNeedSelectCard();
         }
+    }
+    IEnumerator IESpecialAddBuff(int num)
+    {
+        yield return new WaitForEndOfFrame();
+        // BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);//每弃一张牌获得4点护甲
+        //修改BuffIcon显示层数
+        BuffManager.instance.TryModiferBuffIconNum(skill.buffID,num+1,skill.target);
     }
     // IEnumerator WaitForUseCard()
     // {
@@ -282,16 +302,22 @@ public class SkillCard : MonoBehaviour
     //3.降低/增加 自身的消耗
     public void ReduceMPCost(int num)
     {
-        skill.realManaCost -=num;
-        if(skill.realManaCost<0)
-        skill.realManaCost =0;    
+        skill.tempMpCost -=num;
+        if(skill.tempMpCost<0)
+        skill.realManaCost =0;
+        else
+        skill.realManaCost =skill.tempMpCost;
+        // Debug.Log("tempMpCost="+skill.tempMpCost);
+
     }
     public void IncreaseDamage(int num)
     {
-        Debug.Log("增加了攻击");
-        skill.damage +=num;
-        if(skill.damage<0)
+        // Debug.Log("增加了攻击");
+        skill.tempDamage +=num;
+        if(skill.tempDamage<0)
         skill.damage =0;
+        else
+        skill.damage =skill.tempDamage;
     }
     public void IncreaseHeal(int num)
     {

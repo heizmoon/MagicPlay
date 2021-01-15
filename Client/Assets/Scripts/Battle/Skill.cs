@@ -33,6 +33,7 @@ public class Skill : MonoBehaviour
     public float CD;
     public Actor target;//技能的目标
     public Actor caster;//技能的释放者
+    public Summoned casterSummon;
     public float orginSpellTime;
     public float damageDelay;
     public string hitEffect;
@@ -51,6 +52,8 @@ public class Skill : MonoBehaviour
     public int summonNum;
     public SkillData skillData;
     public SkillCard skillCard;
+    public int tempMpCost;
+    public int tempDamage;
 
     //考虑将读取表格和类写在一起？
     void Start()
@@ -120,6 +123,61 @@ public class Skill : MonoBehaviour
         //     ModiferCastSpeed();
         // }
         realManaCost = Mathf.FloorToInt(caster.MpMax*manaCostPercent+manaCost);
+        tempMpCost =realManaCost;
+        tempDamage =damage;
+        describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost),Mathf.Abs(manaProduce));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=crit;{4}=hit;{5}=seep;{6}=fast
+    }
+    public void InitSkill(int _id,Summoned summoned)//根据ID从技能表中读取技能,获取技能释放者
+    {
+        id =_id;
+        skillData = SkillManager.instance.GetInfo(_id);
+        if(skillData == null)
+        {
+            Debug.Log("技能数据为空！");
+            return;
+        }
+        skillName = skillData.name;
+        describe = skillData.describe;
+        icon =skillData.icon;
+        spellEffect =skillData.spellEffect;
+        castEffect =skillData.castEffect;
+        spelllTime = skillData.spelllTime;
+        
+        manaCost = skillData.manaCost;
+        
+        
+        damage = skillData.damage;
+        basicAttack =skillData.basicAttack;
+        damagePercent =skillData.damagePercent;
+        damageDistribution = skillData.damageDistribution;
+        color =skillData.color;
+        heal = skillData.heal;
+        
+        targetSelf =skillData.targetSelf;
+        manaProduce =skillData.manaProduce;
+        
+        buffID =skillData.buffID;
+        CD= skillData.CD;
+        ifActive =skillData.ifActive;
+        damageDelay =damageDistribution.Split(',')[0]==""?0: float.Parse(damageDistribution.Split(',')[0]);
+        orginSpellTime =spelllTime;
+        hitEffect =skillData.hitEffect;
+        usedToRemove =skillData.usedToRemove;
+        usedThrowCard =skillData.usedThrowCard;
+        usedChooseCard =skillData.usedChooseCard;
+        updateID =skillData.updateID;
+        ifSeep = skillData.ifSeep;
+        rank =skillData.rank;
+        summonNum =skillData.summonNum;
+        summonType =skillData.summonType;
+        casterSummon = summoned;
+        GetTarget(summoned);
+        
+        // if(actor)
+        // {
+        //     ModiferCastSpeed();
+        // }
+        realManaCost = Mathf.FloorToInt(caster.MpMax*manaCostPercent+manaCost);
         describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost),Mathf.Abs(manaProduce));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=crit;{4}=hit;{5}=seep;{6}=fast
     }
     void GetTarget(Actor actor)//获取目标和施法者
@@ -132,6 +190,26 @@ public class Skill : MonoBehaviour
         else
         {
             if(actor.actorType ==0)
+            {
+                target = Battle.Instance.enemy;
+            }
+            else
+            {
+                target = Player.instance.playerActor;
+            }
+            
+        }
+    }
+    void GetTarget(Summoned summoned)//获取目标和施法者
+    {
+        caster =summoned.master;
+        if(targetSelf)
+        {
+            target=caster;
+        }
+        else
+        {
+            if(caster.actorType ==ActorType.玩家角色)
             {
                 target = Battle.Instance.enemy;
             }

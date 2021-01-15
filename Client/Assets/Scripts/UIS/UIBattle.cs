@@ -364,43 +364,16 @@ public class UIBattle : MonoBehaviour
 
     public BuffIcon CreateBuffIcon(Buff buff,bool ifHasIcon)
     {
-        if(buff.buffData.maxNum>=0)
+        BuffIcon buffIcon =CheckBuffIcon(buff);
+        if(buffIcon)
         {
-            //查找是否已经拥有bufficon
-            if(buff.target.actorType==ActorType.玩家角色)
-            {
-                if(t_playerBuffPosition.childCount>0)
-                {
-                    foreach (var item in t_playerBuffPosition.GetComponentsInChildren<BuffIcon>())
-                    {
-                        if(item.buffID ==buff.buffData.id)
-                        {
-                            //已经有了
-                            item.buffs.Add(buff);
-                            return item;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if(t_enemyBuffPosition.childCount>0)
-                {
-                    foreach (var item in t_enemyBuffPosition.GetComponentsInChildren<BuffIcon>())
-                    {
-                        if(item.buffID ==buff.buffData.id)
-                        {
-                            //已经有了
-                            item.buffs.Add(buff);
-                            return item;
-                        }
-                    }
-                }
-            }
+            buffIcon.buffs.Add(buff);
+            return buffIcon;
         }
-        
+        else
+        {
         //没有的情况，创建一个prefab
-        BuffIcon buffIcon = ((GameObject)Instantiate(Resources.Load("Prefabs/BuffIcon"))).GetComponent<BuffIcon>();
+        buffIcon = ((GameObject)Instantiate(Resources.Load("Prefabs/BuffIcon"))).GetComponent<BuffIcon>();
         buffIcon.buffs.Add(buff);
         if(ifHasIcon)
         {
@@ -425,14 +398,57 @@ public class UIBattle : MonoBehaviour
             buffIcon.transform.localScale =Vector3.one;
             buffIcon.transform.localPosition =Vector3.zero;
         }
-        
         return buffIcon;
+        }
+
     }
-    ///<summary>抽齐4张手牌(发牌)</summary>
+    public BuffIcon CheckBuffIcon(Buff buff)
+    {
+        if(buff.buffData.maxNum>=0)
+        {
+            //查找是否已经拥有bufficon
+            if(buff.target.actorType==ActorType.玩家角色)
+            {
+                if(t_playerBuffPosition.childCount>0)
+                {
+                    foreach (var item in t_playerBuffPosition.GetComponentsInChildren<BuffIcon>())
+                    {
+                        if(item.buffID ==buff.buffData.id)
+                        {
+                            //已经有了
+                            return item;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if(t_enemyBuffPosition.childCount>0)
+                {
+                    foreach (var item in t_enemyBuffPosition.GetComponentsInChildren<BuffIcon>())
+                    {
+                        if(item.buffID ==buff.buffData.id)
+                        {
+                            //已经有了
+                            return item;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    ///<summary>抽齐4张手牌(补牌)</summary>
     public void DealCards()
     {
-        Debug.Log("开始发牌");
-        for (int i = 0; i < playerActor.dealCardsNumber ; i++)
+        Debug.Log("开始补牌");
+        {
+            //检测当补牌时就触发的buff，道具
+        }
+        int maxNum = playerActor.dealCardsNumber;
+        if(maxNum>8)
+        maxNum=8;//补牌数量上限为8
+        for (int i = 0; i < maxNum ; i++)
         {
             if(cardsList.Count<1)
             ReloadCards();//洗牌
@@ -501,8 +517,9 @@ public class UIBattle : MonoBehaviour
         DealCards();
     }
     ///<summary>将一定数量的手牌丢入弃牌堆</summary>
-    public void ThrowHandCardsToPool(int num)
+    public int ThrowHandCardsToPool(int num)
     {
+        int throwNum =0;
         Debug.Log("将 "+num +" 张手牌丢入弃牌堆");
         for (int i = 0; i < num; i++)
         {
@@ -510,14 +527,16 @@ public class UIBattle : MonoBehaviour
             if(playerActor.handCards.Count==0)
             {
                 DealCards();
-                return;
+                return i;
             }
             //随机一张手牌；丢入弃牌堆
             SkillCard skillCard =RandomSelectACard();
             cardPos[skillCard.posID] =false;
             skillCard.ThrowCard();
+            throwNum++;
         }
         SkillCard.CheckIfNeedSelectCard();
+        return throwNum;//----------------此处可能遗留有顺序问题
     }
     SkillCard RandomSelectACard()
     {

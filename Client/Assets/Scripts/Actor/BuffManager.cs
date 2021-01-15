@@ -29,7 +29,7 @@ public enum BuffType
     数值受伤回复 =21,
     影响全局能量消耗=22,
     百分比影响暴击 =23,
-    影响单技能能量消耗 =24,
+    影响补牌数量 =24,
     百分比影响韧性 =25,
     百分比影响抗性 =26,
     百分比影响穿透 =27,
@@ -141,8 +141,8 @@ public class BuffManager : MonoBehaviour
     {
         buff.target.AddBuff(buff);
         buff.CheckChildren();
-        if(buff.buffData.groupType==1)
-        Debug.LogWarningFormat("添加了深渊遗物buff名为：{0}",buff.buffData.name);
+        // if(buff.buffData.groupType==1)
+        // Debug.LogWarningFormat("添加了深渊遗物buff名为：{0}",buff.buffData.name);
     }
     public static void RemoveBuffFromActor(Buff buff,Actor actor)
     {
@@ -295,5 +295,24 @@ public class BuffManager : MonoBehaviour
         if(OnSummonedRemoveBuff!=null)
         OnSummonedRemoveBuff(buff);
     }
-    
+    public void TryModiferBuffIconNum(int id,int num,Actor target)
+    {
+
+        BuffIcon buffIcon =  UIBattle.Instance.CheckBuffIcon(FindBuff(id,target));
+        if(buffIcon)
+        {
+            buffIcon.textBuffNum.text = num.ToString();
+        }
+    }
+    Buff FindBuff(int id,Actor target)
+    {
+        foreach (var item in target.buffs)
+        {
+            if(item.buffData.id == id)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
 }

@@ -110,7 +110,8 @@ public class UISkillTree : MonoBehaviour
         cube =cb;
         information.SetActive(true);
         skillID =cb.skillID;
-        skill.InitSkill(skillID,null);
+        Actor actor = null;
+        skill.InitSkill(skillID,actor);
         icon.sprite = Resources.Load("Texture/Skills/"+SkillManager.instance.GetInfo(skillID,"icon"),typeof(Sprite)) as Sprite;
         //设置技能名字
         skillName.text =skill.skillName;

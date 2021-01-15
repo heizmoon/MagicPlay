@@ -47,48 +47,59 @@ public class Buff
     public void OnBuffBegin()
     {
         //执行当buff开始就xx的事件
-        if(buffData._type ==BuffType.昏迷)
+        switch (buffData._type)
         {
-            //昏迷
-            target.animState =AnimState.dizzy;
-            target.StopCasting();
-            target.ChangeAnimatorInteger(4);
+            case BuffType.昏迷:
+            {
+                target.animState =AnimState.dizzy;
+                target.StopCasting();
+                target.ChangeAnimatorInteger(4);
+            }
+            break;
+            case BuffType.数值吸收伤害:
+                target.armor+=Mathf.FloorToInt(buffData.value);
+                target.RefeashArmorAutoDecayTime();
+                // if(buffData.id ==1008)
+                // {
+                //     Debug.Log("增加护甲："+Mathf.FloorToInt(buffData.value)+"buffIcon.buffs.count="+buffIcon.buffs.Count+"buffIcon.buffs.buffNum"+buffIcon.buffNum);
+                // }
+            break;
+            case BuffType.影响闪避:
+                target.dodge+=Mathf.FloorToInt(buffData.value);
+            break;
+            case BuffType.影响全局能量消耗:
+            {
+                UIBattle.Instance.playerActor.cardMpReduce+=Mathf.FloorToInt(buffData.value);
+                UIBattle.Instance.ReduceAllCardCost(Mathf.FloorToInt(buffData.value));
+            }
+            break;
+            case BuffType.影响召唤物强度:
+                BuffManager.instance.SummonedAddBuff(this);
+            break;
+            case BuffType.影响召唤物攻速:
+                BuffManager.instance.SummonedAddBuff(this);
+            break;
+            case BuffType.影响召唤物持续时间:
+            {
+                target.SummonedLifeTimePlus+=buffData.value;
+                target.InvokeSummonedLifeTimeUpdate(Mathf.FloorToInt(buffData.value));
+            }
+            break;
+            case BuffType.影响补牌数量:
+                target.dealCardsNumber+=Mathf.FloorToInt(buffData.value);
+            break;
+            default:
+            break;
         }
-        if(buffData._type == BuffType.数值吸收伤害)
-        {
-            target.armor+=Mathf.FloorToInt(buffData.value);
-        }
-        if(buffData._type == BuffType.影响闪避)
-        {
-            target.dodge+=Mathf.FloorToInt(buffData.value);
-        }
-        if(buffData._type == BuffType.影响全局能量消耗)
-        {
-            Debug.Log("影响全局能量消耗");
-            UIBattle.Instance.playerActor.cardMpReduce+=Mathf.FloorToInt(buffData.value);
-            UIBattle.Instance.ReduceAllCardCost(Mathf.FloorToInt(buffData.value));
-        }
-        if(buffData._type == BuffType.影响召唤物强度)
-        {
-            BuffManager.instance.SummonedAddBuff(this);
-        }
-        if(buffData._type == BuffType.影响召唤物攻速)
-        {
-            BuffManager.instance.SummonedAddBuff(this);
-        }
-        if(buffData._type == BuffType.影响召唤物持续时间)
-        {
-            Debug.Log("影响召唤物持续时间");
-            target.SummonedLifeTimePlus+=buffData.value;
-            target.InvokeSummonedLifeTimeUpdate(Mathf.FloorToInt(buffData.value));
-        }
+        
 
     }
     public void OnBuffEnd()
     {
         //执行当buff结束后XX的事件
-        if(buffData._type ==BuffType.昏迷)
+        switch (buffData._type)
         {
+            case BuffType.昏迷:
             //解除昏迷
             if(target.animState!=AnimState.dead)
             {
@@ -96,43 +107,49 @@ public class Buff
                 target.ChangeAnimatorInteger(0);
                 target.RunAI();
             }
-        }
-        //如果身上没有id为xxx的buff（护甲持续时间变永久），那么护甲类buff时间到之后将会移除护甲
-        
-        if(buffData._type == BuffType.数值吸收伤害)
-        {
-            target.AddArmor(-Mathf.FloorToInt(buffData.value));
+            break;
+            case BuffType.数值吸收伤害:
+            //如果身上没有id为xxx的buff（护甲持续时间变永久），那么护甲类buff时间到之后将会移除护甲
+                // target.AddArmor(-Mathf.FloorToInt(buffData.value));
+                //不再根据单独的buff移除护甲，而是统一时间移除护甲
+            break;
+            case BuffType.影响闪避:
+            {
+                if(target.dodge-Mathf.FloorToInt(buffData.value) > 0)
+                {
+                    target.dodge-=Mathf.FloorToInt(buffData.value);
+                }
+                else
+                {
+                    target.dodge =0;
+                }
+            }
+            break;
+            case BuffType.影响全局能量消耗:
+            {
+                UIBattle.Instance.playerActor.cardMpReduce-=Mathf.FloorToInt(buffData.value);
+                UIBattle.Instance.ReduceAllCardCost(Mathf.FloorToInt(-buffData.value));
+            }
+            break;
+            case BuffType.影响召唤物强度:
+                BuffManager.instance.SummonedRemoveBuff(this);
+            break;
+            case BuffType.影响召唤物攻速:
+                BuffManager.instance.SummonedRemoveBuff(this);
+            break;
+            case BuffType.影响召唤物持续时间:
+            {
+                target.SummonedLifeTimePlus-=buffData.value;
+                target.InvokeSummonedLifeTimeUpdate(-Mathf.FloorToInt(buffData.value));
+            }
+            break;
+            case BuffType.影响补牌数量:
+                target.dealCardsNumber-=Mathf.FloorToInt(buffData.value);
+            break;
+            default:
+            break;
         }
 
-        if(buffData._type == BuffType.影响闪避)
-        {
-            if(target.dodge-Mathf.FloorToInt(buffData.value) > 0)
-            {
-                target.dodge-=Mathf.FloorToInt(buffData.value);
-            }
-            else
-            {
-                target.dodge =0;
-            }
-        }
-        if(buffData._type == BuffType.影响全局能量消耗)
-        {
-            UIBattle.Instance.playerActor.cardMpReduce-=Mathf.FloorToInt(buffData.value);
-            UIBattle.Instance.ReduceAllCardCost(Mathf.FloorToInt(-buffData.value));
-        }
-        if(buffData._type == BuffType.影响召唤物强度)
-        {
-            BuffManager.instance.SummonedRemoveBuff(this);
-        }
-        if(buffData._type == BuffType.影响召唤物攻速)
-        {
-            BuffManager.instance.SummonedRemoveBuff(this);
-        }
-        if(buffData._type == BuffType.影响召唤物持续时间)
-        {
-            target.SummonedLifeTimePlus-=buffData.value;
-            target.InvokeSummonedLifeTimeUpdate(-Mathf.FloorToInt(buffData.value));
-        }
 
 
         int num =1;

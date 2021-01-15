@@ -70,7 +70,7 @@ public class Battle : MonoBehaviour
                 //通知施法者已经暴击,暴击伤害为damage(未经削减的)
                 skill.caster.OnSkillHasCrit(skill,damage);
             }
-            damage = ComputeDamageBuffStepTwo(skill,damage);
+            // damage = ComputeDamageBuffStepTwo(skill,damage);
             if(!skill.targetSelf && damage<=0)
             {
                 //通知施法者技能被抵抗
@@ -80,7 +80,7 @@ public class Battle : MonoBehaviour
                 return;
             }
             Statistic(skill,damage);//伤害统计
-            ExportDamage(damage,skill.target,crit,skill.color,ifRebound,ifSeep);
+            ExportDamage(damage,skill.target,crit,skill.color,ifRebound,ifSeep,skill);
             if(ifRebound)
             {
                 // Debug.LogWarningFormat("{0}反弹伤害：{1}点,目标是：{2}",skill.skillName,damage,skill.target.name);
@@ -98,7 +98,8 @@ public class Battle : MonoBehaviour
     ///<summray>用于反弹伤害</summary>
     public void ReceiveSkillDamage(int damage,Actor target,int genre,bool ifSeep)
     {
-        ExportDamage(damage,target,false,genre,true,ifSeep);
+        Skill skill =null;
+        ExportDamage(damage,target,false,genre,true,ifSeep,skill);
     }
     //第一步：技能输出伤害 = （技能原本伤害+buff数值附加伤害）*（1+buff百分比附加）
     //第二步：如果暴击 技能输出伤害 = (技能输出伤害 + 暴击数值附加)* （2+暴击伤害百分比附加） 
@@ -163,9 +164,9 @@ public class Battle : MonoBehaviour
         return damage;
         
     }
-    void ExportDamage(int damage,Actor target,bool crit,int genre,bool ifRebound,bool ifSeep)//计算后传递伤害给目标
+    void ExportDamage(int damage,Actor target,bool crit,int genre,bool ifRebound,bool ifSeep,Skill skill)//计算后传递伤害给目标
     {
-        target.TakeDamage(damage,crit,genre,ifRebound,ifSeep);
+        target.TakeDamage(damage,crit,genre,ifRebound,ifSeep,skill);
         // Debug.LogFormat("目标是：{0}，伤害为：{1}",target.name,damage);
     }
     bool ComputeHit(Skill skill)//判断是否命中

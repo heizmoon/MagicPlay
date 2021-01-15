@@ -80,6 +80,18 @@ public class SkillManager : MonoBehaviour
         skill.InitSkill(id,actor);
         return skill;
     }
+    public static Skill TryGetFromPool(int id,Summoned summoned)
+    {
+        Skill skill =null;
+        if(id ==0)
+        {
+            return skill;
+        }
+        skill =((GameObject)Instantiate(Resources.Load("Prefabs/Skill"))).GetComponent<Skill>();
+        skill.transform.SetParent(ts);
+        skill.InitSkill(id,summoned);
+        return skill;
+    }
     public static void ClearPool()
     {
         Skill[] skills = ts.GetComponentsInChildren<Skill>();
