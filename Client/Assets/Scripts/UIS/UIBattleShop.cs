@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class UIBattleShop : MonoBehaviour
 {
@@ -26,14 +27,17 @@ public class UIBattleShop : MonoBehaviour
         sureButton.interactable =false;   
         foreach (var item in abilityItemBoxes)
         {
-            item.toggle.onValueChanged.AddListener(isOn=>OnToggle(item));
+            // item.toggle.onValueChanged.AddListener(isOn=>OnToggle(item));
+            item.button.onClick.AddListener(delegate () {BuyItem(item);});
         } 
         foreach (var item in skillItemBoxes)
         {
-            item.toggle.onValueChanged.AddListener(isOn=>OnToggle(item));
+            // item.toggle.onValueChanged.AddListener(isOn=>OnToggle(item));
+            item.button.onClick.AddListener(delegate () {BuyItem(item);});
         } 
         Refreash();
     }
+    
     void Refreash()
     {
         AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,Player.instance.playerActor.abilities);
@@ -44,11 +48,14 @@ public class UIBattleShop : MonoBehaviour
         {
             abilityItemBoxes[i].Reset();
             abilityItemBoxes[i].Init(Adatas[i]);
+            abilityItemBoxes[i].InShop();
+
         }
         for (int i = 0; i < Sdatas.Length; i++)
         {
             skillItemBoxes[i].Reset();
             skillItemBoxes[i].Init(Sdatas[i]);
+            skillItemBoxes[i].InShop();
         }
         //随机1个能力打折
         RandomDiscountAbility(Random.Range(0,3));
@@ -64,12 +71,12 @@ public class UIBattleShop : MonoBehaviour
     void RandomDiscountAbility(int number)
     {   
         abilityItemBoxes[number].price =Mathf.FloorToInt(abilityItemBoxes[number].price)/2;      
-        abilityItemBoxes[number].itemName.text = "半价："+abilityItemBoxes[number].price;
+        abilityItemBoxes[number].priceText.text = "半价："+abilityItemBoxes[number].price;
     }
     void RandomDiscountSkill(int number)
     {
         skillItemBoxes[number].price =Mathf.FloorToInt(skillItemBoxes[number].price)/2;       
-        skillItemBoxes[number].itemName.text = "半价："+skillItemBoxes[number].price;
+        skillItemBoxes[number].priceText.text = "半价："+skillItemBoxes[number].price;
     }
     //决定升级哪个技能
     int RandomUpdateSkill()
@@ -148,6 +155,18 @@ public class UIBattleShop : MonoBehaviour
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++金币UI显示变化
         UIBasicBanner.instance.ChangeGoldText();
         RefeashBuyButton();
+    }
+    void BuyItem(ItemBox item)
+    {
+        
+        item.Disable();
+        Player.instance.Gold-=item.price;
+        if(item.type ==1)
+        Player.instance.playerActor.UsingSkillsID.Add(item.id);
+        else if(item.type ==2)
+        Player.instance.playerActor.abilities.Add(item.id);
+
+        UIBasicBanner.instance.ChangeGoldText();
     }
     void OnButtonReturn()
     {

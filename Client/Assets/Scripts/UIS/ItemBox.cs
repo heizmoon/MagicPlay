@@ -15,6 +15,9 @@ public class ItemBox : MonoBehaviour
     Transform Titem;
     public int type;
     GameObject skillMark;
+    public Button button;
+    public Text priceText;
+    public bool inshop;
     void Awake()
     {
         toggle =GetComponent<Toggle>();
@@ -46,22 +49,22 @@ public class ItemBox : MonoBehaviour
         card.transform.localPosition =Vector3.zero;
         card.transform.localScale=Vector3.one;
         
-        toggle.targetGraphic = card.GetComponent<Image>();
-        toggle.graphic = skillMark.GetComponent<Image>();
+        // toggle.targetGraphic = card.GetComponent<Image>();
+        // toggle.graphic = skillMark.GetComponent<Image>();
 
         // describe =item.describe;
         price =(item.rank+1)*25;
-        itemName.text =price.ToString();
+        itemName.text ="";
         id =item.id;
     }
     public void Init(AbilityData item)
     {
-        if(skillMark)
-        skillMark.SetActive(false);
+        // if(skillMark)
+        // skillMark.SetActive(false);
         
         type =2;
         icon.sprite = Resources.Load<Sprite>("Texture/Ability/"+item.icon);
-        itemName.text =item.price.ToString();
+        itemName.text =item.name;
         textChange.text = item.describe;
         textChange.gameObject.SetActive(false);
         describe =item.describe;
@@ -114,6 +117,7 @@ public class ItemBox : MonoBehaviour
         toggle.interactable =false;
         itemName.text ="已购买";
         itemName.color = Color.white;
+        button.gameObject.SetActive(false);
     }
     public void Reset()
     {
@@ -128,7 +132,7 @@ public class ItemBox : MonoBehaviour
         // }
         if(Titem.childCount>0)
         Destroy(Titem.GetChild(0).gameObject);
-        itemName.color = Color.black;
+        // itemName.color = Color.black;
         toggle.interactable =true;
 
         if(toggle.graphic)
@@ -168,7 +172,23 @@ public class ItemBox : MonoBehaviour
         skillMark.SetActive(false);
         toggle.onValueChanged.RemoveAllListeners();
         toggle.onValueChanged.AddListener(isOn => OpenDetail(isOn));
-        itemName.gameObject.SetActive(false);
+        // itemName.gameObject.SetActive(false);
+        textChange.gameObject.SetActive(false);
+    }
+    public void InShop()
+    {
+        inshop =true;
+        if(toggle.graphic)
+        toggle.graphic.gameObject.SetActive(false);
+        toggle.graphic =null;
+        skillMark.SetActive(false);
+        toggle.onValueChanged.RemoveAllListeners();
+        toggle.onValueChanged.AddListener(isOn => OpenDetail(isOn));
+        itemName.gameObject.SetActive(true);
+        textChange.gameObject.SetActive(false);
+        button.gameObject.SetActive(true);
+        priceText.gameObject.SetActive(true);
+        priceText.text =string.Format("{0}",price);
         textChange.gameObject.SetActive(false);
     }
     void OpenDetail(bool isOn)
@@ -179,6 +199,7 @@ public class ItemBox : MonoBehaviour
         {
             textChange.gameObject.SetActive(true);
         }
+        button.gameObject.SetActive(false);
     }
 
 }

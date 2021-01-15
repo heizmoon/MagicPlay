@@ -10,6 +10,7 @@ public class UICardDetail : MonoBehaviour
     Transform target;
     Vector3 tempVector;
     int type;
+    ItemBox itemBox;
     void Awake()
     {
         background =transform.Find("Background").gameObject.GetComponent<Button>();
@@ -29,12 +30,13 @@ public class UICardDetail : MonoBehaviour
     }
     public void Init(ItemBox itemBox)
     {
+        this.itemBox =itemBox;
         target = itemBox.transform;
         tempParent =target.parent;
         tempVector =target.localPosition;
         target.SetParent(point);
         target.localPosition =Vector3.zero;
-        target.localScale = new Vector3(2.5f,2.5f,2.5f);
+        target.localScale = new Vector3(2f,2f,2f);
         type =1;
         itemBox.toggle.onValueChanged.RemoveAllListeners();
         // Debug.Log("查看详情");
@@ -55,11 +57,21 @@ public class UICardDetail : MonoBehaviour
         {
             target.GetComponent<SkillCard>().canShow =true;
         }
-        if(type == 1)
+        if(type == 1&&!itemBox.inshop)
         {
-            target.GetComponent<ItemBox>().HideToggleSelect();
+            itemBox.HideToggleSelect();
         }
+        if(type == 1&&itemBox.inshop)
+        {
+            itemBox.InShop();
+        }
+        StartCoroutine(WaitForDestory());
+    }
+    IEnumerator WaitForDestory()
+    {
+        yield return new WaitForEndOfFrame();
         Destroy(gameObject);
+
     }
     public static UICardDetail CreateUI()
     {
