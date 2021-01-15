@@ -189,6 +189,7 @@ public class SkillCard : MonoBehaviour
                     {
                         //每弃一张牌获得4点护甲
                         skill.target.armor+= 4*(throwNum+1);
+                        skill.target.RefeashArmorAutoDecayTime();
                     }
                 }
             }
@@ -307,7 +308,6 @@ public class SkillCard : MonoBehaviour
         skill.realManaCost =0;
         else
         skill.realManaCost =skill.tempMpCost;
-        // Debug.Log("tempMpCost="+skill.tempMpCost);
 
     }
     public void IncreaseDamage(int num)

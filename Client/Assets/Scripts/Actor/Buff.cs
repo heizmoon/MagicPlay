@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
 public class Buff
 {
     // Start is called before the first frame update

@@ -126,7 +126,7 @@ public class BuffIcon : MonoBehaviour
         stop =true;
         int num=0;
         // buffs.RemoveAll(null);
-        // Debug.LogWarningFormat("开始移除,共有{0}个",buffs.Count);
+        
         for (int i = 0; i < buffs.Count; i++)
         {
             num++;

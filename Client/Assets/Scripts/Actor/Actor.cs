@@ -1297,14 +1297,12 @@ public class Actor : MonoBehaviour
         {
             if(buffs[i].buffData.id == 1001)
             {
-                Debug.LogWarning("攻击！");
                 if(OnOrderSummonedAttack!=null)
                 OnOrderSummonedAttack.Invoke(0);
             }
         }
-        if(skill.id == 111)
+        if(skill.id == 111)//不屈之盾
         {
-            Debug.Log("不屈之盾");
             CloseArmorAutoDecay();
         }
          //每次使用改变自身伤害的技能
@@ -1461,12 +1459,21 @@ public class Actor : MonoBehaviour
             buffs.Add(buff);
             tempList.Add(buff);
             buffNum =1;
+            if(buff.buffIcon==null)
+            {
+                buff.CheckBuffIcon();
+                
+            }
+            buff.buffIcon.buffNum=buffNum;
+            buff.buffIcon.ResetTime();
+            return;
         }
 
         if(UIBattle.Instance ==null)
         {
             return;
         }
+        
         //重置持续时间
         for (int i = 0; i < tempList.Count; i++)
         {
@@ -1477,8 +1484,7 @@ public class Actor : MonoBehaviour
                 
             }
             tempList[i].buffIcon.buffNum=buffNum;
-            tempList[i].buffIcon.ResetTime();
-            
+            tempList[i].buffIcon.ResetTime();    
         }
         if(ifMax)
         {

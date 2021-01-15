@@ -186,7 +186,7 @@ public class UIBattle : MonoBehaviour
     }
     public void SetEnemyBarText(int state,int damage)
     {
-        Debug.LogWarning("敌人的状态是"+state);
+        // Debug.LogWarning("敌人的状态是"+state);
         switch(state)
         {
             case 0:
@@ -364,7 +364,11 @@ public class UIBattle : MonoBehaviour
 
     public BuffIcon CreateBuffIcon(Buff buff,bool ifHasIcon)
     {
-        BuffIcon buffIcon =CheckBuffIcon(buff);
+        BuffIcon buffIcon = null;
+        if(buff.buffData.maxNum !=-1)
+        {
+            buffIcon=CheckBuffIcon(buff);
+        }
         if(buffIcon)
         {
             buffIcon.buffs.Add(buff);
@@ -375,6 +379,10 @@ public class UIBattle : MonoBehaviour
         //没有的情况，创建一个prefab
         buffIcon = ((GameObject)Instantiate(Resources.Load("Prefabs/BuffIcon"))).GetComponent<BuffIcon>();
         buffIcon.buffs.Add(buff);
+        if(buff.buffData.id==1003)
+        {
+            Debug.Log("buffIcon.buffs[0]="+buffIcon.buffs[0].buffData.name);
+        }
         if(ifHasIcon)
         {
             if(buff.target.actorType==ActorType.玩家角色)
