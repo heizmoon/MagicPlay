@@ -57,7 +57,8 @@ public class UIBattle : MonoBehaviour
 
     public int UseAttackCardTimes =0;
     public int UseCardTimes =0;
-
+    bool battleStart;
+    public float BattleTime =0;
     void Awake()
     {
         Instance = this;
@@ -86,7 +87,10 @@ public class UIBattle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(battleStart)
+        {
+            BattleTime+=Time.deltaTime;
+        }
     }
     ///<summary>//初始化UI</summary>
     public void Init(Actor enemy,int scene,bool isBoss)
@@ -159,6 +163,7 @@ public class UIBattle : MonoBehaviour
     }
     void StartBattle()
     {
+        battleStart=true;
         //开战物品生效
         StartCoroutine(IEWaitForOpenAbility());
         Shuffle();//洗牌

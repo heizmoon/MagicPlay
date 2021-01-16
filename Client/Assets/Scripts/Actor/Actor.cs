@@ -302,7 +302,7 @@ public class Actor : MonoBehaviour
             break;
         }
         
-        if(behaviour<5)
+        if(behaviour<4)
         {
             castingbar.changeHPBar(speed);
             wanaSkill = GetSpecialSkill(state,behaviour);
@@ -335,20 +335,35 @@ public class Actor : MonoBehaviour
     int EnemyState()
     {
         int state =1;
-        
+        // Debug.LogWarning("判断阶段"+monsterData.switchCondition2);
         if(monsterData.switchCondition1==1)
         {
+            if(HpCurrent>=Mathf.FloorToInt(HpMax/2))
             state  =1;
         }
-        if(monsterData.switchCondition2==2)
+        if(monsterData.switchCondition2==1)
         {
             if(HpCurrent<=Mathf.FloorToInt(HpMax/2))
             state  =2;
-            Debug.LogWarning("阶段2!");
-
         }
-        if(monsterData.switchCondition3!=0)
+        if(monsterData.switchCondition2==2)
         {
+            if(HpCurrent<=Mathf.FloorToInt(HpMax*0.75f))
+            state  =2;
+        }
+        if(monsterData.switchCondition2==3)
+        {
+            if(UIBattle.Instance.BattleTime>=10)
+            state  =2;
+        }
+        if(monsterData.switchCondition2==4)
+        {
+            if(UIBattle.Instance.BattleTime>=20)
+            state  =2;
+        }
+        if(monsterData.switchCondition3==1)
+        {
+            if(HpCurrent<=Mathf.FloorToInt(HpMax/2))
             state  =3;
         }
         return state;
@@ -357,9 +372,9 @@ public class Actor : MonoBehaviour
     {
         switch(state)
         {
-            case 1: return 1 + GetRandomFromList(monsterData.m_aitype1);
-            case 2: return 1 + GetRandomFromList(monsterData.m_aitype2);
-            case 3: return 1 + GetRandomFromList(monsterData.m_aitype3); 
+            case 1: return  1+GetRandomFromList(monsterData.m_aitype1);
+            case 2: return  1+GetRandomFromList(monsterData.m_aitype2);
+            case 3: return  1+GetRandomFromList(monsterData.m_aitype3); 
         }
         return 1;
     }
@@ -490,15 +505,20 @@ public class Actor : MonoBehaviour
             max+=item;
         }
         int r = UnityEngine.Random.Range(0,max+1);
+        Debug.LogWarning("behaviour:r="+r+",weights[0]="+weights[0]);
+        if(weights[0]==0&&r==0)
+        {
+            return listww[0];
+        }
         if(r<weights[0])
         {
-            return 0;
+            return listww[0];
         }
         for(int i =1;i<weights.Count;i++)
         {
             if (r>=weights[i-1]&&r<=weights[i])
             {
-                // Debug.LogWarning("顺序是"+i);
+                Debug.LogWarning("顺序是"+i+"结果是："+listww[i]);
                 return listww[i];
             }
         }
