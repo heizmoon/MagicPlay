@@ -301,11 +301,25 @@ public class Actor : MonoBehaviour
             speed =monsterData.speed3;
             break;
         }
-        castingbar.changeHPBar(speed);
-        wanaSkill = GetSpecialSkill(state,behaviour);
-        UIBattle.Instance.SetEnemyBarText(behaviour,wanaSkill.damage);
         
-    } 
+        if(behaviour<5)
+        {
+            castingbar.changeHPBar(speed);
+            wanaSkill = GetSpecialSkill(state,behaviour);
+            UIBattle.Instance.SetEnemyBarText(behaviour,wanaSkill.damage);
+        }
+        else//休息2秒然后再次判断
+        {
+            StartCoroutine(IEEnemySleep());
+            UIBattle.Instance.SetEnemyBarText();
+        }
+    
+    }
+    IEnumerator IEEnemySleep()
+    {
+        yield return new WaitForSeconds(2f);
+        RunAI();
+    }
     void OnBehaviourComplete(object sender, EventArgs e)
     {
         //决策条读完了
@@ -322,7 +336,6 @@ public class Actor : MonoBehaviour
     {
         int state =1;
         
-        
         if(monsterData.switchCondition1==1)
         {
             state  =1;
@@ -331,6 +344,8 @@ public class Actor : MonoBehaviour
         {
             if(HpCurrent<=Mathf.FloorToInt(HpMax/2))
             state  =2;
+            Debug.LogWarning("阶段2!");
+
         }
         if(monsterData.switchCondition3!=0)
         {
@@ -469,7 +484,7 @@ public class Actor : MonoBehaviour
         }
         int max =0;
         List<int> weights =new List<int>();
-        foreach (var item in listW)
+        foreach (var item in listww)
         {
             weights.Add(max+item);
             max+=item;
@@ -1176,7 +1191,13 @@ public class Actor : MonoBehaviour
             //执行当角色生命值低于50%，就xxx这类效果
             if(tempHP>0.5*HpMax&&HpCurrent<0.5*HpMax)
             {
+                // if(actorType ==ActorType.敌人)
+                // {
+                //     if(monsterData.switchCondition2==1)
+                //     {
 
+                //     }
+                // }
             }
             //执行当角色生命值低于25%，就xxx这类效果
             if(tempHP>0.5*HpMax&&HpCurrent<0.5*HpMax)
@@ -1313,6 +1334,13 @@ public class Actor : MonoBehaviour
         if(skill.id == 111)//不屈之盾
         {
             CloseArmorAutoDecay();
+        }
+        if(abilities.Contains(1))
+        {
+            if(skill.color ==2)
+            {
+                autoReduceMPAmount+=0.1f;
+            }
         }
          //每次使用改变自身伤害的技能
         if(skill.skillData.EUSDamage!=0)

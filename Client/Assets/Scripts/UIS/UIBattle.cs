@@ -54,6 +54,10 @@ public class UIBattle : MonoBehaviour
     bool isBoss;
     [SerializeField]
     Dictionary<int,bool> cardPos =new Dictionary<int, bool>();
+
+    public int UseAttackCardTimes =0;
+    public int UseCardTimes =0;
+
     void Awake()
     {
         Instance = this;
@@ -228,6 +232,11 @@ public class UIBattle : MonoBehaviour
             break;
         }
     }
+    public void SetEnemyBarText()
+    {
+        enemyBarText.text ="正在发呆…";
+    }
+
     void CreateScene(int scene)
     {
         //根据id加载场景
@@ -473,9 +482,13 @@ public class UIBattle : MonoBehaviour
         //检测当补牌时就触发的buff，道具
         if(playerActor.abilities.Contains(7))
         {
-            // playerActor.AddHp(5);
             Skill skill =SkillManager.TryGetFromPool(26,playerActor);
             skill.ComputeHeal();
+        }
+        if(playerActor.abilities.Contains(6))//凸透镜
+        {
+            Skill skill =SkillManager.TryGetFromPool(27,playerActor);
+            skill.ComputeDamage();
         }
         int maxNum = playerActor.dealCardsNumber;
         if(maxNum>8)

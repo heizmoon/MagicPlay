@@ -556,7 +556,7 @@ public class Player : MonoBehaviour
 		string[] unlock =PlayerPrefs.GetString("unlockAbility").Split(',');
 		if(unlock[0] =="")
 		{
-			unlockAbility =new List<int>{5,7,9};//---------------------------初始解锁的
+			unlockAbility =new List<int>{1,2,3,4,5,6,7,8,9,10};//---------------------------初始解锁的
 			return;
 		}
 		foreach (var item in unlock)

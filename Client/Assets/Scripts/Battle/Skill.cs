@@ -248,10 +248,10 @@ public class Skill : MonoBehaviour
             realDamage =Mathf.FloorToInt(realDamage*_percent);
             StartCoroutine(WaitForDamage(_time,realDamage,ifSeep));
             totalTime+=_time;
-            if(id ==105)
-            {
-            Debug.Log("STEP1:狂风攻击的realDamage="+realDamage+",damage="+damage);
-            }
+            // if(id ==105)
+            // {
+            // Debug.Log("STEP1:狂风攻击的realDamage="+realDamage+",damage="+damage);
+            // }
         }
         
     }
@@ -263,10 +263,10 @@ public class Skill : MonoBehaviour
     void ExportDamage(int realDamage,bool ifSeep)//技能输出的最终伤害→没有计算减免和加成
     {
         Battle.Instance.ReceiveSkillDamage(this,realDamage,false,ifSeep);
-        if(id ==105)
-        {
-            Debug.Log("STEP2:狂风攻击的realDamage="+realDamage+",damage="+damage);
-        }
+        // if(id ==105)
+        // {
+        //     Debug.Log("STEP2:狂风攻击的realDamage="+realDamage+",damage="+damage);
+        // }
     }
     public void ComputeHeal()
     {
