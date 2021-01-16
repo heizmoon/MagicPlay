@@ -42,7 +42,7 @@ public class UIBattleShop : MonoBehaviour
     {
         AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,Player.instance.playerActor.abilities);
         SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkills(3);
-        choosenItemBox.Clear();
+        // choosenItemBox.Clear();
         
         for (int i = 0; i < Adatas.Length; i++)
         {

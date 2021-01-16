@@ -57,13 +57,18 @@ public class UICardDetail : MonoBehaviour
         {
             target.GetComponent<SkillCard>().canShow =true;
         }
-        if(type == 1&&!itemBox.inshop)
-        {
-            itemBox.HideToggleSelect();
-        }
+        
         if(type == 1&&itemBox.inshop)
         {
             itemBox.InShop();
+        }
+        else if(type == 1&&itemBox.inReward)
+        {
+            itemBox.InReward();
+        }
+        else if(type == 1&&!itemBox.inshop)
+        {
+            itemBox.HideToggleSelect();
         }
         StartCoroutine(WaitForDestory());
     }

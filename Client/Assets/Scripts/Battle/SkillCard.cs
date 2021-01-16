@@ -139,7 +139,7 @@ public class SkillCard : MonoBehaviour
 
     void Update()
     {
-        if(UIBattle.Instance==null)
+        if(UIBattle.Instance==null||UIBattle.Instance.ifPause)
         {
             return;
         }

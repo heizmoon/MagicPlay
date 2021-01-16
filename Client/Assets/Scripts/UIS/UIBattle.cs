@@ -286,6 +286,7 @@ public class UIBattle : MonoBehaviour
         //显示结算
         // Battle.Instance.ShowStatisticDamage(0);
         // Battle.Instance.ShowStatisticDamage(1);
+        ifPause = true;
         if(result==1)
         {
             //胜利了
@@ -297,13 +298,10 @@ public class UIBattle : MonoBehaviour
             }
             else
             {
-                CreateRelic();
+                ShowReward();
             }
             //如果是BOSS，选择道具奖励
-            if(isBoss)
-            {
-                // CreateRelic();
-            }
+            
             BattleScene.instance.BattleEnd(isBoss);
         }
         else
@@ -649,14 +647,14 @@ public class UIBattle : MonoBehaviour
     }
     //技能牌因手牌过多而无法加入手牌
 
-    void CreateRelic()
+    void ShowReward()
     {
-        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIChooseAbility"));
+        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIBattleReward"));
         go.transform.SetParent(Main.instance.allScreenUI);
         go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
         go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         go.transform.localScale =Vector3.one;
-        go.GetComponent<UIAbyssChooseRelic>().CreateUIs(3);
+        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,isBoss);
 
     }
     void OnShieldTips()

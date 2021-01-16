@@ -18,6 +18,7 @@ public class ItemBox : MonoBehaviour
     public Button button;
     public Text priceText;
     public bool inshop;
+    public bool inReward;
     void Awake()
     {
         toggle =GetComponent<Toggle>();
@@ -115,7 +116,10 @@ public class ItemBox : MonoBehaviour
         Destroy(Titem.GetChild(0).gameObject);
         icon.gameObject.SetActive(false);
         toggle.interactable =false;
+        if(inshop)
         itemName.text ="已购买";
+        else if(inReward)
+        itemName.text ="";
         itemName.color = Color.white;
         button.gameObject.SetActive(false);
     }
@@ -135,20 +139,20 @@ public class ItemBox : MonoBehaviour
         // itemName.color = Color.black;
         toggle.interactable =true;
 
-        if(toggle.graphic)
-        {
-            toggle.isOn = false;
-            Debug.LogWarning("正确的刷新");
-        }
-        else
-        {
-            Debug.LogWarning("错误的刷新");
+        // if(toggle.graphic)
+        // {
+        //     toggle.isOn = false;
+        //     Debug.LogWarning("正确的刷新");
+        // }
+        // else
+        // {
+        //     Debug.LogWarning("错误的刷新");
 
-            skillMark.SetActive(true);
-        }
+        //     skillMark.SetActive(true);
+        // }
 
         icon.gameObject.SetActive(true);
-        toggle.targetGraphic =icon;
+        // toggle.targetGraphic =icon;
         price =0;
         id =0;
         type=0;
@@ -189,6 +193,22 @@ public class ItemBox : MonoBehaviour
         button.gameObject.SetActive(true);
         priceText.gameObject.SetActive(true);
         priceText.text =string.Format("{0}",price);
+        textChange.gameObject.SetActive(false);
+    }
+    public void InReward()
+    {
+        inReward =true;
+        if(toggle.graphic)
+        toggle.graphic.gameObject.SetActive(false);
+        toggle.graphic =null;
+        skillMark.SetActive(false);
+        toggle.onValueChanged.RemoveAllListeners();
+        toggle.onValueChanged.AddListener(isOn => OpenDetail(isOn));
+        itemName.gameObject.SetActive(true);
+        textChange.gameObject.SetActive(false);
+        button.gameObject.SetActive(true);
+        priceText.gameObject.SetActive(true);
+        priceText.text =string.Format("选择");
         textChange.gameObject.SetActive(false);
     }
     void OpenDetail(bool isOn)
