@@ -79,35 +79,42 @@ public class BattleScene : MonoBehaviour
 		//从所有能力中随机出N个能力，排除List
         
         GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/UIBattleShop"));
-        go.transform.SetParent(Main.instance.middleUI);
+        go.transform.SetParent(Main.instance.MiddleUI);
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         // go.GetComponent<UIBattleShop>().Init(datas);
+        UIBasicBanner.instance.textMap.text ="商店";
+
 	}
     public void InitCamp()
 	{
         GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/UICamp"));
-        go.transform.SetParent(Main.instance.middleUI);
+        go.transform.SetParent(Main.instance.MiddleUI);
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         go.GetComponent<UICamp>().Init();
+        UIBasicBanner.instance.textMap.text ="营地";
+
 	}
     public void InitTreasure()
 	{
         GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/UITreasure"));
-        go.transform.SetParent(Main.instance.middleUI);
+        go.transform.SetParent(Main.instance.MiddleUI);
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         // Debug.Log("生成一个宝箱");
+        UIBasicBanner.instance.textMap.text ="宝箱";
+
 	}
     public void OpenMap()
     {
         if(Map.instance!=null)
         Map.instance.gameObject.SetActive(true);
         Map.instance.Refresh();
+        UIBasicBanner.instance.textMap.text ="地图";
     }
     public void ChangeMap(string mapName)
     {
@@ -116,11 +123,12 @@ public class BattleScene : MonoBehaviour
             Map.instance.DestoryMap();
         }
         GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/Maps/"+mapName));
-        go.transform.SetParent(Main.instance.middleUI);
+        go.transform.SetParent(Main.instance.MiddleUI);
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         go.GetComponent<Map>().InitMap();
+        UIBasicBanner.instance.textMap.text ="地图";
     }
     public void BattleEnd(bool isBoss)
     {

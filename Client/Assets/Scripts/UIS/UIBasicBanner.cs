@@ -10,6 +10,7 @@ public class UIBasicBanner : MonoBehaviour
     public Toggle T_CardGroup;
     public Toggle T_AbilityGroup;
     public Toggle T_Map;
+    public Text textMap;
 
     Transform T_up;
     Transform T_down;
@@ -54,7 +55,7 @@ public class UIBasicBanner : MonoBehaviour
             else
             {
                 GameObject g =(GameObject)Instantiate(Resources.Load("Prefabs/UICardGroup"));
-                g.transform.SetParent(Main.instance.middleUI);
+                g.transform.SetParent(Main.instance.TopUI);
                 g.transform.localPosition =Vector3.zero;
                 g.transform.localScale = Vector3.one;
                 g.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
@@ -84,7 +85,7 @@ public class UIBasicBanner : MonoBehaviour
             else
             {
                 GameObject g =(GameObject)Instantiate(Resources.Load("Prefabs/UIBattleCharacter"));
-                g.transform.SetParent(Main.instance.middleUI);
+                g.transform.SetParent(Main.instance.TopUI);
                 g.transform.localPosition =Vector3.zero;
                 g.transform.localScale = Vector3.one;
                 g.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
@@ -116,7 +117,7 @@ public class UIBasicBanner : MonoBehaviour
             else
             {
                 GameObject g =(GameObject)Instantiate(Resources.Load("Prefabs/UIAbilityGroup"));
-                g.transform.SetParent(Main.instance.middleUI);
+                g.transform.SetParent(Main.instance.TopUI);
                 g.transform.localPosition =Vector3.zero;
                 g.transform.localScale = Vector3.one;
                 g.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
@@ -139,12 +140,10 @@ public class UIBasicBanner : MonoBehaviour
         if(IsOn)
         {
             Map.instance.gameObject.SetActive(true);
-
         }
         else
         {
             Map.instance.gameObject.SetActive(false);
-
         }
     }
 }

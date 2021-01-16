@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class UIBattleReward : MonoBehaviour
 {
@@ -30,7 +31,10 @@ public class UIBattleReward : MonoBehaviour
         Btn_retry.onClick.AddListener(OnRetry);
         Btn_return.onClick.AddListener(OnButtonReturn);
     }
-
+    void Start()
+    {
+        transform.DOPunchScale(new Vector3(0.2f,0.2f,0.2f),0.5f,2,1);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -112,7 +116,7 @@ public class UIBattleReward : MonoBehaviour
     void OnButtonReturn()
     {
         gameObject.SetActive(false);
-        Player.instance.Gold+=level*5;
+        Player.instance.AddGold(level*5);
         // BattleScene.instance.OpenMap();
         UIBattle.Instance.OnBattleGoOn();
         Destroy(gameObject);

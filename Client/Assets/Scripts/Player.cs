@@ -603,5 +603,14 @@ public class Player : MonoBehaviour
 			}
 		}
 	}
+	public void AddGold(int num)
+	{
+		if(Gold+num<=0)
+		{
+			Gold =0;
+		}
+		else
+		Gold+=num;
+	}
 }
 

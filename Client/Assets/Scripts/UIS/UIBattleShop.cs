@@ -141,7 +141,7 @@ public class UIBattleShop : MonoBehaviour
         foreach (var item in choosenItemBox)
         {
             item.Disable();
-            Player.instance.Gold-=item.price;
+            Player.instance.AddGold(-item.price);
             if(item.type ==1)
             Player.instance.playerActor.UsingSkillsID.Add(item.id);
             else if(item.type ==2)
@@ -160,7 +160,7 @@ public class UIBattleShop : MonoBehaviour
     {
         
         item.Disable();
-        Player.instance.Gold-=item.price;
+        Player.instance.AddGold(-item.price);
         if(item.type ==1)
         Player.instance.playerActor.UsingSkillsID.Add(item.id);
         else if(item.type ==2)

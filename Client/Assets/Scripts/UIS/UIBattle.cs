@@ -281,7 +281,7 @@ public class UIBattle : MonoBehaviour
     }
     IEnumerator WaitForShowBattleOver(int result)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         // battleOver.SetActive(true);
         //显示结算
         // Battle.Instance.ShowStatisticDamage(0);
@@ -300,7 +300,6 @@ public class UIBattle : MonoBehaviour
             {
                 ShowReward();
             }
-            //如果是BOSS，选择道具奖励
             
             BattleScene.instance.BattleEnd(isBoss);
         }
@@ -320,6 +319,7 @@ public class UIBattle : MonoBehaviour
         Player.instance.playerActor.transform.localPosition =Vector3.zero;
         playerActor.target =null;
         playerActor.ClearSummon();
+        playerActor.armor =0;
         RecoverActor();//还原角色备份
         Enemy.gameObject.SetActive(false);
 

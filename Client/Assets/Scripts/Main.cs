@@ -25,7 +25,8 @@ public class Main : MonoBehaviour {
 	public int LockFPS;
 	public Player player;
 	public Transform BottomUI;
-	public Transform middleUI;
+	public Transform MiddleUI;
+	public Transform TopUI;
 	public Transform allScreenUI;
 	public GameObject BasicBanner;
 	public Toggle toggleWorld;
@@ -281,14 +282,14 @@ public class Main : MonoBehaviour {
 		if(UISkillTree.instance==null)
 		{
 			GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UISkillTree"));
-			go.transform.SetParent(middleUI);
+			go.transform.SetParent(MiddleUI);
 			go.transform.localScale =Vector3.one;
 			go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 			go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
 		}
 		else
 		{
-			UISkillTree.instance.transform.SetParent(middleUI);
+			UISkillTree.instance.transform.SetParent(MiddleUI);
 			UISkillTree.instance.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 			UISkillTree.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
 		}
@@ -300,7 +301,7 @@ public class Main : MonoBehaviour {
 		if(UIPlayer.instance==null)
 		{
 			GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UIPlayer"));
-			go.transform.SetParent(middleUI);
+			go.transform.SetParent(MiddleUI);
 			go.transform.localScale =Vector3.one;
 			go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 			go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
@@ -308,7 +309,7 @@ public class Main : MonoBehaviour {
 		}
 		else
 		{
-			UIPlayer.instance.transform.SetParent(middleUI);
+			UIPlayer.instance.transform.SetParent(MiddleUI);
 			UIPlayer.instance.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 			UIPlayer.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
 			UIPlayer.instance.RefreashUI();
