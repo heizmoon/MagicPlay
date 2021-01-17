@@ -10,7 +10,8 @@ public enum BuffType
     持续伤害or治疗=2,
     影响急速 =3,
     影响暴击 =4,
-    影响命中 =5,
+    ///<summary>value =要end的buffID,abilityID=要添加的buffID</summary>
+    失去所有护甲后增减buff =5,
     百分比增减受到的伤害 =6,
     百分比增减附加的伤害 =7,
     数值增减受到的伤害 =8,
@@ -30,10 +31,13 @@ public enum BuffType
     影响全局能量消耗=22,
     百分比影响暴击 =23,
     影响补牌数量 =24,
-    百分比影响韧性 =25,
-    百分比影响抗性 =26,
-    百分比影响穿透 =27,
-    百分比影响闪避 =28
+    ///<summary>0=持续时间无限,其余数值为+num</summary>
+    影响护甲持续时间 =25,
+    效果结束时获得buff =26,
+    效果结束时释放技能 =27,
+    百分比影响闪避 =28,
+    获得护甲后触发技能 =29,
+    生命值小于百分之25时触发=30
 
 }
 public class BuffManager : MonoBehaviour
@@ -144,6 +148,7 @@ public class BuffManager : MonoBehaviour
         // if(buff.buffData.groupType==1)
         // Debug.LogWarningFormat("添加了深渊遗物buff名为：{0}",buff.buffData.name);
     }
+    ///<summary>直接移除buff，不触发OnBuffEnd</summary>
     public static void RemoveBuffFromActor(Buff buff,Actor actor)
     {
         actor.buffs.Remove(buff);
@@ -285,6 +290,53 @@ public class BuffManager : MonoBehaviour
                 }
             }
     }
+    ///<summary>检查是否有特殊类型的buff用于触发技能</summary>
+    public static void Check_SpecialTypeBuff_ToTriggerSkill(Actor actor,BuffType buffType)
+    {
+        
+        for (int i = 0; i < actor.buffs.Count; i++)
+            {
+                if(actor.buffs[i].buffData._type == buffType)
+                {
+                    //显示特效
+                    Transform e = EffectManager.TryGetFromPool(actor.buffs[i].buffData.triggerEffect);
+                    if(e!=null)
+                    {
+                        e.SetParent(actor.target.hitPoint);
+                        e.localPosition =Vector3.zero;
+                        e.localScale =Vector3.one;
+                    }
+                    
+                    Skill skill = SkillManager.TryGetFromPool(actor.buffs[i].buffData.abilityID,actor);
+                    Debug.LogWarning("触发技能"+skill.skillName);
+                    skill.caster.BeginSpell(skill);
+                    // Battle.Instance.ReceiveSkillDamage(skill,skill.damage,true,actor.buffs[i].buffData.delay,false);
+                    
+                }
+            }
+    }
+    public static void Check_SpecialTypeBuff_ToSetBuff(Actor actor,BuffType buffType)
+    {
+        
+        for (int i = 0; i < actor.buffs.Count; i++)
+            {
+                if(actor.buffs[i].buffData._type == buffType)
+                {
+                    //显示特效
+                    Transform e = EffectManager.TryGetFromPool(actor.buffs[i].buffData.triggerEffect);
+                    if(e!=null)
+                    {
+                        e.SetParent(actor.target.hitPoint);
+                        e.localPosition =Vector3.zero;
+                        e.localScale =Vector3.one;
+                    }
+                    if(actor.buffs[i].buffData.abilityID!=0)
+                    BuffManager.instance.CreateBuffForActor(actor.buffs[i].buffData.abilityID,actor);
+                    if(actor.buffs[i].buffData.value!=0)
+                    BuffManager.EndBuffFromActor(BuffManager.FindBuff((int)actor.buffs[i].buffData.value,actor),actor);
+                }
+            }
+    }
     public void SummonedAddBuff(Buff buff)
     {
         if(OnSummonedAddBuff!=null)
@@ -304,7 +356,7 @@ public class BuffManager : MonoBehaviour
             buffIcon.textBuffNum.text = num.ToString();
         }
     }
-    Buff FindBuff(int id,Actor target)
+    public static Buff FindBuff(int id,Actor target)
     {
         foreach (var item in target.buffs)
         {
@@ -314,5 +366,10 @@ public class BuffManager : MonoBehaviour
             }
         }
         return null;
+    }
+    public static void EndBuffFromActor(Buff buff,Actor actor)
+    {
+        if(buff!=null)
+        buff.buffIcon.OnEffectEnd();
     }
 }

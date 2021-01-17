@@ -10,7 +10,7 @@ public class Buff
     public int level;
     public float currentValue;
     public Actor target;
-    public List<Buff> childrenBuffs;
+    public List<Buff> childrenBuffs =new List<Buff>();
     public BuffIcon buffIcon;
 
     
@@ -24,7 +24,7 @@ public class Buff
         // Debug.LogWarningFormat("检查childrenbuff：{0}",buffData.name);
         foreach (var item in buffData._childrenBuff)
         {
-            BuffManager.instance.CreateBuffForActor(item,target);
+            childrenBuffs.Add(BuffManager.instance.CreateBuffForActor(item,target));
             Debug.LogFormat("尝试添加buffID：{0}",item);
         }
     }
@@ -58,10 +58,8 @@ public class Buff
             case BuffType.数值吸收伤害:
                 target.armor+=Mathf.FloorToInt(buffData.value);
                 target.RefeashArmorAutoDecayTime();
-                // if(buffData.id ==1008)
-                // {
-                //     Debug.Log("增加护甲："+Mathf.FloorToInt(buffData.value)+"buffIcon.buffs.count="+buffIcon.buffs.Count+"buffIcon.buffs.buffNum"+buffIcon.buffNum);
-                // }
+                // 如果身上有获得护甲后触发的buff，那么此时触发
+                BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(target,BuffType.获得护甲后触发技能);
             break;
             case BuffType.影响闪避:
                 target.dodge+=Mathf.FloorToInt(buffData.value);
@@ -86,6 +84,16 @@ public class Buff
             break;
             case BuffType.影响补牌数量:
                 target.dealCardsNumber+=Mathf.FloorToInt(buffData.value);
+            break;
+            case BuffType.影响护甲持续时间:
+                if(buffData.value ==0)
+                {
+                    target.ChangeArmorAutoDecay(false);
+                }
+                else
+                {
+                    target.constArmorDecayTime+=buffData.value;
+                }
             break;
             default:
             break;
@@ -145,6 +153,23 @@ public class Buff
             case BuffType.影响补牌数量:
                 target.dealCardsNumber-=Mathf.FloorToInt(buffData.value);
             break;
+            case BuffType.影响护甲持续时间:
+                if(buffData.value ==0)
+                {
+                    target.ChangeArmorAutoDecay(true);
+                }
+                else
+                {
+                    target.constArmorDecayTime-=buffData.value;
+                }
+            break;
+            case BuffType.效果结束时获得buff:
+                if(buffData.value >0)
+                {
+                    BuffManager.instance.CreateBuffForActor((int)buffData.value,target);
+                }
+                
+            break;
             default:
             break;
         }
@@ -166,6 +191,7 @@ public class Buff
                 num++;    
             }
         }
+        
         }
         
         //引发技能
@@ -190,7 +216,20 @@ public class Buff
             Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target); 
             
             // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(currentValue),target,buffData._genreList[0]);
-            Battle.Instance.ReceiveSkillDamage(skill,skill.damage*num,false,false);
+            if(num>0)
+            {
+                skill.damage =num;
+                // skill.caster.BeginSpell(skill);
+                skill.ComputeDamage();
+            }
+            // Battle.Instance.ReceiveSkillDamage(skill,skill.damage*num,false,false);
+            if(num<0)
+            {
+                skill.heal =num;
+                // skill.caster.BeginSpell(skill);
+                skill.ComputeHeal();
+            }
+
             
         }
         

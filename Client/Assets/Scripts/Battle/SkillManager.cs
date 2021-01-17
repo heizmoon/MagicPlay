@@ -66,15 +66,24 @@ public class SkillManager : MonoBehaviour
         {
             return skill;
         }
-        // Skill[] skills = ts.GetComponentsInChildren<Skill>();
-        // foreach (var item in skills)
-        // {
-        //     if(item.id ==id&&item.caster==actor)
-        //     {
-        //         skill =item;
-        //         return skill;
-        //     }
-        // }
+        Skill[] skills = ts.GetComponentsInChildren<Skill>();
+        foreach (var item in skills)
+        {
+            if(item.id ==id&&item.caster==actor)
+            {
+                skill =item;
+                return skill;
+            }
+        }
+        return CreateSkillForActor(id,actor);
+    }
+    public static Skill CreateSkillForActor(int id,Actor actor)
+    {
+        Skill skill =null;
+        if(id ==0)
+        {
+            return skill;
+        }
         skill =((GameObject)Instantiate(Resources.Load("Prefabs/Skill"))).GetComponent<Skill>();
         skill.transform.SetParent(ts);
         skill.InitSkill(id,actor);

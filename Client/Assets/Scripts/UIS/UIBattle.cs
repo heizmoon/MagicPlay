@@ -596,8 +596,7 @@ public class UIBattle : MonoBehaviour
     ///<summary>临时创建一张特殊ID的牌</summary>
     public SkillCard CreateNewCardTemp(int id)
     {
-        Skill skill = SkillManager.TryGetFromPool(id,playerActor);
-        skill.InitSkill(id,playerActor);
+        Skill skill = SkillManager.CreateSkillForActor(id,playerActor);
         GameObject go = Instantiate((GameObject)Resources.Load("Prefabs/SkillCard"));
         SkillCard skillCard = go.GetComponent<SkillCard>();
         go.transform.SetParent(t_cardsPool);

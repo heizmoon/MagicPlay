@@ -86,6 +86,7 @@ public class Actor : MonoBehaviour
     [HideInInspector]
     public int dealCardsNumber =4;//发牌数
     int state;
+    int tempState =-1;
     int behaviour;
     ///<summary>手牌列表</summary>
     public List<SkillCard> handCards;
@@ -176,7 +177,7 @@ public class Actor : MonoBehaviour
         skills = new List<Skill>();
         for(int i =0;i<UsingSkillsID.Count;i++)
         {
-            Skill sk =SkillManager.TryGetFromPool(UsingSkillsID[i],this);
+            Skill sk =SkillManager.CreateSkillForActor(UsingSkillsID[i],this);
             skills.Add(sk);
         }
     }
@@ -216,10 +217,11 @@ public class Actor : MonoBehaviour
     //     AddHp(Mathf.FloorToInt(autoReduceHPAmount));
     //     currentAutoReduceHPTime =0;
     // }
-    public void CloseArmorAutoDecay()
+    ///<summary>true=开启护甲衰减，false=关闭护甲衰减</summary>
+    public void ChangeArmorAutoDecay(bool b)
     {
-         ifArmorAutoDecay =false;
-         ArmorAutoDecayTime =2;
+         ifArmorAutoDecay =b;
+         ArmorAutoDecayTime =constArmorDecayTime;
     }
     public void RefeashArmorAutoDecayTime()
     {
@@ -286,8 +288,15 @@ public class Actor : MonoBehaviour
         }
         //判断当前是否会切换阶段
         state = EnemyState();
+        //状态切换了，加buff或者减buff
+        if(tempState!=state)
+        {
+            SetStateBuff();
+            tempState = state;
+        }
         //随机出一项当前要进行的行为
         behaviour =GetBehaviour(state);
+        Debug.LogWarning("behaviour="+behaviour);
         float speed =3f;
         switch (state)
         {
@@ -314,6 +323,54 @@ public class Actor : MonoBehaviour
             UIBattle.Instance.SetEnemyBarText();
         }
     
+    }
+    void SetStateBuff()
+    {
+        switch(state)
+        {
+            case 1:
+            if(monsterData.m_addBuffList1.Count ==0)
+            {
+                return;
+            }
+            foreach (var item in monsterData.m_addBuffList1)
+            {
+                BuffManager.instance.CreateBuffForActor(item,this);    
+            }
+            break;
+            case 2:
+            if(monsterData.m_removeBuffList2.Count >0)
+            {
+                foreach (var item in monsterData.m_removeBuffList2)
+                {
+                    BuffManager.EndBuffFromActor(BuffManager.FindBuff(item,this),this);
+                }
+            }
+            if(monsterData.m_addBuffList2.Count >0)
+            {
+                foreach (var item in monsterData.m_addBuffList2)
+                {
+                    BuffManager.instance.CreateBuffForActor(item,this);
+                }
+            }
+            break;
+            case 3:
+            if(monsterData.m_removeBuffList3.Count >0)
+            {
+                foreach (var item in monsterData.m_removeBuffList3)
+                {
+                    BuffManager.EndBuffFromActor(BuffManager.FindBuff(item,this),this);
+                }
+            }
+            if(monsterData.m_addBuffList3.Count >0)
+            {
+                foreach (var item in monsterData.m_addBuffList3)
+                {
+                    BuffManager.instance.CreateBuffForActor(item,this);
+                }
+            }
+            break;
+        }
     }
     IEnumerator IEEnemySleep()
     {
@@ -364,6 +421,11 @@ public class Actor : MonoBehaviour
         if(monsterData.switchCondition3==1)
         {
             if(HpCurrent<=Mathf.FloorToInt(HpMax/2))
+            state  =3;
+        }
+        if(monsterData.switchCondition3==2)
+        {
+            if(HpCurrent<=Mathf.FloorToInt(HpMax*0.25f))
             state  =3;
         }
         return state;
@@ -506,17 +568,17 @@ public class Actor : MonoBehaviour
         }
         int r = UnityEngine.Random.Range(0,max+1);
         Debug.LogWarning("behaviour:r="+r+",weights[0]="+weights[0]);
-        if(weights[0]==0&&r==0)
-        {
-            return listww[0];
-        }
-        if(r<weights[0])
+        // if(weights[0]==0&&r==0)
+        // {
+        //     return listww[0];
+        // }
+        if(r<=weights[0])
         {
             return listww[0];
         }
         for(int i =1;i<weights.Count;i++)
         {
-            if (r>=weights[i-1]&&r<=weights[i])
+            if (r>weights[i-1]&&r<=weights[i])
             {
                 Debug.LogWarning("顺序是"+i+"结果是："+listww[i]);
                 return listww[i];
@@ -646,12 +708,13 @@ public class Actor : MonoBehaviour
         // Debug.LogWarning("animState="+(int)animState);
         if(animState!=AnimState.dead&&animState!=AnimState.dizzy)
         {
+            animator.Play("attack");
             BeginSpell(skill);
             RunAI();
         }
         
     }
-    void BeginSpell(Skill skill)//开始施放X技能,需要传入一个技能
+    public void BeginSpell(Skill skill)//开始施放X技能,需要传入一个技能
     {
         // if(Main.instance.UIState>0&&!DateManager.instance.timer.enabled)
         // {
@@ -702,8 +765,6 @@ public class Actor : MonoBehaviour
         //5.创建施法特效
         // CreateSpellEffect(skill);
         CreateCastEffect(skill);
-        animator.Play("attack");
-        
         //执行技能释放完毕事件
         OnSkillSpellFinish(skill);
         //6.绑定技能和施法条
@@ -966,6 +1027,10 @@ public class Actor : MonoBehaviour
     {
         if(ifHit)
         {
+            if(skill.id==29)
+            {
+                Debug.LogWarning("该打晕了");
+            }
             //执行当技能命中目标时就xxx这类效果
             if(skill.buffID>0&&!skill.targetSelf)
             {
@@ -1158,16 +1223,18 @@ public class Actor : MonoBehaviour
                 num-=armor;
                 armor =0;
             }
-            if(armor == 0)
+            if(armor == 0)//可执行破盾时就xxx这类效果
             {
-                //当护甲归零时，移除护甲BUFF
-                for (int i = buffs.Count-1; i >=0 ; i--)
-                {
-                    if(buffs[i].buffData._type == BuffType.吸收一定数量的伤害)
-                    {
-                        BuffManager.RemoveBuffFromActor(buffs[i],this);
-                    }
-                }
+                //当护甲归零时，移除护甲BUFF-----------------获得护甲类的BUFF不再显示icon，所以不必手动移除
+                // for (int i = buffs.Count-1; i >=0 ; i--)
+                // {
+                //     if(buffs[i].buffData._type == BuffType.吸收一定数量的伤害)
+                //     {
+                //         BuffManager.RemoveBuffFromActor(buffs[i],this);
+                //     }
+                // }
+                BuffManager.Check_SpecialTypeBuff_ToSetBuff(this,BuffType.失去所有护甲后增减buff);
+                
             }
         }
         #endregion
@@ -1209,7 +1276,7 @@ public class Actor : MonoBehaviour
         if(num>0)
         {
             //执行当角色生命值低于50%，就xxx这类效果
-            if(tempHP>0.5*HpMax&&HpCurrent<0.5*HpMax)
+            if(tempHP>0.5*HpMax&&HpCurrent<=0.5*HpMax)
             {
                 // if(actorType ==ActorType.敌人)
                 // {
@@ -1220,9 +1287,9 @@ public class Actor : MonoBehaviour
                 // }
             }
             //执行当角色生命值低于25%，就xxx这类效果
-            if(tempHP>0.5*HpMax&&HpCurrent<0.5*HpMax)
+            if(tempHP>0.25*HpMax&&HpCurrent<=0.25*HpMax)
             {
-
+                BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(this,BuffType.生命值小于百分之25时触发);
             }
             
         }
@@ -1350,10 +1417,6 @@ public class Actor : MonoBehaviour
                 if(OnOrderSummonedAttack!=null)
                 OnOrderSummonedAttack.Invoke(0);
             }
-        }
-        if(skill.id == 111)//不屈之盾
-        {
-            CloseArmorAutoDecay();
         }
         if(abilities.Contains(1))
         {

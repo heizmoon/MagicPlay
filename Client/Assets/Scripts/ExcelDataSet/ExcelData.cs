@@ -219,6 +219,7 @@ public struct MonsterTypeData
     public int attack;
     public int crit;
     public int switchCondition1;
+    public string addBuffList1;
     public float speed1;
     public string AIType1;
     public string listAttack1;
@@ -226,6 +227,8 @@ public struct MonsterTypeData
     public string listBuff1;
     public string listNerf1;
     public int switchCondition2;
+    public string addBuffList2;
+    public string removeBuffList2;
     public float speed2;
     public string AIType2;
     public string listAttack2;
@@ -233,6 +236,8 @@ public struct MonsterTypeData
     public string listBuff2;
     public string listNerf2;
     public int switchCondition3;
+    public string addBuffList3;
+    public string removeBuffList3;
     public int speed3;
     public string AIType3;
     public string listAttack3;
@@ -267,6 +272,14 @@ public struct MonsterTypeData
     public List<int> m_aitype2;
     public List<int> m_aitype3;
     public List<int> m_aitype4;
+    public List<int> m_addBuffList1;
+    public List<int> m_addBuffList2;
+    public List<int> m_addBuffList3;
+    public List<int> m_removeBuffList2;
+    public List<int> m_removeBuffList3;
+
+
+
 
 
 }

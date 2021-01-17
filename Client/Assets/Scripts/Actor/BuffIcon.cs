@@ -125,8 +125,14 @@ public class BuffIcon : MonoBehaviour
     {
         stop =true;
         int num=0;
-        // buffs.RemoveAll(null);
-        
+        if(buffID==2000)
+        {
+            Debug.LogWarning("buff.childrenBuffs.count="+buff.childrenBuffs.Count);
+        }
+        if(buffID==2002)
+        {
+            Debug.LogWarning("移除buff2002");
+        }
         for (int i = 0; i < buffs.Count; i++)
         {
             num++;
@@ -154,7 +160,7 @@ public class BuffIcon : MonoBehaviour
         {
             BuffManager.RemoveBuffFromActor(buffs[0],buffs[0].target);
         }
-        // Debug.LogWarningFormat("移除{0}个,共有{1}个",num,buffs.Count+num);
+        Debug.LogWarningFormat("移除{0}个,共有{1}个",num,buffs.Count+num);
 
         EffectManager.TryThrowInPool(effect,true);
         Destroy(this.gameObject);
