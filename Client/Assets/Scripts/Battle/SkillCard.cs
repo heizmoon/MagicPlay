@@ -170,9 +170,7 @@ public class SkillCard : MonoBehaviour
             RemoveCard();
             else
             ThrowCard();
-            //抽卡的技能抽卡
-            if(skill.usedChooseCard>0)
-            UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+            
             //弃牌的技能弃牌:弃牌数量不包含自身
             if(skill.usedThrowCard>0)
             {

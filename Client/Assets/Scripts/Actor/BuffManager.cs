@@ -37,7 +37,8 @@ public enum BuffType
     效果结束时释放技能 =27,
     百分比影响闪避 =28,
     获得护甲后触发技能 =29,
-    生命值小于百分之25时触发=30
+    生命值小于百分之25时触发=30,
+    成功格挡后触发技能=31
 
 }
 public class BuffManager : MonoBehaviour

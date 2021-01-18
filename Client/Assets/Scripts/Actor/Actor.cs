@@ -1260,6 +1260,8 @@ public class Actor : MonoBehaviour
             bt.SetText("吸收"+tempNum);
             else
             bt.SetText(-num+"("+tempNum+"吸收)");
+            //格挡成功事件
+            BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(this,BuffType.成功格挡后触发技能);
         }
         else
         {
@@ -1402,7 +1404,9 @@ public class Actor : MonoBehaviour
             BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);
             Debug.LogWarning("添加的buffid="+skill.buffID);
         }
-        
+        //抽卡的技能抽卡
+        if(skill.usedChooseCard>0)
+        UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
         //魔力回复
         skill.caster.AddMp(skill.manaProduce);
         //召唤类技能进行召唤
@@ -1489,6 +1493,8 @@ public class Actor : MonoBehaviour
         // animator.Play("dead");
         UIBattle.Instance.playerActor.StopCasting();
         UIBattle.Instance.Enemy.StopCasting();
+        if(actorType == ActorType.敌人)
+        castingbar.gameObject.SetActive(false);
         // animator.SetInteger("anim",5);
         ChangeAnimatorInteger(5);
         // animator.Play("dead");
