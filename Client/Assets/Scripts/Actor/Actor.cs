@@ -1351,7 +1351,7 @@ public class Actor : MonoBehaviour
             }
             if(TakenSkill.id ==109)//斩杀，恢复10点生命值
             {
-                AddHp(10);
+                TakenSkill.caster.AddHp(10);
             }
             
             Die();

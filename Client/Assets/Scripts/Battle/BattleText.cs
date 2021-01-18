@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BattleText : MonoBehaviour
 {
     // Start is called before the first frame update
-    public Text _text;
+    public GameObject _text;
     void Start()
     {
         
@@ -19,14 +19,14 @@ public class BattleText : MonoBehaviour
     }
     public void SetText(int num,bool crit)
     {
+        GameObject bt =GameObject.Instantiate(_text.gameObject);
+        Text t = bt.GetComponentInChildren<Text>();
+        bt.transform.SetParent(_text.transform.parent);
+        float x = Random.Range(-15f,15f);
+        float y = Random.Range(-15f,15f);
+        bt.transform.localScale =Vector3.one;
+        bt.transform.localPosition =new Vector3(x,y,0);
         
-        Text t = GameObject.Instantiate(_text.gameObject).GetComponent<Text>();
-        t.transform.SetParent(_text.transform.parent);
-        // float x = Random.Range(-5f,5f);
-        // float y = Random.Range(-5f,5f);
-        t.transform.localScale =Vector3.one;
-        t.transform.localPosition =Vector3.zero;
-        Animation anim =t.gameObject.GetComponent<Animation>();
         if(num>0)
         {
             t.text = "-"+num.ToString();
@@ -34,10 +34,6 @@ public class BattleText : MonoBehaviour
             {
                 t.color =new Color(1,0.29f,0.2f);
                 t.fontSize =42;
-                // foreach(AnimationState s in anim)
-                // {
-                //     s.speed=0.5f;
-                // }
             }
         }
         else if(num == 0)
@@ -52,33 +48,37 @@ public class BattleText : MonoBehaviour
             {
                 //t.color =new Color(1,0.29f,0.2f);
                 t.fontSize =42;
-                // foreach(AnimationState s in anim)
-                // {
-                //     s.speed=0.5f;
-                // }
+
             }
         }
-        
-        
-          
-        anim.Play();
-        StartCoroutine(DestorySelf(t));
+        StartCoroutine(DestorySelf(bt));
     }
     public void SetText(string s)
     {
-        Text t = GameObject.Instantiate(_text.gameObject).GetComponent<Text>();
-        t.transform.SetParent(_text.transform.parent);
-        t.transform.localScale =Vector3.one;
-        t.transform.localPosition =Vector3.zero;
+        GameObject bt =GameObject.Instantiate(_text.gameObject);
+        Text t = bt.GetComponentInChildren<Text>();
+        bt.transform.SetParent(_text.transform.parent);
+        float x = Random.Range(-15f,15f);
+        float y = Random.Range(-15f,15f);
+        bt.transform.localScale =Vector3.one;
+        bt.transform.localPosition =new Vector3(x,y,0);
         t.text = s;
         t.color =Color.white;
-        Animation anim =t.gameObject.GetComponent<Animation>();
-        anim.Play();
-        StartCoroutine(DestorySelf(t));
+        StartCoroutine(DestorySelf(bt));
     }
-    IEnumerator DestorySelf(Text t)
+    
+    IEnumerator DestorySelf(GameObject bt)
     {
+        Animation anim =bt.GetComponentInChildren<Animation>();
+        float r1 =Random.Range(0.7f,1.4f);
+        foreach(AnimationState s in anim)
+        {
+            s.speed=r1;
+        }
+        float r2 =Random.Range(0f,0.1f);
+        yield return new WaitForSeconds(r2);
+        anim.Play();
         yield return new  WaitForSeconds(1f);
-        Destroy(t.gameObject);
+        Destroy(bt);
     }
 }
