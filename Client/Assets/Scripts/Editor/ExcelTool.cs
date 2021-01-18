@@ -802,6 +802,11 @@ namespace EditorTool {
                 skillData.EUSDamage =collect[i][28].ToString()==""?0:int.Parse(collect[i][28].ToString());
                 skillData.EUSMP =collect[i][29].ToString()==""?0:int.Parse(collect[i][29].ToString());
                 skillData.EUSHeal =collect[i][30].ToString()==""?0:int.Parse(collect[i][30].ToString());
+                skillData.ELCDamage =collect[i][31].ToString()==""?0:int.Parse(collect[i][31].ToString());
+                skillData.ELCMP =collect[i][32].ToString()==""?0:int.Parse(collect[i][32].ToString());
+                skillData.ELCHeal =collect[i][33].ToString()==""?0:int.Parse(collect[i][33].ToString());
+
+
 
                 array[i - 2] = skillData;
             }

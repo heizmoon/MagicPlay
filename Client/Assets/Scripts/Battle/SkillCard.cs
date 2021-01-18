@@ -292,14 +292,30 @@ public class SkillCard : MonoBehaviour
     {
         mask.SetActive(ifmask);
     }
-    ///<summary>检查手牌数量是否小于1，小于1则自动补牌</summary>
+    ///<summary>检查手牌数量是否小于自动补牌阈值，小于则自动补牌</summary>
     public static void CheckIfNeedSelectCard()
     {
         Debug.Log("手牌数量："+Player.instance.playerActor.handCards.Count); 
-        if(Player.instance.playerActor.handCards.Count <=1)
+        if(Player.instance.playerActor.handCards.Count <=Player.instance.playerActor.autoDealCardsMinValue)
         {
             UIBattle.Instance.DealCards();
         }
+    }
+    public void LegacyCard()
+    {
+        if(skill.skillData.ELCDamage!=0)
+        {
+            IncreaseDamage(skill.skillData.ELCDamage);
+        }
+        if(skill.skillData.ELCMP!=0)
+        {
+            ReduceMPCost(skill.skillData.ELCMP);
+        }
+        if(skill.skillData.ELCHeal!=0)
+        {
+            IncreaseHeal(skill.skillData.ELCHeal);
+        }
+        RefeashCardShow();
     }
     //1.全局降低/增加卡牌能量消耗
     //生效时机：第一次使用，新卡牌出现，效果结束时
@@ -313,7 +329,6 @@ public class SkillCard : MonoBehaviour
         skill.realManaCost =0;
         else
         skill.realManaCost =skill.tempMpCost;
-
     }
     public void IncreaseDamage(int num)
     {
@@ -326,10 +341,11 @@ public class SkillCard : MonoBehaviour
     }
     public void IncreaseHeal(int num)
     {
-        skill.heal +=num;
-        if(skill.heal<0)
+        skill.tempHeal +=num;
+        if(skill.tempHeal<0)
         skill.heal =0;
-        // RefeashCardShow();
+        else
+        skill.heal =skill.tempHeal;
     }
 
 }

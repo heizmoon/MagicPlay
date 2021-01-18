@@ -85,6 +85,7 @@ public class Actor : MonoBehaviour
     public MonsterTypeData monsterData;
     public int dealCardsNumber =3;//发牌数
     public int startBattleDealCardsNumber =4;//初次发牌数
+    public int autoDealCardsMinValue =1;
     int state;
     int tempState =-1;
     int behaviour;
@@ -1435,7 +1436,11 @@ public class Actor : MonoBehaviour
         {
             skill.skillCard.ReduceMPCost(skill.skillData.EUSMP);
         }
-        
+        //每次使用改变自身治疗量的技能
+        if(skill.skillData.EUSHeal!= 0)
+        {
+            skill.skillCard.IncreaseHeal(skill.skillData.EUSHeal);
+        }
            
     }
     public void AddMp(float num)

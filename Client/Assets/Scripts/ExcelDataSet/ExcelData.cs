@@ -63,6 +63,9 @@ public class SkillData{
     public int EUSMP;
     ///<summary>每次使用治疗改变</summary>
     public int EUSHeal;
+    public int ELCDamage;
+    public int ELCMP;
+    public int ELCHeal;
 
 }
 [System.Serializable]
@@ -76,8 +79,6 @@ public class SummonData
     public float speed;
     public int skill;
     
-    
-
 }
 [System.Serializable]
 public class AssetsItemData

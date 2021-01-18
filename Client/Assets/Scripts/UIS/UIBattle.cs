@@ -496,6 +496,14 @@ public class UIBattle : MonoBehaviour
             Skill skill =SkillManager.TryGetFromPool(27,playerActor);
             skill.ComputeDamage();
         }
+        //检查补牌前是否有卡牌被【遗留】
+        if(playerActor.handCards.Count>0)
+        {
+            for (int i = 0; i < playerActor.handCards.Count; i++)
+            {
+                playerActor.handCards[i].LegacyCard();
+            }
+        }
         int maxNum = playerActor.dealCardsNumber;
         if(ifFirstDeal)
         {

@@ -23,6 +23,7 @@ public class Skill : MonoBehaviour
     
     public int color;//法术类系
     public int heal;
+    public int tempHeal;
     
     public bool targetSelf;//目标是自己还是对方
 
