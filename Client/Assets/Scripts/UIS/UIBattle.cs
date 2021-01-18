@@ -59,6 +59,7 @@ public class UIBattle : MonoBehaviour
     public int UseCardTimes =0;
     bool battleStart;
     public float BattleTime =0;
+    bool ifFirstDeal =true;
     void Awake()
     {
         Instance = this;
@@ -496,6 +497,11 @@ public class UIBattle : MonoBehaviour
             skill.ComputeDamage();
         }
         int maxNum = playerActor.dealCardsNumber;
+        if(ifFirstDeal)
+        {
+            maxNum =playerActor.startBattleDealCardsNumber;
+            ifFirstDeal =false;
+        }
         if(maxNum>8)
         maxNum=8;//补牌数量上限为8
         for (int i = 0; i < maxNum ; i++)
@@ -508,8 +514,6 @@ public class UIBattle : MonoBehaviour
                 Debug.LogError("没牌了!");
                 return;
             }
-            
-
             // int r = Random.Range(0,cardsList.Count);
             if(playerActor.handCards.Count<8)
             SelectCard(cardsList[0],i);

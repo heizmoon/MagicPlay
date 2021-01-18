@@ -83,8 +83,8 @@ public class Actor : MonoBehaviour
 
     [HideInInspector]
     public MonsterTypeData monsterData;
-    [HideInInspector]
-    public int dealCardsNumber =4;//发牌数
+    public int dealCardsNumber =3;//发牌数
+    public int startBattleDealCardsNumber =4;//初次发牌数
     int state;
     int tempState =-1;
     int behaviour;
@@ -1422,7 +1422,7 @@ public class Actor : MonoBehaviour
         {
             if(skill.color ==2)
             {
-                autoReduceMPAmount+=0.1f;
+                autoReduceMPAmount+=0.2f;
             }
         }
          //每次使用改变自身伤害的技能

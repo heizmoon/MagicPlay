@@ -46,7 +46,7 @@ public class UIBattleCharacter : MonoBehaviour
         charReMp.text =string.Format("每秒能量回复：{0}",playerActor.autoReduceMPAmount*5);
         charAtt.text =string.Format("攻击力：{0}",playerActor.basicAttack);
         charDef.text =string.Format("防御力：{0}",playerActor.basicDefence);
-        charDeal.text =string.Format("发牌数：{0}",playerActor.dealCardsNumber);
+        charDeal.text =string.Format("补牌数：{0}",playerActor.dealCardsNumber);
         charCrit.text =string.Format("暴击率：{0}%",playerActor.Crit); 
 
     }

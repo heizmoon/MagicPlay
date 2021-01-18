@@ -292,10 +292,11 @@ public class SkillCard : MonoBehaviour
     {
         mask.SetActive(ifmask);
     }
+    ///<summary>检查手牌数量是否小于1，小于1则自动补牌</summary>
     public static void CheckIfNeedSelectCard()
     {
         Debug.Log("手牌数量："+Player.instance.playerActor.handCards.Count); 
-        if(Player.instance.playerActor.handCards.Count ==0)
+        if(Player.instance.playerActor.handCards.Count <=1)
         {
             UIBattle.Instance.DealCards();
         }
