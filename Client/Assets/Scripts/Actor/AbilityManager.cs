@@ -118,7 +118,7 @@ public class AbilityManager : MonoBehaviour
 
         return datas;
     }
-    ///<summary>随机N个X级能力，不包含玩家已拥有的能力，能力必须已经解锁</summary>
+///<summary>随机N个X级能力，不包含玩家已拥有的能力，能力必须已经解锁</summary>
 public AbilityData[] GetRandomAbilityFromLevel(int number,int level)
 {
     List<int> list =new List<int>();

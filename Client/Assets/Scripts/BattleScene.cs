@@ -29,16 +29,16 @@ public class BattleScene : MonoBehaviour
         
         
     }
-    public void ShowRandomAbilityUI()
-    {
-        GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UIChooseAbility"));
-        go.transform.SetParent(Main.instance.allScreenUI);
-		go.transform.localScale =Vector3.one;
-		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-        //使用随机出的3个能力
-        AbilityManager.instance.GetRandomAbility(3,Player.instance.playerActor.abilities);
-    }
+    // public void ShowRandomAbilityUI()
+    // {
+    //     GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UIChooseAbility"));
+    //     go.transform.SetParent(Main.instance.allScreenUI);
+	// 	go.transform.localScale =Vector3.one;
+	// 	go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+	// 	go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+    //     //使用随机出的3个能力
+    //     AbilityManager.instance.GetRandomAbility(3,Player.instance.playerActor.abilities);
+    // }
     public void InitBattle(int monsterID,int sceneID,bool isBoss)
 	{
         //备份当前战斗信息；

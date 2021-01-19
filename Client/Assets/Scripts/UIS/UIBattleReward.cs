@@ -68,7 +68,7 @@ public class UIBattleReward : MonoBehaviour
     {
         if(isBoss&&!hasChoosenRelic)
         {
-            AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,Player.instance.playerActor.abilities);
+            AbilityData[] Adatas = AbilityManager.instance.GetRandomAbilityFromLevel(3,level);
             for (int i = 0; i < Adatas.Length; i++)
             {
                 abilityItemBoxes[i].Reset();
@@ -117,6 +117,7 @@ public class UIBattleReward : MonoBehaviour
     {
         gameObject.SetActive(false);
         Player.instance.AddGold(level*5);
+        UIBasicBanner.instance.ChangeGoldText();
         // BattleScene.instance.OpenMap();
         UIBattle.Instance.OnBattleGoOn();
         Destroy(gameObject);

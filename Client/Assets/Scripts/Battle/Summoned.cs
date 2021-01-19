@@ -154,8 +154,18 @@ public class Summoned : MonoBehaviour
     IEnumerator WaitForAttack(float time,int num)
     {
         yield return new WaitForSeconds(time);
+        if(skill.heal==0)
         //附加伤害的攻击
-        Battle.Instance.ReceiveSkillDamage(skill,num,false,false);
+        {
+            skill.damage =num;
+            skill.ComputeDamage();
+        }
+        // Battle.Instance.ReceiveSkillDamage(skill,num,false,false);
+        else
+        {
+            skill.heal =num;
+            skill.ComputeHeal();
+        }
     }
     void CreateCastEffect(Skill skill)
     {
