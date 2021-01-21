@@ -161,8 +161,7 @@ public class Main : MonoBehaviour {
 	}
 	void JudgeWhatsDoing()
 	{
-		//直接选择角色完毕，进入战斗流程
-		BattleScene.instance.ChangeMap("Map_01");
+		//--------打开主界面
 		
 	}
 	

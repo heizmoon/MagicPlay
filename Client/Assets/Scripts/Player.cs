@@ -52,7 +52,6 @@ public class Player : MonoBehaviour
 
 	public void Init()
 	{
-		string avaterName =CharacterManager.instance.GetInfo(1,"prefab");
 		// if(PlayerPrefs.GetString("playerAvatar")=="")
 		// {
 		// 	avaterName ="Girl_01";
@@ -61,12 +60,10 @@ public class Player : MonoBehaviour
 		// {
 		// 	avaterName =PlayerPrefs.GetString("playerAvatar");
 		// }
-		playerActor = Instantiate((GameObject)Resources.Load("Prefabs/"+avaterName)).GetComponent<Actor>();
-		playerActor.InitPlayerActor(CharacterManager.instance.GetCharacter(1));
+		
 		// playerAbyss = PlayerPrefs.GetInt("abyssLevel")==0?1:PlayerPrefs.GetInt("abyssLevel");
 		// Gold = PlayerPrefs.GetInt("gold");
-		Gold =100;//========================================================临时数值
-		UIBasicBanner.instance.ChangeGoldText();
+		//========================================================临时数值
 		// InputBasicProperty();
 		// LoadTraitList();
 		GetUnlockSkills();

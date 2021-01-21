@@ -135,6 +135,7 @@
      <Compile Include="Assets\Scripts\UIS\UICamp.cs" />
      <Compile Include="Assets\Scripts\UIS\UICardDetail.cs" />
      <Compile Include="Assets\Scripts\UIS\UICardGroup.cs" />
+     <Compile Include="Assets\Scripts\UIS\UIChooseCharacter.cs" />
      <Compile Include="Assets\Scripts\UIS\UIOffLineRewards.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayer.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayerAssets.cs" />

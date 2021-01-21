@@ -146,6 +146,7 @@ namespace EditorTool {
                 item.reMp =collect[i][9].ToString()==""?0:float.Parse(collect[i][9].ToString());
                 item.crit =collect[i][10].ToString()==""?0:float.Parse(collect[i][10].ToString());
                 item.allSkills =collect[i][11].ToString();
+                item.relic =collect[i][12].ToString()==""?0:int.Parse(collect[i][12].ToString());
                 item.allSkillsList =GetListIntFromString(item.allSkills);
                 array[i - 2] = item;
             }

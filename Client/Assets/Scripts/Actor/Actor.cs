@@ -143,6 +143,8 @@ public class Actor : MonoBehaviour
         {
             UsingSkillsID.Add(int.Parse(str[i]));
         }
+        if(character.data.relic>0)
+        abilities.Add(character.data.relic);
     }
     public void InitEnemy(MonsterTypeData data)
     {

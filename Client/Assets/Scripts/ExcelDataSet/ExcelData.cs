@@ -153,6 +153,7 @@ public class CharacterData
     public float reMp;
     public float crit;
     public string allSkills;
+    public int relic;
     public List<int> allSkillsList;
 
 }
