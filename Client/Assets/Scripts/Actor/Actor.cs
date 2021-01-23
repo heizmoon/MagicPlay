@@ -1502,7 +1502,13 @@ public class Actor : MonoBehaviour
         UIBattle.Instance.playerActor.StopCasting();
         UIBattle.Instance.Enemy.StopCasting();
         if(actorType == ActorType.敌人)
-        castingbar.gameObject.SetActive(false);
+        {
+            castingbar.gameObject.SetActive(false);
+            if(abilities.Contains(5))
+            {
+                Player.instance.playerActor.AddHp(11);
+            }
+        }
         // animator.SetInteger("anim",5);
         ChangeAnimatorInteger(5);
         // animator.Play("dead");
