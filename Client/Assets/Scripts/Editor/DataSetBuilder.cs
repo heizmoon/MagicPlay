@@ -450,6 +450,32 @@ namespace EditorTool {
             AssetDatabase.Refresh();
         }
     }
+    public class RandomEventBuild : Editor 
+    {
+ 
+        [MenuItem("生成表格数据/Summon表")]
+        public static void CreateItemAsset() 
+        {
+            // Debug.Log("什么问题？");
+            RandomEventDataSet manager = ScriptableObject.CreateInstance<RandomEventDataSet>();
+            //赋值
+            ExcelTool.CreateItemArrayWithExcel(ExcelConfig.excelsFolderPath + "RandomEvent.xlsx","RandomEvent");
+            manager.dataArray = ExcelTool.GetRandomEventArray();
+            // Debug.Log("长度？"+manager.dataArray.Length);
+
+            //确保文件夹存在
+            if(!Directory.Exists(ExcelConfig.assetPath)) {
+                Directory.CreateDirectory(ExcelConfig.assetPath);
+            }
+ 
+            //asset文件的路径 要以"Assets/..."开始，否则CreateAsset会报错
+            string assetPath = string.Format("{0}{1}.asset", ExcelConfig.assetPath, "RandomEvent");
+            //生成一个Asset文件
+            AssetDatabase.CreateAsset(manager, assetPath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+    }
     public class IdealBuild : Editor 
     {
  
@@ -546,6 +572,8 @@ namespace EditorTool {
         ReformDataBuild.CreateItemAsset();
         AbilityBuild.CreateItemAsset();
         SummonBuild.CreateItemAsset();
+        RandomEventBuild.CreateItemAsset();
+
         Debug.Log("-----所有表格生成完毕----");
     }
     }

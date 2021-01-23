@@ -10,6 +10,35 @@ public class DropGroup {
     
 }
 [System.Serializable]
+public class RandomEvent { 
+    public int id;
+    public string describe;
+    public string image;
+    public int rank;
+    public string des1;
+    public string res1;
+    public string img1;
+    public string eff1;
+    public string des2;
+    public string res2;
+    public string img2;
+    public string eff2;
+    public string des3;
+    public string res3;
+    public string img3;
+    public string eff3;
+    public string des4;
+    public string res4;
+    public string img4;
+    public string eff4;
+    public List<int> eList1;
+    public List<int> eList2;
+    public List<int> eList3;
+    public List<int> eList4;
+
+    
+}
+[System.Serializable]
 public class AbilityData
 {
     public int id;

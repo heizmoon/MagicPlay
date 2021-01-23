@@ -608,6 +608,8 @@ public class Player : MonoBehaviour
 		}
 		else
 		Gold+=num;
+		if(UIBasicBanner.instance)
+		UIBasicBanner.instance.ChangeGoldText();
 	}
 }
 

@@ -76,6 +76,7 @@ public class Main : MonoBehaviour {
 		gameObject.AddComponent<MonsterManager>();
 		gameObject.AddComponent<EventManager>();
 		gameObject.AddComponent<SummonManager>();
+		gameObject.AddComponent<RandomEventManager>();
 
 		// gameObject.AddComponent<AbyssManager>();
 		// gameObject.AddComponent<TraitManager>();
@@ -162,7 +163,7 @@ public class Main : MonoBehaviour {
 	void JudgeWhatsDoing()
 	{
 		//--------打开主界面
-		
+		InitUIChooseCharacter();
 	}
 	
 	public void StartLoadBasicUIs()
@@ -314,21 +315,20 @@ public class Main : MonoBehaviour {
 			UIPlayer.instance.RefreashUI();
 		}
 	}
-	public void InitUIPlayerAssets()
+	public void InitUIChooseCharacter()
 	{
-		if(UIPlayerAssets.instance==null)
+		if(UIChooseCharacter.instance==null)
 		{
-			GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UIPlayerAssets"));
+			GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UIChooseCharacter"));
 			go.transform.SetParent(allScreenUI);
 			go.transform.localScale =Vector3.one;
 			go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 			go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-			UIPlayerAssets.instance.InitUI();
+			
 		}
 		else
 		{
-			UIPlayerAssets.instance.gameObject.SetActive(true);
-			UIPlayerAssets.instance.InitList();
+			UIChooseCharacter.instance.gameObject.SetActive(true);
 		}
 		
 	}

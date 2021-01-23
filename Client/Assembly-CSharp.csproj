@@ -86,6 +86,7 @@
      <Compile Include="Assets\Scripts\Events\BattleData.cs" />
      <Compile Include="Assets\Scripts\Events\BattleEvent.cs" />
      <Compile Include="Assets\Scripts\Events\EventManager.cs" />
+     <Compile Include="Assets\Scripts\Events\RandomEventManager.cs" />
      <Compile Include="Assets\Scripts\Events\TypeEventTool.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\AbilityDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\AbyssGroupDataSet.cs" />
@@ -101,6 +102,7 @@
      <Compile Include="Assets\Scripts\ExcelDataSet\MonsterTypeSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\QuestionDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\QuestionDatabaseSet.cs" />
+     <Compile Include="Assets\Scripts\ExcelDataSet\RandomEventDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\ReformDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\RelicDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\RelicGroupDataSet.cs" />
@@ -139,6 +141,7 @@
      <Compile Include="Assets\Scripts\UIS\UIOffLineRewards.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayer.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayerAssets.cs" />
+     <Compile Include="Assets\Scripts\UIS\UIRandomEvent.cs" />
      <Compile Include="Assets\Scripts\UIS\UISkillButton.cs" />
      <Compile Include="Assets\Scripts\UIS\UISkillChoose.cs" />
      <Compile Include="Assets\Scripts\UIS\UISkillTree.cs" />

@@ -7,6 +7,7 @@ using DG.Tweening;
 
 public class UIChooseCharacter : MonoBehaviour
 {
+    public static UIChooseCharacter instance;
     GameObject _char1;
     GameObject _char2;
     GameObject _char3;
@@ -14,13 +15,17 @@ public class UIChooseCharacter : MonoBehaviour
     Button _sureBtn;
     int nowCharacter =0;
     float mouseX;
-    void Start()
+    void Awake()
     {
+        instance = this;
         _char1 =transform.Find("background/char1").gameObject;
         _char2 =transform.Find("background/char2").gameObject;
         _char3 =transform.Find("background/char3").gameObject;
         _sureBtn =transform.Find("background/SureButton").gameObject.GetComponent<Button>();
         _sureBtn.onClick.AddListener(OnChooseCharacter);
+    }
+    void Start()
+    {
         ChangeCharacter();
     }
 
@@ -31,7 +36,7 @@ public class UIChooseCharacter : MonoBehaviour
     }
     void OnChooseCharacter()
     {
-		UIBasicBanner.instance.ChangeGoldText();
+		// UIBasicBanner.instance.ChangeGoldText();
         string avaterName =CharacterManager.instance.GetInfo(1,"prefab");
         Actor playerActor = Instantiate((GameObject)Resources.Load("Prefabs/"+avaterName)).GetComponent<Actor>();
         Player.instance.playerActor =playerActor;

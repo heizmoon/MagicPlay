@@ -54,7 +54,7 @@ public class UIPlayer : MonoBehaviour
     public void OnOpenAssetsUI()
     {
         HideAvatar();
-        Main.instance.InitUIPlayerAssets();
+        Main.instance.InitUIChooseCharacter();
     }
     public void OnOpenTraitUI()
     {

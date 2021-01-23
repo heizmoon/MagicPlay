@@ -109,6 +109,16 @@ public class BattleScene : MonoBehaviour
         UIBasicBanner.instance.textMap.text ="宝箱";
 
 	}
+    public void InitRandomEvent()
+	{
+        GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/UIRandomEvent"));
+        go.transform.SetParent(Main.instance.MiddleUI);
+		go.transform.localScale =Vector3.one;
+		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        UIBasicBanner.instance.textMap.text ="事件";
+
+	}
     public void OpenMap()
     {
         if(Map.instance!=null)

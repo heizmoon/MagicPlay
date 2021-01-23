@@ -69,7 +69,7 @@ public class Map : MonoBehaviour
             BattleScene.instance.InitCamp();
             break;
             case MapPointType.events:
-            // Main.instance.InitBattle(point.realID,sceneID);
+            BattleScene.instance.InitRandomEvent();
             break;
             case MapPointType.shop:
             BattleScene.instance.InitShop();

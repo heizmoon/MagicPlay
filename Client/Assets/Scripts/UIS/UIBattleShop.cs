@@ -166,7 +166,6 @@ public class UIBattleShop : MonoBehaviour
         else if(item.type ==2)
         Player.instance.playerActor.abilities.Add(item.id);
 
-        UIBasicBanner.instance.ChangeGoldText();
     }
     void OnButtonReturn()
     {

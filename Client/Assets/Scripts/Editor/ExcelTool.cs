@@ -32,7 +32,7 @@ namespace EditorTool {
         static ReformData[] reformDatas;
         static AbilityData[] abilityDatas;
         static SummonData[] summonDatas;
-
+        static RandomEvent[] randomEventArray;
 
 
 
@@ -112,6 +112,9 @@ namespace EditorTool {
                 case "Summon":
                 CreateSummonArray(filePath);
                 break;
+                case "RandomEvent":
+                CreateRandomEventArray(filePath);
+                break;
 
             }
 
@@ -170,6 +173,47 @@ namespace EditorTool {
                 array[i - 2] = item;
             }
             droupGroupArray =array;
+        }
+        public static void CreateRandomEventArray(string filePath) 
+        {
+            //获得表数据
+            int columnNum = 0, rowNum = 0;
+            DataRowCollection collect = ReadExcel(filePath, ref columnNum, ref rowNum);
+ 
+            //根据excel的定义，第二行开始才是数据
+            RandomEvent[] array = new RandomEvent[rowNum - 2];
+            for(int i = 2; i < rowNum; i++) 
+            {
+                RandomEvent item = new RandomEvent();
+                //解析每列的数据
+                item.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
+                item.describe = collect[i][1].ToString();
+                item.image = collect[i][2].ToString();
+                item.rank = collect[i][3].ToString()==""?0:int.Parse(collect[i][3].ToString());
+                item.des1 = collect[i][4].ToString();
+                item.res1 = collect[i][5].ToString();
+                item.img1 = collect[i][6].ToString();
+                item.eff1 = collect[i][7].ToString();
+                item.des2 = collect[i][8].ToString();
+                item.res2 = collect[i][9].ToString();
+                item.img2 = collect[i][10].ToString();
+                item.eff2 = collect[i][11].ToString();
+                item.des3 = collect[i][12].ToString();
+                item.res3 = collect[i][13].ToString();
+                item.img3 = collect[i][14].ToString();
+                item.eff3 = collect[i][15].ToString();
+                item.des4 = collect[i][16].ToString();
+                item.des4 = collect[i][17].ToString();
+                item.img4 = collect[i][18].ToString();
+                item.eff4 = collect[i][19].ToString();
+                item.eList1 =GetListIntFromString(item.eff1);
+                item.eList2 =GetListIntFromString(item.eff2);
+                item.eList3 =GetListIntFromString(item.eff3);
+                item.eList4 =GetListIntFromString(item.eff4);
+
+                array[i - 2] = item;
+            }
+            randomEventArray =array;
         }
         public static void CreateRelicGroupArray(string filePath) 
         {
@@ -1021,6 +1065,10 @@ namespace EditorTool {
         public static SummonData[] GetSummonDataArray()
         {
             return summonDatas;
+        }
+        public static RandomEvent[] GetRandomEventArray()
+        {
+            return randomEventArray;
         }
         /// <summary>
         /// 读取excel文件内容
