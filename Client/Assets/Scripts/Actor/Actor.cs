@@ -166,8 +166,7 @@ public class Actor : MonoBehaviour
         UsingSkillsID = UsingSkillsID.Union(data.m_nerfSkills1).ToList(); 
         UsingSkillsID = UsingSkillsID.Union(data.m_nerfSkills2).ToList(); 
         UsingSkillsID = UsingSkillsID.Union(data.m_nerfSkills3).ToList(); 
-
-        
+    
     }
     public void InitMagic()//初始化技能数值
     {
@@ -698,7 +697,10 @@ public class Actor : MonoBehaviour
             return false;
         }
         
-        StartCoroutine(WaitForBeginSpell(skill));
+        // StartCoroutine(WaitForBeginSpell(skill));
+        animator.Play("attack");
+        BeginSpell(skill);
+        RunAI();
         // BeginSpell(skill);
         // RunAI();
         return true;
@@ -1271,7 +1273,7 @@ public class Actor : MonoBehaviour
         }
         
         Debug.LogFormat("角色：{0}的当前生命值：{1}",name,HpCurrent);
-        if(num<=0)
+        if(!ifAbsorb&&num<=0)
         {
             bt.SetText("0");
             return 0;
@@ -1432,6 +1434,10 @@ public class Actor : MonoBehaviour
                 autoReduceMPAmount+=0.2f;
             }
         }
+        if(abilities.Contains(4))
+        {
+            AddMp(1);
+        }
          //每次使用改变自身伤害的技能
         if(skill.skillData.EUSDamage!=0)
         {
@@ -1482,7 +1488,7 @@ public class Actor : MonoBehaviour
     public void OnHitResistance()
     {
         //显示文字 抵抗
-        bt.SetText("0");
+        bt.SetText("抵抗");
         //执行当角色抵抗技能时就xxx这类效果
     }
     void Die()

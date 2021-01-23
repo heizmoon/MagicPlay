@@ -191,10 +191,7 @@ public class SkillCard : MonoBehaviour
                     }
                 }
             }
-            if(Player.instance.playerActor.abilities.Contains(4))
-            {
-                Player.instance.playerActor.AddMp(1);
-            }
+            
             CheckIfNeedSelectCard();
         }
     }
