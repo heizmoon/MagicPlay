@@ -179,6 +179,119 @@ public class UIRandomEvent : MonoBehaviour
             Player.instance.playerActor.AddHp(r);
             strs[4]=(-r).ToString();
         }
+        if(effList.Contains(5))
+        {
+            int r =Random.Range(10,20);
+            Player.instance.playerActor.AddMaxHP(r);
+            strs[5]=(r).ToString();
+        }
+        if(effList.Contains(6))
+        {
+            int r =Random.Range(-10,-20);
+            Player.instance.playerActor.AddMaxHP(r);
+            strs[6]=(-r).ToString();
+        }
+        if(effList.Contains(7))
+        {
+            int r =Random.Range(1,4);
+            SkillManager.instance.GetRandomSelfSkills(r);
+            strs[7]=(r).ToString();
+        }
+        if(effList.Contains(8))
+        {
+            int r =Random.Range(0,Player.instance.playerActor.UsingSkillsID.Count);
+            Player.instance.playerActor.UsingSkillsID.RemoveAt(r);
+            strs[8]=(r).ToString();
+        }
+        if(effList.Contains(9))
+        {
+            int r =Random.Range(1,4);
+            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,0);
+            strs[9]=(r).ToString();
+        }
+        if(effList.Contains(10))
+        {
+            int r =Random.Range(1,4);
+            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,1);
+            strs[10]=(r).ToString();
+        }
+        if(effList.Contains(11))
+        {
+            int r =Random.Range(1,4);
+            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,2);
+            strs[11]=(r).ToString();
+        }
+        if(effList.Contains(12))
+        {
+            int r =Random.Range(1,4);
+            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,3);
+            strs[12]=(r).ToString();
+        }
+        if(effList.Contains(13))
+        {
+            int r =Random.Range(1,4);
+            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,4);
+            strs[13]=(r).ToString();
+        }
+        if(effList.Contains(14))//---------随机获得1-3张符合当前等级的牌
+        {
+            int r =Random.Range(1,4);
+            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,5);
+            strs[14]=(r).ToString();
+        }
+        if(effList.Contains(15))
+        {
+            int level = BattleScene.instance.steps;//------换算公式未定
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            strs[15]=(abilities[0].name).ToString();
+        }
+        if(effList.Contains(16))
+        {
+            int level = BattleScene.instance.steps;//------换算公式未定
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            strs[16]=(abilities[0].name).ToString();
+        }
+        if(effList.Contains(17))
+        {
+            int level = BattleScene.instance.steps;//------换算公式未定
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            strs[17]=(abilities[0].name).ToString();
+        }
+        if(effList.Contains(18))
+        {
+            int level = BattleScene.instance.steps;//------换算公式未定
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            strs[18]=(abilities[0].name).ToString();
+        }
+        if(effList.Contains(19))
+        {
+            int level = BattleScene.instance.steps;//------换算公式未定
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            strs[19]=(abilities[0].name).ToString();
+        }
+        if(effList.Contains(20))
+        {
+            Player.instance.playerActor.abilities.RemoveAt(0);
+            strs[20]=(AbilityManager.instance.GetInfo(Player.instance.playerActor.character.data.relic).name).ToString();
+        }
+       /* 21：接下来每场战斗结束后看广告
+        22：接下来每场战斗结束后金钱奖励翻倍
+        23：获得一次重生能力
+        24：完全恢复
+        25：失去所有金钱
+        26：获得随机诅咒圣遗物（当前未持有）*/
+        if(effList.Contains(24))
+        {
+            Player.instance.playerActor.AddHp(Player.instance.playerActor.HpMax);
+            // strs[24]=().ToString();
+        }
+        if(effList.Contains(25))
+        {
+            Player.instance.AddGold(-100000);
+            // strs[24]=().ToString();
+        }
+        
+
     }
     void OnClose()
     {
