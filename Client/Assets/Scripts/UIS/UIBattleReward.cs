@@ -116,7 +116,7 @@ public class UIBattleReward : MonoBehaviour
     void OnButtonReturn()
     {
         gameObject.SetActive(false);
-        Player.instance.AddGold(level*5);
+        Player.instance.AddGold(level*Configs.instance.battleLevelGold);
         // UIBasicBanner.instance.ChangeGoldText();
         // BattleScene.instance.OpenMap();
         UIBattle.Instance.OnBattleGoOn();

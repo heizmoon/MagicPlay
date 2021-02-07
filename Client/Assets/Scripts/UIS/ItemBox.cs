@@ -54,7 +54,7 @@ public class ItemBox : MonoBehaviour
         // toggle.graphic = skillMark.GetComponent<Image>();
 
         // describe =item.describe;
-        price =(item.rank+1)*25;
+        price =(item.rank+1)*Configs.instance.priceRankGold;
         itemName.text ="";
         id =item.id;
     }

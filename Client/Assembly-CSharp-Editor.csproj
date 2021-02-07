@@ -172,6 +172,7 @@
      <Compile Include="Assets\Anima2D\Scripts\Editor\VertexManipulator\VertexManipulator.cs" />
      <Compile Include="Assets\Anima2D\Scripts\Editor\WeightEditor.cs" />
      <Compile Include="Assets\Anima2D\Scripts\Editor\WindowEditorTool.cs" />
+     <Compile Include="Assets\Scripts\Editor\ConfigsEditor.cs" />
      <Compile Include="Assets\Scripts\Editor\DataSetBuilder.cs" />
      <Compile Include="Assets\Scripts\Editor\ExcelConfig.cs" />
      <Compile Include="Assets\Scripts\Editor\ExcelTool.cs" />

@@ -46,6 +46,8 @@ public class UIChooseCharacter : MonoBehaviour
         playerActor.transform.localScale =Vector3.one;
         //直接选择角色完毕，进入战斗流程
 		BattleScene.instance.ChangeMap("Map_01");
+        //获得初始金币
+        Player.instance.AddGold(Configs.instance.initGold);
         gameObject.SetActive(false);
         Destroy(gameObject);
     }

@@ -82,6 +82,7 @@
      <Compile Include="Assets\Scripts\Battle\SummonManager.cs" />
      <Compile Include="Assets\Scripts\Battle\Summoned.cs" />
      <Compile Include="Assets\Scripts\BattleScene.cs" />
+     <Compile Include="Assets\Scripts\Configs.cs" />
      <Compile Include="Assets\Scripts\DateManager.cs" />
      <Compile Include="Assets\Scripts\Events\BattleData.cs" />
      <Compile Include="Assets\Scripts\Events\BattleEvent.cs" />

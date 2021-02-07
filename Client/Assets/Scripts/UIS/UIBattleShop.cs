@@ -158,7 +158,10 @@ public class UIBattleShop : MonoBehaviour
     }
     void BuyItem(ItemBox item)
     {
-        
+        if(item.price>Player.instance.Gold)
+        {
+            return;
+        }
         item.Disable();
         Player.instance.AddGold(-item.price);
         if(item.type ==1)
