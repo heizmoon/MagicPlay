@@ -610,3 +610,14 @@ public class IdealData
     public string describe;
 
 }
+[System.Serializable]
+public class ShopData
+{
+    public int id;
+    public string SellCardList;
+    public string SellRelicList;
+    public List<int> _sellCardList;
+    public List<int> _sellRelicList;
+
+
+}

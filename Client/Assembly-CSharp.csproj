@@ -88,6 +88,7 @@
      <Compile Include="Assets\Scripts\Events\BattleEvent.cs" />
      <Compile Include="Assets\Scripts\Events\EventManager.cs" />
      <Compile Include="Assets\Scripts\Events\RandomEventManager.cs" />
+     <Compile Include="Assets\Scripts\Events\ShopManager.cs" />
      <Compile Include="Assets\Scripts\Events\TypeEventTool.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\AbilityDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\AbyssGroupDataSet.cs" />
@@ -108,6 +109,7 @@
      <Compile Include="Assets\Scripts\ExcelDataSet\RelicDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\RelicGroupDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\SceneDataSet.cs" />
+     <Compile Include="Assets\Scripts\ExcelDataSet\ShopDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\SkillDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\SummonDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\TaskEventDataSet.cs" />

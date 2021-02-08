@@ -72,7 +72,7 @@ public class Map : MonoBehaviour
             BattleScene.instance.InitRandomEvent();
             break;
             case MapPointType.shop:
-            BattleScene.instance.InitShop();
+            BattleScene.instance.InitShop(point.idList[0]);//此处需要之后优化为对应每个角色
             break;
             case MapPointType.treasure:
             BattleScene.instance.InitTreasure();

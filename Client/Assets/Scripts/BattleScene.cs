@@ -73,7 +73,7 @@ public class BattleScene : MonoBehaviour
         return enemy;
     }
 	//---------------------------------
-	public void InitShop()
+	public void InitShop(int realID)
 	{
 		//商店不会出售玩家身上已经拥有的能力
 		//从所有能力中随机出N个能力，排除List
@@ -83,7 +83,7 @@ public class BattleScene : MonoBehaviour
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-        // go.GetComponent<UIBattleShop>().Init(datas);
+        go.GetComponent<UIBattleShop>().Init(realID);
         UIBasicBanner.instance.textMap.text ="商店";
 
 	}

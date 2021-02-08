@@ -68,7 +68,6 @@ public class Main : MonoBehaviour {
         // }
 
 		
-		// gameObject.AddComponent<AssetsManager>();
 		gameObject.AddComponent<AbilityManager>();
 		gameObject.AddComponent<CharacterManager>();
 		gameObject.AddComponent<ReformManager>();
@@ -77,9 +76,7 @@ public class Main : MonoBehaviour {
 		gameObject.AddComponent<EventManager>();
 		gameObject.AddComponent<SummonManager>();
 		gameObject.AddComponent<RandomEventManager>();
-
-		// gameObject.AddComponent<AbyssManager>();
-		// gameObject.AddComponent<TraitManager>();
+		gameObject.AddComponent<ShopManager>();
 		gameObject.AddComponent<BuffManager>();
 		//判断玩家离线前的状态
 		InitBasicListUI();

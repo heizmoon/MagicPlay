@@ -33,6 +33,7 @@ namespace EditorTool {
         static AbilityData[] abilityDatas;
         static SummonData[] summonDatas;
         static RandomEvent[] randomEventArray;
+        static ShopData[] shopDatas;
 
 
 
@@ -114,6 +115,9 @@ namespace EditorTool {
                 break;
                 case "RandomEvent":
                 CreateRandomEventArray(filePath);
+                break;
+                 case "ShopData":
+                CreateShopArray(filePath);
                 break;
 
             }
@@ -978,6 +982,27 @@ namespace EditorTool {
             }
             summonDatas =array;
         }
+        public static void CreateShopArray(string filePath) {
+            //获得表数据
+            int columnNum = 0, rowNum = 0;
+            DataRowCollection collect = ReadExcel(filePath, ref columnNum, ref rowNum);
+ 
+            //根据excel的定义，第二行开始才是数据
+            ShopData[] array = new ShopData[rowNum - 2];
+            for(int i = 2; i < rowNum; i++) {
+            ShopData data = new ShopData();
+            //解析每列的数据
+            data.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
+            data.SellCardList = collect[i][1].ToString();
+            data.SellRelicList = collect[i][2].ToString();
+
+            data._sellCardList =GetListIntFromString(data.SellCardList); 
+            data._sellRelicList =GetListIntFromString(data.SellRelicList); 
+
+            array[i - 2] = data;
+            }
+            shopDatas =array;
+        }
         public static DropGroup[] GetItemArray()
         {
             return droupGroupArray;
@@ -1069,6 +1094,10 @@ namespace EditorTool {
         public static RandomEvent[] GetRandomEventArray()
         {
             return randomEventArray;
+        }
+        public static ShopData[] GetShopDataArray()
+        {
+            return shopDatas;
         }
         /// <summary>
         /// 读取excel文件内容

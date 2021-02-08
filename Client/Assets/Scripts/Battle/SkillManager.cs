@@ -208,7 +208,26 @@ public class SkillManager : MonoBehaviour
         }
         return skillDatas;
     }
-
+    ///<summary>从特定的池子中随机出N个不重复的技能</summary>
+    public SkillData[] GetRandomSkillFromSpecialPool(int N,List<int> list)
+    {
+       SkillData[] skillDatas =new SkillData[N];
+        // List<int> list = Player.instance.playerActor.character.allSkillsList;
+        if(N<1)
+        return null;
+        List<int> temp =new List<int>();
+        for(int i =0;i<N;i++)
+        {
+            int r =UnityEngine.Random.Range(1,list.Count);
+            while (temp.Contains(r))
+            {
+                r =UnityEngine.Random.Range(1,list.Count);
+            }
+            temp.Add(r);
+            skillDatas[i] =GetInfo(list[r]);
+        }
+        return skillDatas;
+    }
     // public Ability[] GetRandomUnlockPassiveSkills(int N)
     // {
     //     Ability[] abilities =new Ability[N];

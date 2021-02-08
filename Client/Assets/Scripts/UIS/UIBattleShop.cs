@@ -15,11 +15,12 @@ public class UIBattleShop : MonoBehaviour
     List<ItemBox> choosenItemBox =new List<ItemBox>();
     public Button retryButton;
     int totalPrice=0;
+    ShopData shopData;
     private void Start() 
     {
-        Init();
+        // Init();
     }
-    public void Init()
+    public void Init(int realID)
     {
         sureButton.onClick.AddListener(OnButtonBuy);
         cannelButton.onClick.AddListener(OnButtonReturn);
@@ -35,13 +36,17 @@ public class UIBattleShop : MonoBehaviour
             // item.toggle.onValueChanged.AddListener(isOn=>OnToggle(item));
             item.button.onClick.AddListener(delegate () {BuyItem(item);});
         } 
+        shopData = ShopManager.instance.GetInfo(realID);
+
         Refreash();
     }
     
     void Refreash()
     {
         AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,Player.instance.playerActor.abilities);
-        SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkills(3);
+        // SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkills(3);
+        SkillData[] Sdatas = SkillManager.instance.GetRandomSkillFromSpecialPool(3,shopData._sellCardList);
+
         // choosenItemBox.Clear();
         
         for (int i = 0; i < Adatas.Length; i++)
