@@ -5,7 +5,7 @@ using UnityEngine;
 public class BattleScene : MonoBehaviour
 {
     public static BattleScene instance;
-    public int steps{get;set;}//行走步数，用于决定难度等
+    public int steps;//行走步数，用于决定难度等
     public int beatEnemyNumber{get;set;}
     public int beatBossNumber{get;set;}
     int currentMonsterId;

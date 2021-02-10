@@ -127,13 +127,17 @@ public class Main : MonoBehaviour {
 		Debug.LogFormat("开始加载---");
 		// InitUISkillTree();//加载图像数量最多
 		//一个一个加载
-		yield return new WaitForSeconds(0.2f);
+		yield return new WaitForSeconds(0.5f);
 		// InitUIPlayer();
-		yield return new WaitForSeconds(3f);
+		CharacterManager.instance.CreateCharacters();
+
+		yield return new WaitForSeconds(1f);
+		SkillManager.instance.SeparateSkillFromLevel();
+
+		yield return new WaitForSeconds(2f);
 		
 		//等到全部加载完毕，全部隐藏
 		
-		CharacterManager.instance.CreateCharacters();
 		CloseOhterUIs();
 		player.Init();
 		// player.playerActor.InitPlayerActor();

@@ -37,10 +37,11 @@ public class UIChooseCharacter : MonoBehaviour
     void OnChooseCharacter()
     {
 		// UIBasicBanner.instance.ChangeGoldText();
-        string avaterName =CharacterManager.instance.GetInfo(1,"prefab");
+        string avaterName =CharacterManager.instance.GetInfo(0,"prefab");
         Actor playerActor = Instantiate((GameObject)Resources.Load("Prefabs/"+avaterName)).GetComponent<Actor>();
         Player.instance.playerActor =playerActor;
-		playerActor.InitPlayerActor(CharacterManager.instance.GetCharacter(1));
+		playerActor.InitPlayerActor(CharacterManager.instance.GetCharacter(0));
+        Player.instance.CharID =0;
         playerActor.transform.SetParent(Main.instance.BottomUI);
         playerActor.transform.localPosition =Vector3.zero;
         playerActor.transform.localScale =Vector3.one;

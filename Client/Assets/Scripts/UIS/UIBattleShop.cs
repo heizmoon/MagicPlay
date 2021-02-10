@@ -43,7 +43,9 @@ public class UIBattleShop : MonoBehaviour
     
     void Refreash()
     {
-        AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,Player.instance.playerActor.abilities);
+        // AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,Player.instance.playerActor.abilities);
+        AbilityData[] Adatas = AbilityManager.instance.GetRandomAbilityFromLevel(3,2);
+
         // SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkills(3);
         SkillData[] Sdatas = SkillManager.instance.GetRandomSkillFromSpecialPool(3,shopData._sellCardList);
 

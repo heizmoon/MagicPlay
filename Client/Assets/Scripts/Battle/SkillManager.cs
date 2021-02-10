@@ -23,12 +23,14 @@ public class SkillManager : MonoBehaviour
     //0-8:水，火，风，土，心灵，能量，物质,时空，真理
     public int[] totalLevel=new int[]{0,0,0,0,0,0,0,0,0};
     public List<int> unlockSkills =new List<int>();
-    struct CharSkillList
-    {
-        int rank;
-        List<int> skills;
-    }
-    Dictionary<int,CharSkillList> charSkillList =new Dictionary<int, CharSkillList>();
+    // public Dictionary<int,List<int>> rankSkills =new Dictionary<int, List<int>>();
+    // struct CharSkillList
+    // {
+    //    public int rank;
+    //    public List<int> skills;
+    // }
+    ///<summary>职业，级别，技能列表</summary>
+    Dictionary<int,List<int>[]> charSkillDic =new Dictionary<int, List<int>[]>();
     void Awake()
     {
         instance =this;
@@ -37,27 +39,37 @@ public class SkillManager : MonoBehaviour
     }
     void Start()
     {
-        SeparateSkillFromLevel();
     }
         //将各个角色的技能按照级别分列表储存
-
-    void SeparateSkillFromLevel()
+    public void SeparateSkillFromLevel()
     {
-        for (int i = 0; i < CharacterManager.instance.characters.Count; i++)
+        StartCoroutine(IESeparateSkillFromLevel());
+    }
+    IEnumerator IESeparateSkillFromLevel()
+    {
+        yield return new WaitForSeconds(2f);
+        for (int i = 0; i < CharacterManager.instance.characters.Count; i++)//所有职业循环
         {
-            
-            foreach (var item in manager.dataArray)
+            List<int>[] list =new List<int>[5];
+            list[0] = new List<int>();
+            list[1] = new List<int>();
+            list[2] = new List<int>();
+            list[3] = new List<int>();
+            list[4] = new List<int>();
+            foreach (var item in manager.dataArray)//所有技能循环
             {
-                if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )
+                if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
                 {
-                    if(item.updateID==0)
-                    {
-                        
-                    }
+                    list[item.rank].Add(item.id);
+                    Debug.Log("item.rank="+item.rank+",item.id="+item.id);
                 }
             }
+            charSkillDic.Add(i,list);
         }
-        
+        Debug.Log("charSkillDic[0].count="+charSkillDic[0].Length);
+        Debug.Log("charSkillDic[0][0].count="+charSkillDic[0][0].Count);
+
+
     }
     public static Skill TryGetFromPool(int id,Actor actor)
     {
@@ -192,7 +204,10 @@ public class SkillManager : MonoBehaviour
     public SkillData[] GetRandomSelfSkillsLevelLimit(int N,int rank)
     {
        SkillData[] skillDatas =new SkillData[N];
-        List<int> list = Player.instance.playerActor.character.allSkillsList;
+        // List<int> list = Player.instance.playerActor.character.allSkillsList;
+        List<int>[] _list = charSkillDic[Player.instance.CharID];
+        List<int> list =_list[rank];
+        Debug.Log("list.count ="+list.Count+"rank ="+rank);
         if(N<1)
         return null;
         List<int> temp =new List<int>();
@@ -262,6 +277,8 @@ public class SkillManager : MonoBehaviour
                     case "ifActive":
                     // Debug.LogFormat("内容:{0}",item.name);
                     return item.ifActive.ToString();
+                    case "rank":
+                    return item.rank.ToString();
                     
                 }     
             }    

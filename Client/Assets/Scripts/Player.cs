@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
 
 	public static Player instance;
 	public int Gold{get;set;}
-	public int Transistor{get;set;}
+	public int CharID =0;
 	
 	//各种技能的等级，存储方式：技能ID，对应等级
 	private Dictionary<int,int> skillLevel =new Dictionary<int, int>();

@@ -16,7 +16,7 @@ public class CharacterManager : MonoBehaviour
     {
         instance =this;
         manager = Resources.Load<CharacterDataSet>("DataAssets/Character");
-        unlockCharacters.Add(1);
+        unlockCharacters.Add(0);
     }
     public void GetUnlockCharacter()
     {
@@ -172,6 +172,7 @@ public class CharacterManager : MonoBehaviour
     //创建所有角色
     public void CreateCharacters()
     {
+        Debug.Log("CreateCharacters");
         foreach (var item in unlockCharacters)
         {
             Character character =new Character();

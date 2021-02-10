@@ -8,7 +8,7 @@ public class UIBattleReward : MonoBehaviour
 {
     // 战斗结束后获取奖励的界面
     GameObject relicFrame;
-    int level;//物品随机等级
+    int steps;//物品随机等级
     bool isBoss;
     Text goldText;
     public List<ItemBox> abilityItemBoxes;
@@ -19,7 +19,7 @@ public class UIBattleReward : MonoBehaviour
     bool hasChoosenRelic;
     int chooseStep =0;
     int needChooseStep =0;
-
+    int rewardCardRank =0;
 
     void Awake()
     {
@@ -40,11 +40,11 @@ public class UIBattleReward : MonoBehaviour
     {
         
     }
-    public void Init(int level,bool isBoss)
+    public void Init(int steps,bool isBoss)
     {
-        this.level =level;
+        this.steps =steps;
         this.isBoss =isBoss;
-        goldText.text =string.Format("{0}",level*5);
+        goldText.text =string.Format("{0}",steps*Configs.instance.battleLevelGold);
         if(!isBoss)
         {
             relicFrame.SetActive(false);
@@ -61,14 +61,15 @@ public class UIBattleReward : MonoBehaviour
         foreach (var item in skillItemBoxes)
         {
             item.button.onClick.AddListener(delegate () {GetItem(item);});
-        } 
+        }
+        rewardCardRank =Configs.instance.GetCardRank(steps); 
         Refreash();
     }
     void Refreash()
     {
         if(isBoss&&!hasChoosenRelic)
         {
-            AbilityData[] Adatas = AbilityManager.instance.GetRandomAbilityFromLevel(3,level);
+            AbilityData[] Adatas = AbilityManager.instance.GetRandomAbilityFromLevel(3,0);
             for (int i = 0; i < Adatas.Length; i++)
             {
                 abilityItemBoxes[i].Reset();
@@ -78,7 +79,7 @@ public class UIBattleReward : MonoBehaviour
         }
         if(!hasChoosenCard)
         {
-            SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkills(3);
+            SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
             for (int i = 0; i < Sdatas.Length; i++)
             {
                 skillItemBoxes[i].Reset();
@@ -116,7 +117,7 @@ public class UIBattleReward : MonoBehaviour
     void OnButtonReturn()
     {
         gameObject.SetActive(false);
-        Player.instance.AddGold(level*Configs.instance.battleLevelGold);
+        Player.instance.AddGold(steps*Configs.instance.battleLevelGold);
         // UIBasicBanner.instance.ChangeGoldText();
         // BattleScene.instance.OpenMap();
         UIBattle.Instance.OnBattleGoOn();

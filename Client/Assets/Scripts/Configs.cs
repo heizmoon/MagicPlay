@@ -8,6 +8,12 @@ public class Configs : MonoBehaviour
     public int initGold;
     public int battleLevelGold;
     public int priceRankGold;
+    public int cardRank1;
+    public int cardRank2;
+    public int cardRank3;
+    public int cardRank4;
+
+
     void Awake()
     {
         instance =this;
@@ -17,5 +23,31 @@ public class Configs : MonoBehaviour
     void Update()
     {
         
+    }
+    public int GetCardRank(int step)
+    {
+        int rank =0;
+        if(step<cardRank1)
+        {
+            rank =0;
+        }
+        else if(cardRank1<=step&&step<cardRank2)
+        {
+            rank =1;
+        }
+        else if(cardRank2<=step&&step<cardRank3)
+        {
+            rank =2;
+        }
+        else if(cardRank3<=step&&step<cardRank4)
+        {
+            rank =3;
+        }
+        else
+        {
+            rank =4;
+        }
+
+        return rank;
     }
 }

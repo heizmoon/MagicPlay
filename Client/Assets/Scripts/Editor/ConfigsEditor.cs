@@ -15,8 +15,11 @@ public class ConfigsEditor : Editor {
         drawProperty("initGold", "初始金钱");
         drawProperty("battleLevelGold", "战斗胜利获得金钱系数");
         drawProperty("priceRankGold", "卡牌价格与卡牌级别相关系数");
-        
-        
+        drawProperty("cardRank1", "最小rank1步数");
+        drawProperty("cardRank2", "最小rank2步数");
+        drawProperty("cardRank3", "最小rank3步数");
+        drawProperty("cardRank4", "最小rank4步数");
+
 
         // 只读属性
         // GUI.enabled = false;

@@ -133,6 +133,7 @@ public class Actor : MonoBehaviour
         this.character =character;
         HpMax =character.HPMax;
         MpMax =character.MPMax;
+        HpCurrent =HpMax;
         autoReduceMPAmount =character.reMP;
         Crit = character.crit;
         SetBasicAttack();
@@ -889,6 +890,10 @@ public class Actor : MonoBehaviour
     }
     public void ChangeAnimatorInteger(int i)
     {
+        if(animator==null)
+        {
+            return;
+        }
         if(animState == AnimState.dead)
         {
             animator.SetInteger("anim",5);

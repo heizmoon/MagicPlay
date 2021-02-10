@@ -957,7 +957,7 @@ namespace EditorTool {
             array[i - 2] = data;
             }
             abilityDatas =array;
-            Debug.Log("abilityDatas="+abilityDatas.Length);
+            // Debug.Log("abilityDatas="+abilityDatas.Length);
         }
         public static void CreateSummonArray(string filePath) {
             //获得表数据

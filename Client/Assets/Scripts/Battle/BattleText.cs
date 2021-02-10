@@ -51,6 +51,7 @@ public class BattleText : MonoBehaviour
 
             }
         }
+        bt.gameObject.SetActive(false);
         StartCoroutine(DestorySelf(bt));
     }
     public void SetText(string s)
@@ -78,6 +79,7 @@ public class BattleText : MonoBehaviour
         float r2 =Random.Range(0f,0.1f);
         yield return new WaitForSeconds(r2);
         anim.Play();
+        bt.SetActive(true);
         yield return new  WaitForSeconds(1f);
         Destroy(bt);
     }
