@@ -27,7 +27,7 @@ public class Skill : MonoBehaviour
     
     public bool targetSelf;//目标是自己还是对方
 
-    public int manaProduce;//魔力生成
+    public float manaProduce;//魔力生成
     
     public bool ifActive;//是否为主动技能
     public int buffID;

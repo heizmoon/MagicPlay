@@ -836,7 +836,7 @@ namespace EditorTool {
 
                 skillData.targetSelf =collect[i][17].ToString()=="1"?true:false;
                 
-                skillData.manaProduce =collect[i][18].ToString()==""?0: int.Parse(collect[i][18].ToString());
+                skillData.manaProduce =collect[i][18].ToString()==""?0: float.Parse(collect[i][18].ToString());
 
                 skillData.buffID = collect[i][19].ToString()==""?0:int.Parse(collect[i][19].ToString());
                 

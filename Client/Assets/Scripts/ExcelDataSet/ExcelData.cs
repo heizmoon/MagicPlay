@@ -70,7 +70,7 @@ public class SkillData{
     public float damagePercent;
     public bool targetSelf;
     
-    public int manaProduce;
+    public float manaProduce;
     
     public int buffID;
     ///<summry>使用后从本场战斗中移除</summary>
