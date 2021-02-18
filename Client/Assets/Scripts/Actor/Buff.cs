@@ -170,6 +170,14 @@ public class Buff
                 }
                 
             break;
+            case BuffType.效果结束时释放技能:
+                if(buffData.abilityID >0)
+                {
+                    Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+                    skill.caster.OnSkillSpellFinish(skill);
+                }
+                
+            break;
             default:
             break;
         }

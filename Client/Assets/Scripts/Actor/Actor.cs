@@ -54,7 +54,7 @@ public class Actor : MonoBehaviour
 
     ///<summary>角色将要改变成的动作状态 0=idle,1=spell,2=casting,3=castEnd,4=dizzy,5=dead</summary>
     int NextState;
-    Timer timer;//角色泛用计时器
+    // Timer timer;//角色泛用计时器
     Transform pool;
     // int TempSkillNumber =0;
     ///<summary>用于敌人和NPC的数值成长判断</summary>
@@ -125,7 +125,13 @@ public class Actor : MonoBehaviour
             animator =GetComponentInChildren<Animator>();
         }
         bt = gameObject.GetComponentInChildren<BattleText>();
-        timer =gameObject.GetComponent<Timer>();
+        Transform btParent = transform.Find("TextPoint/BattleText");
+        GameObject g = (GameObject)Instantiate(Resources.Load("Prefabs/battleText"));
+        g.transform.SetParent(btParent);
+        g.transform.localPosition =Vector3.zero;
+        g.transform.localScale =Vector3.one;
+
+        // timer =gameObject.GetComponent<Timer>();
         summonPoint =transform.Find("SummonPoint");
     }
     public void InitPlayerActor(Character character)
