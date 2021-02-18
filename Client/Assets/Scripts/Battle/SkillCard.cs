@@ -54,15 +54,15 @@ public class SkillCard : MonoBehaviour
             backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Special");
         }
         icon.sprite = Resources.Load<Sprite>("Texture/Skills"+skill.icon);
-        if(skill.rank <2)
+        if(skill.rank <1)
         {
             rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Normal");
         }
-        else if(skill.rank <4)
+        else if(skill.rank <2)
         {
             rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Good");
         }
-        else if(skill.rank <6)
+        else if(skill.rank <3)
         {
             rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Epic");
         }
@@ -279,7 +279,7 @@ public class SkillCard : MonoBehaviour
         yield return new WaitForSeconds(time);
         transform.SetParent(UIBattle.Instance.t_handCards);
         transform.localScale =Vector3.one;
-        float _x =posID<4?80+(posID)*180:80+(posID-4)*180;
+        float _x =posID<4?80+(posID)*175:80+(posID-4)*175;
         float _y =posID>3?-375:-120;
         GetComponent<RectTransform>().anchoredPosition3D =new Vector3(_x,_y,0);
     }
