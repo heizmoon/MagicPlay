@@ -35,9 +35,10 @@ public class Actor : MonoBehaviour
     public Transform summonPoint;
 
 	public List<int> UsingSkillsID;//角色携带的卡牌列表
+    [HideInInspector]
     ///<summary>0=玩家角色；1=敌人；2=NPC</summary>
     public ActorType actorType;
-    [HideInInspector]
+    
     public List<int> abilities =new List<int>();
     [HideInInspector]
     public List<Skill> skills;//读取后的技能列表
@@ -1370,6 +1371,10 @@ public class Actor : MonoBehaviour
             {
                 TakenSkill.caster.AddHp(10);
             }
+            if(target.abilities.Contains(11))//勇气手环
+            {
+                Player.instance.playerActor.AddHp(4);
+            }
             
             Die();
         }    
@@ -1515,10 +1520,7 @@ public class Actor : MonoBehaviour
         if(actorType == ActorType.敌人)
         {
             castingbar.gameObject.SetActive(false);
-            if(abilities.Contains(11))//勇气手环
-            {
-                Player.instance.playerActor.AddHp(10);
-            }
+           
         }
         // animator.SetInteger("anim",5);
         ChangeAnimatorInteger(5);
