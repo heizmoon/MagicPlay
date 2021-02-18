@@ -1509,9 +1509,9 @@ public class Actor : MonoBehaviour
         if(actorType == ActorType.敌人)
         {
             castingbar.gameObject.SetActive(false);
-            if(abilities.Contains(5))
+            if(abilities.Contains(11))//勇气手环
             {
-                Player.instance.playerActor.AddHp(11);
+                Player.instance.playerActor.AddHp(10);
             }
         }
         // animator.SetInteger("anim",5);
