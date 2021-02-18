@@ -626,7 +626,7 @@ namespace EditorTool {
                 item.crit = collect[i][6].ToString()==""?0: int.Parse(collect[i][6].ToString());
                 item.switchCondition1 = collect[i][7].ToString()==""?0: int.Parse(collect[i][7].ToString());
                 item.addBuffList1 = collect[i][8].ToString();
-                item.speed1 = collect[i][9].ToString()==""?0: int.Parse(collect[i][9].ToString());
+                item.speed1 = collect[i][9].ToString()==""?0: float.Parse(collect[i][9].ToString());
                 item.AIType1 = collect[i][10].ToString();
                 item.listAttack1 = collect[i][11].ToString();
                 item.listDefend1 = collect[i][12].ToString();
@@ -635,7 +635,7 @@ namespace EditorTool {
                 item.switchCondition2 = collect[i][15].ToString()==""?0: int.Parse(collect[i][15].ToString());
                 item.addBuffList2 = collect[i][16].ToString();
                 item.removeBuffList2 = collect[i][17].ToString();
-                item.speed2 = collect[i][18].ToString()==""?0: int.Parse(collect[i][18].ToString());
+                item.speed2 = collect[i][18].ToString()==""?0: float.Parse(collect[i][18].ToString());
                 item.AIType2 = collect[i][19].ToString();
                 item.listAttack2 = collect[i][20].ToString();
                 item.listDefend2 = collect[i][21].ToString();
@@ -644,7 +644,7 @@ namespace EditorTool {
                 item.switchCondition3 = collect[i][24].ToString()==""?0: int.Parse(collect[i][24].ToString());
                 item.addBuffList3 = collect[i][25].ToString();
                 item.removeBuffList3 = collect[i][26].ToString();
-                item.speed3 = collect[i][27].ToString()==""?0: int.Parse(collect[i][27].ToString());
+                item.speed3 = collect[i][27].ToString()==""?0: float.Parse(collect[i][27].ToString());
                 item.AIType3 = collect[i][28].ToString();
                 item.listAttack3 = collect[i][29].ToString();
                 item.listDefend3 = collect[i][30].ToString();

@@ -269,7 +269,7 @@ public struct MonsterTypeData
     public int switchCondition3;
     public string addBuffList3;
     public string removeBuffList3;
-    public int speed3;
+    public float speed3;
     public string AIType3;
     public string listAttack3;
     public string listDefend3;
