@@ -1371,9 +1371,10 @@ public class Actor : MonoBehaviour
             {
                 TakenSkill.caster.AddHp(10);
             }
-            if(target.abilities.Contains(11))//勇气手环
+            if(Player.instance.playerActor.abilities.Contains(11))//勇气手环
             {
-                Player.instance.playerActor.AddHp(4);
+                Skill tempSkill =SkillManager.TryGetFromPool(40,Player.instance.playerActor);
+                Player.instance.playerActor.OnSkillSpellFinish(tempSkill);
             }
             
             Die();
