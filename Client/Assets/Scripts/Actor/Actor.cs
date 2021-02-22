@@ -1369,7 +1369,7 @@ public class Actor : MonoBehaviour
             }
             if(TakenSkill.id ==109)//斩杀，恢复10点生命值
             {
-                TakenSkill.caster.AddHp(10);
+                TakenSkill.caster.AddHp(Configs.instance.executeRestoreHP);
             }
             if(Player.instance.playerActor.abilities.Contains(11))//勇气手环
             {

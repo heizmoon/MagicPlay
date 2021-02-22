@@ -167,6 +167,7 @@ public class UIBattleShop : MonoBehaviour
     {
         if(item.price>Player.instance.Gold)
         {
+            Main.instance.ShowNotEnoughGoldTip();
             return;
         }
         item.Disable();

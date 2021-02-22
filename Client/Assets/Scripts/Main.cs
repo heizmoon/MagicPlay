@@ -382,6 +382,19 @@ public class Main : MonoBehaviour {
 	{
 		yield return new WaitForSeconds(0.5f);
 	}
+	public void ShowNotEnoughGoldTip()
+	{
+		GameObject g =(GameObject)Instantiate(Resources.Load("Prefabs/NotEnoughGoldTip"));
+		g.transform.SetParent(allScreenUI);
+		g.transform.localPosition=Vector3.zero;
+		g.transform.localScale=Vector3.one;
+		StartCoroutine(WaitForDestoryNotEnoughGoldTip(g));
+	}
+	IEnumerator WaitForDestoryNotEnoughGoldTip(GameObject g)
+	{
+		yield return new WaitForSeconds(1f);
+		Destroy(g);
+	}
 	// void RemindEventOpen()
 	// {
 	// 	EventOpenRemindWindow.SetActive(true);

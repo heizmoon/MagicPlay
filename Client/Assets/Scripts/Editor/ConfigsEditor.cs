@@ -19,6 +19,9 @@ public class ConfigsEditor : Editor {
         drawProperty("cardRank2", "最小rank2步数");
         drawProperty("cardRank3", "最小rank3步数");
         drawProperty("cardRank4", "最小rank4步数");
+        drawProperty("campRestoreHP", "营地回血百分比(小数)");
+        drawProperty("executeRestoreHP", "斩杀回血数值");
+
 
 
         // 只读属性

@@ -12,7 +12,8 @@ public class Configs : MonoBehaviour
     public int cardRank2;
     public int cardRank3;
     public int cardRank4;
-
+    public float campRestoreHP;
+    public int executeRestoreHP;
 
     void Awake()
     {
