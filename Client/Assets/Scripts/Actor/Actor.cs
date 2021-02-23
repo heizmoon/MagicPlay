@@ -1626,8 +1626,7 @@ public class Actor : MonoBehaviour
             {
                 buffNum++;
                 // tempBUff =item;
-                tempList.Add(item);
-                
+                tempList.Add(item);    
             }
         }
         
@@ -1667,11 +1666,11 @@ public class Actor : MonoBehaviour
             buffNum =1;
             if(buff.buffIcon==null)
             {
-                buff.CheckBuffIcon();
-                
+                buff.CheckBuffIcon();    
             }
             buff.buffIcon.buffNum=buffNum;
             buff.buffIcon.ResetTime();
+            buff.buffIcon.OnEffectBegin(buff);
             return;
         }
 
@@ -1690,8 +1689,9 @@ public class Actor : MonoBehaviour
                 
             }
             tempList[i].buffIcon.buffNum=buffNum;
-            tempList[i].buffIcon.ResetTime();    
+            tempList[i].buffIcon.ResetTime();
         }
+        buff.buffIcon.OnEffectBegin(buff);
         if(ifMax)
         {
             //执行当达到最大层数后就xxx的事件

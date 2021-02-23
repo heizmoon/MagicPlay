@@ -80,7 +80,7 @@ public class UICardRemove : MonoBehaviour
             button.onClick.AddListener(delegate(){RemoveCard(button);});
             buttons.Add(button);
         }
-        content.GetComponent<RectTransform>().sizeDelta =new Vector2(0,256*((int)(cardList.Count/4)+1));
+        content.GetComponent<RectTransform>().sizeDelta =new Vector2(0,285*((int)(cardList.Count/3)+1));
     }
     void RemoveCard(Button button)
     {

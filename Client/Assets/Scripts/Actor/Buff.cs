@@ -204,7 +204,10 @@ public class Buff
             
         }
         
-
+        if(buffData.id==15)
+        {
+            Debug.LogWarning("移除了几次？");
+        }
         int num =1;
         if(buffData.removeType ==1)//只移除自己
         {
@@ -226,7 +229,7 @@ public class Buff
         //引发技能
         //若技能的数值与层数相关，则使用num
 
-        //移除自己
+        //移除自己----------??
         BuffManager.RemoveBuffFromActor(this,target);
     }
     public void OnBuffInterval()

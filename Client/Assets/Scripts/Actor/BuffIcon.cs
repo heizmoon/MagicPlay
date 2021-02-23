@@ -130,15 +130,12 @@ public class BuffIcon : MonoBehaviour
     {
         stop =true;
         int num=0;
-        // if(buffID==2000)
-        // {
-        //     Debug.LogWarning("buff.childrenBuffs.count="+buff.childrenBuffs.Count);
-        // }
+        
         // if(buffID==2002)
         // {
         //     Debug.LogWarning("移除buff2002");
         // }
-        for (int i = 0; i < buffs.Count; i++)
+        for (int i = buffs.Count-1; i >=0;i--)
         {
             num++;
             if(buffs[i] ==null)
@@ -156,15 +153,20 @@ public class BuffIcon : MonoBehaviour
                         buffs[i].childrenBuffs[j].buffIcon.OnEffectEnd();   
                     }
                 }
+                if(buffID==15)
+                {
+                    Debug.LogWarning("end了几次？"+buffs.Count);
+                }
                 buffs[i].OnBuffEnd();
+
                 // buffs.Remove(buffs[i]);
             }
             
         }
-        if(buffs.Count>0)
-        {
-            BuffManager.RemoveBuffFromActor(buffs[0],buffs[0].target);
-        }
+        // if(buffs.Count>0)
+        // {
+        //     BuffManager.RemoveBuffFromActor(buffs[0],buffs[0].target);
+        // }
         Debug.LogWarningFormat("移除{0}个,共有{1}个",num,buffs.Count+num);
 
         EffectManager.TryThrowInPool(effect,true);
@@ -193,9 +195,9 @@ public class BuffIcon : MonoBehaviour
         
         stop =false;
         iconShow.fillAmount =1;
-        OnEffectBegin();
+        // OnEffectBegin();//--问题所在：重置时间的时候并不需要Begin所有BUFF
     }
-    void OnEffectBegin()
+    public void OnEffectBegin(Buff currentBuff)
     {
 
         // for (int i = 0; i < buffs.Count; i++)
@@ -206,7 +208,7 @@ public class BuffIcon : MonoBehaviour
         //         buffs[i].OnBuffBegin();//???所有相同BUFF都重启一次？
         //     }
         // }
-        buff.OnBuffBegin();
+        currentBuff.OnBuffBegin();
         if(effect!=null)
         {
             effect.gameObject.SetActive(true);

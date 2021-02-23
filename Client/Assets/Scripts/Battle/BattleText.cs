@@ -7,6 +7,7 @@ public class BattleText : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject _text;
+    GameObject critPic;
     void Start()
     {
         
@@ -20,12 +21,14 @@ public class BattleText : MonoBehaviour
     public void SetText(int num,bool crit)
     {
         GameObject bt =GameObject.Instantiate(_text.gameObject);
+        critPic =bt.GetComponentInChildren<Image>().gameObject;
         Text t = bt.GetComponentInChildren<Text>();
         bt.transform.SetParent(_text.transform.parent);
         float x = Random.Range(-15f,15f);
         float y = Random.Range(-15f,15f);
         bt.transform.localScale =Vector3.one;
         bt.transform.localPosition =new Vector3(x,y,0);
+        critPic.gameObject.SetActive(false);
         
         if(num>0)
         {
@@ -34,6 +37,8 @@ public class BattleText : MonoBehaviour
             {
                 t.color =new Color(1,0.29f,0.2f);
                 t.fontSize =42;
+                critPic.gameObject.SetActive(true);
+                critPic.transform.localScale =Vector3.one;
             }
         }
         else if(num == 0)
@@ -48,7 +53,7 @@ public class BattleText : MonoBehaviour
             {
                 //t.color =new Color(1,0.29f,0.2f);
                 t.fontSize =42;
-
+                
             }
         }
         bt.gameObject.SetActive(false);
