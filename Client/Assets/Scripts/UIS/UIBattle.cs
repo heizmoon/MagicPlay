@@ -486,7 +486,7 @@ public class UIBattle : MonoBehaviour
     {
         Debug.Log("开始补牌");
         //检测当补牌时就触发的buff，道具
-        if(playerActor.abilities.Contains(7))
+        if(playerActor.abilities.Contains(7))//樱桃罐头
         {
             Skill skill =SkillManager.TryGetFromPool(26,playerActor);
             skill.ComputeHeal();
@@ -546,7 +546,7 @@ public class UIBattle : MonoBehaviour
     //用于给技能卡定位
     int GetCardPos()
     {
-        Debug.LogWarning(cardPos.Count);
+        // Debug.LogWarning(cardPos.Count);
         
         foreach (var item in cardPos)
         {
@@ -694,7 +694,7 @@ public class UIBattle : MonoBehaviour
     {
         for (int i = 0; i < allCards.Count; i++)
         {
-            allCards[i].ReduceMPCost(num);
+            allCards[i].skill.ReduceMPCost(num);
             allCards[i].RefeashCardShow();
 
         }

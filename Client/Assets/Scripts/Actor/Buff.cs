@@ -13,7 +13,6 @@ public class Buff
     public List<Buff> childrenBuffs =new List<Buff>();
     public BuffIcon buffIcon;
 
-    
     // Update is called once per frame
     void Update()
     {
@@ -55,6 +54,13 @@ public class Buff
                 target.ChangeAnimatorInteger(4);
             }
             break;
+            case BuffType.影响攻击力:
+            target.basicAttack+=(int)buffData.value;
+            Debug.LogWarning("增加了攻击力："+(int)buffData.value);
+            break;
+            case BuffType.影响防御力:
+            target.basicDefence+=(int)buffData.value;
+            break;
             case BuffType.数值吸收伤害:
                 target.armor+=Mathf.FloorToInt(buffData.value);
                 target.RefeashArmorAutoDecayTime();
@@ -62,7 +68,13 @@ public class Buff
                 BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(target,BuffType.获得护甲后触发技能);
             break;
             case BuffType.影响闪避:
-                target.dodge+=Mathf.FloorToInt(buffData.value);
+                target.dodge+=buffData.value;
+            break;
+            case BuffType.影响暴击率:
+                target.Crit+=buffData.value;
+            break;
+            case BuffType.百分比影响护甲值:
+                target.armor+=(int)(buffData.value*target.armor);
             break;
             case BuffType.影响全局能量消耗:
             {
@@ -115,6 +127,12 @@ public class Buff
                 target.RunAI();
             }
             break;
+            case BuffType.影响攻击力:
+            target.basicAttack-=(int)buffData.value;
+            break;
+            case BuffType.影响防御力:
+            target.basicDefence-=(int)buffData.value;
+            break;
             case BuffType.数值吸收伤害:
             //如果身上没有id为xxx的buff（护甲持续时间变永久），那么护甲类buff时间到之后将会移除护甲
                 // target.AddArmor(-Mathf.FloorToInt(buffData.value));
@@ -131,6 +149,9 @@ public class Buff
                     target.dodge =0;
                 }
             }
+            break;
+            case BuffType.影响暴击率:
+                target.Crit-=buffData.value;
             break;
             case BuffType.影响全局能量消耗:
             {
@@ -180,9 +201,9 @@ public class Buff
             break;
             default:
             break;
+            
         }
-
-
+        
 
         int num =1;
         if(buffData.removeType ==1)//只移除自己
@@ -236,10 +257,9 @@ public class Buff
                 skill.heal =num;
                 // skill.caster.BeginSpell(skill);
                 skill.ComputeHeal();
-            }
-
-            
+            }    
         }
+        
         
     }
     public void RemoveSlef()

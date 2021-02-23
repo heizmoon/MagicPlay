@@ -73,6 +73,7 @@ public class SkillData{
     public float manaProduce;
     
     public int buffID;
+    public int buffNum;
     ///<summry>使用后从本场战斗中移除</summary>
     public bool usedToRemove;
     ///<summary>使用后从牌堆堆抽N张牌</summary>
@@ -95,6 +96,18 @@ public class SkillData{
     public int ELCDamage;
     public int ELCMP;
     public int ELCHeal;
+    public float exCrit;
+    public int checkBuff;
+    public bool checkSelf;
+    public int buffNumLimit;
+    public int CBDamage;
+    public int CBHeal;
+    public bool CBSeep;
+    public float CBCrit;
+    public int CBManaCost;
+    public float CBmanaProduce;
+    public int CBBuff;
+    public int CBBuffNum;
 
 }
 [System.Serializable]

@@ -251,10 +251,7 @@ public class Actor : MonoBehaviour
         MpMax+=number;
 
     }
-    public void AddBasicAttack(int number)
-    {
-        basicAttack+=number;
-    }
+
     
     public void SetBasicAttack()
     {
@@ -306,7 +303,7 @@ public class Actor : MonoBehaviour
         }
         //随机出一项当前要进行的行为
         behaviour =GetBehaviour(state);
-        Debug.LogWarning("behaviour="+behaviour);
+        // Debug.LogWarning("behaviour="+behaviour);
         float speed =3f;
         switch (state)
         {
@@ -577,7 +574,7 @@ public class Actor : MonoBehaviour
             max+=item;
         }
         int r = UnityEngine.Random.Range(0,max+1);
-        Debug.LogWarning("behaviour:r="+r+",weights[0]="+weights[0]);
+        // Debug.LogWarning("behaviour:r="+r+",weights[0]="+weights[0]);
         // if(weights[0]==0&&r==0)
         // {
         //     return listww[0];
@@ -590,7 +587,7 @@ public class Actor : MonoBehaviour
         {
             if (r>weights[i-1]&&r<=weights[i])
             {
-                Debug.LogWarning("顺序是"+i+"结果是："+listww[i]);
+                // Debug.LogWarning("顺序是"+i+"结果是："+listww[i]);
                 return listww[i];
             }
         }
@@ -1037,8 +1034,24 @@ public class Actor : MonoBehaviour
         //暴击检查点燃Buff 和 燃爆 等级,满足条件造成燃爆伤害
         // SkillManager.CheckSkillToTriggerNewSkill(skill,1112,null,new List<int>(){1},null,new List<int>(){4},false);
         //添加点燃buff
-        // if(skills.
-        SkillManager.CheckSkillOnHitToAddBuff(skill,1110,4,new List<int>(){1110},null,null);
+        
+        // SkillManager.CheckSkillOnHitToAddBuff(skill,1110,4);
+        
+        if(BuffManager.FindBuff(1024,this)!=null)// 如果身上有水晶剑:1024,那么给自己添加[兴奋buff]:1023
+        {
+            BuffManager.instance.CreateBuffForActor(1023,skill.caster);    
+
+        }
+        if(BuffManager.FindBuff(1028,this)!=null)//如果身上有英勇斗篷：1028，则回复1点能量
+        {
+            AddMp(1f);
+        }
+        if(BuffManager.FindBuff(1029,this)!=null)//如果身上有冲锋面罩：1029，则回复1点生命
+        {
+            Skill skill1 = SkillManager.TryGetFromPool(41,this);
+            OnSkillSpellFinish(skill1);
+        }
+
     }
     public void OnSkillHasHit(bool ifHit ,Skill skill)
     {
@@ -1051,17 +1064,30 @@ public class Actor : MonoBehaviour
             //执行当技能命中目标时就xxx这类效果
             if(skill.buffID>0&&!skill.targetSelf)
             {
-                BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);
+                for (int i = 0; i < skill.skillData.buffNum; i++)//添加几层BUFF
+                {
+                    BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target); 
+                    Debug.LogWarning("添加1层"+skill.buffID);
+                }
+            }
+            //检查BUFF类的技能在有BUFF的情况下，添加额外BUFF
+            if(skill.addCBBuff&&!skill.targetSelf)
+            {
+                for (int i = 0; i < skill.skillData.CBBuffNum; i++)
+                {
+                    BuffManager.instance.CreateBuffForActor(skill.skillData.CBBuff,skill.target);      
+                }
             }
             // Check1110(skill);
             //火系技能添加点燃buff
             // SkillManager.CheckSkillOnHitToAddBuff(skill,1110,4,new List<int>(){1110},new List<int>(){1},null);
             //冻结
-            SkillManager.CheckSkillOnHitToAddBuff(skill,1011,6,new List<int>(){1112},new List<int>(){0},new List<int>(){7});
+            // SkillManager.CheckSkillOnHitToAddBuff(skill,1011,6,new List<int>(){1112},new List<int>(){0},new List<int>(){7});
             //引火烧身
-            SkillManager.instance.Check1117(skill);
+            // SkillManager.instance.Check1117(skill);
             
             // Check1011(skill);
+            if(skill.damage>0)
             Main.instance.ShakeCamera();
         }
         else
@@ -1415,14 +1441,22 @@ public class Actor : MonoBehaviour
         //有伤害的技能输出伤害
         if(skill.damage!=0)
         skill.ComputeDamage();
+        if(skill.damage==0&skill.buffID>0)
+        {
+            //没有伤害，但是会添加BUFF的技能
+            Battle.Instance.NoDamageSkillHitTarget(skill);
+        }
         //有治疗的技能产生治疗
-        //........
         if(skill.heal!=0)
         skill.ComputeHeal();
         //有buff的技能加buff
         if(skill.buffID>0&&skill.targetSelf)
         {
-            BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);
+            for (int i = 0; i < skill.skillData.buffNum; i++)//添加几层buff
+            {
+                BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);  
+                Debug.LogWarning("添加1层"+skill.buffID);     
+            }
             Debug.LogWarning("添加的buffid="+skill.buffID);
         }
         //抽卡的技能抽卡
@@ -1444,6 +1478,15 @@ public class Actor : MonoBehaviour
                 OnOrderSummonedAttack.Invoke(0);
             }
         }
+        //检查BUFF类的技能在有BUFF的情况下，添加额外BUFF
+        if(skill.addCBBuff&&skill.targetSelf)
+        {
+            for (int i = 0; i < skill.skillData.CBBuffNum; i++)
+            {
+                BuffManager.instance.CreateBuffForActor(skill.skillData.CBBuff,skill.target); 
+                Debug.LogWarning("添加1层"+skill.buffID);     
+            }
+        }
         if(abilities.Contains(1))
         {
             if(skill.color ==2)
@@ -1458,17 +1501,17 @@ public class Actor : MonoBehaviour
          //每次使用改变自身伤害的技能
         if(skill.skillData.EUSDamage!=0)
         {
-            skill.skillCard.IncreaseDamage(skill.skillData.EUSDamage);
+            skill.IncreaseDamage(skill.skillData.EUSDamage);
         }
         //每次使用改变自身消耗的技能
         if(skill.skillData.EUSMP!= 0)
         {
-            skill.skillCard.ReduceMPCost(skill.skillData.EUSMP);
+            skill.ReduceMPCost(skill.skillData.EUSMP);
         }
         //每次使用改变自身治疗量的技能
         if(skill.skillData.EUSHeal!= 0)
         {
-            skill.skillCard.IncreaseHeal(skill.skillData.EUSHeal);
+            skill.IncreaseHeal(skill.skillData.EUSHeal);
         }
            
     }
@@ -1571,7 +1614,7 @@ public class Actor : MonoBehaviour
     {
         // if(!buffs.Contains(buff))
         //Buff叠加机制：相同id的buff，如果已达最大层数，只会刷新持续时间
-        
+        Debug.LogWarning("Actor.addBuff:"+buff.buffData.id);
         int buffNum =0;
         bool ifMax=false;
         // Buff tempBUff =null;
@@ -1612,6 +1655,10 @@ public class Actor : MonoBehaviour
             buffs.Add(buff);
             tempList.Add(buff);
             ifMax =true;
+        }
+        else if(buff.buffData.maxNum>0&&buffNum>buff.buffData.maxNum)
+        {
+            Debug.LogWarning("buff数量超了");
         }
         else//不能叠层，当有新的相同IDbuff时，会额外生成一个buff图标
         {

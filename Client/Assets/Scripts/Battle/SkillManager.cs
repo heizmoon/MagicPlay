@@ -372,34 +372,36 @@ public class SkillManager : MonoBehaviour
     ///<param name ="refuseSkills">如果命中的技能是这些之一则不能触发</param>
     ///<param name ="needGenres">命中的技能必须是这些派系之一</param>
     ///<param name ="refuseBuffs">目标身上不能携带这些buff</param>
-    public static void CheckSkillOnHitToAddBuff(Skill skill,int skillID, int buffID,List<int> refuseSkills,List<int> needGenres,List<int> refuseBuffs)
+    // public static void CheckSkillOnHitToAddBuff(Skill skill,int skillID, int buffID,List<int> refuseSkills,List<int> needGenres,List<int> refuseBuffs)
+    public static void CheckSkillOnHitToAddBuff(Skill skill,int skillID, int buffID)
+
     {
         // Debug.LogWarningFormat("{0}经过第0次判断:不能触发的技能{1}，需要的派系{2}",skillID,refuseSkills[0],needGenres[0]);
         //不能触发的技能列表
-        if(refuseSkills!= null&&refuseSkills.Contains(skill.id))
-        {
-            return;
-        }
+        // if(refuseSkills!= null&&refuseSkills.Contains(skill.id))
+        // {
+        //     return;
+        // }
         //必须是X系技能
-        if(needGenres!=null &&!needGenres.Contains(skill.color))
-        {
-            return;
-        }
+        // if(needGenres!=null &&!needGenres.Contains(skill.color))
+        // {
+        //     return;
+        // }
         //目标身上有某些Buff时不能添加
-        if(refuseBuffs != null)
-        {
-            for (int i = 0; i < skill.target.buffs.Count; i++)
-            {
-                for (int j = 0; j < refuseBuffs.Count; j++)
-                {
-                    if(skill.target.buffs[i].buffData.id == refuseBuffs[j])
-                    {
-                        return;
-                    }
-                }
+        // if(refuseBuffs != null)
+        // {
+        //     for (int i = 0; i < skill.target.buffs.Count; i++)
+        //     {
+        //         for (int j = 0; j < refuseBuffs.Count; j++)
+        //         {
+        //             if(skill.target.buffs[i].buffData.id == refuseBuffs[j])
+        //             {
+        //                 return;
+        //             }
+        //         }
                 
-            }
-        }
+        //     }
+        // }
         
         var tempskills =skill.caster.skills;
         if(tempskills==null)

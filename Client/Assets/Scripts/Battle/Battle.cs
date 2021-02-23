@@ -63,7 +63,8 @@ public class Battle : MonoBehaviour
         {
             damage = ComputeDamageBuffStepOne(skill,damage);
             skill.caster.OnSkillHasHit(true,skill);
-            if(playerActor.Crit>=Random.Range(0,101))
+            float critRate = playerActor.Crit+skill.exCrit;//某些技能拥有额外暴击率加成
+            if(critRate>=Random.Range(0,101))
             {
                 damage=Mathf.CeilToInt(damage*1.5f);
                 crit =true;
@@ -92,7 +93,19 @@ public class Battle : MonoBehaviour
             skill.target.OnHitMiss();
         }
     }
-    
+    public void NoDamageSkillHitTarget(Skill skill)
+    {
+        if(ComputeHit(skill))
+        {
+            skill.caster.OnSkillHasHit(true,skill);
+        }
+        else
+        {
+            skill.caster.OnSkillHasHit(false,skill);
+            skill.target.OnHitMiss();
+        }
+
+    }
     ///<summary>buff伤害</summary>
     //持续伤害可暴击，不受急速影响，独立判断命中，独立判断减伤
     ///<summray>用于反弹伤害</summary>
@@ -110,20 +123,20 @@ public class Battle : MonoBehaviour
         //特殊被动技能附加的伤害
         //如果身上有冻结效果，技能1013等级大于0，则所有伤害增加
         //碎冰
-        int tempd = SkillManager.CheckSkillOnComputeToGiveAdd(skill,1013,new List<int>(){7},false,new List<int>(){1012},new List<int>(){0,1,2,3,4,5,6,7,8},null,SkillBuffType.伤害);
-        if(tempd>0)
-        {
-            Debug.LogWarningFormat("{0}技能的碎冰附加伤害为{1}",skill.skillName,tempd);
-        }
-        damage +=tempd;
-        tempd =0;
-        //燃烧：如果目标身上有点燃效果，技能1111等级大于0，则除点燃外所有火焰魔法伤害增加
-        tempd = SkillManager.CheckSkillOnComputeToGiveAdd(skill,1111,new List<int>(){4},false,new List<int>(){1110},new List<int>(){1},null,SkillBuffType.伤害);
-        if(tempd>0)
-        {
-            Debug.LogWarningFormat("{0}技能的燃烧附加伤害为{1}",skill.skillName,tempd);
-        }
-        damage +=tempd;
+        // int tempd = SkillManager.CheckSkillOnComputeToGiveAdd(skill,1013,new List<int>(){7},false,new List<int>(){1012},new List<int>(){0,1,2,3,4,5,6,7,8},null,SkillBuffType.伤害);
+        // if(tempd>0)
+        // {
+        //     Debug.LogWarningFormat("{0}技能的碎冰附加伤害为{1}",skill.skillName,tempd);
+        // }
+        // damage +=tempd;
+        // tempd =0;
+        // //燃烧：如果目标身上有点燃效果，技能1111等级大于0，则除点燃外所有火焰魔法伤害增加
+        // tempd = SkillManager.CheckSkillOnComputeToGiveAdd(skill,1111,new List<int>(){4},false,new List<int>(){1110},new List<int>(){1},null,SkillBuffType.伤害);
+        // if(tempd>0)
+        // {
+        //     Debug.LogWarningFormat("{0}技能的燃烧附加伤害为{1}",skill.skillName,tempd);
+        // }
+        // damage +=tempd;
         foreach (var item in skill.caster.buffs)
         {
             if(item.buffData._type == BuffType.数值增减附加的伤害 && item.buffData._genreList.Contains(skill.color))
@@ -131,13 +144,17 @@ public class Battle : MonoBehaviour
                 damage+=Mathf.CeilToInt(item.currentValue);
             }
         }
+        float damageChangeValue =0;
         foreach (var item in skill.caster.buffs)
         {
-            if(item.buffData._type == BuffType.百分比增减附加的伤害 && item.buffData._genreList.Contains(skill.color))
+            if(item.buffData._type == BuffType.百分比增减附加的伤害)
             {
-                damage*=Mathf.CeilToInt(1+item.currentValue);
+                damageChangeValue+=item.currentValue;
             }
         }
+        damage*=Mathf.CeilToInt(1+damageChangeValue);
+        Debug.LogWarning("伤害改变了"+damageChangeValue);
+
         
 
 

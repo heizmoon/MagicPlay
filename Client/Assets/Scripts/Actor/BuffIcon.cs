@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System;
 
 public class BuffIcon : MonoBehaviour
 {
@@ -23,6 +23,8 @@ public class BuffIcon : MonoBehaviour
     string triggerEffectString;
     bool ifInit;
     Button button;
+    public static event Action<int,string,int,ActorType> OnBuffAction;
+
     private void Awake() 
     {
         button =GetComponent<Button>();
@@ -119,20 +121,23 @@ public class BuffIcon : MonoBehaviour
             triggerEffect.localScale =Vector3.one;
             triggerEffect.gameObject.SetActive(true);
         }
-        
+        if(OnBuffAction!=null)
+        {
+            OnBuffAction(buffID,"interval",buffNum,buff.target.actorType);
+        }
     }
     public void OnEffectEnd()
     {
         stop =true;
         int num=0;
-        if(buffID==2000)
-        {
-            Debug.LogWarning("buff.childrenBuffs.count="+buff.childrenBuffs.Count);
-        }
-        if(buffID==2002)
-        {
-            Debug.LogWarning("移除buff2002");
-        }
+        // if(buffID==2000)
+        // {
+        //     Debug.LogWarning("buff.childrenBuffs.count="+buff.childrenBuffs.Count);
+        // }
+        // if(buffID==2002)
+        // {
+        //     Debug.LogWarning("移除buff2002");
+        // }
         for (int i = 0; i < buffs.Count; i++)
         {
             num++;
@@ -163,6 +168,10 @@ public class BuffIcon : MonoBehaviour
         Debug.LogWarningFormat("移除{0}个,共有{1}个",num,buffs.Count+num);
 
         EffectManager.TryThrowInPool(effect,true);
+        if(OnBuffAction!=null)
+        {
+            OnBuffAction(buffID,"end",buffNum,buff.target.actorType);
+        }
         Destroy(this.gameObject);
     }
     public void ResetTime()
@@ -189,16 +198,22 @@ public class BuffIcon : MonoBehaviour
     void OnEffectBegin()
     {
 
-        for (int i = 0; i < buffs.Count; i++)
-        {
-            if(buffs[i]!=null)
-            {
-                buffs[i].OnBuffBegin();
-            }
-        }
+        // for (int i = 0; i < buffs.Count; i++)
+        // {
+        //     if(buffs[i]!=null)
+        //     {
+        //         //如果是修改数值的BUFF，不应该再重启一次，如果是触发伤害的BUFF，可以重启？
+        //         buffs[i].OnBuffBegin();//???所有相同BUFF都重启一次？
+        //     }
+        // }
+        buff.OnBuffBegin();
         if(effect!=null)
         {
             effect.gameObject.SetActive(true);
+        }
+        if(OnBuffAction!=null)
+        {
+            OnBuffAction(buffID,"begin",buffNum,buff.target.actorType);
         }
     }
     void ShowDetail()

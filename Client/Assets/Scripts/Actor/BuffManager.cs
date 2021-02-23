@@ -8,8 +8,8 @@ public enum BuffType
 {
     昏迷 =1,
     持续伤害or治疗=2,
-    影响急速 =3,
-    影响暴击 =4,
+    影响攻击力 =3,
+    影响防御力 =4,
     ///<summary>value =要end的buffID,abilityID=要添加的buffID</summary>
     失去所有护甲后增减buff =5,
     百分比增减受到的伤害 =6,
@@ -19,7 +19,7 @@ public enum BuffType
     百分比反弹受到的伤害=10,
     数值反弹受到的伤害=11,
     死亡后复活并恢复百分比生命=12,
-    吸收一定数量的伤害=13,
+    百分比影响护甲值=13,
     影响召唤物持续时间 =14,
     影响召唤物强度 =15,
     影响召唤物攻速=16,
@@ -29,7 +29,7 @@ public enum BuffType
     百分比吸收伤害 =20,
     数值受伤回复 =21,
     影响全局能量消耗=22,
-    百分比影响暴击 =23,
+    影响暴击率 =23,
     影响补牌数量 =24,
     ///<summary>0=持续时间无限,其余数值为+num</summary>
     影响护甲持续时间 =25,
@@ -128,10 +128,12 @@ public class BuffManager : MonoBehaviour
                 if(buff.buffData.delay>0)
                 {
                     StartCoroutine(WaitForAddBuff(buff));
+                    return buff;
                 }
                 else
                 {
                     AddBuff(buff);
+                    return buff;
                 }
             }
         }

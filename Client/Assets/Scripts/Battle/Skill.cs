@@ -53,8 +53,13 @@ public class Skill : MonoBehaviour
     public int summonNum;
     public SkillData skillData;
     public SkillCard skillCard;
-    public int tempMpCost;
-    public int tempDamage;
+    int tempMpCost;
+    int tempDamage;
+    float tempManaProduce;
+    public float exCrit; 
+    public bool addCBBuff;
+    bool buffed;//是否已经BUFF过了
+
 
     //考虑将读取表格和类写在一起？
     void Start()
@@ -110,6 +115,7 @@ public class Skill : MonoBehaviour
         rank =skillData.rank;
         summonNum =skillData.summonNum;
         summonType =skillData.summonType;
+        exCrit =skillData.exCrit;
         if(!actor)
         {
             caster=Player.instance.playerActor;
@@ -172,6 +178,8 @@ public class Skill : MonoBehaviour
         summonNum =skillData.summonNum;
         summonType =skillData.summonType;
         casterSummon = summoned;
+        exCrit =skillData.exCrit;
+
         GetTarget(summoned);
         
         // if(actor)
@@ -290,6 +298,76 @@ public class Skill : MonoBehaviour
     {
         int realHeal = Mathf.FloorToInt(heal*_percent);
         target.TakeHeal(realHeal);
+    }
+    ///<summary>用于检测有BUFF时技能的变化</summary>
+    public void CheckBuffUpdate(bool ifHas)
+    {
+        if(ifHas)
+        {
+            if(buffed)
+            {
+                return;//已经BUFF过了不能再次BUFF
+            }
+            IncreaseDamage(skillData.CBDamage);
+            IncreaseHeal(skillData.CBHeal);
+            ReduceMPCost(skillData.CBManaCost);
+            IncreaseManaProduce(skillData.CBmanaProduce);
+            ifSeep =skillData.CBSeep;
+            exCrit +=skillData.CBCrit;
+            if(skillData.CBBuff>0)
+            {
+                addCBBuff = true;
+            }
+            buffed =true;
+        }
+        else
+        {
+            IncreaseDamage(-skillData.CBDamage);
+            IncreaseHeal(-skillData.CBHeal);
+            ReduceMPCost(-skillData.CBManaCost);
+            IncreaseManaProduce(-skillData.CBmanaProduce);
+            ifSeep =skillData.ifSeep;
+            exCrit -=skillData.CBCrit;
+            addCBBuff = false;
+
+            buffed =false;
+
+
+        }
+        
+    }
+    public void ReduceMPCost(int num)
+    {
+        tempMpCost -=num;
+        if(tempMpCost<0)
+        realManaCost =0;
+        else
+        realManaCost =tempMpCost;
+    }
+    public void IncreaseDamage(int num)
+    {
+        // Debug.Log("增加了攻击");
+        tempDamage +=num;
+        if(tempDamage<0)
+        damage =0;
+        else
+        damage =tempDamage;
+    }
+    public void IncreaseHeal(int num)
+    {
+        tempHeal +=num;
+        if(tempHeal<0)
+        heal =0;
+        else
+        heal =tempHeal;
+    }
+    public void IncreaseManaProduce(float num)
+    {
+        tempManaProduce +=num;
+        if(tempManaProduce<0)
+        manaProduce =0;
+        else
+        manaProduce =tempManaProduce;
     }
 
 }

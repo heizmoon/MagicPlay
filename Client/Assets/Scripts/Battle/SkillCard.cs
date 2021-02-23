@@ -17,6 +17,7 @@ public class SkillCard : MonoBehaviour
     Text textSkillDescribe;
     Text textSkillCost;
     public bool canShow;
+    public GameObject _hightLight;
     
     void Awake()
     {
@@ -30,6 +31,7 @@ public class SkillCard : MonoBehaviour
         textSkillCost =transform.Find("cardCost").GetComponent<Text>();
         icon = transform.Find("icon").GetComponent<Image>();
         rank =transform.Find("rank").GetComponent<Image>();
+        // _hightLight = transform.Find("HighLight").gameObject;
     }
     public void Init(Skill skill)
     {
@@ -70,7 +72,10 @@ public class SkillCard : MonoBehaviour
         {
             rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Legend");
         }
-        
+        if(skill.skillData.checkBuff>0)
+        {
+            BuffIcon.OnBuffAction+=CheckBuffCard;
+        }
         
         
     }
@@ -296,19 +301,19 @@ public class SkillCard : MonoBehaviour
             UIBattle.Instance.DealCards();
         }
     }
-    public void LegacyCard()
+    public void LegacyCard()//遗留效果
     {
         if(skill.skillData.ELCDamage!=0)
         {
-            IncreaseDamage(skill.skillData.ELCDamage);
+            skill.IncreaseDamage(skill.skillData.ELCDamage);
         }
         if(skill.skillData.ELCMP!=0)
         {
-            ReduceMPCost(skill.skillData.ELCMP);
+            skill.ReduceMPCost(skill.skillData.ELCMP);
         }
         if(skill.skillData.ELCHeal!=0)
         {
-            IncreaseHeal(skill.skillData.ELCHeal);
+            skill.IncreaseHeal(skill.skillData.ELCHeal);
         }
         RefeashCardShow();
     }
@@ -317,30 +322,43 @@ public class SkillCard : MonoBehaviour
     //2.降低/增加 某类卡牌消耗
     //
     //3.降低/增加 自身的消耗
-    public void ReduceMPCost(int num)
+    void CheckBuffCard(int buffID,string buffState,int buffNum,ActorType actorType)
     {
-        skill.tempMpCost -=num;
-        if(skill.tempMpCost<0)
-        skill.realManaCost =0;
-        else
-        skill.realManaCost =skill.tempMpCost;
+        //buffID是否为要检查的ID
+        if(buffID!=skill.skillData.checkBuff)
+        {
+            return;
+        }
+        //buff的数量是否达到要求
+        if(buffNum<skill.skillData.buffNumLimit)
+        {
+            return;
+        }
+        //buff要检查的目标是否符合要求
+        if(skill.skillData.checkSelf&&actorType!=skill.caster.actorType)
+        {
+            return;
+        }
+        if(!skill.skillData.checkSelf&&actorType==skill.caster.actorType)
+        {
+            return;
+        }
+        if(buffState =="begin")
+        {
+            skill.CheckBuffUpdate(true);
+            HighLightCard(true);
+        }
+        if(buffState =="end")
+        {
+            skill.CheckBuffUpdate(false);
+            HighLightCard(false);
+        }
+        // RefeashCardShow();
     }
-    public void IncreaseDamage(int num)
+    void HighLightCard(bool ifShow)//技能卡高亮显示
     {
-        // Debug.Log("增加了攻击");
-        skill.tempDamage +=num;
-        if(skill.tempDamage<0)
-        skill.damage =0;
-        else
-        skill.damage =skill.tempDamage;
-    }
-    public void IncreaseHeal(int num)
-    {
-        skill.tempHeal +=num;
-        if(skill.tempHeal<0)
-        skill.heal =0;
-        else
-        skill.heal =skill.tempHeal;
+        if(_hightLight)
+        _hightLight.SetActive(ifShow);
     }
 
 }
