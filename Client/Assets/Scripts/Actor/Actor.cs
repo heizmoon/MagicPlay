@@ -1108,6 +1108,11 @@ public class Actor : MonoBehaviour
             target.StopCasting();
             return 0;
         }
+        //如果对方角色已经死亡，则不会再承受伤害
+        if(target.animState == AnimState.dead)
+        {
+            return 0;
+        }
         //基础防御力减免
         if(num-basicDefence>0)
         num-=basicDefence;
