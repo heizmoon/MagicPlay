@@ -13,7 +13,7 @@ public class UIChooseCharacter : MonoBehaviour
     GameObject _char3;
 
     Button _sureBtn;
-    int nowCharacter =0;
+    public int nowCharacter =1;
     float mouseX;
     void Awake()
     {
@@ -37,11 +37,12 @@ public class UIChooseCharacter : MonoBehaviour
     void OnChooseCharacter()
     {
 		// UIBasicBanner.instance.ChangeGoldText();
-        string avaterName =CharacterManager.instance.GetInfo(0,"prefab");
+        string avaterName =CharacterManager.instance.GetInfo(nowCharacter,"prefab");
         Actor playerActor = Instantiate((GameObject)Resources.Load("Prefabs/"+avaterName)).GetComponent<Actor>();
+        playerActor.actorType =ActorType.玩家角色;
         Player.instance.playerActor =playerActor;
-		playerActor.InitPlayerActor(CharacterManager.instance.GetCharacter(0));
-        Player.instance.CharID =0;
+		playerActor.InitPlayerActor(CharacterManager.instance.GetCharacter(nowCharacter));
+        Player.instance.CharID =nowCharacter;
         playerActor.transform.SetParent(Main.instance.BottomUI);
         playerActor.transform.localPosition =Vector3.zero;
         playerActor.transform.localScale =Vector3.one;
@@ -73,17 +74,17 @@ public class UIChooseCharacter : MonoBehaviour
         Debug.Log("当前"+nowCharacter);
         switch (nowCharacter)
         {
-            case 0:
+            case 1:
             _char1.GetComponent<CanvasGroup>().DOFade(1f,1f);
             _char2.GetComponent<CanvasGroup>().DOFade(0f,1f);
             _char3.GetComponent<CanvasGroup>().DOFade(0f,1f);
             break;
-            case 1:
+            case 2:
             _char1.GetComponent<CanvasGroup>().DOFade(0f,1f);
             _char2.GetComponent<CanvasGroup>().DOFade(1f,1f);
             _char3.GetComponent<CanvasGroup>().DOFade(0f,1f);
             break;
-            case 2:
+            case 3:
             _char1.GetComponent<CanvasGroup>().DOFade(0f,1f);
             _char2.GetComponent<CanvasGroup>().DOFade(0f,1f);
             _char3.GetComponent<CanvasGroup>().DOFade(1f,1f);
@@ -92,21 +93,21 @@ public class UIChooseCharacter : MonoBehaviour
     }
     public void SwipeRight()
     {
-        if(nowCharacter>0)
+        if(nowCharacter>1)
         {
             nowCharacter--;
         }
         else
         {
-            nowCharacter=2;
+            nowCharacter=3;
         }
         ChangeCharacter();
     }
     public void SwipeLeft()
     {
-        if(nowCharacter>1)
+        if(nowCharacter>2)
         {
-            nowCharacter=0;
+            nowCharacter=1;
         }
         else
         {

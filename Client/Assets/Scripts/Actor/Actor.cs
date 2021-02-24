@@ -35,7 +35,6 @@ public class Actor : MonoBehaviour
     public Transform summonPoint;
 
 	public List<int> UsingSkillsID;//角色携带的卡牌列表
-    [HideInInspector]
     ///<summary>0=玩家角色；1=敌人；2=NPC</summary>
     public ActorType actorType;
     
@@ -689,7 +688,7 @@ public class Actor : MonoBehaviour
         //     }
         // }
         #endregion
-        if(skill.realManaCost>MpCurrent)//法力值不足
+        if(actorType ==ActorType.玩家角色&&skill.realManaCost>MpCurrent)//法力值不足
         {
             // Debug.LogFormat("魔法值不足,需要{0},当前为{1}",skill.realManaCost,MpCurrent);
             return false;
@@ -1706,6 +1705,10 @@ public class Actor : MonoBehaviour
     #endregion
     public void ClearSummon()
     {
+        if(summonPoint==null)
+        {
+            return;
+        }
         for (int i = summonPoint.childCount-1; i >=0 ; i--)
         {
             summonPoint.GetChild(i).GetComponent<Summoned>().Death();
