@@ -74,6 +74,7 @@ public class UIBattleFail : MonoBehaviour
         CloseUI();
         UIBattle.Instance.OnBattleGoOn();
         BattleScene.instance.BattleSceneOver();
+        Main.instance.InitUIChooseCharacter();
     }
     void CloseUI()
     {

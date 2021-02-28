@@ -181,6 +181,10 @@ public class Main : MonoBehaviour {
 	{
 		yield return new WaitForSeconds(3f);
 		UILoading.SetActive(false);
+		if(Player.instance.playerActor!=null)
+		{
+			Destroy(Player.instance.playerActor.gameObject);
+		}
 	}
 	public void HideBasicBanner()
 	{

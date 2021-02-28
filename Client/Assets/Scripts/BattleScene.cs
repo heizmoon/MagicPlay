@@ -21,12 +21,17 @@ public class BattleScene : MonoBehaviour
         
         
     }
-    public void Init()
+    public void Reset()
     {
         //选择角色结束后，playerActer = 选定的character
         
         //如果是第一次游戏：新手流程
-        
+        steps =0;
+        beatEnemyNumber =0;
+        beatBossNumber=0;
+        currentMonsterId=0;
+        currentSceneId=0;
+        isBoss =false;
         
     }
     // public void ShowRandomAbilityUI()
@@ -163,8 +168,9 @@ public class BattleScene : MonoBehaviour
     public void BattleSceneOver()
     {
         //2.摧毁自身
-        Destroy(gameObject);
+        // Destroy(gameObject);
         Main.instance.StartLoadingUI();
+        Reset();
     }
     
 }

@@ -7,11 +7,15 @@ public class UICamp : MonoBehaviour
 {
     public Button BTNSleep;
     public Button BTNRemove;
+    public Button BTNGift;
+
 
     void Start()
     {
         BTNSleep.onClick.AddListener(OnSleep);
         BTNRemove.onClick.AddListener(OnRemoveCard);
+        BTNGift.onClick.AddListener(OnGift);
+
 
     }
 
@@ -30,6 +34,10 @@ public class UICamp : MonoBehaviour
     public void Init()
     {
         //根据情况决定都显示哪些按钮
+        if(Player.instance.CharID !=3)
+        {
+            BTNGift.gameObject.SetActive(false);
+        }
     }
     void OnRemoveCard()
     {
@@ -39,5 +47,10 @@ public class UICamp : MonoBehaviour
         go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
 
+    }
+    void OnGift()
+    {
+        //获得一个随机道具
+        BTNGift.interactable =false;
     }
 }
