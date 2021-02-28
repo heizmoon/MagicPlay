@@ -21,6 +21,8 @@ public class ConfigsEditor : Editor {
         drawProperty("cardRank4", "最小rank4步数");
         drawProperty("campRestoreHP", "营地回血百分比(小数)");
         drawProperty("executeRestoreHP", "斩杀回血数值");
+        drawProperty("eneryCubeRestoreMP", "能量块回复能量数值");
+
 
 
 
