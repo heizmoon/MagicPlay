@@ -14,6 +14,7 @@ public class Configs : MonoBehaviour
     public int cardRank4;
     public float campRestoreHP;
     public int executeRestoreHP;
+    public float eneryCubeRestoreMP;
 
     void Awake()
     {

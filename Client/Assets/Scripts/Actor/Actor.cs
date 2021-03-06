@@ -1498,9 +1498,9 @@ public class Actor : MonoBehaviour
                 autoReduceMPAmount+=0.2f;
             }
         }
-        if(abilities.Contains(4))
+        if(abilities.Contains(4))//能量块
         {
-            AddMp(1);
+            AddMp(Configs.instance.eneryCubeRestoreMP);
         }
          //每次使用改变自身伤害的技能
         if(skill.skillData.EUSDamage!=0)
