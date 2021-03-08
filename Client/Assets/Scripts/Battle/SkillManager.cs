@@ -31,6 +31,10 @@ public class SkillManager : MonoBehaviour
     // }
     ///<summary>职业，级别，技能列表</summary>
     Dictionary<int,List<int>[]> charSkillDic =new Dictionary<int, List<int>[]>();
+    //装备牌技能列表
+    List<int> equipCardsList =new List<int>();
+    Dictionary<int,List<int>[]> typeSkillDic =new Dictionary<int, List<int>[]>();
+
     void Awake()
     {
         instance =this;
@@ -68,7 +72,8 @@ public class SkillManager : MonoBehaviour
         }
         Debug.Log("charSkillDic[0].count="+charSkillDic[0].Length);
         Debug.Log("charSkillDic[0][0].count="+charSkillDic[0][0].Count);
-
+        //
+        IESeparateSkillFromType();
 
     }
     public static Skill TryGetFromPool(int id,Actor actor)
@@ -127,6 +132,7 @@ public class SkillManager : MonoBehaviour
     ///<summary>获取技能</summary>
     public SkillData GetInfo(int id)
     {
+        
         foreach (var item in manager.dataArray)
         {
             if(item.id == id)
@@ -161,11 +167,38 @@ public class SkillManager : MonoBehaviour
 
         return null;
     }
-    void USE()
+    //所有职业的装备牌List
+    void IESeparateSkillFromType()
     {
-        
+        for (int i = 0; i < CharacterManager.instance.characters.Count; i++)//所有职业循环
+        {
+            List<int>[] list =new List<int>[5];
+            list[0] = new List<int>();
+            list[1] = new List<int>();
+            list[2] = new List<int>();
+            list[3] = new List<int>();
+            list[4] = new List<int>();
+            foreach (var item in manager.dataArray)//所有技能循环
+            {
+                if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
+                {
+                    list[item.rank].Add(item.id);
+                    Debug.Log("item.rank="+item.rank+",item.id="+item.id);
+                }
+            }
+            typeSkillDic.Add(i,list);
+        }
     }
-    
+    public int GetRandomEquipCard()
+    {
+        int r =UnityEngine.Random.Range(1,equipCardsList.Count);
+        return r;
+    }
+    public int GetRandomSkillByType(int charID,int type)
+    {
+        int r =UnityEngine.Random.Range(1,typeSkillDic[charID][type].Count);
+        return r;
+    }
     // public SkillData[] GetRandomSkills(int N,Mydegete mydegete)
     // {
     //     SkillData[] skillDatas =new SkillData[N];

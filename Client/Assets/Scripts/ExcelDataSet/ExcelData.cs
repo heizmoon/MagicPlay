@@ -60,6 +60,7 @@ public class SkillData{
     public float spelllTime;
     public float CD;
     public bool ifActive;
+    ///<summary>0=攻击牌，1=防御牌，2=装备牌，3=魔法牌</summary>
     public int color;
     public int heal;
     public int manaCost;
@@ -108,6 +109,10 @@ public class SkillData{
     public float CBmanaProduce;
     public int CBBuff;
     public int CBBuffNum;
+    public int createCardNum;
+    public int createCardID;
+    public int createCardChar;
+    public int createCardType;
 
 }
 [System.Serializable]

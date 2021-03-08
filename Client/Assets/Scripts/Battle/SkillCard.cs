@@ -196,7 +196,23 @@ public class SkillCard : MonoBehaviour
                     }
                 }
             }
-            
+            //创建卡牌的牌
+            if(skill.skillData.createCardNum>0)
+            {
+                for (int i = 0; i < skill.skillData.createCardNum; i++)
+                {
+                    if(skill.skillData.createCardID==0)
+                    {
+                        int r =SkillManager.instance.GetRandomSkillByType(skill.skillData.createCardChar,skill.skillData.createCardType);
+                        UIBattle.Instance.CreateNewCardAndGiveToHand(r);
+                    }
+                    else
+                    {
+                        UIBattle.Instance.CreateNewCardAndGiveToHand(skill.skillData.createCardID);
+                    } 
+                }
+                    
+            }
             CheckIfNeedSelectCard();
         }
     }
