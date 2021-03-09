@@ -245,11 +245,11 @@ public class Buff
                     num++;    
                 }
             }
-            Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target); 
             
             // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(currentValue),target,buffData._genreList[0]);
             if(num>0)
             {
+                Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target); 
                 skill.damage =num;
                 // skill.caster.BeginSpell(skill);
                 skill.ComputeDamage();
@@ -257,12 +257,21 @@ public class Buff
             // Battle.Instance.ReceiveSkillDamage(skill,skill.damage*num,false,false);
             if(num<0)
             {
+                Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target); 
                 skill.heal =num;
                 // skill.caster.BeginSpell(skill);
                 skill.ComputeHeal();
             }    
         }
-        
+        if(buffData._type ==BuffType.时间间隔触发卡牌效果)
+        {
+            Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+            SkillCard.CardThrowCard(skill);
+            SkillCard.CardCreateCard(skill);
+            if(skill.usedChooseCard>0)
+            UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+
+        }
         
     }
     public void RemoveSlef()

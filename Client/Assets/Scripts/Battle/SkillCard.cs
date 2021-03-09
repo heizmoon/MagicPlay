@@ -177,44 +177,55 @@ public class SkillCard : MonoBehaviour
             ThrowCard();
             
             //弃牌的技能弃牌:弃牌数量不包含自身
-            if(skill.usedThrowCard>0)
-            {
-                int throwNum = UIBattle.Instance.ThrowHandCardsToPool(skill.usedThrowCard);
-                Debug.Log("弃牌数="+throwNum);
-                if(throwNum>0)
-                {
-                    //执行每当弃牌时就XX的事件
-                    if(skill.id == 107)//技能--质能转换
-                    {
-                        skill.target.AddMp(throwNum);//每弃一张牌回复1点能量
-                    }
-                    if(skill.id == 110)//技能--破釜沉舟
-                    {
-                        //每弃一张牌获得4点护甲
-                        skill.target.armor+= 4*(throwNum+1);
-                        skill.target.RefeashArmorAutoDecayTime();
-                    }
-                }
-            }
+            CardThrowCard(skill);
             //创建卡牌的牌
-            if(skill.skillData.createCardNum>0)
+            CardCreateCard(skill);
+            //抽卡的技能抽卡
+            if(skill.usedChooseCard>0)
+            UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+            CheckIfNeedSelectCard();
+        }
+    }
+    public static void CardCreateCard(Skill _skill)
+    {
+        if(_skill.skillData.createCardNum>0)
             {
-                for (int i = 0; i < skill.skillData.createCardNum; i++)
+                for (int i = 0; i < _skill.skillData.createCardNum; i++)
                 {
-                    if(skill.skillData.createCardID==0)
+                    if(_skill.skillData.createCardID==0)
                     {
-                        int r =SkillManager.instance.GetRandomSkillByType(skill.skillData.createCardChar,skill.skillData.createCardType);
+                        int r =SkillManager.instance.GetRandomSkillByType(_skill.skillData.createCardChar,_skill.skillData.createCardType);
                         UIBattle.Instance.CreateNewCardAndGiveToHand(r);
                     }
                     else
                     {
-                        UIBattle.Instance.CreateNewCardAndGiveToHand(skill.skillData.createCardID);
+                        UIBattle.Instance.CreateNewCardAndGiveToHand(_skill.skillData.createCardID);
                     } 
                 }
                     
             }
-            CheckIfNeedSelectCard();
-        }
+    }
+    public static void CardThrowCard(Skill _skill)
+    {
+        if(_skill.usedThrowCard>0)
+            {
+                int throwNum = UIBattle.Instance.ThrowHandCardsToPool(_skill.usedThrowCard);
+                Debug.Log("弃牌数="+throwNum);
+                if(throwNum>0)
+                {
+                    //执行每当弃牌时就XX的事件
+                    if(_skill.id == 107)//技能--质能转换
+                    {
+                        _skill.target.AddMp(throwNum);//每弃一张牌回复1点能量
+                    }
+                    if(_skill.id == 110)//技能--破釜沉舟
+                    {
+                        //每弃一张牌获得4点护甲
+                        _skill.target.armor+= 4*(throwNum+1);
+                        _skill.target.RefeashArmorAutoDecayTime();
+                    }
+                }
+            }
     }
     IEnumerator IESpecialAddBuff(int num)
     {

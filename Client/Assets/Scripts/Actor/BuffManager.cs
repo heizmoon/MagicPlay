@@ -38,7 +38,8 @@ public enum BuffType
     百分比影响闪避 =28,
     获得护甲后触发技能 =29,
     生命值小于百分之25时触发=30,
-    成功格挡后触发技能=31
+    成功格挡后触发技能=31,
+    时间间隔触发卡牌效果=32
 
 }
 public class BuffManager : MonoBehaviour

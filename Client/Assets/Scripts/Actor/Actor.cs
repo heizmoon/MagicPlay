@@ -1463,9 +1463,7 @@ public class Actor : MonoBehaviour
             }
             Debug.LogWarning("添加的buffid="+skill.buffID);
         }
-        //抽卡的技能抽卡
-        if(skill.usedChooseCard>0)
-        UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+        
         //魔力回复
         skill.caster.AddMp(skill.manaProduce);
         //召唤类技能进行召唤
