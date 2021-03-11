@@ -868,6 +868,10 @@ namespace EditorTool {
                 skillData.CBmanaProduce =collect[i][44].ToString()==""?0:float.Parse(collect[i][44].ToString());
                 skillData.CBBuff =collect[i][45].ToString()==""?0:int.Parse(collect[i][45].ToString());
                 skillData.CBBuffNum =collect[i][46].ToString()==""?0:int.Parse(collect[i][46].ToString());
+                skillData.createCardNum =collect[i][47].ToString()==""?0:int.Parse(collect[i][47].ToString());
+                skillData.createCardID =collect[i][48].ToString()==""?0:int.Parse(collect[i][48].ToString());
+                skillData.createCardChar =collect[i][49].ToString()==""?0:int.Parse(collect[i][49].ToString());
+                skillData.createCardType =collect[i][50].ToString()==""?0:int.Parse(collect[i][50].ToString());
 
 
                 array[i - 2] = skillData;

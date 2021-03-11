@@ -256,6 +256,7 @@ public class Buff
     }
     public void OnBuffInterval()
     {
+
         int num =0;
         if(buffData._type ==BuffType.间隔触发技能)
         {
@@ -293,6 +294,7 @@ public class Buff
 
         if(buffData._type ==BuffType.时间间隔触发卡牌效果)
         {
+            Debug.LogWarning("触发间隔时间卡牌效果");
             Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
             SkillCard.CardThrowCard(skill);
             SkillCard.CardCreateCard(skill);

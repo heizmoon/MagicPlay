@@ -190,11 +190,13 @@ public class SkillCard : MonoBehaviour
     {
         if(_skill.skillData.createCardNum>0)
             {
+            Debug.LogWarning("创建卡牌"+_skill.skillName);
                 for (int i = 0; i < _skill.skillData.createCardNum; i++)
                 {
                     if(_skill.skillData.createCardID==0)
                     {
                         int r =SkillManager.instance.GetRandomSkillByType(_skill.skillData.createCardChar,_skill.skillData.createCardType);
+                        Debug.LogWarning("随机到卡牌id为"+r);
                         UIBattle.Instance.CreateNewCardAndGiveToHand(r);
                     }
                     else

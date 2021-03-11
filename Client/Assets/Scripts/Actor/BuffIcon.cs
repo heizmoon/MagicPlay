@@ -48,7 +48,7 @@ public class BuffIcon : MonoBehaviour
         currentTime+=Time.deltaTime;
         invertTime+=Time.deltaTime;
         iconShow.fillAmount -=fillNum*Time.deltaTime;
-        if(invertTime>=buff.buffData.effectInterval)
+        if(buff.buffData.effectInterval>0&&invertTime>=buff.buffData.effectInterval)
         {
             OnEffectInterval();
         }

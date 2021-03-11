@@ -196,7 +196,8 @@ public class SkillManager : MonoBehaviour
     }
     public int GetRandomSkillByType(int charID,int type)
     {
-        int r =UnityEngine.Random.Range(1,typeSkillDic[charID][type].Count);
+        int r =UnityEngine.Random.Range(0,typeSkillDic[charID][type].Count);
+        r=typeSkillDic[charID][type][r];
         return r;
     }
     // public SkillData[] GetRandomSkills(int N,Mydegete mydegete)
