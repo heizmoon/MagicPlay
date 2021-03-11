@@ -97,6 +97,10 @@ public class Buff
             case BuffType.影响补牌数量:
                 target.dealCardsNumber+=Mathf.FloorToInt(buffData.value);
             break;
+            case BuffType.引导能量:
+                target.ChannelSkill(buffData.value);
+                target.OnChannelSkillManaOut+=ChannelEnd;
+            break;
             case BuffType.影响护甲持续时间:
                 if(buffData.value ==0)
                 {
@@ -109,6 +113,16 @@ public class Buff
             break;
             default:
             break;
+            case BuffType.冰冷效果:
+                target.AddCold(Mathf.FloorToInt(buffData.value));
+            break;
+            case BuffType.对目标造成伤害后触发技能:
+                target.target.OnTakeDamageAndReduceHP+=DamageTriggerSkill;
+            break;
+            case BuffType.受到伤害后触发技能:
+                target.OnTakeDamageAndReduceHP+=DamageTriggerSkill;
+            break;
+            
         }
         
 
@@ -199,15 +213,23 @@ public class Buff
                 }
                 
             break;
-            default:
+            case BuffType.引导能量:
+                target.ChannelSkill(-buffData.value);
+                target.OnChannelSkillManaOut-=ChannelEnd;
+            break;
+            case BuffType.对目标造成伤害后触发技能:
+                target.target.OnTakeDamageAndReduceHP-=DamageTriggerSkill;
+            break;
+            case BuffType.受到伤害后触发技能:
+                target.OnTakeDamageAndReduceHP-=DamageTriggerSkill;
             break;
             
         }
         
-        if(buffData.id==15)
-        {
-            Debug.LogWarning("移除了几次？");
-        }
+        // if(buffData.id==15)
+        // {
+        //     Debug.LogWarning("移除了几次？");
+        // }
         int num =1;
         if(buffData.removeType ==1)//只移除自己
         {
@@ -235,7 +257,7 @@ public class Buff
     public void OnBuffInterval()
     {
         int num =0;
-        if(buffData._type ==BuffType.持续伤害or治疗)
+        if(buffData._type ==BuffType.间隔触发技能)
         {
             //检测是否有相同ID的buff，如果有，合并计算
             for (int i = 0; i < target.buffs.Count; i++)
@@ -245,24 +267,30 @@ public class Buff
                     num++;    
                 }
             }
-            
             // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(currentValue),target,buffData._genreList[0]);
-            if(num>0)
+            if(buffData.value>0)
             {
                 Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target); 
-                skill.damage =num;
-                // skill.caster.BeginSpell(skill);
-                skill.ComputeDamage();
+                skill.damage *=num;
+                // skill.ComputeDamage();
+                skill.caster.OnSkillSpellFinish(skill);
             }
             // Battle.Instance.ReceiveSkillDamage(skill,skill.damage*num,false,false);
-            if(num<0)
+            if(buffData.value<0)
             {
                 Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target); 
-                skill.heal =num;
-                // skill.caster.BeginSpell(skill);
-                skill.ComputeHeal();
-            }    
+                skill.heal *=num;
+                // skill.ComputeHeal();
+                skill.caster.OnSkillSpellFinish(skill);
+
+            }
+            if(buffData.removeType==2)//每次触发移除一层
+            {
+                OnBuffEnd();    
+            }
+
         }
+
         if(buffData._type ==BuffType.时间间隔触发卡牌效果)
         {
             Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
@@ -273,6 +301,15 @@ public class Buff
 
         }
         
+    }
+    public void ChannelEnd()
+    {
+        buffIcon.OnEffectEnd();
+    }
+    void DamageTriggerSkill(int num)
+    {
+        Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+        skill.caster.OnSkillSpellFinish(skill);
     }
     public void RemoveSlef()
     {

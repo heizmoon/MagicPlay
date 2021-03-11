@@ -19,6 +19,7 @@ public class HPBar : MonoBehaviour
     public bool CastingBar;
     public bool LikeBar;
     public bool hasShadow;
+
     Skill skill;
     BarEventArgs barEventTrue;
     BarEventArgs barEventFalse;
@@ -41,7 +42,11 @@ public class HPBar : MonoBehaviour
     public event EventHandler onBarEvent;
 
     Image shadowImage;
+    Image minImage;
+
     bool isChanging;
+    GameObject coldFrame;
+    Text coldNumber;
       
     void Awake()
     {
@@ -52,10 +57,17 @@ public class HPBar : MonoBehaviour
         if(showArmor)
         {
             armorText.transform.parent.gameObject.SetActive(true);
+            coldFrame =transform.Find("ColdFrame").gameObject;
+            coldNumber =transform.Find("ColdFrame/ColdNumber").GetComponent<Text>();
+
         }
         if(hasShadow)
         {
             shadowImage =transform.Find("Shadow").GetComponent<Image>();
+        }
+        if(playerActerMPBar)
+        {
+            minImage =transform.Find("Min").GetComponent<Image>();
         }
 
         // if(!hasShadow)
@@ -148,6 +160,8 @@ public class HPBar : MonoBehaviour
     public void BindHPBar(Actor actor)//绑定HP条与角色
     {
         this.actor=actor;
+         if(showArmor)
+        ChangeCold();
     }
     public void BindHPBar(Skill skill)//绑定施法条与技能
     {
@@ -276,6 +290,22 @@ public class HPBar : MonoBehaviour
         HpCurrent =0;
         setHpBarNormal();
         // actor.OnTimerComplete(skill);
+    }
+    public void ChangeMin()
+    {
+        if(actor)
+        minImage.fillAmount = actor.manaMin/actor.MpMax;
+    }
+    public void ChangeCold()
+    {
+        if(actor.coldNum<=0)
+        {
+            coldFrame.SetActive(false);
+            return;
+        }
+        coldFrame.SetActive(true);
+        coldNumber.text = actor.coldNum.ToString();
+        
     }
 
 }

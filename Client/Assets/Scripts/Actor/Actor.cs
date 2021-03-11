@@ -91,6 +91,9 @@ public class Actor : MonoBehaviour
     int behaviour;
     ///<summary>手牌列表</summary>
     public List<SkillCard> handCards;
+    ///<summary>维持技能最低限制</summary>
+    public float manaMin;
+    public int coldNum;
 
 #region 已经无用的属性
 //---------------已经无用--------------
@@ -105,6 +108,9 @@ public class Actor : MonoBehaviour
 
     ///<summary>命令召唤物立即进行一次攻击,可传入附加的伤害</summary>
     public event Action<int> OnOrderSummonedAttack;//
+    public event Action OnChannelSkillManaOut;
+    ///<summary>受到了技能伤害,可传入伤害值</summary>
+    public event Action<int> OnTakeDamageAndReduceHP;
 
     
     //怪物AI相关
@@ -220,6 +226,15 @@ public class Actor : MonoBehaviour
                 ArmorAutoDecayTime =0;
             }
         }
+        if(manaMin>0&&MpCurrent<manaMin)
+        {
+            if(OnChannelSkillManaOut!=null)
+            {
+                manaMin=0;
+                OnChannelSkillManaOut.Invoke();
+            }
+            
+        }
     }
     // void AutoReduceHP()
     // {
@@ -249,6 +264,35 @@ public class Actor : MonoBehaviour
     {
         MpMax+=number;
 
+    }
+    public void AddCold(int number)
+    {
+
+        if(number<0)
+        {
+            int realNumber =-number>coldNum?coldNum:-number;
+            //冰冷数值减少时，移除对应数量的冰冷BUFF
+            int j =0;
+            for (int i = buffs.Count-1; i >=0 ; i--)
+            {
+                if(buffs[i].buffData._type ==BuffType.冰冷效果)
+                {
+                    buffs[i].OnBuffEnd();
+                    j++;
+                    if(j==realNumber)
+                    {
+                        Debug.LogWarning("移除了"+j+"层冰冷效果");
+                        break;
+                    }
+                }
+            }
+        }
+        coldNum+=number;
+        if(coldNum<0)
+        {
+            coldNum=0;  
+        }
+        hpBar.ChangeCold();
     }
 
     
@@ -781,19 +825,14 @@ public class Actor : MonoBehaviour
         // castingbar.BindHPBar(skill);
 
     }
-    
-    bool CheckAbility(Skill skill,int costAmount)
+    public void ChannelSkill(float val)
     {
-        if(costAmount>=3)
-        {
-            // if(abilities.Contains(101))
-            {
-                return true;
-            }
-        }
-        return false;
-
+        manaMin+=val;
+        if(manaMin<0)
+        manaMin=0;
+        mpBar.ChangeMin();
     }
+    
     void CreateSpellEffect(Skill skill)
     {
         if(skill.spellEffect=="")
@@ -1272,16 +1311,7 @@ public class Actor : MonoBehaviour
             }
             if(armor == 0)//可执行破盾时就xxx这类效果
             {
-                //当护甲归零时，移除护甲BUFF-----------------获得护甲类的BUFF不再显示icon，所以不必手动移除
-                // for (int i = buffs.Count-1; i >=0 ; i--)
-                // {
-                //     if(buffs[i].buffData._type == BuffType.吸收一定数量的伤害)
-                //     {
-                //         BuffManager.RemoveBuffFromActor(buffs[i],this);
-                //     }
-                // }
-                BuffManager.Check_SpecialTypeBuff_ToSetBuff(this,BuffType.失去所有护甲后增减buff);
-                
+                BuffManager.Check_SpecialTypeBuff_ToSetBuff(this,BuffType.失去所有护甲后增减buff);   
             }
         }
         #endregion
@@ -1324,6 +1354,10 @@ public class Actor : MonoBehaviour
         //如果最终判断掉血了
         if(num>0)
         {
+            if(OnTakeDamageAndReduceHP!=null)
+            {
+                OnTakeDamageAndReduceHP(num);
+            }
             //执行当角色生命值低于50%，就xxx这类效果
             if(tempHP>0.5*HpMax&&HpCurrent<=0.5*HpMax)
             {
