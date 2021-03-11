@@ -7,7 +7,7 @@ using System;
 public enum BuffType
 {
     昏迷 =1,
-    持续伤害or治疗=2,
+    间隔触发技能=2,
     影响攻击力 =3,
     影响防御力 =4,
     ///<summary>value =要end的buffID,abilityID=要添加的buffID</summary>
@@ -35,10 +35,14 @@ public enum BuffType
     影响护甲持续时间 =25,
     效果结束时获得buff =26,
     效果结束时释放技能 =27,
-    百分比影响闪避 =28,
+    引导能量 =28,
     获得护甲后触发技能 =29,
     生命值小于百分之25时触发=30,
-    成功格挡后触发技能=31
+    成功格挡后触发技能=31,
+    时间间隔触发卡牌效果=32,
+    冰冷效果=33,
+    对目标造成伤害后触发技能 =34,
+    受到伤害后触发技能=35
 
 }
 public class BuffManager : MonoBehaviour

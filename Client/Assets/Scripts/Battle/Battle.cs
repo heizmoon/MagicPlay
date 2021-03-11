@@ -71,7 +71,7 @@ public class Battle : MonoBehaviour
                 //通知施法者已经暴击,暴击伤害为damage(未经削减的)
                 skill.caster.OnSkillHasCrit(skill,damage);
             }
-            // damage = ComputeDamageBuffStepTwo(skill,damage);
+            damage = ComputeDamageBuffStepTwo(skill,damage);
             if(!skill.targetSelf && damage<=0)
             {
                 //通知施法者技能被抵抗
@@ -162,20 +162,24 @@ public class Battle : MonoBehaviour
     int ComputeDamageBuffStepTwo(Skill skill,int damage)
     {
         
-        foreach (var item in skill.target.buffs)
-        {
-            if(item.buffData._type == BuffType.数值增减受到的伤害 && item.buffData._genreList.Contains(skill.color))
-            {
-                damage+=Mathf.CeilToInt(item.currentValue);
-            }
-        }
-        foreach (var item in skill.target.buffs)
-        {
-            if(item.buffData._type == BuffType.百分比增减受到的伤害 && item.buffData._genreList.Contains(skill.color))
-            {
-                damage+=Mathf.CeilToInt(item.currentValue);
-            }
-        }
+        // foreach (var item in skill.target.buffs)
+        // {
+        //     if(item.buffData._type == BuffType.数值增减受到的伤害)
+        //     {
+        //         damage+=Mathf.CeilToInt(item.currentValue);
+        //     }
+        // }
+        // foreach (var item in skill.target.buffs)
+        // {
+        //     if(item.buffData._type == BuffType.百分比增减受到的伤害)
+        //     {
+        //         damage+=Mathf.CeilToInt(item.currentValue);
+        //     }
+        // }
+        //计算寒冷层数
+        int temp =damage;
+        damage-=skill.caster.coldNum;
+        skill.caster.AddCold(-temp);
         return damage;
         
     }
