@@ -267,12 +267,12 @@ public class Actor : MonoBehaviour
     }
     public void AddCold(int number)
     {
-
-        if(number<0)
+        if(number<0&&coldNum>0)
         {
             int realNumber =-number>coldNum?coldNum:-number;
             //冰冷数值减少时，移除对应数量的冰冷BUFF
             int j =0;
+            
             for (int i = buffs.Count-1; i >=0 ; i--)
             {
                 if(buffs[i].buffData._type ==BuffType.冰冷效果)

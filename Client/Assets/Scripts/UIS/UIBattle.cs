@@ -330,6 +330,7 @@ public class UIBattle : MonoBehaviour
         playerActor.cardMpReduce =0;
         playerActor.SummonedLifeTimePlus =0;
         playerActor.ChannelSkill(-999);
+        playerActor.AddCold(-999);
         playerActor.handCards =new List<SkillCard>();
         Player.instance.playerActor.transform.SetParent(Main.instance.BottomUI);
         Player.instance.playerActor.transform.localPosition =Vector3.zero;

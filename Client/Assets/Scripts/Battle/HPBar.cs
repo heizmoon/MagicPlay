@@ -293,8 +293,7 @@ public class HPBar : MonoBehaviour
     }
     public void ChangeMin()
     {
-        if(actor)
-        minImage.fillAmount = actor.manaMin/actor.MpMax;
+        minImage.fillAmount = Player.instance.playerActor.manaMin/Player.instance.playerActor.MpMax;
     }
     public void ChangeCold()
     {

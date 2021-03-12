@@ -135,6 +135,10 @@ public class BuffIcon : MonoBehaviour
         // {
         //     Debug.LogWarning("移除buff2002");
         // }
+        if(buffs.Count<=0)
+        {
+            return;
+        }
         for (int i = buffs.Count-1; i >=0;i--)
         {
             num++;

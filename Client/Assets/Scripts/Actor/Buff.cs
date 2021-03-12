@@ -261,6 +261,7 @@ public class Buff
         if(buffData._type ==BuffType.间隔触发技能)
         {
             //检测是否有相同ID的buff，如果有，合并计算
+
             for (int i = 0; i < target.buffs.Count; i++)
             {
                 if(target.buffs[i].buffData.id ==buffData.id)
@@ -268,23 +269,14 @@ public class Buff
                     num++;    
                 }
             }
-            // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(currentValue),target,buffData._genreList[0]);
-            if(buffData.value>0)
-            {
-                Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target); 
-                skill.damage *=num;
+            Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target); 
+            skill.damage *=num;
+            skill.heal *=num;
+            skill.caster.OnSkillSpellFinish(skill);
                 // skill.ComputeDamage();
-                skill.caster.OnSkillSpellFinish(skill);
-            }
+            // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(currentValue),target,buffData._genreList[0]);
             // Battle.Instance.ReceiveSkillDamage(skill,skill.damage*num,false,false);
-            if(buffData.value<0)
-            {
-                Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target); 
-                skill.heal *=num;
                 // skill.ComputeHeal();
-                skill.caster.OnSkillSpellFinish(skill);
-
-            }
             if(buffData.removeType==2)//每次触发移除一层
             {
                 OnBuffEnd();    
