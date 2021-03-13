@@ -416,10 +416,10 @@ public class UIBattle : MonoBehaviour
         //没有的情况，创建一个prefab
         buffIcon = ((GameObject)Instantiate(Resources.Load("Prefabs/BuffIcon"))).GetComponent<BuffIcon>();
         buffIcon.buffs.Add(buff);
-        if(buff.buffData.id==1003)
-        {
-            Debug.Log("buffIcon.buffs[0]="+buffIcon.buffs[0].buffData.name);
-        }
+        // if(buff.buffData.id==1003)
+        // {
+        //     Debug.Log("buffIcon.buffs[0]="+buffIcon.buffs[0].buffData.name);
+        // }
         if(ifHasIcon)
         {
             if(buff.target.actorType==ActorType.玩家角色)
@@ -452,6 +452,20 @@ public class UIBattle : MonoBehaviour
         if(buff.buffData.maxNum>=0)
         {
             //查找是否已经拥有bufficon
+            if(buff.buffData.icon=="")
+            {
+                if(t_buffPool.childCount>0)
+                {
+                    foreach (var item in t_buffPool.GetComponentsInChildren<BuffIcon>())
+                    {
+                        if(item.buffID ==buff.buffData.id)
+                        {
+                            //已经有了
+                            return item;
+                        }
+                    }
+                }
+            }
             if(buff.target.actorType==ActorType.玩家角色)
             {
                 if(t_playerBuffPosition.childCount>0)
