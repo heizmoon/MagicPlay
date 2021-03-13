@@ -54,7 +54,7 @@ public class Skill : MonoBehaviour
     public SkillData skillData;
     public SkillCard skillCard;
     int tempMpCost;
-    int tempDamage;
+    public int tempDamage;
     float tempManaProduce;
     public float exCrit; 
     public bool addCBBuff;

@@ -281,8 +281,8 @@ public class Buff
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
             else
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
-            skill.damage *=num;
-            skill.heal *=num;
+            skill.damage =num*skill.tempDamage;
+            skill.heal =num*skill.tempHeal;
             skill.caster.OnSkillSpellFinish(skill);
                 // skill.ComputeDamage();
             // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(currentValue),target,buffData._genreList[0]);
@@ -290,7 +290,7 @@ public class Buff
                 // skill.ComputeHeal();
             if(buffData.removeType==2)//每次触发移除一层
             {
-                OnBuffEnd();    
+                OnBuffEnd();
             }
 
         }
