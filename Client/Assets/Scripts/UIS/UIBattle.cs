@@ -97,7 +97,7 @@ public class UIBattle : MonoBehaviour
     public void Init(Actor enemy,int scene,bool isBoss)
     {
         cardPos.Clear();
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 8; i++)
         {
             cardPos.Add(i,false);
         }
