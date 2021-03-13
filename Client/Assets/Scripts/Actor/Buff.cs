@@ -65,7 +65,10 @@ public class Buff
                 target.armor+=Mathf.FloorToInt(buffData.value);
                 target.RefeashArmorAutoDecayTime();
                 // 如果身上有获得护甲后触发的buff，那么此时触发
+                if(buffData.value==0)
                 BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(target,BuffType.获得护甲后触发技能);
+                else
+                BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(target.target,BuffType.获得护甲后触发技能);
             break;
             case BuffType.影响闪避:
                 target.dodge+=buffData.value;
@@ -208,7 +211,11 @@ public class Buff
             case BuffType.效果结束时释放技能:
                 if(buffData.abilityID >0)
                 {
-                    Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+                    Skill skill;
+                    if(buffData.value==0)
+                    skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+                    else
+                    skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
                     skill.caster.OnSkillSpellFinish(skill);
                 }
                 
@@ -269,7 +276,11 @@ public class Buff
                     num++;    
                 }
             }
-            Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target); 
+            Skill skill;
+            if(buffData.value==0)
+            skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+            else
+            skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
             skill.damage *=num;
             skill.heal *=num;
             skill.caster.OnSkillSpellFinish(skill);
@@ -283,16 +294,20 @@ public class Buff
             }
 
         }
+        //合并计算后，如何跳过所有同类BUFF
 
         if(buffData._type ==BuffType.时间间隔触发卡牌效果)
         {
             Debug.LogWarning("触发间隔时间卡牌效果");
-            Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+            Skill skill;
+            if(buffData.value==0)
+            skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+            else
+            skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
             SkillCard.CardThrowCard(skill);
             SkillCard.CardCreateCard(skill);
             if(skill.usedChooseCard>0)
             UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
-
         }
         
     }
@@ -302,7 +317,11 @@ public class Buff
     }
     void DamageTriggerSkill(int num)
     {
-        Skill skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+        Skill skill;
+        if(buffData.value==0)
+        skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+        else
+        skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
         skill.caster.OnSkillSpellFinish(skill);
     }
     public void RemoveSlef()
