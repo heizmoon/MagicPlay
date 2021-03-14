@@ -152,8 +152,9 @@ public class Battle : MonoBehaviour
                 damageChangeValue+=item.currentValue;
             }
         }
-        damage*=Mathf.RoundToInt(1+damageChangeValue);
-        Debug.LogWarning("伤害改变了"+damageChangeValue);
+        // Debug.LogWarning("原始伤害为："+damage);
+        damage=Mathf.RoundToInt(damage*(1+damageChangeValue));
+        // Debug.LogWarning("伤害改变了："+damageChangeValue+"，改变后为："+damage);
 
         
         return damage;

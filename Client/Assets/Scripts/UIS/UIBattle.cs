@@ -327,6 +327,7 @@ public class UIBattle : MonoBehaviour
 
         // BuffManager.RemovePlayerActorTempBuff();
         BuffManager.RemovePlayerActorAllBuff();//------------移除所有buff
+        BuffManager.RemoveActorAllBuff(Enemy);
         playerActor.cardMpReduce =0;
         playerActor.SummonedLifeTimePlus =0;
         playerActor.ChannelSkill(-999);

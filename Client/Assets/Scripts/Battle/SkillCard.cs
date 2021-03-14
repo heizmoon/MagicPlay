@@ -353,13 +353,9 @@ public class SkillCard : MonoBehaviour
     //3.降低/增加 自身的消耗
     void CheckBuffCard(int buffID,string buffState,int buffNum,ActorType actorType)
     {
+        
         //buffID是否为要检查的ID
-        if(buffID!=skill.skillData.checkBuff)
-        {
-            return;
-        }
-        //buff的数量是否达到要求
-        if(buffNum<skill.skillData.buffNumLimit)
+        if (buffID!=skill.skillData.checkBuff)
         {
             return;
         }
@@ -372,13 +368,22 @@ public class SkillCard : MonoBehaviour
         {
             return;
         }
-        if(buffState =="begin")
+        if(buffState =="begin")//收到添加了新buff事件，检查添加后层数是否满足
         {
+            //buff的数量是否达到要求
+            if(buffNum<skill.skillData.buffNumLimit)
+            {
+                return;
+            }
             skill.CheckBuffUpdate(true);
             HighLightCard(true);
         }
-        if(buffState =="end")
+        if(buffState =="end")//收到buff结束事件，检查结束后层数是否满足
         {
+            if(buffNum>=skill.skillData.buffNumLimit)
+            {
+                return;
+            }
             skill.CheckBuffUpdate(false);
             HighLightCard(false);
         }

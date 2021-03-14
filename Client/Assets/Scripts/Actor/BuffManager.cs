@@ -176,15 +176,15 @@ public class BuffManager : MonoBehaviour
         {
             BuffManager.RemoveBuffFromActor(Player.instance.playerActor.buffs[i],Player.instance.playerActor);
         }
-        Debug.LogWarning("剩余buff数量："+Player.instance.playerActor.buffs.Count);
+        // Debug.LogWarning("剩余buff数量："+Player.instance.playerActor.buffs.Count);
     }
-    ///<summary>移除角色身上所有持续时间大于0的buff</summary>
-    public static void RemovePlayerActorTempBuff()
+    ///<summary>移除角色身上所有的buff</summary>
+    public static void RemoveActorAllBuff(Actor actor)
     {
-        for (int i = Player.instance.playerActor.buffs.Count-1; i >=0 ; i--)
+        for (int i = actor.buffs.Count-1; i >=0 ; i--)
         {
-            if(Player.instance.playerActor.buffs[i].buffData.time!=0)
-            BuffManager.RemoveBuffFromActor(Player.instance.playerActor.buffs[i],Player.instance.playerActor);    
+            // if(Player.instance.playerActor.buffs[i].buffData.time!=0)
+            BuffManager.RemoveBuffFromActor(actor.buffs[i],actor);    
         }
     }
     public void OnBuffMax(Buff buff)

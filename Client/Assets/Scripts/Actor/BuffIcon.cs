@@ -157,10 +157,10 @@ public class BuffIcon : MonoBehaviour
                         buffs[i].childrenBuffs[j].buffIcon.OnEffectEnd();   
                     }
                 }
-                if(buffID==15)
-                {
-                    Debug.LogWarning("end了几次？"+buffs.Count);
-                }
+                // if(buffID==15)
+                // {
+                //     Debug.LogWarning("end了几次？"+buffs.Count);
+                // }
                 buffs[i].OnBuffEnd();
 
                 // buffs.Remove(buffs[i]);
@@ -176,9 +176,14 @@ public class BuffIcon : MonoBehaviour
         EffectManager.TryThrowInPool(effect,true);
         if(OnBuffAction!=null)
         {
-            OnBuffAction(buffID,"end",buffNum,buff.target.actorType);
+            OnBuffAction(buffID,"end",buffNum-num,buff.target.actorType);
         }
         Destroy(this.gameObject);
+    }
+    public void OnEffectReduce(int num)
+    {
+        OnBuffAction(buffID,"end",buffNum-num,buff.target.actorType);
+
     }
     public void ResetTime()
     {

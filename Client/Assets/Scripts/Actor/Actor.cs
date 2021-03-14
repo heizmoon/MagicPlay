@@ -277,15 +277,18 @@ public class Actor : MonoBehaviour
             {
                 if(buffs[i].buffData._type ==BuffType.冰冷效果)
                 {
-                    buffs[i].OnBuffEnd();
                     j++;
                     if(j==realNumber)
                     {
                         Debug.LogWarning("移除了"+j+"层冰冷效果");
+                        buffs[i].buffIcon.OnEffectReduce(realNumber);
+                        buffs[i].OnBuffEnd();    
                         break;
                     }
+                    buffs[i].OnBuffEnd();    
                 }
             }
+
         }
         coldNum+=number;
         if(coldNum<0)
@@ -1584,7 +1587,7 @@ public class Actor : MonoBehaviour
     public void OnHitResistance()
     {
         //显示文字 抵抗
-        bt.SetText("抵抗");
+        bt.SetText("0");
         //执行当角色抵抗技能时就xxx这类效果
     }
     void Die()

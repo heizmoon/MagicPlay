@@ -91,10 +91,11 @@ public class UICardRemove : MonoBehaviour
         }
         ItemBox itemBox =button.GetComponentInParent<ItemBox>();
         Player.instance.playerActor.UsingSkillsID.Remove(itemBox.id);
-        price+=25;
+        
         buttons.Remove(button);
         DestroyImmediate(itemBox.gameObject);
         Player.instance.AddGold(-price);
+        price+=25;
         StartCoroutine(WaitForDisableGridLayout());
     }
    void CloseUI()

@@ -167,7 +167,7 @@ public class SkillManager : MonoBehaviour
 
         return null;
     }
-    //所有职业的装备牌List
+    //所有职业的类型牌List
     void IESeparateSkillFromType()
     {
         for (int i = 0; i < CharacterManager.instance.characters.Count; i++)//所有职业循环
@@ -177,13 +177,13 @@ public class SkillManager : MonoBehaviour
             list[1] = new List<int>();
             list[2] = new List<int>();
             list[3] = new List<int>();
-            list[4] = new List<int>();
+            // list[4] = new List<int>();
             foreach (var item in manager.dataArray)//所有技能循环
             {
                 if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
                 {
-                    list[item.rank].Add(item.id);
-                    Debug.Log("item.rank="+item.rank+",item.id="+item.id);
+                    list[item.color].Add(item.id);
+                    Debug.Log("收录--角色["+i+"]的"+item.color+"牌列表：item.id="+item.id+","+item.name);
                 }
             }
             typeSkillDic.Add(i,list);
