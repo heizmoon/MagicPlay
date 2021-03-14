@@ -323,6 +323,11 @@ public class Buff
         else
         skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
         skill.caster.OnSkillSpellFinish(skill);
+        
+        SkillCard.CardThrowCard(skill);
+        SkillCard.CardCreateCard(skill);
+        if(skill.usedChooseCard>0)
+        UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
     }
     public void RemoveSlef()
     {
