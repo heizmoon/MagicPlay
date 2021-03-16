@@ -735,7 +735,7 @@ public class Actor : MonoBehaviour
         //     }
         // }
         #endregion
-        if(actorType ==ActorType.玩家角色&&skill.realManaCost>MpCurrent)//法力值不足
+        if(actorType ==ActorType.玩家角色&&skill.realManaCost+skill.skillData.keepManaCost>MpCurrent)//法力值不足
         {
             // Debug.LogFormat("魔法值不足,需要{0},当前为{1}",skill.realManaCost,MpCurrent);
             return false;

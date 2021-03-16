@@ -125,15 +125,15 @@ public class SkillCard : MonoBehaviour
         textSkillDescribe.text =skill.describe;
 
         if(Player.instance.playerActor.basicAttack>0||skill.damage>skill.skillData.damage)
-        skill.describe =string.Format(skill.skillData.describe,"<color=cyan>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost),Mathf.Abs(skill.manaProduce));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=crit;{4}=hit;{5}=seep;{6}=fast
+        skill.describe =string.Format(skill.skillData.describe,"<color=cyan>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=crit;{4}=hit;{5}=seep;{6}=fast
         else if(Player.instance.playerActor.basicAttack==0||skill.damage==skill.skillData.damage)
-        skill.describe =string.Format(skill.skillData.describe,"<color=white>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost),Mathf.Abs(skill.manaProduce));
+        skill.describe =string.Format(skill.skillData.describe,"<color=white>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce));
         else
-        skill.describe =string.Format(skill.skillData.describe,"<color=red>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost),Mathf.Abs(skill.manaProduce));
+        skill.describe =string.Format(skill.skillData.describe,"<color=red>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce));
 
 
 
-        textSkillCost.text =skill.realManaCost.ToString();
+        textSkillCost.text =(skill.realManaCost+skill.skillData.keepManaCost).ToString();
         if(skill.realManaCost==skill.skillData.manaCost)
         textSkillCost.color = Color.white;
         else if(skill.realManaCost>skill.skillData.manaCost)
@@ -306,7 +306,7 @@ public class SkillCard : MonoBehaviour
     // }
     void JudgeMP()
     {
-        MaskCard(Player.instance.playerActor.MpCurrent<skill.realManaCost);    
+        MaskCard(Player.instance.playerActor.MpCurrent<skill.realManaCost+skill.skillData.keepManaCost);    
     }
     IEnumerator SetCardPosition(float time)
     {

@@ -42,7 +42,8 @@ public enum BuffType
     时间间隔触发卡牌效果=32,
     冰冷效果=33,
     对目标造成伤害后触发技能 =34,
-    受到伤害后触发技能=35
+    受到伤害后触发技能=35,
+    影响能量回复速度=36
 
 }
 public class BuffManager : MonoBehaviour
@@ -314,7 +315,11 @@ public class BuffManager : MonoBehaviour
                         e.localScale =Vector3.one;
                     }
                     
-                    Skill skill = SkillManager.TryGetFromPool(actor.buffs[i].buffData.abilityID,actor);
+                    Skill skill;
+                    if(actor.buffs[i].buffData.value==0)
+                    skill = SkillManager.TryGetFromPool(actor.buffs[i].buffData.abilityID,actor);
+                    else
+                    skill = SkillManager.TryGetFromPool(actor.buffs[i].buffData.abilityID,actor.target);
                     Debug.LogWarning("触发技能"+skill.skillName);
                     skill.caster.BeginSpell(skill);
                     // Battle.Instance.ReceiveSkillDamage(skill,skill.damage,true,actor.buffs[i].buffData.delay,false);

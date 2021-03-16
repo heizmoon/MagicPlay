@@ -113,6 +113,7 @@ public class SkillData{
     public int createCardID;
     public int createCardChar;
     public int createCardType;
+    public int keepManaCost;
 
 }
 [System.Serializable]

@@ -872,6 +872,7 @@ namespace EditorTool {
                 skillData.createCardID =collect[i][48].ToString()==""?0:int.Parse(collect[i][48].ToString());
                 skillData.createCardChar =collect[i][49].ToString()==""?0:int.Parse(collect[i][49].ToString());
                 skillData.createCardType =collect[i][50].ToString()==""?0:int.Parse(collect[i][50].ToString());
+                skillData.keepManaCost =collect[i][51].ToString()==""?0:int.Parse(collect[i][51].ToString());
 
 
                 array[i - 2] = skillData;

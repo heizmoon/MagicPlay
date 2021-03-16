@@ -65,10 +65,7 @@ public class Buff
                 target.armor+=Mathf.FloorToInt(buffData.value);
                 target.RefeashArmorAutoDecayTime();
                 // 如果身上有获得护甲后触发的buff，那么此时触发
-                if(buffData.value==0)
-                BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(target,BuffType.获得护甲后触发技能);
-                else
-                BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(target.target,BuffType.获得护甲后触发技能);
+                BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(target,BuffType.获得护甲后触发技能);  
             break;
             case BuffType.影响闪避:
                 target.dodge+=buffData.value;
@@ -124,6 +121,9 @@ public class Buff
             break;
             case BuffType.受到伤害后触发技能:
                 target.OnTakeDamageAndReduceHP+=DamageTriggerSkill;
+            break;
+            case BuffType.影响能量回复速度:
+                target.autoReduceMPAmount+=buffData.value/5f;
             break;
             
         }
@@ -229,6 +229,9 @@ public class Buff
             break;
             case BuffType.受到伤害后触发技能:
                 target.OnTakeDamageAndReduceHP-=DamageTriggerSkill;
+            break;
+            case BuffType.影响能量回复速度:
+                target.autoReduceMPAmount-=buffData.value/5f;
             break;
             
         }
