@@ -22,6 +22,8 @@ public class UIBattle : MonoBehaviour
     public Button BTN_BattleOverGoOn;
     public Button BTN_shieldTip_1;
     public Button BTN_shieldTip_2;
+    public Button BTN_coldTip_1;
+    public Button BTN_coldTip_2;
 
     public Text enemyBarText;
     public Text battleResult;
@@ -69,7 +71,8 @@ public class UIBattle : MonoBehaviour
         btn_play.onClick.AddListener(ResumeBattle);
         BTN_shieldTip_1.onClick.AddListener(OnShieldTips);
         BTN_shieldTip_2.onClick.AddListener(OnShieldTips);
-
+        BTN_coldTip_1.onClick.AddListener(OnColdTips);
+        BTN_coldTip_2.onClick.AddListener(OnColdTips);
     }
     public void OnPressSetting()
     {
@@ -706,6 +709,10 @@ public class UIBattle : MonoBehaviour
     void OnShieldTips()
     {
         UIBuffDetail.CreateUIBuffDetail("每1点护甲可以减少1点伤害,但无法减少穿透伤害");
+    }
+    void OnColdTips()
+    {
+        UIBuffDetail.CreateUIBuffDetail("每1点寒冷可以减少1点造成的伤害,最多10点");
     }
     public void ReduceAllCardCost(int num)
     {

@@ -44,7 +44,10 @@ public enum BuffType
     对目标造成伤害后触发技能 =34,
     受到伤害后触发技能=35,
     影响能量回复速度=36,
-    技能暴击后触发技能=37
+    技能暴击后触发技能=37,
+    被攻击触发技能 =38,
+    移除指定ID的BUFF=39,
+    BUFF叠加到最大层触发技能=40
 
 }
 public class BuffManager : MonoBehaviour
@@ -189,13 +192,13 @@ public class BuffManager : MonoBehaviour
             BuffManager.RemoveBuffFromActor(actor.buffs[i],actor);    
         }
     }
-    public void OnBuffMax(Buff buff)
-    {
-        //检查冻结
-        // Debug.LogWarningFormat("开始判断冻结");
-        // Check1012(buff);
-        CheckSpecialBuff(buff,1012,new List<int>(){6},null);
-    }
+    // public void OnBuffMax(Buff buff)
+    // {
+    //     //检查冻结
+    //     // Debug.LogWarningFormat("开始判断冻结");
+    //     // Check1012(buff);
+    //     CheckSpecialBuff(buff,1012,new List<int>(){6},null);
+    // }
     // void Check1012(Buff buff)
     // {
     //     //如果buff是寒流，且玩家冻结技能等级大于0

@@ -114,7 +114,10 @@ public class Actor : MonoBehaviour
     public event Action<int> OnTakeDamageAndReduceHP;
     ///<summary>技能造成了暴击,可传入伤害值</summary>
     public event Action<int> OnSkillHasCritEvent;
-    
+    ///<summary>角色被攻击了</summary>
+    public event Action<int> OnActorHasHit;
+    ///<summary>Buff叠到最大层</summary>
+    public event Action<Buff> OnBuffMax;
     //怪物AI相关
     Skill wanaSkill;
 
@@ -269,6 +272,7 @@ public class Actor : MonoBehaviour
     }
     public void AddCold(int number)
     {
+        int tempNum =coldNum;
         if(number<0&&coldNum>0)
         {
             int realNumber =-number>coldNum?coldNum:-number;
@@ -296,6 +300,14 @@ public class Actor : MonoBehaviour
         if(coldNum<0)
         {
             coldNum=0;  
+        }
+        if(coldNum>10)
+        {
+            coldNum=10;
+            if(tempNum<10)
+            {
+                //冰冷叠加至最大层了
+            }
         }
         hpBar.ChangeCold();
     }
@@ -1169,75 +1181,80 @@ public class Actor : MonoBehaviour
         {
             return 0;
         }
+        if(OnActorHasHit!=null)
+        {
+            OnActorHasHit(0);
+        }
         //基础防御力减免
         if(num-basicDefence>0)
         num-=basicDefence;
         else
         num = 0;
-
+        #region 旧版反弹伤害
         //反弹伤害不能被反弹
         //治疗不能被反弹
-        if(!ifRebound&&num>0)
-        {
-            // Debug.Log("可以反弹伤害");
-            //如果拥有数值反弹或百分比反弹伤害的buff
-            for (int i = 0; i < buffs.Count; i++)
-            {
-                if(buffs[i].buffData._type == BuffType.数值反弹受到的伤害 && buffs[i].buffData._genreList.Contains(genre))
-                {
-                    // Debug.LogFormat("数值反弹buff名为：{0},效果类型为：{1},影响派系为：{2}",buffs[i].buffData.name,buffs[i].buffData._type,buffs[i].buffData.genreList);
-                    //显示特效
-                    Transform e = EffectManager.TryGetFromPool(buffs[i].buffData.triggerEffect);
-                    if(e!=null)
-                    {
-                        e.SetParent(target.hitPoint);
-                        e.localPosition =Vector3.zero;
-                        e.localScale =Vector3.one;
-                    }
-                    //伤害目标:输出一次伤害，反弹伤害属性与原技能属性相同，不会未命中，不会暴击，不受任何加成【作废】
-                    // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(buffs[i].currentValue),target,genre);
-                    //伤害目标：使用关联技能来造成伤害
-                    Skill skill = SkillManager.TryGetFromPool(buffs[i].buffData.abilityID,this);
-                    if(skill.targetSelf)
-                    {
-                        skill.target =target;
-                    }
-                    Battle.Instance.ReceiveSkillDamage(skill,skill.damage,true,false);
-                    skill.target =this;    
-                }
-            }
-            for (int i = 0; i < buffs.Count; i++)
-            {
-                if(buffs[i].buffData._type == BuffType.百分比反弹受到的伤害 && buffs[i].buffData._genreList.Contains(genre))
-                {
-                    //显示特效
-                    Transform e = EffectManager.TryGetFromPool(buffs[i].buffData.triggerEffect);
-                    if(e!=null)
-                    {
-                        e.SetParent(target.hitPoint);
-                        e.localPosition =Vector3.zero;
-                        e.localScale =Vector3.one;
-                    }
-                    //伤害目标:输出一次伤害，反弹伤害属性与原技能属性相同，不会未命中，不会暴击，不受任何加成
-                    Skill skill = SkillManager.TryGetFromPool(buffs[i].buffData.abilityID,this);
-                    if(skill!=null)
-                    {
-                        if(skill.targetSelf)
-                        {
-                            skill.target =target;
-                            Battle.Instance.ReceiveSkillDamage(skill,Mathf.CeilToInt(buffs[i].currentValue),true,false);
-                            skill.target =this;
-                        }
-                    }
-                    else
-                    {
-                        Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(buffs[i].currentValue),target,genre,false);
-                    }
+        // if(!ifRebound&&num>0)
+        // {
+        //     // Debug.Log("可以反弹伤害");
+        //     //如果拥有数值反弹或百分比反弹伤害的buff
+        //     for (int i = 0; i < buffs.Count; i++)
+        //     {
+        //         if(buffs[i].buffData._type == BuffType.数值反弹受到的伤害 && buffs[i].buffData._genreList.Contains(genre))
+        //         {
+        //             // Debug.LogFormat("数值反弹buff名为：{0},效果类型为：{1},影响派系为：{2}",buffs[i].buffData.name,buffs[i].buffData._type,buffs[i].buffData.genreList);
+        //             //显示特效
+        //             Transform e = EffectManager.TryGetFromPool(buffs[i].buffData.triggerEffect);
+        //             if(e!=null)
+        //             {
+        //                 e.SetParent(target.hitPoint);
+        //                 e.localPosition =Vector3.zero;
+        //                 e.localScale =Vector3.one;
+        //             }
+        //             //伤害目标:输出一次伤害，反弹伤害属性与原技能属性相同，不会未命中，不会暴击，不受任何加成【作废】
+        //             // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(buffs[i].currentValue),target,genre);
+        //             //伤害目标：使用关联技能来造成伤害
+        //             Skill skill = SkillManager.TryGetFromPool(buffs[i].buffData.abilityID,this);
+        //             if(skill.targetSelf)
+        //             {
+        //                 skill.target =target;
+        //             }
+        //             Battle.Instance.ReceiveSkillDamage(skill,skill.damage,true,false);
+        //             skill.target =this;    
+        //         }
+        //     }
+        //     for (int i = 0; i < buffs.Count; i++)
+        //     {
+        //         if(buffs[i].buffData._type == BuffType.百分比反弹受到的伤害 && buffs[i].buffData._genreList.Contains(genre))
+        //         {
+        //             //显示特效
+        //             Transform e = EffectManager.TryGetFromPool(buffs[i].buffData.triggerEffect);
+        //             if(e!=null)
+        //             {
+        //                 e.SetParent(target.hitPoint);
+        //                 e.localPosition =Vector3.zero;
+        //                 e.localScale =Vector3.one;
+        //             }
+        //             //伤害目标:输出一次伤害，反弹伤害属性与原技能属性相同，不会未命中，不会暴击，不受任何加成
+        //             Skill skill = SkillManager.TryGetFromPool(buffs[i].buffData.abilityID,this);
+        //             if(skill!=null)
+        //             {
+        //                 if(skill.targetSelf)
+        //                 {
+        //                     skill.target =target;
+        //                     Battle.Instance.ReceiveSkillDamage(skill,Mathf.CeilToInt(buffs[i].currentValue),true,false);
+        //                     skill.target =this;
+        //                 }
+        //             }
+        //             else
+        //             {
+        //                 Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(buffs[i].currentValue),target,genre,false);
+        //             }
                     
-                    // Debug.LogFormat("百分比反弹buff名为：{0},效果类型为：{1},影响派系为：{2}",buffs[i].buffData.name,buffs[i].buffData._type,buffs[i].buffData.genreList);
-                }
-            }
-        }
+        //             // Debug.LogFormat("百分比反弹buff名为：{0},效果类型为：{1},影响派系为：{2}",buffs[i].buffData.name,buffs[i].buffData._type,buffs[i].buffData.genreList);
+        //         }
+        //     }
+        // }
+        #endregion
         #region 吸收伤害相关
         ///<summary>是否吸收伤害</summary>
         bool ifAbsorb =false;
@@ -1670,7 +1687,7 @@ public class Actor : MonoBehaviour
         //Buff叠加机制：相同id的buff，如果已达最大层数，只会刷新持续时间
         Debug.LogWarning("Actor.addBuff:"+buff.buffData.id);
         int buffNum =0;
-        bool ifMax=false;
+        // bool ifMax=false;
         // Buff tempBUff =null;
         List<Buff> tempList =new List<Buff>();
         foreach (var item in buffs)
@@ -1697,6 +1714,14 @@ public class Actor : MonoBehaviour
             buffs.Add(buff);
             tempList.Add(buff);
             buffNum++;
+            if(buffNum==buff.buffData.maxNum)
+            {
+                //叠到最大层了
+                if(OnBuffMax!=null)
+                {
+                    OnBuffMax(buff);
+                }
+            }
         }
         //已叠加到最大层
         else if(buff.buffData.maxNum>0&&buffNum==buff.buffData.maxNum)
@@ -1707,7 +1732,7 @@ public class Actor : MonoBehaviour
             tempList.Remove(tempList[0]);
             buffs.Add(buff);
             tempList.Add(buff);
-            ifMax =true;
+            // ifMax =true;
         }
         else if(buff.buffData.maxNum>0&&buffNum>buff.buffData.maxNum)
         {
@@ -1746,11 +1771,11 @@ public class Actor : MonoBehaviour
             tempList[i].buffIcon.ResetTime();
         }
         buff.buffIcon.OnEffectBegin(buff);
-        if(ifMax)
-        {
-            //执行当达到最大层数后就xxx的事件
-            BuffManager.instance.OnBuffMax(buff);
-        }
+        // if(ifMax)
+        // {
+        //     //执行当达到最大层数后就xxx的事件
+        //     BuffManager.instance.OnBuffMax(buff);
+        // }
     }
     #endregion
     public void ClearSummon()

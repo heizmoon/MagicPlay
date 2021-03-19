@@ -11,6 +11,7 @@ public class UICardDetail : MonoBehaviour
     Vector3 tempVector;
     int type;
     ItemBox itemBox;
+    Text describeText;
     void Awake()
     {
         background =transform.Find("Background").gameObject.GetComponent<Button>();
@@ -25,6 +26,10 @@ public class UICardDetail : MonoBehaviour
         target.SetParent(point);
         target.localPosition =Vector3.zero;
         target.localScale = new Vector3(2.5f,2.5f,2.5f);
+        describeText =skillCard.textSkillDescribe;
+        describeText.fontSize =15;
+        describeText.lineSpacing =1.2f;
+
         type =0;
         // Debug.Log("技能卡详情");
     }
@@ -37,6 +42,9 @@ public class UICardDetail : MonoBehaviour
         target.SetParent(point);
         target.localPosition =Vector3.zero;
         target.localScale = new Vector3(2f,2f,2f);
+        describeText =itemBox.skillText;
+        describeText.fontSize =15;
+        describeText.lineSpacing =1.2f;
         type =1;
         itemBox.toggle.onValueChanged.RemoveAllListeners();
         // Debug.Log("查看详情");
@@ -53,6 +61,8 @@ public class UICardDetail : MonoBehaviour
         target.SetParent(tempParent);
         target.localPosition =tempVector;
         target.localScale = Vector3.one;
+        describeText.fontSize =18;
+        describeText.lineSpacing =1f;
         if(type == 0&&!UIBattle.Instance)
         {
             target.GetComponent<SkillCard>().canShow =true;

@@ -19,6 +19,7 @@ public class ItemBox : MonoBehaviour
     public Text priceText;
     public bool inshop;
     public bool inReward;
+    public Text skillText;
     void Awake()
     {
         toggle =GetComponent<Toggle>();
@@ -41,6 +42,7 @@ public class ItemBox : MonoBehaviour
         icon.gameObject.SetActive(false);
         SkillCard card= Instantiate((GameObject)Resources.Load("Prefabs/SkillCard")).GetComponent<SkillCard>();
         card.Init(item);
+        skillText=card.textSkillDescribe;
         card.transform.SetParent(Titem);
         card.transform.localPosition =Vector3.zero;
         card.transform.localScale=Vector3.one;

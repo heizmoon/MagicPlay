@@ -131,6 +131,30 @@ public class Buff
             case BuffType.技能暴击后触发技能:
                 target.OnSkillHasCritEvent+=BuffTriggerSkill;
             break;
+            case BuffType.被攻击触发技能:
+                target.OnActorHasHit+=BuffTriggerSkill;
+            break;
+            case BuffType.移除指定ID的BUFF:
+            for (int i = 0; i < buffData.value-1; i++)
+            {
+                Buff _buff = BuffManager.FindBuff(buffData.abilityID,target);
+                if(_buff!=null)
+                {
+                    _buff.OnBuffEnd();
+                    if(_buff.buffIcon.buffs.Count==0)
+                    {
+                        _buff.buffIcon.OnEffectEnd();
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            break;
+            case BuffType.BUFF叠加到最大层触发技能:
+                target.OnBuffMax+=BuffMax;
+            break;
         }
         
 
@@ -241,6 +265,15 @@ public class Buff
             case BuffType.影响能量回复速度:
                 target.autoReduceMPAmount-=buffData.value/5f;
             break;
+            case BuffType.技能暴击后触发技能:
+                target.OnSkillHasCritEvent-=BuffTriggerSkill;
+            break;
+            case BuffType.被攻击触发技能:
+                target.OnActorHasHit-=BuffTriggerSkill;
+            break;
+            case BuffType.BUFF叠加到最大层触发技能:
+                target.OnBuffMax-=BuffMax;
+            break;
             
         }
         
@@ -339,6 +372,13 @@ public class Buff
         SkillCard.CardCreateCard(skill);
         if(skill.usedChooseCard>0)
         UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+    }
+    void BuffMax(Buff _buff)
+    {
+        if(_buff.buffData.id == (int)buffData.effectInterval)
+        {
+            BuffTriggerSkill(0);
+        }
     }
     public void RemoveSlef()
     {

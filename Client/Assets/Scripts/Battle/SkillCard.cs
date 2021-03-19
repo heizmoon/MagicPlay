@@ -14,7 +14,7 @@ public class SkillCard : MonoBehaviour
     public Button button;
     float innerTime =0;
     public int posID;
-    Text textSkillDescribe;
+    public Text textSkillDescribe;
     Text textSkillCost;
     public bool canShow;
     public GameObject _hightLight;
