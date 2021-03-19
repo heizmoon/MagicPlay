@@ -56,8 +56,6 @@
      <Compile Include="Assets\Scripts\Actor\Actor.cs" />
      <Compile Include="Assets\Scripts\Actor\ActorBackUp.cs" />
      <Compile Include="Assets\Scripts\Actor\ActorController.cs" />
-     <Compile Include="Assets\Scripts\Actor\AssetsItem.cs" />
-     <Compile Include="Assets\Scripts\Actor\AssetsManager.cs" />
      <Compile Include="Assets\Scripts\Actor\Buff.cs" />
      <Compile Include="Assets\Scripts\Actor\BuffIcon.cs" />
      <Compile Include="Assets\Scripts\Actor\BuffManager.cs" />
@@ -67,8 +65,6 @@
      <Compile Include="Assets\Scripts\Actor\TraitManager.cs" />
      <Compile Include="Assets\Scripts\Ball.cs" />
      <Compile Include="Assets\Scripts\BallManager.cs" />
-     <Compile Include="Assets\Scripts\Battle\Abyss.cs" />
-     <Compile Include="Assets\Scripts\Battle\AbyssManager.cs" />
      <Compile Include="Assets\Scripts\Battle\Battle.cs" />
      <Compile Include="Assets\Scripts\Battle\BattleText.cs" />
      <Compile Include="Assets\Scripts\Battle\EffectManager.cs" />
@@ -85,15 +81,11 @@
      <Compile Include="Assets\Scripts\CameraTest.cs" />
      <Compile Include="Assets\Scripts\Configs.cs" />
      <Compile Include="Assets\Scripts\DateManager.cs" />
-     <Compile Include="Assets\Scripts\Events\BattleData.cs" />
-     <Compile Include="Assets\Scripts\Events\BattleEvent.cs" />
      <Compile Include="Assets\Scripts\Events\EventManager.cs" />
      <Compile Include="Assets\Scripts\Events\RandomEventManager.cs" />
      <Compile Include="Assets\Scripts\Events\ShopManager.cs" />
      <Compile Include="Assets\Scripts\Events\TypeEventTool.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\AbilityDataSet.cs" />
-     <Compile Include="Assets\Scripts\ExcelDataSet\AbyssGroupDataSet.cs" />
-     <Compile Include="Assets\Scripts\ExcelDataSet\AssetsItemDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\BuffDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\CharacterDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\DialogueDataSet.cs" />
@@ -124,8 +116,6 @@
      <Compile Include="Assets\Scripts\TextTool.cs" />
      <Compile Include="Assets\Scripts\Timer.cs" />
      <Compile Include="Assets\Scripts\UIS\ItemBox.cs" />
-     <Compile Include="Assets\Scripts\UIS\SkillBox.cs" />
-     <Compile Include="Assets\Scripts\UIS\SkillCube.cs" />
      <Compile Include="Assets\Scripts\UIS\ToggleMagic.cs" />
      <Compile Include="Assets\Scripts\UIS\TraitBox.cs" />
      <Compile Include="Assets\Scripts\UIS\TraitCasket.cs" />
@@ -145,11 +135,8 @@
      <Compile Include="Assets\Scripts\UIS\UIChooseCharacter.cs" />
      <Compile Include="Assets\Scripts\UIS\UIOffLineRewards.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayer.cs" />
-     <Compile Include="Assets\Scripts\UIS\UIPlayerAssets.cs" />
      <Compile Include="Assets\Scripts\UIS\UIRandomEvent.cs" />
      <Compile Include="Assets\Scripts\UIS\UISkillButton.cs" />
-     <Compile Include="Assets\Scripts\UIS\UISkillChoose.cs" />
-     <Compile Include="Assets\Scripts\UIS\UISkillTree.cs" />
      <Compile Include="Assets\Scripts\UIS\UIStatisticLine.cs" />
      <Compile Include="Assets\Scripts\UIS\UITrait.cs" />
      <Compile Include="Assets\Scripts\UIS\UITreasure.cs" />

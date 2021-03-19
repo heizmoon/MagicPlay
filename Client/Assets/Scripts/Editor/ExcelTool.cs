@@ -12,8 +12,6 @@ namespace EditorTool {
         
         static DropGroup[] droupGroupArray;
         static SkillData[] skillDataArray;
-        static AssetsItemData[] assetsItemArray;
-        static AbyssGroupData[] abyssGroups;
         static CharacterData[] characterDatas;
         static DiagueDatabase[] diagueDatabases;
         static QuestionData[] questionDatas;
@@ -49,12 +47,6 @@ namespace EditorTool {
                 
                 case "Skill":
                 CreateSkillArray(filePath);
-                break;
-                case "AssetsItem":
-                CreateAssetsItemArray(filePath);
-                break;
-                case "AbyssGroup":
-                CreateAbyssGroupArray(filePath);
                 break;
                 case "Character":
                 CreateCharacterArray(filePath);
@@ -764,43 +756,7 @@ namespace EditorTool {
             }
             diagueDatabases =array;
         }
-        public static void CreateAbyssGroupArray(string filePath) {
-            //获得表数据
-            int columnNum = 0, rowNum = 0;
-            DataRowCollection collect = ReadExcel(filePath, ref columnNum, ref rowNum);
- 
-            //根据excel的定义，第二行开始才是数据
-            AbyssGroupData[] array = new AbyssGroupData[rowNum - 2];
-            for(int i = 2; i < rowNum; i++) 
-            {
-                AbyssGroupData item = new AbyssGroupData();
-                //解析每列的数据
-                item.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
-                item.groupName = collect[i][1].ToString();
-                item.describe = collect[i][2].ToString();
-                item.icon = collect[i][3].ToString();
-                item.background =collect[i][4].ToString();
-                item.timeCost = collect[i][5].ToString()==""?0: int.Parse(collect[i][5].ToString());
-                item.goldReward = collect[i][6].ToString()==""?0: int.Parse(collect[i][6].ToString());
-                item.startLevel = collect[i][7].ToString()==""?0: int.Parse(collect[i][7].ToString());
-                item.endLevel = collect[i][8].ToString()==""?0: int.Parse(collect[i][8].ToString());
-                item.battles = collect[i][9].ToString()==""?0: int.Parse(collect[i][9].ToString());
-                item.deathLevel = collect[i][10].ToString()==""?0: int.Parse(collect[i][10].ToString());
-                item.monsterGroups = collect[i][11].ToString();
-                item.relicGroupDistribution = collect[i][12].ToString();
-                item.dropGropDistribution = collect[i][13].ToString();
-                item.eventDistribution = collect[i][14].ToString();
-                item.monsterLevelInterval =collect[i][15].ToString()==""?0: int.Parse(collect[i][15].ToString());
-                item.bossLevelInterval =collect[i][16].ToString()==""?0: int.Parse(collect[i][16].ToString());
-                item.monsterBasicLevel =collect[i][17].ToString()==""?0: int.Parse(collect[i][17].ToString());
-
-
-
-                array[i - 2] = item;
-            }
-            abyssGroups =array;
-            
-        }
+        
 
 
         public static void CreateSkillArray(string filePath) {
@@ -873,6 +829,7 @@ namespace EditorTool {
                 skillData.createCardChar =collect[i][49].ToString()==""?0:int.Parse(collect[i][49].ToString());
                 skillData.createCardType =collect[i][50].ToString()==""?0:int.Parse(collect[i][50].ToString());
                 skillData.keepManaCost =collect[i][51].ToString()==""?0:int.Parse(collect[i][51].ToString());
+                skillData.critTriggerSkill =collect[i][52].ToString()==""?0:int.Parse(collect[i][52].ToString());
 
 
                 array[i - 2] = skillData;
@@ -880,52 +837,8 @@ namespace EditorTool {
               skillDataArray =array;
             //   Debug.Log("skillDataArray:"+skillDataArray[0].name);
         }
-        public static void CreateAssetsItemArray(string filePath) {
-            //获得表数据
-            int columnNum = 0, rowNum = 0;
-            DataRowCollection collect = ReadExcel(filePath, ref columnNum, ref rowNum);
- 
-            //根据excel的定义，第二行开始才是数据
-            AssetsItemData[] array = new AssetsItemData[rowNum - 2];
-            for(int i = 2; i < rowNum; i++) {
-            AssetsItemData data = new AssetsItemData();
-            //解析每列的数据
-            data.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
-            data.name = collect[i][1].ToString();
-            data.describe = collect[i][2].ToString();
-            data.icon = collect[i][3].ToString();
-            data.type = collect[i][4].ToString()==""?0: int.Parse(collect[i][4].ToString());;
-            data.equipType = collect[i][5].ToString()==""?0: int.Parse(collect[i][5].ToString());;
-            data.value =collect[i][6].ToString()==""?0: int.Parse(collect[i][6].ToString());
-            data.hpBuffer =collect[i][7].ToString()==""?0: int.Parse(collect[i][7].ToString());
-            data.mpBuffer =collect[i][8].ToString()==""?0: int.Parse(collect[i][8].ToString());
-            data.dodgeBuffer =collect[i][9].ToString()==""?0: int.Parse(collect[i][9].ToString());;
-            data.toughBuffer = collect[i][10].ToString()==""?0: int.Parse(collect[i][10].ToString());
-            data.resistance0 =collect[i][11].ToString()==""?0: int.Parse(collect[i][11].ToString());
-            data.resistance1 =collect[i][12].ToString()==""?0: int.Parse(collect[i][12].ToString());
-            data.resistance2 =collect[i][13].ToString()==""?0: int.Parse(collect[i][13].ToString());
-            data.resistance3 =collect[i][14].ToString()==""?0: int.Parse(collect[i][14].ToString());
-            data.resistance4 =collect[i][15].ToString()==""?0: int.Parse(collect[i][15].ToString());
-            data.resistance5 =collect[i][16].ToString()==""?0: int.Parse(collect[i][16].ToString());
-            data.resistance6 =collect[i][17].ToString()==""?0: int.Parse(collect[i][17].ToString());               
-            data.resistance7 =collect[i][18].ToString()==""?0: int.Parse(collect[i][18].ToString());               
-            data.valueGrow =collect[i][19].ToString()==""?0: int.Parse(collect[i][19].ToString());               
-            data.hpGrow =collect[i][20].ToString()==""?0: int.Parse(collect[i][20].ToString());
-            data.mpGrow =collect[i][21].ToString()==""?0: int.Parse(collect[i][21].ToString());
-            data.dodgeGrow =collect[i][22].ToString()==""?0: int.Parse(collect[i][22].ToString());
-            data.toughGrow =collect[i][23].ToString()==""?0: int.Parse(collect[i][23].ToString());
-            data.resistanceGrow =collect[i][24].ToString()==""?0: int.Parse(collect[i][24].ToString());
-            data.skillBuffer = collect[i][25].ToString()==""?0:int.Parse(collect[i][25].ToString());
-            data.skillBufferLevel = collect[i][26].ToString()==""?0:int.Parse(collect[i][26].ToString());
-            data.skillBufferGrow = collect[i][27].ToString()==""?0:int.Parse(collect[i][27].ToString());
-            data.unlockSkill = collect[i][28].ToString();
-            data.buffList = collect[i][29].ToString();
-            data.life = collect[i][30].ToString()==""?-1:int.Parse(collect[i][30].ToString());
-            array[i - 2] = data;
-            }
-            assetsItemArray =array;
-        }
-        public static void CreateReformArray(string filePath) {
+        public static void CreateReformArray(string filePath) 
+        {
             //获得表数据
             int columnNum = 0, rowNum = 0;
             DataRowCollection collect = ReadExcel(filePath, ref columnNum, ref rowNum);
@@ -1028,14 +941,6 @@ namespace EditorTool {
         public static SkillData[] GetSkillArray()
         {
             return skillDataArray;
-        }
-        public static AssetsItemData[] GetAssetsItemArray()
-        {
-            return assetsItemArray;
-        }
-        public static AbyssGroupData[] GetAbyssGroupArray()
-        {
-            return abyssGroups;
         }
         public static CharacterData[] GetCharacterArray()
         {

@@ -8,6 +8,7 @@ public class ActorBackUp : MonoBehaviour
     public int HpMax;//最大HP
 	public int MpMax;
     public float Crit;
+    public float critBonus;
     public float dodge;
     public List<int> UsingSkillsID;
     public List<int> abilities =new List<int>();
@@ -23,6 +24,7 @@ public class ActorBackUp : MonoBehaviour
         HpMax =actor.HpMax;
         MpMax =actor.MpMax;
         Crit =actor.Crit;
+        critBonus =actor.critBonus;
         dodge =actor.dodge;
         UsingSkillsID = actor.UsingSkillsID;
         abilities =actor.abilities;
@@ -41,6 +43,7 @@ public class ActorBackUp : MonoBehaviour
         actor.abilities =abilities;
         actor.UsingSkillsID =UsingSkillsID;
         actor.Crit =Crit;
+        actor.critBonus=critBonus;
         actor.MpMax =MpMax;
         actor.HpMax =HpMax;
         if(actor.HpCurrent>HpMax)

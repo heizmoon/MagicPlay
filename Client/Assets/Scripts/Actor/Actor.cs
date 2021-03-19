@@ -29,6 +29,7 @@ public class Actor : MonoBehaviour
     public float MpCurrent;
     public float Crit;
     public float dodge;
+    public float critBonus =1.5f;
     public Transform spellPoint;
     public Transform castPoint;
     public Transform hitPoint;
@@ -111,7 +112,8 @@ public class Actor : MonoBehaviour
     public event Action OnChannelSkillManaOut;
     ///<summary>受到了技能伤害,可传入伤害值</summary>
     public event Action<int> OnTakeDamageAndReduceHP;
-
+    ///<summary>技能造成了暴击,可传入伤害值</summary>
+    public event Action<int> OnSkillHasCritEvent;
     
     //怪物AI相关
     Skill wanaSkill;
@@ -1078,19 +1080,32 @@ public class Actor : MonoBehaviour
         
         // SkillManager.CheckSkillOnHitToAddBuff(skill,1110,4);
         
-        if(BuffManager.FindBuff(1024,this)!=null)// 如果身上有水晶剑:1024,那么给自己添加[兴奋buff]:1023
-        {
-            BuffManager.instance.CreateBuffForActor(1023,skill.caster);    
-
-        }
-        if(BuffManager.FindBuff(1028,this)!=null)//如果身上有英勇斗篷：1028，则回复1点能量
-        {
-            AddMp(1f);
-        }
-        if(BuffManager.FindBuff(1029,this)!=null)//如果身上有冲锋面罩：1029，则回复1点生命
+        // if(BuffManager.FindBuff(1024,this)!=null)// 如果身上有水晶剑:1024,那么给自己添加[兴奋buff]:1023
+        // {
+        //     BuffManager.instance.CreateBuffForActor(1023,skill.caster);
+        // }
+        // if(BuffManager.FindBuff(1028,this)!=null)//如果身上有英勇斗篷：1028，则回复1点能量
+        // {
+        //     AddMp(1f);
+        // }
+        // if(BuffManager.FindBuff(1029,this)!=null)//如果身上有冲锋面罩：1029，则回复1点生命
+        // {
+        //     Skill skill1 = SkillManager.TryGetFromPool(41,this);
+        //     OnSkillSpellFinish(skill1);
+        // }
+        //技能暴击触发另一个技能
+        if(skill.skillData.critTriggerSkill>0)
         {
             Skill skill1 = SkillManager.TryGetFromPool(41,this);
             OnSkillSpellFinish(skill1);
+            SkillCard.CardThrowCard(skill);
+            SkillCard.CardCreateCard(skill);
+            if(skill.usedChooseCard>0)
+            UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+        }
+        if(OnSkillHasCritEvent!=null)
+        {
+            OnSkillHasCritEvent(damage);
         }
 
     }
@@ -1533,7 +1548,7 @@ public class Actor : MonoBehaviour
                 autoReduceMPAmount+=0.2f;
             }
         }
-        if(abilities.Contains(4))//能量块
+        if(abilities.Contains(4)&&skill.ifActive)//能量块:必须是主动技能才能触发能量块
         {
             AddMp(Configs.instance.eneryCubeRestoreMP);
         }

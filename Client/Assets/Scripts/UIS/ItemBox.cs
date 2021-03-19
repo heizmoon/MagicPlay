@@ -35,11 +35,6 @@ public class ItemBox : MonoBehaviour
     {
         
     }
-    public void Init(AssetsItem item)
-    {
-        icon.sprite = Resources.Load("Texture/Assets/"+item._icon,typeof(Sprite)) as Sprite;
-        itemName.text =item._name;
-    }
     public void Init(SkillData item)
     {
         type =1;

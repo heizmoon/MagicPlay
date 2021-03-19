@@ -43,7 +43,8 @@ public enum BuffType
     冰冷效果=33,
     对目标造成伤害后触发技能 =34,
     受到伤害后触发技能=35,
-    影响能量回复速度=36
+    影响能量回复速度=36,
+    技能暴击后触发技能=37
 
 }
 public class BuffManager : MonoBehaviour
@@ -243,7 +244,7 @@ public class BuffManager : MonoBehaviour
             return;
         }
 
-        if(buff.target.actorType==ActorType.敌人&&Player.instance.GetSkillLevel(needSkill)>0)
+        if(buff.target.actorType==ActorType.敌人)
         {
             buff.buffIcon.OnEffectEnd();
             Skill skill = SkillManager.TryGetFromPool(needSkill,Player.instance.playerActor);

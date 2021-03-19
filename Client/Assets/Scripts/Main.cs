@@ -200,7 +200,6 @@ public class Main : MonoBehaviour {
 		player.playerActor.transform.SetParent(BottomUI);
 		// Destroy(UIPlayer.instance.gameObject);
 		SkillManager.ClearPool();
-		Destroy(UISkillTree.instance.gameObject);
 		// Destroy(UIEvents.instance.gameObject);
 		
 		
@@ -258,10 +257,7 @@ public class Main : MonoBehaviour {
 		
 		switch(toggle.name)
 		{
-			case "Toggle_SkillTree":
-			CloseOhterUIs();
-			InitUISkillTree();
-			break;
+			
 			case "Toggle_Practice":
 			CloseOhterUIs();
 			// StartPractice();
@@ -282,24 +278,7 @@ public class Main : MonoBehaviour {
 	///<summary>传入一个技能ID，然后开始练习这个技能</summary>
 	///<param name ="skillID">技能ID</param>
 	
-	void InitUISkillTree()
-	{
-		if(UISkillTree.instance==null)
-		{
-			GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UISkillTree"));
-			go.transform.SetParent(MiddleUI);
-			go.transform.localScale =Vector3.one;
-			go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-		}
-		else
-		{
-			UISkillTree.instance.transform.SetParent(MiddleUI);
-			UISkillTree.instance.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			UISkillTree.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-		}
-		UIState =0;
-	}
+	
 	public void InitUIPlayer()
 	{
 		UIState =-1;
@@ -415,12 +394,7 @@ public class Main : MonoBehaviour {
 		UIState =0;
 		
 
-		if(UISkillTree.instance)
-		{
-			UISkillTree.instance.transform.SetParent(BottomUI);
-			UISkillTree.instance.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-			UISkillTree.instance.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-		}
+		
 		
 		if(UIPlayer.instance)
 		{
@@ -447,7 +421,6 @@ public class Main : MonoBehaviour {
 		//保存玩家角色形象
 		PlayerPrefs.SetString("playerAvatar","Girl_01");
 		//保存玩家技能等级
-		PlayerPrefs.SetString("playerSkillLevel",Player.instance.OutputSkillLevel());
 		// Debug.LogFormat("playerSkillLevel:{0}",PlayerPrefs.GetString("playerSkillLevel"));
 		//保存玩家技能熟练度
 		// PlayerPrefs.SetString("playerSkillProficiency",Player.instance.OutputSkillProficiency());

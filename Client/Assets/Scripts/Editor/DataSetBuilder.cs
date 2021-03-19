@@ -7,26 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace EditorTool {
-    public class AssetsItemBuild : Editor {
- 
-        [MenuItem("生成表格数据/AssetsType表")]
-        public static void CreateItemAsset() {
-            AssetsItemDataSet manager = ScriptableObject.CreateInstance<AssetsItemDataSet>();
-            //赋值
-            ExcelTool.CreateItemArrayWithExcel(ExcelConfig.excelsFolderPath + "AssetsType.xlsx","AssetsItem");
-            manager.dataArray = ExcelTool.GetAssetsItemArray();
-            //确保文件夹存在
-            if(!Directory.Exists(ExcelConfig.assetPath)) {
-                Directory.CreateDirectory(ExcelConfig.assetPath);
-            } 
-            //asset文件的路径 要以"Assets/..."开始，否则CreateAsset会报错
-            string assetPath = string.Format("{0}{1}.asset", ExcelConfig.assetPath, "AssetsItem");
-            //生成一个Asset文件
-            AssetDatabase.CreateAsset(manager, assetPath);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-        }
-    }
+    
     public class CharacterBuild : Editor {
  
         [MenuItem("生成表格数据/Character表")]
@@ -48,27 +29,7 @@ namespace EditorTool {
             AssetDatabase.Refresh();
         }
     }
-    public class AbyssGroupBuild : Editor {
- 
-        [MenuItem("生成表格数据/AbyssGroup表")]
-        public static void CreateItemAsset() {
-            AbyssGroupDataSet manager = ScriptableObject.CreateInstance<AbyssGroupDataSet>();
-            //赋值
-            ExcelTool.CreateItemArrayWithExcel(ExcelConfig.excelsFolderPath + "AbyssGroup.xlsx","AbyssGroup");
-            manager.dataArray = ExcelTool.GetAbyssGroupArray();
-            //确保文件夹存在
-            if(!Directory.Exists(ExcelConfig.assetPath)) {
-                Directory.CreateDirectory(ExcelConfig.assetPath);
-            }
- 
-            //asset文件的路径 要以"Assets/..."开始，否则CreateAsset会报错
-            string assetPath = string.Format("{0}{1}.asset", ExcelConfig.assetPath, "AbyssGroup");
-            //生成一个Asset文件
-            AssetDatabase.CreateAsset(manager, assetPath);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-        }
-    }
+    
     public class SkillBuild : Editor {
  
         [MenuItem("生成表格数据/Skill表")]
@@ -571,12 +532,9 @@ namespace EditorTool {
     public static void CreateAll()
     {
         Debug.Log("-----开始生成----");
-        AssetsItemBuild.CreateItemAsset();
         CharacterBuild.CreateItemAsset();
-        AbyssGroupBuild.CreateItemAsset();
         SkillBuild.CreateItemAsset();
         DropGroupBuild.CreateItemAsset();
-        DialogueBuild.CreateItemAsset();
         QuestionDataBuild.CreateItemAsset();
         QuestionDatabaseBuild.CreateItemAsset();
         MonsterTypeBuild.CreateItemAsset();
@@ -588,7 +546,6 @@ namespace EditorTool {
         SceneBuild.CreateItemAsset();
         GuildBuild.CreateItemAsset();
         BuffBuild.CreateItemAsset();
-        IdealBuild.CreateItemAsset();
         RelicGroupBuild.CreateItemAsset();
         ReformDataBuild.CreateItemAsset();
         AbilityBuild.CreateItemAsset();

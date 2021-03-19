@@ -114,6 +114,8 @@ public class SkillData{
     public int createCardChar;
     public int createCardType;
     public int keepManaCost;
+    public int critTriggerSkill;
+
 
 }
 [System.Serializable]
@@ -128,64 +130,7 @@ public class SummonData
     public int skill;
     
 }
-[System.Serializable]
-public class AssetsItemData
-{            
-    public int id;
-    public string name;
-    public string describe;
-    public string icon;
-    public int type;
-    public int equipType;
-    public int value;
-    public int hpBuffer;
-    public int mpBuffer;
-    public int dodgeBuffer;
-    public int toughBuffer;
-    public int resistance0;
-    public int resistance1;
-    public int resistance2;
-    public int resistance3;
-    public int resistance4;
-    public int resistance5;
-    public int resistance6;
-    public int resistance7;
-    public int valueGrow;
-    public int hpGrow;
-    public int mpGrow;
-    public int dodgeGrow;
-    public int toughGrow;
-    public int resistanceGrow;
-    public int skillBuffer;
-    public int skillBufferLevel;
-    public int skillBufferGrow;
-    public string unlockSkill;
-    public string buffList;
-    public int life;
-}
-[System.Serializable]
-public struct AbyssGroupData
-{            
-    public int id;
-    public string groupName;
-    public string describe;
-    public string icon;
-    public string background;
-    public int timeCost;
-    public int goldReward;
-    public int startLevel;
-    public int endLevel;
-    public int battles;
-    ///<summary>死亡率：百分比*100</summary>        
-    public int deathLevel;
-    public string monsterGroups;
-    public string relicGroupDistribution;
-    public string dropGropDistribution;
-    public string eventDistribution;
-    public int monsterLevelInterval;
-    public int bossLevelInterval;
-    public int monsterBasicLevel;
-}
+
 [System.Serializable]
 public class CharacterData
 {            

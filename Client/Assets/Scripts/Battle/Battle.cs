@@ -66,7 +66,7 @@ public class Battle : MonoBehaviour
             float critRate = playerActor.Crit+skill.exCrit;//某些技能拥有额外暴击率加成
             if(critRate>=Random.Range(0,101))
             {
-                damage=Mathf.CeilToInt(damage*1.5f);
+                damage=Mathf.CeilToInt(damage*skill.caster.critBonus);
                 crit =true;
                 //通知施法者已经暴击,暴击伤害为damage(未经削减的)
                 skill.caster.OnSkillHasCrit(skill,damage);

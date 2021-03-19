@@ -97,6 +97,9 @@ public class Buff
             case BuffType.影响补牌数量:
                 target.dealCardsNumber+=Mathf.FloorToInt(buffData.value);
             break;
+            case BuffType.影响暴击增益:
+                target.critBonus+=buffData.value;
+            break;
             case BuffType.引导能量:
                 target.ChannelSkill(buffData.value);
                 target.OnChannelSkillManaOut+=ChannelEnd;
@@ -117,15 +120,17 @@ public class Buff
                 target.AddCold(Mathf.FloorToInt(buffData.value));
             break;
             case BuffType.对目标造成伤害后触发技能:
-                target.target.OnTakeDamageAndReduceHP+=DamageTriggerSkill;
+                target.target.OnTakeDamageAndReduceHP+=BuffTriggerSkill;
             break;
             case BuffType.受到伤害后触发技能:
-                target.OnTakeDamageAndReduceHP+=DamageTriggerSkill;
+                target.OnTakeDamageAndReduceHP+=BuffTriggerSkill;
             break;
             case BuffType.影响能量回复速度:
                 target.autoReduceMPAmount+=buffData.value/5f;
             break;
-            
+            case BuffType.技能暴击后触发技能:
+                target.OnSkillHasCritEvent+=BuffTriggerSkill;
+            break;
         }
         
 
@@ -169,6 +174,9 @@ public class Buff
             break;
             case BuffType.影响暴击率:
                 target.Crit-=buffData.value;
+            break;
+            case BuffType.影响暴击增益:
+                target.critBonus-=buffData.value;
             break;
             case BuffType.影响全局能量消耗:
             {
@@ -225,10 +233,10 @@ public class Buff
                 target.OnChannelSkillManaOut-=ChannelEnd;
             break;
             case BuffType.对目标造成伤害后触发技能:
-                target.target.OnTakeDamageAndReduceHP-=DamageTriggerSkill;
+                target.target.OnTakeDamageAndReduceHP-=BuffTriggerSkill;
             break;
             case BuffType.受到伤害后触发技能:
-                target.OnTakeDamageAndReduceHP-=DamageTriggerSkill;
+                target.OnTakeDamageAndReduceHP-=BuffTriggerSkill;
             break;
             case BuffType.影响能量回复速度:
                 target.autoReduceMPAmount-=buffData.value/5f;
@@ -318,7 +326,7 @@ public class Buff
     {
         buffIcon.OnEffectEnd();
     }
-    void DamageTriggerSkill(int num)
+    void BuffTriggerSkill(int num)
     {
         Skill skill;
         if(buffData.value==0)
