@@ -387,7 +387,49 @@ public class SkillCard : MonoBehaviour
             skill.CheckBuffUpdate(false);
             HighLightCard(false);
         }
-        // RefeashCardShow();
+        RefeashCardShow();
+    }
+    public void CheckBuffCardWhileCreateCard()
+    {
+        if(skill.skillData.checkBuff==0)
+        {
+            return;
+        }
+        int num =0;
+        if(skill.skillData.checkSelf)
+        {
+            if(skill.caster.buffs.Count==0)
+            {
+                return;
+            }
+            for (int i = 0; i < skill.caster.buffs.Count; i++)
+            {
+                if(skill.caster.buffs[i].buffData.id==skill.skillData.checkBuff)
+                {
+                    num++;
+                }
+            }
+        }
+        else
+        {
+            if(skill.caster.target.buffs.Count==0)
+            {
+                return;
+            }
+            for (int i = 0; i < skill.caster.target.buffs.Count; i++)
+            {
+                if(skill.caster.target.buffs[i].buffData.id==skill.skillData.checkBuff)
+                {
+                    num++;
+                }
+            }
+        }
+        if(num>=skill.skillData.buffNumLimit)
+        {
+            skill.CheckBuffUpdate(true);
+            HighLightCard(true);
+            RefeashCardShow();
+        }
     }
     void HighLightCard(bool ifShow)//技能卡高亮显示
     {

@@ -1687,7 +1687,7 @@ public class Actor : MonoBehaviour
         //Buff叠加机制：相同id的buff，如果已达最大层数，只会刷新持续时间
         Debug.LogWarning("Actor.addBuff:"+buff.buffData.id);
         int buffNum =0;
-        // bool ifMax=false;
+        bool ifMax=false;
         // Buff tempBUff =null;
         List<Buff> tempList =new List<Buff>();
         foreach (var item in buffs)
@@ -1716,11 +1716,7 @@ public class Actor : MonoBehaviour
             buffNum++;
             if(buffNum==buff.buffData.maxNum)
             {
-                //叠到最大层了
-                if(OnBuffMax!=null)
-                {
-                    OnBuffMax(buff);
-                }
+                ifMax =true;
             }
         }
         //已叠加到最大层
@@ -1736,7 +1732,7 @@ public class Actor : MonoBehaviour
         }
         else if(buff.buffData.maxNum>0&&buffNum>buff.buffData.maxNum)
         {
-            Debug.LogWarning("buff数量超了");
+            Debug.LogError("buff数量超了");
         }
         else//不能叠层，当有新的相同IDbuff时，会额外生成一个buff图标
         {
@@ -1771,11 +1767,16 @@ public class Actor : MonoBehaviour
             tempList[i].buffIcon.ResetTime();
         }
         buff.buffIcon.OnEffectBegin(buff);
-        // if(ifMax)
-        // {
-        //     //执行当达到最大层数后就xxx的事件
-        //     BuffManager.instance.OnBuffMax(buff);
-        // }
+        if(ifMax)
+        {
+            //执行当达到最大层数后就xxx的事件
+            if(OnBuffMax!=null)
+            {
+                OnBuffMax(buff);
+            }
+        }
+        
+                
     }
     #endregion
     public void ClearSummon()

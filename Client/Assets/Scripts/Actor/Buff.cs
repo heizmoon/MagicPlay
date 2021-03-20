@@ -135,11 +135,18 @@ public class Buff
                 target.OnActorHasHit+=BuffTriggerSkill;
             break;
             case BuffType.移除指定ID的BUFF:
-            for (int i = 0; i < buffData.value-1; i++)
+            Debug.Log("触发移除指定ID的Buff");
+            if(buffData.abilityID ==33)
+            {
+                target.AddCold(-(int)buffData.value);
+                break;
+            }
+            for (int i = 0; i < buffData.value; i++)
             {
                 Buff _buff = BuffManager.FindBuff(buffData.abilityID,target);
                 if(_buff!=null)
                 {
+                    Debug.Log("移除一层"+_buff.buffData.name);
                     _buff.OnBuffEnd();
                     if(_buff.buffIcon.buffs.Count==0)
                     {
@@ -153,7 +160,10 @@ public class Buff
             }
             break;
             case BuffType.BUFF叠加到最大层触发技能:
+                if(buffData.value==0)
                 target.OnBuffMax+=BuffMax;
+                else
+                target.target.OnBuffMax+=BuffMax;
             break;
         }
         
@@ -272,7 +282,10 @@ public class Buff
                 target.OnActorHasHit-=BuffTriggerSkill;
             break;
             case BuffType.BUFF叠加到最大层触发技能:
-                target.OnBuffMax-=BuffMax;
+                if(buffData.value==0)
+                target.OnBuffMax+=BuffMax;
+                else
+                target.target.OnBuffMax+=BuffMax;
             break;
             
         }
@@ -362,10 +375,21 @@ public class Buff
     void BuffTriggerSkill(int num)
     {
         Skill skill;
-        if(buffData.value==0)
-        skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+        if(num==-1)
+        {
+            if(buffData.value==0)
+            skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
+            else
+            skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+        }
         else
-        skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
+        {
+            if(buffData.value==0)
+            skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+            else
+            skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
+        }
+        
         skill.caster.OnSkillSpellFinish(skill);
         
         SkillCard.CardThrowCard(skill);
@@ -375,9 +399,10 @@ public class Buff
     }
     void BuffMax(Buff _buff)
     {
+        Debug.Log(_buff.buffData.name+"达到最大层");
         if(_buff.buffData.id == (int)buffData.effectInterval)
         {
-            BuffTriggerSkill(0);
+            BuffTriggerSkill(-1);
         }
     }
     public void RemoveSlef()

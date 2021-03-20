@@ -31,7 +31,6 @@ public class Skill : MonoBehaviour
     
     public bool ifActive;//是否为主动技能
     public int buffID;
-    public float CD;
     public Actor target;//技能的目标
     public Actor caster;//技能的释放者
     public Summoned casterSummon;
@@ -102,7 +101,6 @@ public class Skill : MonoBehaviour
         manaProduce =skillData.manaProduce;
         
         buffID =skillData.buffID;
-        CD= skillData.CD;
         ifActive =skillData.ifActive;
         damageDelay =damageDistribution.Split(',')[0]==""?0: float.Parse(damageDistribution.Split(',')[0]);
         orginSpellTime =spelllTime;
@@ -164,7 +162,6 @@ public class Skill : MonoBehaviour
         manaProduce =skillData.manaProduce;
         
         buffID =skillData.buffID;
-        CD= skillData.CD;
         ifActive =skillData.ifActive;
         damageDelay =damageDistribution.Split(',')[0]==""?0: float.Parse(damageDistribution.Split(',')[0]);
         orginSpellTime =spelllTime;
@@ -331,7 +328,6 @@ public class Skill : MonoBehaviour
             addCBBuff = false;
 
             buffed =false;
-
 
         }
         

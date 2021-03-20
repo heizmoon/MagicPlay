@@ -141,7 +141,7 @@ public class Summoned : MonoBehaviour
         //攻击动画，攻击特效
         animator.SetTrigger("Attack");
         CreateCastEffect(skill);
-        StartCoroutine(WaitForAttack(skill.CD,Power));
+        StartCoroutine(WaitForAttack(skill.damageDelay,Power));
     }
     void Attack(int num)
     {
@@ -149,7 +149,7 @@ public class Summoned : MonoBehaviour
         animator.SetTrigger("Attack");
         CreateCastEffect(skill);
         // Debug.Log("圣剑攻击！");
-        StartCoroutine(WaitForAttack(skill.CD,Power+num));
+        StartCoroutine(WaitForAttack(skill.damageDelay,Power+num));
     }
     IEnumerator WaitForAttack(float time,int num)
     {

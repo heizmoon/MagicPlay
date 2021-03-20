@@ -636,6 +636,7 @@ public class UIBattle : MonoBehaviour
         skill.realManaCost -=Player.instance.playerActor.cardMpReduce;
         skillCard.RefeashCardShow();
         allCards.Add(skillCard);
+        skillCard.CheckBuffCardWhileCreateCard();
         return skillCard;
     }
     public void CreateNewCardAndGiveToHand(int id)

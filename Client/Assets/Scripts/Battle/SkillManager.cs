@@ -289,7 +289,9 @@ public class SkillManager : MonoBehaviour
     //     }
     //     return abilities;
     // }
-  
+  /*获取技能卡的规则：
+  根据当前拥有的牌，选出最适合组成BUILD的牌
+  */
     public string GetInfo(int id ,string content)
     {
         foreach(var item in manager.dataArray)

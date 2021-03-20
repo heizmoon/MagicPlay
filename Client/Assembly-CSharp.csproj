@@ -63,8 +63,6 @@
      <Compile Include="Assets\Scripts\Actor\CharacterManager.cs" />
      <Compile Include="Assets\Scripts\Actor\ReformManager.cs" />
      <Compile Include="Assets\Scripts\Actor\TraitManager.cs" />
-     <Compile Include="Assets\Scripts\Ball.cs" />
-     <Compile Include="Assets\Scripts\BallManager.cs" />
      <Compile Include="Assets\Scripts\Battle\Battle.cs" />
      <Compile Include="Assets\Scripts\Battle\BattleText.cs" />
      <Compile Include="Assets\Scripts\Battle\EffectManager.cs" />
@@ -136,7 +134,6 @@
      <Compile Include="Assets\Scripts\UIS\UIOffLineRewards.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayer.cs" />
      <Compile Include="Assets\Scripts\UIS\UIRandomEvent.cs" />
-     <Compile Include="Assets\Scripts\UIS\UISkillButton.cs" />
      <Compile Include="Assets\Scripts\UIS\UIStatisticLine.cs" />
      <Compile Include="Assets\Scripts\UIS\UITrait.cs" />
      <Compile Include="Assets\Scripts\UIS\UITreasure.cs" />
