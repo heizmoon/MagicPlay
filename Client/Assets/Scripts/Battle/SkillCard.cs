@@ -121,16 +121,16 @@ public class SkillCard : MonoBehaviour
     }
     public void RefeashCardShow()
     {
-
-        textSkillDescribe.text =skill.describe;
-
         if(Player.instance.playerActor.basicAttack>0||skill.damage>skill.skillData.damage)
         skill.describe =string.Format(skill.skillData.describe,"<color=cyan>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=crit;{4}=hit;{5}=seep;{6}=fast
         else if(Player.instance.playerActor.basicAttack==0||skill.damage==skill.skillData.damage)
-        skill.describe =string.Format(skill.skillData.describe,"<color=white>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce));
+        {
+            // Debug.Log("技能显示恢复正常");
+            skill.describe =string.Format(skill.skillData.describe,"<color=white>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce));
+        }
         else
         skill.describe =string.Format(skill.skillData.describe,"<color=red>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce));
-
+        textSkillDescribe.text =skill.describe;
 
 
         textSkillCost.text =(skill.realManaCost+skill.skillData.keepManaCost).ToString();

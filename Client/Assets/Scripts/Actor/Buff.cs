@@ -135,29 +135,9 @@ public class Buff
                 target.OnActorHasHit+=BuffTriggerSkill;
             break;
             case BuffType.移除指定ID的BUFF:
-            Debug.Log("触发移除指定ID的Buff");
-            if(buffData.abilityID ==33)
-            {
-                target.AddCold(-(int)buffData.value);
-                break;
-            }
-            for (int i = 0; i < buffData.value; i++)
-            {
-                Buff _buff = BuffManager.FindBuff(buffData.abilityID,target);
-                if(_buff!=null)
-                {
-                    Debug.Log("移除一层"+_buff.buffData.name);
-                    _buff.OnBuffEnd();
-                    if(_buff.buffIcon.buffs.Count==0)
-                    {
-                        _buff.buffIcon.OnEffectEnd();
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            }
+            // Debug.Log("触发移除指定ID的Buff");
+            
+            BuffManager.instance.BuffRemoveBuff(this);
             break;
             case BuffType.BUFF叠加到最大层触发技能:
                 if(buffData.value==0)
@@ -318,6 +298,7 @@ public class Buff
         //移除自己----------??
         BuffManager.RemoveBuffFromActor(this,target);
     }
+    
     public void OnBuffInterval()
     {
 
@@ -340,6 +321,9 @@ public class Buff
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
             skill.damage =num*skill.tempDamage;
             skill.heal =num*skill.tempHeal;
+            skill.buffNum =num*skill.tempBuffNum;
+            Debug.Log("触发的技能"+skill.skillName+"buff层数"+skill.buffNum);
+            skill.CBBuffNum =num*skill.tempCBBuffNum;
             skill.caster.OnSkillSpellFinish(skill);
                 // skill.ComputeDamage();
             // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(currentValue),target,buffData._genreList[0]);
@@ -396,6 +380,8 @@ public class Buff
         SkillCard.CardCreateCard(skill);
         if(skill.usedChooseCard>0)
         UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+        Debug.LogWarning(buffData.name+"--暴击触发:"+skill.skillName);
+
     }
     void BuffMax(Buff _buff)
     {
@@ -436,6 +422,12 @@ public class Buff
         }
         
         target =null;
+    }
+    public void RemoveAllEvent()
+    {
+        // System.Reflection.EventInfo myEvent =
+       Debug.LogError(this.GetType().GetEvents().ToString());    
+        
     }
 
 }

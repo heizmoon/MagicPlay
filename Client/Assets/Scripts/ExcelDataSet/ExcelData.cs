@@ -74,6 +74,7 @@ public class SkillData{
     public float manaProduce;
     
     public int buffID;
+    public bool buffTarget;
     public int buffNum;
     ///<summry>使用后从本场战斗中移除</summary>
     public bool usedToRemove;
@@ -108,6 +109,7 @@ public class SkillData{
     public int CBManaCost;
     public float CBmanaProduce;
     public int CBBuff;
+    public bool CBBuffTarget;
     public int CBBuffNum;
     public int createCardNum;
     public int createCardID;

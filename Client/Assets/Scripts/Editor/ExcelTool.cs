@@ -795,41 +795,44 @@ namespace EditorTool {
                 skillData.manaProduce =collect[i][18].ToString()==""?0: float.Parse(collect[i][18].ToString());
 
                 skillData.buffID = collect[i][19].ToString()==""?0:int.Parse(collect[i][19].ToString());
-                skillData.buffNum = collect[i][20].ToString()==""?0:int.Parse(collect[i][20].ToString());
+                skillData.buffTarget = collect[i][20].ToString()=="1"?true:false;
+                skillData.buffNum = collect[i][21].ToString()==""?0:int.Parse(collect[i][21].ToString());
                 
-                skillData.usedToRemove = collect[i][21].ToString()=="1"?true:false;
-                skillData.usedChooseCard =collect[i][22].ToString()==""?0:int.Parse(collect[i][22].ToString());
-                skillData.usedThrowCard =collect[i][23].ToString()==""?0:int.Parse(collect[i][23].ToString());
-                skillData.updateID =collect[i][24].ToString()==""?0:int.Parse(collect[i][24].ToString());
-                skillData.ifSeep =collect[i][25].ToString()=="1"?true:false;
-                skillData.rank =collect[i][26].ToString()==""?0:int.Parse(collect[i][26].ToString());
-                skillData.summonType =collect[i][27].ToString()==""?0:int.Parse(collect[i][27].ToString());
-                skillData.summonNum =collect[i][28].ToString()==""?0:int.Parse(collect[i][28].ToString());
-                skillData.EUSDamage =collect[i][29].ToString()==""?0:int.Parse(collect[i][29].ToString());
-                skillData.EUSMP =collect[i][30].ToString()==""?0:int.Parse(collect[i][30].ToString());
-                skillData.EUSHeal =collect[i][31].ToString()==""?0:int.Parse(collect[i][31].ToString());
-                skillData.ELCDamage =collect[i][32].ToString()==""?0:int.Parse(collect[i][32].ToString());
-                skillData.ELCMP =collect[i][33].ToString()==""?0:int.Parse(collect[i][33].ToString());
-                skillData.ELCHeal =collect[i][34].ToString()==""?0:int.Parse(collect[i][34].ToString());
+                skillData.usedToRemove = collect[i][22].ToString()=="1"?true:false;
+                skillData.usedChooseCard =collect[i][23].ToString()==""?0:int.Parse(collect[i][23].ToString());
+                skillData.usedThrowCard =collect[i][24].ToString()==""?0:int.Parse(collect[i][24].ToString());
+                skillData.updateID =collect[i][25].ToString()==""?0:int.Parse(collect[i][25].ToString());
+                skillData.ifSeep =collect[i][26].ToString()=="1"?true:false;
+                skillData.rank =collect[i][27].ToString()==""?0:int.Parse(collect[i][27].ToString());
+                skillData.summonType =collect[i][28].ToString()==""?0:int.Parse(collect[i][28].ToString());
+                skillData.summonNum =collect[i][29].ToString()==""?0:int.Parse(collect[i][29].ToString());
+                skillData.EUSDamage =collect[i][30].ToString()==""?0:int.Parse(collect[i][30].ToString());
+                skillData.EUSMP =collect[i][31].ToString()==""?0:int.Parse(collect[i][31].ToString());
+                skillData.EUSHeal =collect[i][32].ToString()==""?0:int.Parse(collect[i][32].ToString());
+                skillData.ELCDamage =collect[i][33].ToString()==""?0:int.Parse(collect[i][33].ToString());
+                skillData.ELCMP =collect[i][34].ToString()==""?0:int.Parse(collect[i][34].ToString());
+                skillData.ELCHeal =collect[i][35].ToString()==""?0:int.Parse(collect[i][35].ToString());
 
-                skillData.exCrit =collect[i][35].ToString()==""?0:float.Parse(collect[i][35].ToString());
-                skillData.checkBuff =collect[i][36].ToString()==""?0:int.Parse(collect[i][36].ToString());
-                skillData.checkSelf = collect[i][37].ToString()=="1"?true:false;
-                skillData.buffNumLimit =collect[i][38].ToString()==""?0:int.Parse(collect[i][38].ToString());
-                skillData.CBDamage =collect[i][39].ToString()==""?0:int.Parse(collect[i][39].ToString());
-                skillData.CBHeal =collect[i][40].ToString()==""?0:int.Parse(collect[i][40].ToString());
-                skillData.CBSeep = collect[i][41].ToString()=="1"?true:false;
-                skillData.CBCrit =collect[i][42].ToString()==""?0:float.Parse(collect[i][42].ToString());
-                skillData.CBManaCost =collect[i][43].ToString()==""?0:int.Parse(collect[i][43].ToString());
-                skillData.CBmanaProduce =collect[i][44].ToString()==""?0:float.Parse(collect[i][44].ToString());
-                skillData.CBBuff =collect[i][45].ToString()==""?0:int.Parse(collect[i][45].ToString());
-                skillData.CBBuffNum =collect[i][46].ToString()==""?0:int.Parse(collect[i][46].ToString());
-                skillData.createCardNum =collect[i][47].ToString()==""?0:int.Parse(collect[i][47].ToString());
-                skillData.createCardID =collect[i][48].ToString()==""?0:int.Parse(collect[i][48].ToString());
-                skillData.createCardChar =collect[i][49].ToString()==""?0:int.Parse(collect[i][49].ToString());
-                skillData.createCardType =collect[i][50].ToString()==""?0:int.Parse(collect[i][50].ToString());
-                skillData.keepManaCost =collect[i][51].ToString()==""?0:int.Parse(collect[i][51].ToString());
-                skillData.critTriggerSkill =collect[i][52].ToString()==""?0:int.Parse(collect[i][52].ToString());
+                skillData.exCrit =collect[i][36].ToString()==""?0:float.Parse(collect[i][36].ToString());
+                skillData.checkBuff =collect[i][37].ToString()==""?0:int.Parse(collect[i][37].ToString());
+                skillData.checkSelf = collect[i][38].ToString()=="1"?true:false;
+                skillData.buffNumLimit =collect[i][39].ToString()==""?0:int.Parse(collect[i][39].ToString());
+                skillData.CBDamage =collect[i][40].ToString()==""?0:int.Parse(collect[i][40].ToString());
+                skillData.CBHeal =collect[i][41].ToString()==""?0:int.Parse(collect[i][41].ToString());
+                skillData.CBSeep = collect[i][42].ToString()=="1"?true:false;
+                skillData.CBCrit =collect[i][43].ToString()==""?0:float.Parse(collect[i][43].ToString());
+                skillData.CBManaCost =collect[i][44].ToString()==""?0:int.Parse(collect[i][44].ToString());
+                skillData.CBmanaProduce =collect[i][45].ToString()==""?0:float.Parse(collect[i][45].ToString());
+                skillData.CBBuff =collect[i][46].ToString()==""?0:int.Parse(collect[i][46].ToString());
+                skillData.CBBuffTarget = collect[i][47].ToString()=="1"?true:false;
+
+                skillData.CBBuffNum =collect[i][48].ToString()==""?0:int.Parse(collect[i][48].ToString());
+                skillData.createCardNum =collect[i][49].ToString()==""?0:int.Parse(collect[i][49].ToString());
+                skillData.createCardID =collect[i][50].ToString()==""?0:int.Parse(collect[i][50].ToString());
+                skillData.createCardChar =collect[i][51].ToString()==""?0:int.Parse(collect[i][51].ToString());
+                skillData.createCardType =collect[i][52].ToString()==""?0:int.Parse(collect[i][52].ToString());
+                skillData.keepManaCost =collect[i][53].ToString()==""?0:int.Parse(collect[i][53].ToString());
+                skillData.critTriggerSkill =collect[i][54].ToString()==""?0:int.Parse(collect[i][54].ToString());
 
 
                 array[i - 2] = skillData;

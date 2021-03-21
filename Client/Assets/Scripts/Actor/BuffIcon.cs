@@ -182,6 +182,7 @@ public class BuffIcon : MonoBehaviour
     }
     public void OnEffectReduce(int num)
     {
+        if(OnBuffAction!=null)
         OnBuffAction(buffID,"end",buffNum-num,buff.target.actorType);
     }
     public void ResetTime()

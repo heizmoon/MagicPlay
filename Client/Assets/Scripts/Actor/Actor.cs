@@ -1077,20 +1077,44 @@ public class Actor : MonoBehaviour
             //执行当技能命中目标时就xxx这类效果
             if(skill.buffID>0&&!skill.targetSelf)
             {
-                for (int i = 0; i < skill.skillData.buffNum; i++)//添加几层BUFF
+                if(!skill.skillData.buffTarget)
                 {
-                    BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target); 
-                    Debug.LogWarning("添加1层"+skill.buffID);
+                    for (int i = 0; i < skill.buffNum; i++)//添加几层BUFF
+                    {
+                        BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target); 
+                        Debug.LogWarning("给"+skill.target+"添加1层"+skill.buffID);
+                    }
                 }
+                else
+                {
+                    for (int i = 0; i < skill.buffNum; i++)//添加几层BUFF
+                    {
+                        BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target.target); 
+                        Debug.LogWarning("给"+skill.target.target+"添加1层"+skill.buffID);
+                    }
+                }
+                
             }
             //检查BUFF类的技能在有BUFF的情况下，添加额外BUFF
             if(skill.addCBBuff&&!skill.targetSelf)
             {
-                for (int i = 0; i < skill.skillData.CBBuffNum; i++)
+                if(!skill.skillData.CBBuffTarget)
                 {
-                    BuffManager.instance.CreateBuffForActor(skill.skillData.CBBuff,skill.target);
-                    Debug.LogWarning("CBBuff:额外给"+skill.target+"添加1层"+skill.skillData.CBBuff);      
+                    for (int i = 0; i < skill.CBBuffNum; i++)
+                    {
+                        BuffManager.instance.CreateBuffForActor(skill.skillData.CBBuff,skill.target);
+                        Debug.LogWarning("CBBuff:额外给"+skill.target+"添加1层"+skill.skillData.CBBuff);      
+                    }
                 }
+                else
+                {
+                    for (int i = 0; i < skill.CBBuffNum; i++)
+                    {
+                        BuffManager.instance.CreateBuffForActor(skill.skillData.CBBuff,skill.target.target);
+                        Debug.LogWarning("CBBuff:额外给"+skill.target.target+"添加1层"+skill.skillData.CBBuff);      
+                    }
+                }
+                
             }
             // Check1110(skill);
             //火系技能添加点燃buff
@@ -1471,12 +1495,24 @@ public class Actor : MonoBehaviour
         //有buff的技能加buff
         if(skill.buffID>0&&skill.targetSelf)
         {
-            for (int i = 0; i < skill.skillData.buffNum; i++)//添加几层buff
+            if(!skill.skillData.buffTarget)
             {
-                BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);  
-                // Debug.LogWarning("添加1层"+skill.buffID);     
+                for (int i = 0; i < skill.buffNum; i++)//添加几层buff
+                {
+                    BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);  
+                    // Debug.LogWarning("添加1层"+skill.buffID);     
+                }
+                Debug.LogWarning("给"+skill.target+"添加的buffid="+skill.buffID);
             }
-            Debug.LogWarning("添加的buffid="+skill.buffID);
+            else
+            {
+                for (int i = 0; i < skill.buffNum; i++)//添加几层buff
+                {
+                    BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target.target);  
+                    // Debug.LogWarning("添加1层"+skill.buffID);     
+                }
+                Debug.LogWarning("给"+skill.target.target+"添加的buffid="+skill.buffID);
+            }  
         }
         
         //魔力回复
@@ -1498,11 +1534,23 @@ public class Actor : MonoBehaviour
         //检查BUFF类的技能在有BUFF的情况下，添加额外BUFF
         if(skill.addCBBuff&&skill.targetSelf)
         {
-            for (int i = 0; i < skill.skillData.CBBuffNum; i++)
+            if(!skill.skillData.CBBuffTarget)
             {
-                BuffManager.instance.CreateBuffForActor(skill.skillData.CBBuff,skill.target); 
-                Debug.LogWarning("CBBuff:额外给"+skill.target+"添加1层"+skill.skillData.CBBuff);     
+                for (int i = 0; i < skill.CBBuffNum; i++)
+                {
+                    BuffManager.instance.CreateBuffForActor(skill.skillData.CBBuff,skill.target); 
+                    Debug.LogWarning("CBBuff:额外给"+skill.target+"添加1层"+skill.skillData.CBBuff);     
+                }
             }
+            else
+            {
+                for (int i = 0; i < skill.CBBuffNum; i++)
+                {
+                    BuffManager.instance.CreateBuffForActor(skill.skillData.CBBuff,skill.target.target); 
+                    Debug.LogWarning("CBBuff:额外给"+skill.target.target+"添加1层"+skill.skillData.CBBuff);     
+                }
+            }
+            
         }
         if(abilities.Contains(1))
         {
@@ -1547,6 +1595,8 @@ public class Actor : MonoBehaviour
         {
             MpCurrent+=num;
         }
+        int i =(int)(MpCurrent*100);
+        MpCurrent=i*0.01f;
         if(mpBar!=null)
         {
             mpBar.changeHPBar((int)MpCurrent,true);

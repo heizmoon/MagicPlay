@@ -31,6 +31,8 @@ public class Skill : MonoBehaviour
     
     public bool ifActive;//是否为主动技能
     public int buffID;
+    public int buffNum;
+    public int tempBuffNum;
     public Actor target;//技能的目标
     public Actor caster;//技能的释放者
     public Summoned casterSummon;
@@ -55,6 +57,8 @@ public class Skill : MonoBehaviour
     int tempMpCost;
     public int tempDamage;
     float tempManaProduce;
+    public int CBBuffNum;
+    public int tempCBBuffNum;
     public float exCrit; 
     public bool addCBBuff;
     bool buffed;//是否已经BUFF过了
@@ -101,6 +105,8 @@ public class Skill : MonoBehaviour
         manaProduce =skillData.manaProduce;
         
         buffID =skillData.buffID;
+        buffNum =skillData.buffNum;
+        CBBuffNum=skillData.CBBuffNum;
         ifActive =skillData.ifActive;
         damageDelay =damageDistribution.Split(',')[0]==""?0: float.Parse(damageDistribution.Split(',')[0]);
         orginSpellTime =spelllTime;
@@ -130,6 +136,9 @@ public class Skill : MonoBehaviour
         realManaCost = Mathf.FloorToInt(caster.MpMax*manaCostPercent+manaCost);
         tempMpCost =realManaCost;
         tempDamage =damage;
+        tempHeal =heal;
+        tempBuffNum =buffNum;
+        tempCBBuffNum =CBBuffNum;
         describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost)+skillData.keepManaCost,Mathf.Abs(manaProduce));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=crit;{4}=hit;{5}=seep;{6}=fast
     }
     public void InitSkill(int _id,Summoned summoned)//根据ID从技能表中读取技能,获取技能释放者
@@ -162,6 +171,8 @@ public class Skill : MonoBehaviour
         manaProduce =skillData.manaProduce;
         
         buffID =skillData.buffID;
+        buffNum =skillData.buffNum;
+        CBBuffNum=skillData.CBBuffNum;
         ifActive =skillData.ifActive;
         damageDelay =damageDistribution.Split(',')[0]==""?0: float.Parse(damageDistribution.Split(',')[0]);
         orginSpellTime =spelllTime;
@@ -184,6 +195,11 @@ public class Skill : MonoBehaviour
         //     ModiferCastSpeed();
         // }
         realManaCost = Mathf.FloorToInt(caster.MpMax*manaCostPercent+manaCost);
+        tempMpCost =realManaCost;
+        tempDamage =damage;
+        tempHeal =heal;
+        tempBuffNum =buffNum;
+        tempCBBuffNum =CBBuffNum;
         describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost)+skillData.keepManaCost,Mathf.Abs(manaProduce));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=crit;{4}=hit;{5}=seep;{6}=fast
     }
     void GetTarget(Actor actor)//获取目标和施法者

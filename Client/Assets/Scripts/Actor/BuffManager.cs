@@ -86,15 +86,39 @@ public class BuffManager : MonoBehaviour
         colors[1] =new Color(1,0,0);
         colors[2] =new Color(0,0,1);
     }
-    ///<summary>给指定的actor增加buff</summary>
-    void AddBuff(int id,Actor target)
+    ///<summary>用于BUFF触发移除另一个BUFF</summary>
+    public void BuffRemoveBuff(Buff buff)
     {
-
+        StartCoroutine(IEWaitForRemoveBuff(buff));
     }
-    ///<summary>直接给Player增加buff</summary>
-    void AddBuff(int id)
+    IEnumerator IEWaitForRemoveBuff(Buff buff)
     {
-
+        yield return new WaitForSeconds(0.1f);
+        if(buff.buffData.abilityID ==33)
+        {
+            buff.target.AddCold(-(int)buff.buffData.value);    
+        }
+        else
+        {
+            for (int i = 0; i < buff.buffData.value; i++)
+            {
+                Buff _buff = BuffManager.FindBuff(buff.buffData.abilityID,buff.target);
+                if(_buff!=null)
+                {
+                    Debug.Log("移除一层"+_buff.buffData.name);
+                    _buff.OnBuffEnd();
+                    if(_buff.buffIcon.buffs.Count==0)
+                    {
+                        _buff.buffIcon.OnEffectEnd();
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        
     }
     //思路：Player中仅记录BUFFID，在各处需要判断时，仅判断是否拥有此BUFFID即可
     //战斗时需要显示BUFF图标，显示BUFF预设效果，然后在数值计算时判断BUFFID
@@ -169,6 +193,7 @@ public class BuffManager : MonoBehaviour
             buff.buffIcon.buffs.Remove(buff);
         }
         // buff.RemoveSlef();
+        //--------------------------------------------此处需要移除BUFF绑定的所有事件！！！！！！！！           
         buff =null;
         // EffectManager.TryThrowInPool(buff.buffData.triggerEffect);
         //EffectManager.TryThrowInPool(buff.buffData.prefab,actor.castPoint);
@@ -177,20 +202,32 @@ public class BuffManager : MonoBehaviour
     ///<summary>移除角色身上所有buff</summary>
     public static void RemovePlayerActorAllBuff()
     {
-        for (int i = Player.instance.playerActor.buffs.Count-1; i >=0 ; i--)
+        // for (int i = Player.instance.playerActor.buffs.Count-1; i >=0 ; i--)
+        // {
+        //     BuffManager.RemoveBuffFromActor(Player.instance.playerActor.buffs[i],Player.instance.playerActor);
+        //     // Player.instance.playerActor.buffs[i].OnBuffEnd();
+        // }
+        while (Player.instance.playerActor.buffs.Count>0)
         {
-            BuffManager.RemoveBuffFromActor(Player.instance.playerActor.buffs[i],Player.instance.playerActor);
+            Player.instance.playerActor.buffs[0].OnBuffEnd();
         }
-        // Debug.LogWarning("剩余buff数量："+Player.instance.playerActor.buffs.Count);
+        Player.instance.playerActor.buffs.Clear();
+        Debug.LogWarning("RemovePlayerActorAllBuff::剩余buff数量："+Player.instance.playerActor.buffs.Count);
     }
     ///<summary>移除角色身上所有的buff</summary>
     public static void RemoveActorAllBuff(Actor actor)
     {
-        for (int i = actor.buffs.Count-1; i >=0 ; i--)
+        // for (int i = actor.buffs.Count-1; i >=0 ; i--)
+        // {
+        //     // if(Player.instance.playerActor.buffs[i].buffData.time!=0)
+        //     BuffManager.RemoveBuffFromActor(actor.buffs[i],actor);
+        //     // actor.buffs[i].OnBuffEnd();
+        // }
+        while (actor.buffs.Count>0)
         {
-            // if(Player.instance.playerActor.buffs[i].buffData.time!=0)
-            BuffManager.RemoveBuffFromActor(actor.buffs[i],actor);    
+            actor.buffs[0].OnBuffEnd();
         }
+        actor.buffs.Clear();
     }
     // public void OnBuffMax(Buff buff)
     // {
