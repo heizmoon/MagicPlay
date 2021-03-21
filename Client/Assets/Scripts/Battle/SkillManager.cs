@@ -65,7 +65,7 @@ public class SkillManager : MonoBehaviour
                 if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
                 {
                     list[item.rank].Add(item.id);
-                    Debug.Log("item.rank="+item.rank+",item.id="+item.id);
+                    // Debug.Log("item.rank="+item.rank+",item.id="+item.id);
                 }
             }
             charSkillDic.Add(i,list);
@@ -183,7 +183,7 @@ public class SkillManager : MonoBehaviour
                 if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
                 {
                     list[item.color].Add(item.id);
-                    Debug.Log("收录--角色["+i+"]的"+item.color+"牌列表：item.id="+item.id+","+item.name);
+                    // Debug.Log("收录--角色["+i+"]的"+item.color+"系牌列表：item.id="+item.id+","+item.name);
                 }
             }
             typeSkillDic.Add(i,list);

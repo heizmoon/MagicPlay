@@ -729,26 +729,6 @@ public class Actor : MonoBehaviour
             
             return false;
         }
-        #region 宝珠相关,已无用
-        //如果需要消耗宝珠，先检查宝珠的数量是否足够
-        // if(skill.needBallAmount>0)
-        // {
-        //     if(skill.dontNeedColor)
-        //     {
-        //         if(!BallManager.instance.CheckBallNumber(skill.needBallAmount))
-        //         {
-        //             return false;
-        //         }
-        //     }
-        //     else
-        //     {
-        //         if(!BallManager.instance.CheckBallNumber(skill.needBallColor,skill.needBallAmount))
-        //         {
-        //             return false;
-        //         }
-        //     }
-        // }
-        #endregion
         if(actorType ==ActorType.玩家角色&&skill.realManaCost+skill.skillData.keepManaCost>MpCurrent)//法力值不足
         {
             // Debug.LogFormat("魔法值不足,需要{0},当前为{1}",skill.realManaCost,MpCurrent);
@@ -796,42 +776,7 @@ public class Actor : MonoBehaviour
         
         //消耗MP，数值为技能所需
         AddMp(-skill.realManaCost);
-        #region 宝珠相关，以及其他废弃部分
-        // int costAmount =0;
-        // if(skill.needBallAmount>0)
-        // {
-        //     if(skill.dontNeedColor)
-        //     {
-                
-        //     }
-        //     else
-        //     {
-        //         costAmount =BallManager.instance.CostBalls(skill.needBallColor);
-        //     }
-        // }
-        // BallManager.instance.CreateNewBall(skill.amount,(BallColor)skill.color);
-        // costAmount+=BallManager.instance.CostBalls();
-        // Debug.Log("costAmout:"+costAmount);
         
-        //检查消耗宝珠能力
-
-        // if(Main.instance.UIState <=0)
-        // {
-        //     //调整施法时间
-        //     // skill.ModiferCastSpeed();
-        //     //2.消耗MP，数值为技能所需
-            
-            
-        //     //3.施法条开始自行运动
-        //     // castingbar.changeHPBar(skill.spelllTime+0f);
-        // }
-        // else
-        // {
-        //     timer.start(skill.spelllTime,OnPracticeTimerComplete);
-        // }
-        //4.设置角色状态为casting
-        // animState=AnimState.casting;
-        #endregion
         //5.创建施法特效
         // CreateSpellEffect(skill);
         CreateCastEffect(skill);
@@ -1108,7 +1053,7 @@ public class Actor : MonoBehaviour
         //技能暴击触发另一个技能
         if(skill.skillData.critTriggerSkill>0)
         {
-            Skill skill1 = SkillManager.TryGetFromPool(41,this);
+            Skill skill1 = SkillManager.TryGetFromPool(skill.skillData.critTriggerSkill,this);
             OnSkillSpellFinish(skill1);
             SkillCard.CardThrowCard(skill);
             SkillCard.CardCreateCard(skill);
@@ -1143,7 +1088,8 @@ public class Actor : MonoBehaviour
             {
                 for (int i = 0; i < skill.skillData.CBBuffNum; i++)
                 {
-                    BuffManager.instance.CreateBuffForActor(skill.skillData.CBBuff,skill.target);      
+                    BuffManager.instance.CreateBuffForActor(skill.skillData.CBBuff,skill.target);
+                    Debug.LogWarning("CBBuff:额外给"+skill.target+"添加1层"+skill.skillData.CBBuff);      
                 }
             }
             // Check1110(skill);
@@ -1528,7 +1474,7 @@ public class Actor : MonoBehaviour
             for (int i = 0; i < skill.skillData.buffNum; i++)//添加几层buff
             {
                 BuffManager.instance.CreateBuffForActor(skill.buffID,skill.target);  
-                Debug.LogWarning("添加1层"+skill.buffID);     
+                // Debug.LogWarning("添加1层"+skill.buffID);     
             }
             Debug.LogWarning("添加的buffid="+skill.buffID);
         }
@@ -1555,7 +1501,7 @@ public class Actor : MonoBehaviour
             for (int i = 0; i < skill.skillData.CBBuffNum; i++)
             {
                 BuffManager.instance.CreateBuffForActor(skill.skillData.CBBuff,skill.target); 
-                Debug.LogWarning("添加1层"+skill.buffID);     
+                Debug.LogWarning("CBBuff:额外给"+skill.target+"添加1层"+skill.skillData.CBBuff);     
             }
         }
         if(abilities.Contains(1))
@@ -1685,7 +1631,7 @@ public class Actor : MonoBehaviour
     {
         // if(!buffs.Contains(buff))
         //Buff叠加机制：相同id的buff，如果已达最大层数，只会刷新持续时间
-        Debug.LogWarning("Actor.addBuff:"+buff.buffData.id);
+        // Debug.LogWarning("Actor.addBuff:"+buff.buffData.id);
         int buffNum =0;
         bool ifMax=false;
         // Buff tempBUff =null;

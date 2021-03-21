@@ -171,7 +171,7 @@ public class BuffIcon : MonoBehaviour
         // {
         //     BuffManager.RemoveBuffFromActor(buffs[0],buffs[0].target);
         // }
-        Debug.LogWarningFormat("移除{0}个,共有{1}个",num,buffs.Count+num);
+        // Debug.LogWarningFormat("移除{0}个,共有{1}个",num,buffs.Count+num);
 
         EffectManager.TryThrowInPool(effect,true);
         if(OnBuffAction!=null)

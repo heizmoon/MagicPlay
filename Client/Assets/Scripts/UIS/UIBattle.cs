@@ -13,7 +13,6 @@ public class UIBattle : MonoBehaviour
     public Actor Enemy;
     ///<summary>战斗场景</summary>
     public GameObject scene;
-    //public UISkillButton[] BTNSkill;//技能1按钮
     public HPBar EnemyHP;
     public HPBar PlayerHP;
     Timer timer;
