@@ -16,12 +16,12 @@ public class Skill : MonoBehaviour
     
     public float manaCostPercent;
     public int damage;//伤害值
-    public int basicAttack;//基础攻击力倍数
+    public int addArmor;//增加护甲值
     public float damagePercent;
     string damageDistribution;
     
     
-    public int color;//法术类系
+    public int type;//法术类系
     public int heal;
     public int tempHeal;
     
@@ -59,6 +59,7 @@ public class Skill : MonoBehaviour
     float tempManaProduce;
     public int CBBuffNum;
     public int tempCBBuffNum;
+    public int tempArmor;
     public float exCrit; 
     public bool addCBBuff;
     bool buffed;//是否已经BUFF过了
@@ -95,10 +96,10 @@ public class Skill : MonoBehaviour
         
         
         damage = skillData.damage;
-        basicAttack =skillData.basicAttack;
+        addArmor =skillData.addArmor;
         damagePercent =skillData.damagePercent;
         damageDistribution = skillData.damageDistribution;
-        color =skillData.color;
+        type =skillData.type;
         heal = skillData.heal;
         
         targetSelf =skillData.targetSelf;
@@ -137,9 +138,10 @@ public class Skill : MonoBehaviour
         tempMpCost =realManaCost;
         tempDamage =damage;
         tempHeal =heal;
+        tempArmor= addArmor;
         tempBuffNum =buffNum;
         tempCBBuffNum =CBBuffNum;
-        describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost)+skillData.keepManaCost,Mathf.Abs(manaProduce));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=crit;{4}=hit;{5}=seep;{6}=fast
+        describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost)+skillData.keepManaCost,Mathf.Abs(manaProduce),Mathf.Abs(addArmor));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
     }
     public void InitSkill(int _id,Summoned summoned)//根据ID从技能表中读取技能,获取技能释放者
     {
@@ -161,10 +163,10 @@ public class Skill : MonoBehaviour
         
         
         damage = skillData.damage;
-        basicAttack =skillData.basicAttack;
+        addArmor =skillData.addArmor;
         damagePercent =skillData.damagePercent;
         damageDistribution = skillData.damageDistribution;
-        color =skillData.color;
+        type =skillData.type;
         heal = skillData.heal;
         
         targetSelf =skillData.targetSelf;
@@ -198,9 +200,10 @@ public class Skill : MonoBehaviour
         tempMpCost =realManaCost;
         tempDamage =damage;
         tempHeal =heal;
+        tempArmor= addArmor;
         tempBuffNum =buffNum;
         tempCBBuffNum =CBBuffNum;
-        describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost)+skillData.keepManaCost,Mathf.Abs(manaProduce));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=crit;{4}=hit;{5}=seep;{6}=fast
+        describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost)+skillData.keepManaCost,Mathf.Abs(manaProduce),Mathf.Abs(addArmor));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
     }
     void GetTarget(Actor actor)//获取目标和施法者
     {
@@ -266,7 +269,7 @@ public class Skill : MonoBehaviour
         {
             float _time = distribution[i]==""?0:float.Parse(distribution[i].Split(',')[0]);
             float _percent = float.Parse(distribution[i].Split(',')[1]);
-            int realDamage = damage+basicAttack*caster.basicAttack+Mathf.FloorToInt(target.HpMax*damagePercent);
+            int realDamage = damage+Mathf.FloorToInt(target.HpMax*damagePercent);
             realDamage =Mathf.FloorToInt(realDamage*_percent);
             StartCoroutine(WaitForDamage(_time,realDamage,ifSeep));
             totalTime+=_time;
@@ -325,6 +328,7 @@ public class Skill : MonoBehaviour
             IncreaseHeal(skillData.CBHeal);
             ReduceMPCost(skillData.CBManaCost);
             IncreaseManaProduce(skillData.CBmanaProduce);
+            IncreaseArmor(skillData.CBArmor);
             ifSeep =skillData.CBSeep;
             exCrit +=skillData.CBCrit;
             if(skillData.CBBuff>0)
@@ -339,6 +343,7 @@ public class Skill : MonoBehaviour
             IncreaseHeal(-skillData.CBHeal);
             ReduceMPCost(-skillData.CBManaCost);
             IncreaseManaProduce(-skillData.CBmanaProduce);
+            IncreaseArmor(-skillData.CBArmor);
             ifSeep =skillData.ifSeep;
             exCrit -=skillData.CBCrit;
             addCBBuff = false;
@@ -372,6 +377,14 @@ public class Skill : MonoBehaviour
         heal =0;
         else
         heal =tempHeal;
+    }
+    public void IncreaseArmor(int num)
+    {
+        tempArmor +=num;
+        if(tempArmor<0)
+        addArmor =0;
+        else
+        addArmor =tempArmor;
     }
     public void IncreaseManaProduce(float num)
     {

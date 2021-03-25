@@ -14,6 +14,7 @@ public class ItemBox : MonoBehaviour
     public int price;
     Transform Titem;
     public int type;
+    public int contentType;
     GameObject skillMark;
     public Button button;
     public Text priceText;
@@ -39,6 +40,7 @@ public class ItemBox : MonoBehaviour
     public void Init(SkillData item)
     {
         type =1;
+        contentType =1;
         icon.gameObject.SetActive(false);
         SkillCard card= Instantiate((GameObject)Resources.Load("Prefabs/SkillCard")).GetComponent<SkillCard>();
         card.Init(item);
@@ -61,6 +63,7 @@ public class ItemBox : MonoBehaviour
         // skillMark.SetActive(false);
         
         type =2;
+        contentType =2;
         icon.sprite = Resources.Load<Sprite>("Texture/Ability/"+item.icon);
         itemName.text =item.name;
         textChange.text = item.describe;

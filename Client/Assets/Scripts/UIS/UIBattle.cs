@@ -77,7 +77,7 @@ public class UIBattle : MonoBehaviour
     {
         //调出设置界面
         //将游戏速度调整到0.001
-        Time.timeScale =0.01f;
+        Time.timeScale =0.001f;
         g_settingPannel.SetActive(true);
     }
     public void OnQuitSetting()
@@ -86,7 +86,11 @@ public class UIBattle : MonoBehaviour
         g_settingPannel.SetActive(false);
 
     }
-
+    public void OnQuitBattle()
+    {
+        Time.timeScale =1f;
+        BattleEnd(playerActor);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -538,7 +542,7 @@ public class UIBattle : MonoBehaviour
             if(cardsList.Count<1)
             {
                 //--------洗牌也没牌了，那就不抽了
-                Debug.LogError("没牌了!");
+                // Debug.LogError("没牌了!");
                 return;
             }
             // int r = Random.Range(0,cardsList.Count);

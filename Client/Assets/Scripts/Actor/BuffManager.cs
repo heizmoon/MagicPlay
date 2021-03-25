@@ -9,7 +9,7 @@ public enum BuffType
     昏迷 =1,
     间隔触发技能=2,
     影响攻击力 =3,
-    影响防御力 =4,
+    影响耐力 =4,
     ///<summary>value =要end的buffID,abilityID=要添加的buffID</summary>
     失去所有护甲后增减buff =5,
     百分比增减受到的伤害 =6,
@@ -193,7 +193,8 @@ public class BuffManager : MonoBehaviour
             buff.buffIcon.buffs.Remove(buff);
         }
         // buff.RemoveSlef();
-        //--------------------------------------------此处需要移除BUFF绑定的所有事件！！！！！！！！           
+        //--------------------------------------------此处需要移除BUFF绑定的所有事件！！！！！！！！
+        // buff.RemoveAllEvent();           
         buff =null;
         // EffectManager.TryThrowInPool(buff.buffData.triggerEffect);
         //EffectManager.TryThrowInPool(buff.buffData.prefab,actor.castPoint);

@@ -61,12 +61,12 @@ public class SkillData{
     public float CD;
     public bool ifActive;
     ///<summary>0=攻击牌，1=防御牌，2=装备牌，3=魔法牌</summary>
-    public int color;
+    public int type;
     public int heal;
     public int manaCost;
     
     public int damage;
-    public int basicAttack;
+    public int addArmor;
     public string damageDistribution;
     public float damagePercent;
     public bool targetSelf;
@@ -95,15 +95,20 @@ public class SkillData{
     public int EUSMP;
     ///<summary>每次使用治疗改变</summary>
     public int EUSHeal;
+    public int EUSArmor;
     public int ELCDamage;
     public int ELCMP;
     public int ELCHeal;
+    public int ELCArmor;
+
     public float exCrit;
     public int checkBuff;
     public bool checkSelf;
     public int buffNumLimit;
     public int CBDamage;
     public int CBHeal;
+    public int CBArmor;
+
     public bool CBSeep;
     public float CBCrit;
     public int CBManaCost;

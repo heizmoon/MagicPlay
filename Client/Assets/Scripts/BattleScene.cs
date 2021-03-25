@@ -11,6 +11,7 @@ public class BattleScene : MonoBehaviour
     int currentMonsterId;
     int currentSceneId;
     bool isBoss;
+    public bool ifLevelUp;
 
     void Awake()
     {

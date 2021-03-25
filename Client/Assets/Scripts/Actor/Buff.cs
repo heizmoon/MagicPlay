@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Reflection;
+
 
 public class Buff
 {
@@ -58,14 +60,14 @@ public class Buff
             target.basicAttack+=(int)buffData.value;
             Debug.LogWarning("增加了攻击力："+(int)buffData.value);
             break;
-            case BuffType.影响防御力:
-            target.basicDefence+=(int)buffData.value;
+            case BuffType.影响耐力:
+            target.AddStamina((int)buffData.value);
             break;
             case BuffType.数值吸收伤害:
-                target.armor+=Mathf.FloorToInt(buffData.value);
-                target.RefeashArmorAutoDecayTime();
-                // 如果身上有获得护甲后触发的buff，那么此时触发
-                BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(target,BuffType.获得护甲后触发技能);  
+            target.armor+=(int)buffData.value+target.basicDefence;
+            target.RefeashArmorAutoDecayTime();
+            // 如果身上有获得护甲后触发的buff，那么此时触发
+            BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(target,BuffType.获得护甲后触发技能);     
             break;
             case BuffType.影响闪避:
                 target.dodge+=buffData.value;
@@ -166,8 +168,8 @@ public class Buff
             case BuffType.影响攻击力:
             target.basicAttack-=(int)buffData.value;
             break;
-            case BuffType.影响防御力:
-            target.basicDefence-=(int)buffData.value;
+            case BuffType.影响耐力:
+            target.AddStamina(-(int)buffData.value);
             break;
             case BuffType.数值吸收伤害:
             //如果身上没有id为xxx的buff（护甲持续时间变永久），那么护甲类buff时间到之后将会移除护甲
@@ -423,11 +425,54 @@ public class Buff
         
         target =null;
     }
-    public void RemoveAllEvent()
-    {
-        // System.Reflection.EventInfo myEvent =
-       Debug.LogError(this.GetType().GetEvents().ToString());    
-        
-    }
+    #region 移除事件相关
+//     public void RemoveAllEvent()
+//     {
+//         // System.Reflection.EventInfo myEvent =
+//         // Debug.LogError(this.GetType().GetEvents().ToString());    
+//         var events = this.GetType().GetEvents();
+//         if (events == null || events.Length < 1)
+//         {  
+//             return;
+//         }
+//         foreach (var info in events)
+//         {
+//             ClearEvents(this,info.Name);
+//         }
+
+//     }
+//     public static void ClearEvents(object objectHasEvents, string eventName)
+//     {  
+//         if (objectHasEvents == null)
+//         {  
+//             return;
+//         }  
+//         Delegate[] invokeList = GetObjectEventList(objectHasEvents, eventName);
+//         if (invokeList != null)
+//         {
+//             Type t = objectHasEvents.GetType();
+//             foreach (Delegate del in invokeList)
+//             {
+//                 t.GetEvent(eventName).RemoveEventHandler(objectHasEvents, del);
+//             }
+//         }
+//     }
+// private static Delegate[] GetObjectEventList(object p_Object, string p_EventName)
+// {
+// 	FieldInfo _Field = p_Object.GetType().GetField(p_EventName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static);
+// 	if (_Field == null)
+// 	{
+// 		return null;
+// 	}
+// 	object _FieldValue = _Field.GetValue(p_Object);
+// 	if (_FieldValue != null && _FieldValue is Delegate)
+// 	{
+// 		Delegate _ObjectDelegate = (Delegate)_FieldValue;
+// 		return _ObjectDelegate.GetInvocationList();
+// 	}
+// 	return null;
+// }
+#endregion
+
 
 }

@@ -45,12 +45,23 @@ public class Map : MonoBehaviour
         {
             item.Refresh();
         }
+        if(BattleScene.instance.ifLevelUp)
+        {
+            Player.instance.playerActor.LevelUp();
+            BattleScene.instance.ifLevelUp =false;
+            // UIBasicBanner.instance.F_LevelUp.SetActive(true);
+            UIBasicBanner.instance.ShowNewTalent();
+        }
     }
     public void MoveLocal(MapPoint point)
     {
         local.DOLocalMove(point.transform.localPosition,0.75f,false);
         Refresh();
         BattleScene.instance.steps++;
+        if(BattleScene.instance.steps%Configs.instance.levelUpNeedSteps==0)
+        {
+           BattleScene.instance.ifLevelUp = true; 
+        }
         StartCoroutine(WaitForPoint(point));
     }
     IEnumerator WaitForPoint(MapPoint point)

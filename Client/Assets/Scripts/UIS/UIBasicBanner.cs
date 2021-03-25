@@ -10,6 +10,15 @@ public class UIBasicBanner : MonoBehaviour
     public Toggle T_CardGroup;
     public Toggle T_AbilityGroup;
     public Toggle T_Map;
+    public Toggle T_Talent;
+    public GameObject talent_new;
+    public GameObject F_LevelUp;
+    Button BTN_LevelUp;
+    Text text_level;
+    Text text_attack;
+    Text text_defence;
+
+
     public Text textMap;
 
     Transform T_up;
@@ -23,6 +32,13 @@ public class UIBasicBanner : MonoBehaviour
     void Start()
     {
         goldText =transform.Find("up/goldText").GetComponent<Text>();
+        F_LevelUp =transform.Find("LevelUpFrame").gameObject;
+        BTN_LevelUp =transform.Find("LevelUpFrame/Button").GetComponent<Button>();
+        text_level =transform.Find("LevelUpFrame/LevleText").GetComponent<Text>();
+        text_attack =transform.Find("LevelUpFrame/AttackText").GetComponent<Text>();
+        text_defence =transform.Find("LevelUpFrame/DefenceText").GetComponent<Text>();
+
+        F_LevelUp.SetActive(false);
         RegisterButton();
     }
     
@@ -42,6 +58,8 @@ public class UIBasicBanner : MonoBehaviour
         T_CardGroup.onValueChanged.AddListener(isOn => OpenUICardGroup(T_CardGroup.isOn));
         T_AbilityGroup.onValueChanged.AddListener(isOn => OpenUIAbilityGroup(T_AbilityGroup.isOn));
         T_Map.onValueChanged.AddListener(isOn => OpenUIMap(T_Map.isOn));
+        T_Talent.onValueChanged.AddListener(isOn => OpenUITalent(T_Talent.isOn));
+        BTN_LevelUp.onClick.AddListener(CloseLevelUpFrame);
     }
     void OpenUICardGroup(bool IsOn)
     {
@@ -145,5 +163,29 @@ public class UIBasicBanner : MonoBehaviour
         {
             Map.instance.gameObject.SetActive(false);
         }
+    }
+    void OpenUITalent(bool IsOn)
+    {
+        if(IsOn)
+        {
+            talent_new.SetActive(false);    
+        }
+        else
+        {
+            
+        }
+    }
+    public void ShowNewTalent()
+    {
+        talent_new.SetActive(true);
+        F_LevelUp.SetActive(true);
+        text_level.text =string.Format("Lv{0}→Lv{1}",Player.instance.playerActor.level-1,Player.instance.playerActor.level);
+        text_attack.text =string.Format("攻击力:{0}→{1}",Player.instance.playerActor.basicAttack-1,Player.instance.playerActor.basicAttack);
+        text_defence.text =string.Format("防御力:{0}→{1}",Player.instance.playerActor.basicDefence-1,Player.instance.playerActor.basicDefence);
+
+    }
+    void CloseLevelUpFrame()
+    {
+        F_LevelUp.SetActive(false);
     }
 }

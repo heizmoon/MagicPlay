@@ -128,9 +128,7 @@ public class BuffIcon : MonoBehaviour
     }
     public void OnEffectEnd()
     {
-        stop =true;
-        int num=0;
-        
+        stop =true;        
         // if(buffID==2002)
         // {
         //     Debug.LogWarning("移除buff2002");
@@ -139,29 +137,31 @@ public class BuffIcon : MonoBehaviour
         {
             return;
         }
-        for (int i = buffs.Count-1; i >=0;i--)
-        {
-            num++;
-            if(buffs[i] ==null)
+        while(buffs.Count>0)
+        { 
+            if(buffs[0] ==null)
             {
-                buffs.Remove(buffs[i]);
+                buffs.Remove(buffs[0]);
                 continue;
             }
-            if(buffs[i]!=null)
+            if(buffs[0]!=null)
             {   
-                if(buffs[i].childrenBuffs!=null)
+                if(buffs[0].childrenBuffs!=null)
                 {
-                    for (int j = 0; j < buffs[i].childrenBuffs.Count; j++)
+                    // while(buffs[0].childrenBuffs.Count>0)
+                    for (int i = 0; i < buffs[0].childrenBuffs.Count; i++)
                     {
-                        if(buffs[i].childrenBuffs[j]!=null&&buffs[i].childrenBuffs[j].buffIcon!=null)
-                        buffs[i].childrenBuffs[j].buffIcon.OnEffectEnd();   
+                        if(buffs[0].childrenBuffs[i]!=null&&buffs[0].childrenBuffs[i].buffIcon!=null)
+                        buffs[0].childrenBuffs[i].buffIcon.OnEffectEnd();
+                        else
+                        buffs[0].childrenBuffs[i].OnBuffEnd();   
                     }
                 }
                 // if(buffID==15)
                 // {
                 //     Debug.LogWarning("end了几次？"+buffs.Count);
                 // }
-                buffs[i].OnBuffEnd();
+                buffs[0].OnBuffEnd();
 
                 // buffs.Remove(buffs[i]);
             }
@@ -176,7 +176,7 @@ public class BuffIcon : MonoBehaviour
         EffectManager.TryThrowInPool(effect,true);
         if(OnBuffAction!=null)
         {
-            OnBuffAction(buffID,"end",buffNum-num,buff.target.actorType);
+            OnBuffAction(buffID,"end",0,buff.target.actorType);
         }
         Destroy(this.gameObject);
     }

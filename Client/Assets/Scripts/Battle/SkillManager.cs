@@ -182,7 +182,7 @@ public class SkillManager : MonoBehaviour
             {
                 if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
                 {
-                    list[item.color].Add(item.id);
+                    list[item.type].Add(item.id);
                     // Debug.Log("收录--角色["+i+"]的"+item.color+"系牌列表：item.id="+item.id+","+item.name);
                 }
             }
@@ -291,6 +291,18 @@ public class SkillManager : MonoBehaviour
     // }
   /*获取技能卡的规则：
   根据当前拥有的牌，选出最适合组成BUILD的牌
+  计算出当前牌的Build值
+  例如 
+    牌  Build值
+    A   1
+    B   1
+    C   2
+    1:2,2:1
+    3:2:1:..
+    核心牌
+    每张牌从哪个流派列表中随机
+    list 12345 weight 
+    → 
   */
     public string GetInfo(int id ,string content)
     {
@@ -307,7 +319,7 @@ public class SkillManager : MonoBehaviour
                     // Debug.LogFormat("内容:{0}",item.describe);
                     break;
                     case "genre":
-                    return item.color.ToString();
+                    return item.type.ToString();
                     case "icon":
                     return item.icon;
                     case "ifActive":
@@ -336,7 +348,7 @@ public class SkillManager : MonoBehaviour
             return;
         }
         //必须是X系技能
-        if(needGenres!=null &&!needGenres.Contains(skill.color))
+        if(needGenres!=null &&!needGenres.Contains(skill.type))
         {
             return;
         }
@@ -472,7 +484,7 @@ public class SkillManager : MonoBehaviour
             return 0;
         }
         //必须是X系技能
-        if(needGenres!=null &&!needGenres.Contains(skill.color))
+        if(needGenres!=null &&!needGenres.Contains(skill.type))
         {
             return 0;
         }

@@ -81,7 +81,7 @@ public class Battle : MonoBehaviour
                 return;
             }
             Statistic(skill,damage);//伤害统计
-            ExportDamage(damage,skill.target,crit,skill.color,ifRebound,ifSeep,skill);
+            ExportDamage(damage,skill.target,crit,skill.type,ifRebound,ifSeep,skill);
             if(ifRebound)
             {
                 // Debug.LogWarningFormat("{0}反弹伤害：{1}点,目标是：{2}",skill.skillName,damage,skill.target.name);
@@ -139,7 +139,7 @@ public class Battle : MonoBehaviour
         // damage +=tempd;
         foreach (var item in skill.caster.buffs)
         {
-            if(item.buffData._type == BuffType.数值增减附加的伤害 && item.buffData._genreList.Contains(skill.color))
+            if(item.buffData._type == BuffType.数值增减附加的伤害 && item.buffData._genreList.Contains(skill.type))
             {
                 damage+=Mathf.CeilToInt(item.currentValue);
             }

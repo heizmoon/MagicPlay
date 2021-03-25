@@ -30,6 +30,7 @@ public class Actor : MonoBehaviour
     public float Crit;
     public float dodge;
     public float critBonus =1.5f;
+    ///<summary>获得护甲时，提高获得的护甲值</summary>
     public Transform spellPoint;
     public Transform castPoint;
     public Transform hitPoint;
@@ -74,7 +75,8 @@ public class Actor : MonoBehaviour
     bool ifArmorAutoDecay =true;
 
     public int basicAttack;
-    public int basicDefence;
+    public int basicDefence =0;
+    public int Stamina;
     public float initialMP=0;
     public int cardMpReduce =0;
     public float SummonedLifeTimePlus=0;
@@ -153,6 +155,7 @@ public class Actor : MonoBehaviour
         HpCurrent =HpMax;
         autoReduceMPAmount =character.reMP;
         Crit = character.crit;
+        level =1;
         SetBasicAttack();
         // UsingSkillsID =data.skills;
         string[] str =character.data.skills.Split(',');
@@ -331,6 +334,12 @@ public class Actor : MonoBehaviour
         armor +=number;
         if(armor<0)
         armor =0;
+    }
+    public void AddStamina(int number)
+    {
+        Stamina+=number;
+        if(Stamina<0)
+        Stamina=0;
     }
 
     //在牌堆中增加一张牌(本局游戏永久)
@@ -1031,25 +1040,7 @@ public class Actor : MonoBehaviour
     public void OnSkillHasCrit(Skill skill, int damage)//通知角色技能暴击，暴击伤害为damage
     {
         //执行当技能产生暴击时就xxx这类效果
-        //暴击检查点燃Buff 和 燃爆 等级,满足条件造成燃爆伤害
-        // SkillManager.CheckSkillToTriggerNewSkill(skill,1112,null,new List<int>(){1},null,new List<int>(){4},false);
-        //添加点燃buff
-        
-        // SkillManager.CheckSkillOnHitToAddBuff(skill,1110,4);
-        
-        // if(BuffManager.FindBuff(1024,this)!=null)// 如果身上有水晶剑:1024,那么给自己添加[兴奋buff]:1023
-        // {
-        //     BuffManager.instance.CreateBuffForActor(1023,skill.caster);
-        // }
-        // if(BuffManager.FindBuff(1028,this)!=null)//如果身上有英勇斗篷：1028，则回复1点能量
-        // {
-        //     AddMp(1f);
-        // }
-        // if(BuffManager.FindBuff(1029,this)!=null)//如果身上有冲锋面罩：1029，则回复1点生命
-        // {
-        //     Skill skill1 = SkillManager.TryGetFromPool(41,this);
-        //     OnSkillSpellFinish(skill1);
-        // }
+
         //技能暴击触发另一个技能
         if(skill.skillData.critTriggerSkill>0)
         {
@@ -1073,6 +1064,14 @@ public class Actor : MonoBehaviour
             if(skill.id==29)
             {
                 Debug.LogWarning("该打晕了");
+            }
+            //增加护甲
+            if(skill.addArmor>0)
+            {
+                skill.target.armor+=skill.addArmor+basicDefence;
+                skill.target.RefeashArmorAutoDecayTime();
+                // 如果身上有获得护甲后触发的buff，那么此时触发
+                BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(skill.target,BuffType.获得护甲后触发技能);
             }
             //执行当技能命中目标时就xxx这类效果
             if(skill.buffID>0&&!skill.targetSelf)
@@ -1156,8 +1155,8 @@ public class Actor : MonoBehaviour
             OnActorHasHit(0);
         }
         //基础防御力减免
-        if(num-basicDefence>0)
-        num-=basicDefence;
+        if(num-Stamina>0)
+        num-=Stamina;
         else
         num = 0;
         #region 旧版反弹伤害
@@ -1492,6 +1491,14 @@ public class Actor : MonoBehaviour
         //有治疗的技能产生治疗
         if(skill.heal!=0)
         skill.ComputeHeal();
+        //增加护甲
+        if(skill.addArmor>0)
+        {
+            skill.target.armor+=skill.addArmor+basicDefence;
+            skill.target.RefeashArmorAutoDecayTime();
+            // 如果身上有获得护甲后触发的buff，那么此时触发
+            BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(skill.target,BuffType.获得护甲后触发技能);
+        }
         //有buff的技能加buff
         if(skill.buffID>0&&skill.targetSelf)
         {
@@ -1554,7 +1561,7 @@ public class Actor : MonoBehaviour
         }
         if(abilities.Contains(1))
         {
-            if(skill.color ==2)
+            if(skill.type ==2)
             {
                 autoReduceMPAmount+=0.2f;
             }
@@ -1792,6 +1799,12 @@ public class Actor : MonoBehaviour
     {
         if(OnUpdateSummonedLifeTime!=null)
         OnUpdateSummonedLifeTime(num);
+    }
+    public void LevelUp()
+    {
+        basicAttack+=Configs.instance.levelUpAddAttack;
+        basicDefence+=Configs.instance.levelUpAddDefence;
+        level++;
     }
     
 }

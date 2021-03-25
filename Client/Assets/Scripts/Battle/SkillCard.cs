@@ -18,7 +18,7 @@ public class SkillCard : MonoBehaviour
     Text textSkillCost;
     public bool canShow;
     public GameObject _hightLight;
-    
+    bool _enable;
     void Awake()
     {
         button =GetComponent<Button>();
@@ -39,19 +39,19 @@ public class SkillCard : MonoBehaviour
         skill.skillCard =this;
         textSkillName.text =skill.skillName;
         RefeashCardShow();
-        if(skill.color ==0)
+        if(skill.type ==0)
         {
             backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Attack");
         }
-        else if(skill.color ==1)
+        else if(skill.type ==1)
         {
             backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Defence");
         }
-        else if(skill.color ==2)
+        else if(skill.type ==2)
         {
             backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Equipment");
         }
-        else if(skill.color ==3)
+        else if(skill.type ==3)
         {
             backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Special");
         }
@@ -82,21 +82,22 @@ public class SkillCard : MonoBehaviour
     public void Init(SkillData skillData)
     {
         textSkillName.text =skillData.name;
-        textSkillDescribe.text =string.Format(skillData.describe,skillData.damage,skillData.manaCost,skillData.manaProduce);
+        textSkillDescribe.text =string.Format(skillData.describe,skillData.damage+Player.instance.playerActor.basicAttack,
+                                skillData.manaCost,skillData.manaProduce,skillData.addArmor+Player.instance.playerActor.basicDefence);
         textSkillCost.text =skillData.manaCost.ToString();
-        if(skillData.color ==0)
+        if(skillData.type ==0)
         {
             backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Attack");
         }
-        else if(skillData.color ==1)
+        else if(skillData.type ==1)
         {
             backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Defence");
         }
-        else if(skillData.color ==2)
+        else if(skillData.type ==2)
         {
             backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Equipment");
         }
-        else if(skillData.color ==3)
+        else if(skillData.type ==3)
         {
             backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Special");
         }
@@ -121,18 +122,22 @@ public class SkillCard : MonoBehaviour
     }
     public void RefeashCardShow()
     {
-        if(Player.instance.playerActor.basicAttack>0||skill.damage>skill.skillData.damage)
-        skill.describe =string.Format(skill.skillData.describe,"<color=cyan>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=crit;{4}=hit;{5}=seep;{6}=fast
-        else if(Player.instance.playerActor.basicAttack==0||skill.damage==skill.skillData.damage)
+        if(skill.damage>skill.skillData.damage)
+        skill.describe =string.Format(skill.skillData.describe,"<color=cyan>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
+        else if(skill.damage==skill.skillData.damage)
         {
             // Debug.Log("技能显示恢复正常");
-            skill.describe =string.Format(skill.skillData.describe,"<color=white>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce));
+            skill.describe =string.Format(skill.skillData.describe,"<color=white>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence));
         }
         else
-        skill.describe =string.Format(skill.skillData.describe,"<color=red>"+Mathf.Abs(skill.damage)+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce));
+        skill.describe =string.Format(skill.skillData.describe,"<color=red>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence));
+        if(textSkillDescribe!=null)
         textSkillDescribe.text =skill.describe;
 
-
+        if(textSkillCost==null)
+        {
+            return;
+        }
         textSkillCost.text =(skill.realManaCost+skill.skillData.keepManaCost).ToString();
         if(skill.realManaCost==skill.skillData.manaCost)
         textSkillCost.color = Color.white;
@@ -170,6 +175,12 @@ public class SkillCard : MonoBehaviour
         }
         if(Player.instance.playerActor.WanaSpell(skill))
         {
+            //已经使用，不可再次点击
+            if(!_enable)
+            {
+                return;
+            }
+            _enable = false;
             //移除的技能移除
             if(skill.usedToRemove)
             RemoveCard();
@@ -294,6 +305,7 @@ public class SkillCard : MonoBehaviour
         // StartCoroutine(ThrowCardToHand());
         RefeashCardShow();
         StartCoroutine(SetCardPosition(delay));
+        _enable = true;
 
     }
     // IEnumerator IEThrowCardToHand()

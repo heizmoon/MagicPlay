@@ -12,6 +12,7 @@ public class UICardDetail : MonoBehaviour
     int type;
     ItemBox itemBox;
     Text describeText;
+    Transform needCloseButton;
     void Awake()
     {
         background =transform.Find("Background").gameObject.GetComponent<Button>();
@@ -25,7 +26,7 @@ public class UICardDetail : MonoBehaviour
         tempVector =target.localPosition;
         target.SetParent(point);
         target.localPosition =Vector3.zero;
-        target.localScale = new Vector3(2.5f,2.5f,2.5f);
+        target.localScale = new Vector3(2f,2f,2f);
         describeText =skillCard.textSkillDescribe;
         describeText.fontSize =15;
         describeText.lineSpacing =1.2f;
@@ -42,9 +43,17 @@ public class UICardDetail : MonoBehaviour
         target.SetParent(point);
         target.localPosition =Vector3.zero;
         target.localScale = new Vector3(2f,2f,2f);
-        describeText =itemBox.skillText;
-        describeText.fontSize =15;
-        describeText.lineSpacing =1.2f;
+        if(itemBox.contentType==1)
+        {
+            describeText =itemBox.skillText;
+            describeText.fontSize =15;
+            describeText.lineSpacing =1.2f;
+        }
+        needCloseButton= target.Find("ButtonRemove(Clone)");
+        if(needCloseButton!=null)
+        {
+           needCloseButton.gameObject.SetActive(false);
+        }
         type =1;
         itemBox.toggle.onValueChanged.RemoveAllListeners();
         // Debug.Log("查看详情");
@@ -61,8 +70,13 @@ public class UICardDetail : MonoBehaviour
         target.SetParent(tempParent);
         target.localPosition =tempVector;
         target.localScale = Vector3.one;
-        describeText.fontSize =18;
-        describeText.lineSpacing =1f;
+        if(needCloseButton!=null)
+        needCloseButton.gameObject.SetActive(true);
+        if(describeText!=null)
+        {
+            describeText.fontSize =18;
+            describeText.lineSpacing =1f;
+        }
         if(type == 0&&!UIBattle.Instance)
         {
             target.GetComponent<SkillCard>().canShow =true;

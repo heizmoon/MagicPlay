@@ -15,6 +15,9 @@ public class Configs : MonoBehaviour
     public float campRestoreHP;
     public int executeRestoreHP;
     public float eneryCubeRestoreMP;
+    public int levelUpAddAttack;
+    public int levelUpAddDefence;
+    public int levelUpNeedSteps;
 
     void Awake()
     {

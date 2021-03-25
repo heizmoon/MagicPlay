@@ -10,6 +10,7 @@ public class ActorBackUp : MonoBehaviour
     public float Crit;
     public float critBonus;
     public float dodge;
+    public int stamina;
     public List<int> UsingSkillsID;
     public List<int> abilities =new List<int>();
     public float autoReduceMPAmount =0;
@@ -33,6 +34,7 @@ public class ActorBackUp : MonoBehaviour
         basicDefence =actor.basicDefence;
         dealCardsNumber =actor.dealCardsNumber;
         initialMP = actor.initialMP;
+        stamina = actor.Stamina;
     }
 //战斗结束后进行recover
 //如果出现角色当前生命值大于最大生命值的情况，角色当前生命值要回归到最大生命值
@@ -53,5 +55,6 @@ public class ActorBackUp : MonoBehaviour
         actor.basicAttack = basicAttack;
         actor.basicDefence = basicDefence;
         actor.initialMP =initialMP;
+        actor.Stamina =stamina;
     }
 }

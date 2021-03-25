@@ -22,6 +22,9 @@ public class ConfigsEditor : Editor {
         drawProperty("campRestoreHP", "营地回血百分比(小数)");
         drawProperty("executeRestoreHP", "斩杀回血数值");
         drawProperty("eneryCubeRestoreMP", "能量块回复能量数值");
+        drawProperty("levelUpAddAttack", "每级增加攻击力");
+        drawProperty("levelUpAddDefence", "每级增加防御力");
+        drawProperty("levelUpNeedSteps", "每多少步提升1级");
 
 
 
