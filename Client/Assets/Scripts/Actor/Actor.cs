@@ -391,7 +391,7 @@ public class Actor : MonoBehaviour
         {
             castingbar.changeHPBar(speed);
             wanaSkill = GetSpecialSkill(state,behaviour);
-            UIBattle.Instance.SetEnemyBarText(behaviour,wanaSkill.damage);
+            UIBattle.Instance.SetEnemyBarText(behaviour,wanaSkill.damage+basicAttack);
         }
         else//休息2秒然后再次判断
         {
