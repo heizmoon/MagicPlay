@@ -391,7 +391,7 @@ public class Actor : MonoBehaviour
         {
             castingbar.changeHPBar(speed);
             wanaSkill = GetSpecialSkill(state,behaviour);
-            UIBattle.Instance.SetEnemyBarText(behaviour,wanaSkill.damage+basicAttack);
+            UIBattle.Instance.SetEnemyBarText(behaviour,wanaSkill.damage);
         }
         else//休息2秒然后再次判断
         {
@@ -1802,6 +1802,13 @@ public class Actor : MonoBehaviour
     }
     public void LevelUp()
     {
+        Debug.LogWarning("升级了");
+        if(UIBattle.Instance!=null)
+        {
+            ActorBackUp backUp = UIBattle.Instance.GetComponent<ActorBackUp>();
+            backUp.basicAttack+=Configs.instance.levelUpAddAttack;
+            backUp.basicDefence+=Configs.instance.levelUpAddDefence;
+        }
         basicAttack+=Configs.instance.levelUpAddAttack;
         basicDefence+=Configs.instance.levelUpAddDefence;
         level++;

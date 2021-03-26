@@ -89,7 +89,7 @@ public class UIBattle : MonoBehaviour
     public void OnQuitBattle()
     {
         Time.timeScale =1f;
-        BattleEnd(playerActor);
+        StartCoroutine(WaitForShowBattleOver(0,2f));
     }
     // Update is called once per frame
     void Update()
@@ -298,11 +298,11 @@ public class UIBattle : MonoBehaviour
         // BTNSkill[1].ContrlButton(false);
         // BTNSkill[2].ContrlButton(false);
         // BTNSkill[3].ContrlButton(false);
-        StartCoroutine(WaitForShowBattleOver(result));
+        StartCoroutine(WaitForShowBattleOver(result,2f));
     }
-    IEnumerator WaitForShowBattleOver(int result)
+    IEnumerator WaitForShowBattleOver(int result,float delay)
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(delay);
         // battleOver.SetActive(true);
         //显示结算
         // Battle.Instance.ShowStatisticDamage(0);
@@ -403,6 +403,7 @@ public class UIBattle : MonoBehaviour
     }
     void RecoverActor()
     {
+        Debug.LogWarning("还原备份");
         GetComponent<ActorBackUp>().Recover(playerActor);
     }
 

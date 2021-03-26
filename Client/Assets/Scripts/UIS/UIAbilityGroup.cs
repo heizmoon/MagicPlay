@@ -57,7 +57,7 @@ public class UIAbilityGroup : MonoBehaviour
             itemBox.Init(AbilityManager.instance.GetInfo(item));
             itemBox.HideToggleSelect();
         }
-        content.GetComponent<RectTransform>().sizeDelta =new Vector2(0,152*((int)(abilityList.Count/4)+1));
+        content.GetComponent<RectTransform>().sizeDelta =new Vector2(0,205*((int)(abilityList.Count/4)+1));
     }
     void DestoryCards()
     {
