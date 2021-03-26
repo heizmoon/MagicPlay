@@ -12,6 +12,7 @@ public class BattleScene : MonoBehaviour
     int currentSceneId;
     bool isBoss;
     public bool ifLevelUp;
+    public int talentPoint;
 
     void Awake()
     {
@@ -33,6 +34,7 @@ public class BattleScene : MonoBehaviour
         currentMonsterId=0;
         currentSceneId=0;
         isBoss =false;
+        talentPoint =0;
         
     }
     // public void ShowRandomAbilityUI()

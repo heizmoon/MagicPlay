@@ -47,6 +47,8 @@ public class AbilityData
     public string icon;
     public int price;
     public int level;
+    public int buffID;
+    public bool targetSelf;
 }
 [System.Serializable]
 public class SkillData{
@@ -58,7 +60,7 @@ public class SkillData{
     public string castEffect;
     public string hitEffect;
     public float spelllTime;
-    public float CD;
+    public int buildID;
     public bool ifActive;
     ///<summary>0=攻击牌，1=防御牌，2=装备牌，3=魔法牌</summary>
     public int type;
@@ -155,6 +157,9 @@ public class CharacterData
     public string allSkills;
     public int relic;
     public List<int> allSkillsList;
+    public string buildList;
+    public List<int> _buildList;
+
 
 }
 [System.Serializable]

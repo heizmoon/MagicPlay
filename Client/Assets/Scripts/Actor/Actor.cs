@@ -1812,6 +1812,7 @@ public class Actor : MonoBehaviour
         basicAttack+=Configs.instance.levelUpAddAttack;
         basicDefence+=Configs.instance.levelUpAddDefence;
         level++;
+        BattleScene.instance.talentPoint++;
     }
     
 }

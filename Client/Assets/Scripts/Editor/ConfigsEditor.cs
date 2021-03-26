@@ -25,6 +25,8 @@ public class ConfigsEditor : Editor {
         drawProperty("levelUpAddAttack", "每级增加攻击力");
         drawProperty("levelUpAddDefence", "每级增加防御力");
         drawProperty("levelUpNeedSteps", "每多少步提升1级");
+        drawProperty("cardWeightAddition", "获得卡牌时每张现有牌的权重加成");
+
 
 
 

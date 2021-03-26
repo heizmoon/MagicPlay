@@ -33,6 +33,7 @@ public class SkillManager : MonoBehaviour
     Dictionary<int,List<int>[]> charSkillDic =new Dictionary<int, List<int>[]>();
     //装备牌技能列表
     List<int> equipCardsList =new List<int>();
+    ///<summary>（buildID,List(skillid)[type]）</summary>
     Dictionary<int,List<int>[]> typeSkillDic =new Dictionary<int, List<int>[]>();
 
     void Awake()
@@ -170,7 +171,7 @@ public class SkillManager : MonoBehaviour
     //所有职业的类型牌List
     void IESeparateSkillFromType()
     {
-        for (int i = 0; i < CharacterManager.instance.characters.Count; i++)//所有职业循环
+        for (int i = 0; i < 9; i++)//所有流派
         {
             List<int>[] list =new List<int>[5];
             list[0] = new List<int>();
@@ -180,10 +181,11 @@ public class SkillManager : MonoBehaviour
             // list[4] = new List<int>();
             foreach (var item in manager.dataArray)//所有技能循环
             {
-                if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
+                // if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
+                if(item.buildID ==i)//角色技能列表循环
                 {
                     list[item.type].Add(item.id);
-                    // Debug.Log("收录--角色["+i+"]的"+item.color+"系牌列表：item.id="+item.id+","+item.name);
+                    Debug.Log("收录--流派["+i+"]的"+item.type+"系牌列表：item.id="+item.id+","+item.name);
                 }
             }
             typeSkillDic.Add(i,list);
@@ -237,25 +239,76 @@ public class SkillManager : MonoBehaviour
     //随机获得N个不重复的本职业级别A的技能
     public SkillData[] GetRandomSelfSkillsLevelLimit(int N,int rank)
     {
-       SkillData[] skillDatas =new SkillData[N];
-        // List<int> list = Player.instance.playerActor.character.allSkillsList;
-        List<int>[] _list = charSkillDic[Player.instance.CharID];
-        List<int> list =_list[rank];
-        Debug.Log("list.count ="+list.Count+"rank ="+rank);
         if(N<1)
         return null;
+       SkillData[] skillDatas =new SkillData[N];
+        // 首先先获取本职业都有哪些流派
+        List<int> _buildList = Player.instance.playerActor.character.data._buildList;
+        // 随机出本次要从那个流派中抽牌
+        int[] buildIDs =GetRandomWeight(_buildList,CheckPlayerSkillBuild(),N);
         List<int> temp =new List<int>();
-        for(int i =0;i<N;i++)
+
+        for (int i = 0; i < N; i++)
         {
-            int r =UnityEngine.Random.Range(1,list.Count);
+            List<int>[] _list = typeSkillDic[buildIDs[i]];
+            List<int> list =_list[rank];
+    
+            int r =UnityEngine.Random.Range(0,list.Count);
             while (temp.Contains(r))
             {
-                r =UnityEngine.Random.Range(1,list.Count);
+                r =UnityEngine.Random.Range(0,list.Count);
             }
             temp.Add(r);
             skillDatas[i] =GetInfo(list[r]);
+            Debug.Log("流派为"+buildIDs[i]+",从"+list.Count+"张牌中随机到了"+rank+"级技能："+skillDatas[i].name);
+            
         }
+        
         return skillDatas;
+    }
+    int[] GetRandomWeight(List<int> _buildList,Dictionary<int,int> playerBuildDic,int N)
+    {
+        List<int> _list =new List<int>();
+        foreach (var item in _buildList)
+        {
+            if(playerBuildDic.ContainsKey(item))
+            _list.Add(1+playerBuildDic[item]);
+            else
+            _list.Add(1);
+        }
+        List<int> weightList =new List<int>();
+        int totalWeight =0;
+        foreach (var item in _list)
+        {
+            weightList.Add(item+totalWeight);
+            totalWeight+=item;
+        }
+        int[] buildIDs = new int[N];
+        //__buildList = 0,1,2,3; weightList =4,5,6,10
+        for (int j = 0; j < N; j++)
+        {
+            int r = UnityEngine.Random.Range(0,totalWeight+1);
+            if(r<weightList[0])
+            {
+                buildIDs[j] = _buildList[0];
+                Debug.Log("r="+r+",buildIDs["+j+"]= _buildList["+0+"]="+_buildList[0]);
+            }
+            else
+            {
+                for(int i =1;i<weightList.Count;i++)
+                {
+                    if (r>weightList[i-1]&&r<=weightList[i])
+                    {
+                        buildIDs[j] = _buildList[i];
+                        Debug.Log("r="+r+",buildIDs["+j+"]= _buildList["+i+"]="+_buildList[i]);
+                    }
+                }
+            }
+            
+        }
+        
+        return buildIDs;
+
     }
     ///<summary>从特定的池子中随机出N个不重复的技能</summary>
     public SkillData[] GetRandomSkillFromSpecialPool(int N,List<int> list)
@@ -304,6 +357,20 @@ public class SkillManager : MonoBehaviour
     list 12345 weight 
     → 
   */
+    public Dictionary<int,int> CheckPlayerSkillBuild()
+    {
+        Dictionary<int,int> playerBuildDic =new Dictionary<int, int>();
+        for (int i = 0; i < Player.instance.playerActor.UsingSkillsID.Count; i++)
+        {
+            int _key =int.Parse (GetInfo(Player.instance.playerActor.UsingSkillsID[i],"buildID"));
+            if(playerBuildDic.ContainsKey(_key))
+            playerBuildDic[_key] += Configs.instance.cardWeightAddition;
+            else
+            playerBuildDic.Add(_key,Configs.instance.cardWeightAddition);
+        }
+        return playerBuildDic;
+    }
+
     public string GetInfo(int id ,string content)
     {
         foreach(var item in manager.dataArray)
@@ -318,7 +385,7 @@ public class SkillManager : MonoBehaviour
                     case "describe":
                     // Debug.LogFormat("内容:{0}",item.describe);
                     break;
-                    case "genre":
+                    case "type":
                     return item.type.ToString();
                     case "icon":
                     return item.icon;
@@ -327,7 +394,8 @@ public class SkillManager : MonoBehaviour
                     return item.ifActive.ToString();
                     case "rank":
                     return item.rank.ToString();
-                    
+                    case "buildID":
+                    return item.buildID.ToString();
                 }     
             }    
         }

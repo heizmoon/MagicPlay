@@ -179,17 +179,27 @@ public class UIBattle : MonoBehaviour
     IEnumerator IEWaitForOpenAbility()
     {
         yield return new WaitForSeconds(0.1f);
-        if(playerActor.abilities.Contains(5))//充能护符
+        // if(playerActor.abilities.Contains(5))//充能护符
+        // {
+        //     playerActor.AddMp(100);
+        // }
+        // if(playerActor.abilities.Contains(7))//樱桃罐头
+        // {
+        //     BuffManager.instance.CreateBuffForActor(1012,playerActor);    
+        // }
+        // if(playerActor.abilities.Contains(9))//震撼登场
+        // {
+        //     BuffManager.instance.CreateBuffForActor(1011,Enemy);    
+        // }
+        for (int i = 0; i < playerActor.abilities.Count; i++)
         {
-            playerActor.AddMp(100);
-        }
-        if(playerActor.abilities.Contains(7))//樱桃罐头
-        {
-            BuffManager.instance.CreateBuffForActor(1012,playerActor);    
-        }
-        if(playerActor.abilities.Contains(9))//震撼登场
-        {
-            BuffManager.instance.CreateBuffForActor(1011,Enemy);    
+            AbilityData ability = AbilityManager.instance.GetInfo(playerActor.abilities[i]);
+            Actor target;
+            if(ability.targetSelf)
+            target = playerActor; 
+            else
+            target =Enemy;
+            BuffManager.instance.CreateBuffForActor(ability.buffID,Enemy);
         }
     }
     //抽4张卡

@@ -146,7 +146,11 @@ namespace EditorTool {
                 item.crit =collect[i][10].ToString()==""?0:float.Parse(collect[i][10].ToString());
                 item.allSkills =collect[i][11].ToString();
                 item.relic =collect[i][12].ToString()==""?0:int.Parse(collect[i][12].ToString());
+                item.buildList =collect[i][13].ToString();
+
                 item.allSkillsList =GetListIntFromString(item.allSkills);
+                item._buildList =GetListIntFromString(item.buildList);
+
                 array[i - 2] = item;
             }
             characterDatas =array;
@@ -778,7 +782,7 @@ namespace EditorTool {
                 skillData.hitEffect = collect[i][6].ToString();
 
                 skillData.spelllTime =collect[i][7].ToString()==""?0: float.Parse(collect[i][7].ToString());
-                skillData.CD = collect[i][8].ToString()==""?0:float.Parse(collect[i][8].ToString());
+                skillData.buildID = collect[i][8].ToString()==""?0:int.Parse(collect[i][8].ToString());
                 
                 skillData.ifActive = collect[i][9].ToString()=="1"?true:false;
                 skillData.type =collect[i][10].ToString()==""?0: int.Parse(collect[i][10].ToString());
@@ -891,6 +895,8 @@ namespace EditorTool {
             data.icon = collect[i][3].ToString();
             data.price =collect[i][4].ToString()==""?0:int.Parse(collect[i][4].ToString());
             data.level =collect[i][5].ToString()==""?0:int.Parse(collect[i][5].ToString());
+            data.buffID =collect[i][6].ToString()==""?0:int.Parse(collect[i][6].ToString());
+            data.targetSelf =collect[i][7].ToString()==""?false:true;
 
 
             array[i - 2] = data;
