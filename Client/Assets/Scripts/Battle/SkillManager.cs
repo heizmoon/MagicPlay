@@ -308,7 +308,7 @@ public class SkillManager : MonoBehaviour
                 }
             }    
         }
-        Debug.LogError("流派随机出现问题！");
+        // Debug.LogError("流派随机出现问题！");
         return buildIDs;
 
     }

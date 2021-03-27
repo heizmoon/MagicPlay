@@ -421,7 +421,7 @@ public class Buff
     }
     void LegacyCardTriggerSkill(int num)
     {
-        if(num%(int)buffData.effectInterval!=0)
+        if(num>0&&num%(int)buffData.value!=0)
         {
             return;
         }
@@ -435,7 +435,7 @@ public class Buff
     }
     void ThrowCardTriggerSkill(int num)
     {
-        if(num>=(int)buffData.value)
+        if(num>0&&num>=(int)buffData.value)
         {
             Skill skill;
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
@@ -448,7 +448,7 @@ public class Buff
     }
     void DealCardsTriggerSkill(int num)
     {
-        if(num%(int)buffData.effectInterval!=0)
+        if(num>0&&num%(int)buffData.value!=0)
         {
             return;
         }
