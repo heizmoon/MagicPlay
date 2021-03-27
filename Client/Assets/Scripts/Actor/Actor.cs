@@ -338,8 +338,6 @@ public class Actor : MonoBehaviour
     public void AddStamina(int number)
     {
         Stamina+=number;
-        if(Stamina<0)
-        Stamina=0;
     }
 
     //在牌堆中增加一张牌(本局游戏永久)
