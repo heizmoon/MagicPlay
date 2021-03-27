@@ -26,9 +26,7 @@ public class ConfigsEditor : Editor {
         drawProperty("levelUpAddDefence", "每级增加防御力");
         drawProperty("levelUpNeedSteps", "每多少步提升1级");
         drawProperty("cardWeightAddition", "获得卡牌时每张现有牌的权重加成");
-
-
-
+        drawProperty("buildNumber", "全部流派数量");
 
 
         // 只读属性

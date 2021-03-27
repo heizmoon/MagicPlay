@@ -29,11 +29,11 @@ public class SkillManager : MonoBehaviour
     //    public int rank;
     //    public List<int> skills;
     // }
-    ///<summary>职业，级别，技能列表</summary>
-    Dictionary<int,List<int>[]> charSkillDic =new Dictionary<int, List<int>[]>();
+    ///<summary>流派，级别，技能列表</summary>
+    Dictionary<int,List<int>[]> buildSkillDic =new Dictionary<int, List<int>[]>();
     //装备牌技能列表
     List<int> equipCardsList =new List<int>();
-    ///<summary>（buildID,List(skillid)[type]）</summary>
+    ///<summary>（charID,List(skillid)[type]）</summary>
     Dictionary<int,List<int>[]> typeSkillDic =new Dictionary<int, List<int>[]>();
 
     void Awake()
@@ -53,7 +53,7 @@ public class SkillManager : MonoBehaviour
     IEnumerator IESeparateSkillFromLevel()
     {
         yield return new WaitForSeconds(2f);
-        for (int i = 0; i < CharacterManager.instance.characters.Count; i++)//所有职业循环
+        for (int i = 0; i < Configs.instance.buildNumber+1; i++)//所有流派
         {
             List<int>[] list =new List<int>[5];
             list[0] = new List<int>();
@@ -63,19 +63,41 @@ public class SkillManager : MonoBehaviour
             list[4] = new List<int>();
             foreach (var item in manager.dataArray)//所有技能循环
             {
-                if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
+                if(item.buildID ==i)//角色技能列表循环
                 {
                     list[item.rank].Add(item.id);
-                    // Debug.Log("item.rank="+item.rank+",item.id="+item.id);
+                    Debug.Log("收录--流派["+i+"]的["+item.rank+"]级别牌列表：item.id="+item.id+","+item.name);
                 }
             }
-            charSkillDic.Add(i,list);
+            buildSkillDic.Add(i,list);
         }
-        Debug.Log("charSkillDic[0].count="+charSkillDic[0].Length);
-        Debug.Log("charSkillDic[0][0].count="+charSkillDic[0][0].Count);
+        Debug.Log("charSkillDic[0].count="+buildSkillDic[0].Length);
+        Debug.Log("charSkillDic[0][0].count="+buildSkillDic[0][0].Count);
         //
         IESeparateSkillFromType();
 
+    }
+    //所有职业的类型牌List
+    void IESeparateSkillFromType()
+    {
+        for (int i = 0; i < CharacterManager.instance.characters.Count; i++)//所有职业循环
+        {
+            List<int>[] list =new List<int>[5];
+            list[0] = new List<int>();
+            list[1] = new List<int>();
+            list[2] = new List<int>();
+            list[3] = new List<int>();
+            // list[4] = new List<int>();
+            foreach (var item in manager.dataArray)//所有技能循环
+            {
+                if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
+                {
+                    list[item.type].Add(item.id);
+                    Debug.Log("收录--职业id:["+i+"]的["+item.type+"]类牌列表：item.id="+item.id+","+item.name);
+                }    
+            }
+            typeSkillDic.Add(i,list);
+        }
     }
     public static Skill TryGetFromPool(int id,Actor actor)
     {
@@ -168,29 +190,7 @@ public class SkillManager : MonoBehaviour
 
         return null;
     }
-    //所有职业的类型牌List
-    void IESeparateSkillFromType()
-    {
-        for (int i = 0; i < 9; i++)//所有流派
-        {
-            List<int>[] list =new List<int>[5];
-            list[0] = new List<int>();
-            list[1] = new List<int>();
-            list[2] = new List<int>();
-            list[3] = new List<int>();
-            // list[4] = new List<int>();
-            foreach (var item in manager.dataArray)//所有技能循环
-            {
-                // if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
-                if(item.buildID ==i)//角色技能列表循环
-                {
-                    list[item.type].Add(item.id);
-                    Debug.Log("收录--流派["+i+"]的"+item.type+"系牌列表：item.id="+item.id+","+item.name);
-                }
-            }
-            typeSkillDic.Add(i,list);
-        }
-    }
+    
     public int GetRandomEquipCard()
     {
         int r =UnityEngine.Random.Range(1,equipCardsList.Count);
@@ -250,7 +250,7 @@ public class SkillManager : MonoBehaviour
 
         for (int i = 0; i < N; i++)
         {
-            List<int>[] _list = typeSkillDic[buildIDs[i]];
+            List<int>[] _list = buildSkillDic[buildIDs[i]];
             List<int> list =_list[rank];
     
             int r =UnityEngine.Random.Range(0,list.Count);

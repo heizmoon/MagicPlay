@@ -19,6 +19,7 @@ public class Configs : MonoBehaviour
     public int levelUpAddDefence;
     public int levelUpNeedSteps;
     public int cardWeightAddition;
+    public int buildNumber;
 
     void Awake()
     {
