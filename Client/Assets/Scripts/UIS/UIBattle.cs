@@ -114,7 +114,7 @@ public class UIBattle : MonoBehaviour
         {
             cardPos.Add(i,false);
         }
-        //1.显示敌我双方角色
+        useCardTimes=new Dictionary<int, int>();        //1.显示敌我双方角色
         //2.显示敌我双方的生命值，魔法值
         //3.显示我方技能列表
         Enemy =enemy;
