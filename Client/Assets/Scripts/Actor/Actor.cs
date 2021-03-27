@@ -604,13 +604,13 @@ public class Actor : MonoBehaviour
         // Debug.LogWarning("MAX="+max);
         int r = UnityEngine.Random.Range(0,max+1);
         // Debug.LogWarning("随机到"+r);
-        if(r<weights[0])
+        if(r<=weights[0])
         {
             return 0;
         }
         for(int i =1;i<weights.Count;i++)
         {
-            if (r>=weights[i-1]&&r<=weights[i])
+            if (r>weights[i-1]&&r<=weights[i])
             {
                 // Debug.LogWarning("顺序是"+i);
                 return i;
@@ -1511,14 +1511,18 @@ public class Actor : MonoBehaviour
             SummonManager.instance.CreateSummon(skill);
         }
         //如果有圣剑buff，那么命令圣剑攻击
-        for (int i = 0; i < buffs.Count; i++)
+        if(skill.skillCard!=null)
         {
-            if(buffs[i].buffData.id == 1001)
+            for (int i = 0; i < buffs.Count; i++)
             {
-                if(OnOrderSummonedAttack!=null)
-                OnOrderSummonedAttack.Invoke(0);
+                if(buffs[i].buffData.id == 1001)
+                {
+                    if(OnOrderSummonedAttack!=null)
+                    OnOrderSummonedAttack.Invoke(0);
+                }
             }
         }
+        
         //检查BUFF类的技能在有BUFF的情况下，添加额外BUFF
         if(skill.addCBBuff&&skill.targetSelf)
         {

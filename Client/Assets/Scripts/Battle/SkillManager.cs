@@ -290,7 +290,8 @@ public class SkillManager : MonoBehaviour
         for (int j = 0; j < N; j++)
         {
             int r = UnityEngine.Random.Range(0,totalWeight+1);
-            if(r<weightList[0])
+            Debug.Log("r="+r);
+            if(r<=weightList[0])
             {
                 buildIDs[j] = _buildList[0];
                 Debug.Log("r="+r+",buildIDs["+j+"]= _buildList["+0+"]="+_buildList[0]);
