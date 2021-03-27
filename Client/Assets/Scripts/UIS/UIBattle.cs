@@ -206,7 +206,10 @@ public class UIBattle : MonoBehaviour
             target = playerActor; 
             else
             target =Enemy;
-            BuffManager.instance.CreateBuffForActor(ability.buffID,Enemy);
+            for (int j = 0; j < ability.buffNum; j++)
+            {
+                BuffManager.instance.CreateBuffForActor(ability.buffID,Enemy);   
+            }
         }
     }
     //抽4张卡
@@ -273,8 +276,7 @@ public class UIBattle : MonoBehaviour
         //根据场景效果，给角色附加buff
     }
     public void BattleBegin()
-    { 
-        
+    {         
         //主角入场，怪物出场
         anim.Play();
         playerActor.animator.Play("run");        
@@ -287,14 +289,6 @@ public class UIBattle : MonoBehaviour
         isBattleOver =false;
         Enemy.RunAI();
         StartBattle();       
-    }
-    public void CheckButtonMP()
-    {
-        // BTNSkill[0].ChangeMpBar();
-        // BTNSkill[1].ChangeMpBar();
-        // BTNSkill[2].ChangeMpBar();
-        // BTNSkill[3].ChangeMpBar();
-
     }
     public void BattleEnd(Actor actor)
     {
@@ -311,10 +305,6 @@ public class UIBattle : MonoBehaviour
             battleResult.text ="失败";
             result =0;
         }
-        // BTNSkill[0].ContrlButton(false);
-        // BTNSkill[1].ContrlButton(false);
-        // BTNSkill[2].ContrlButton(false);
-        // BTNSkill[3].ContrlButton(false);
         StartCoroutine(WaitForShowBattleOver(result,2f));
     }
     IEnumerator WaitForShowBattleOver(int result,float delay)

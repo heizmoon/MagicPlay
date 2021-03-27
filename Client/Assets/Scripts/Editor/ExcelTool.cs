@@ -897,6 +897,7 @@ namespace EditorTool {
             data.level =collect[i][5].ToString()==""?0:int.Parse(collect[i][5].ToString());
             data.buffID =collect[i][6].ToString()==""?0:int.Parse(collect[i][6].ToString());
             data.targetSelf =collect[i][7].ToString()==""?false:true;
+            data.buffNum =collect[i][8].ToString()==""?0:int.Parse(collect[i][8].ToString());
 
 
             array[i - 2] = data;

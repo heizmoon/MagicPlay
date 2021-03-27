@@ -56,9 +56,7 @@ public class Actor : MonoBehaviour
 
     ///<summary>角色将要改变成的动作状态 0=idle,1=spell,2=casting,3=castEnd,4=dizzy,5=dead</summary>
     int NextState;
-    // Timer timer;//角色泛用计时器
     Transform pool;
-    // int TempSkillNumber =0;
     ///<summary>用于敌人和NPC的数值成长判断</summary>
     public int level =1;
     public Actor target;
@@ -187,11 +185,9 @@ public class Actor : MonoBehaviour
         UsingSkillsID = UsingSkillsID.Union(data.m_nerfSkills1).ToList(); 
         UsingSkillsID = UsingSkillsID.Union(data.m_nerfSkills2).ToList(); 
         UsingSkillsID = UsingSkillsID.Union(data.m_nerfSkills3).ToList(); 
-    
     }
     public void InitMagic()//初始化技能数值
     {
-        
         if(actorType ==ActorType.NPC)
         {
             // return;
@@ -706,20 +702,7 @@ public class Actor : MonoBehaviour
             castingbar.onBarEvent+= OnBehaviourComplete;
         }        
     }
-    // void GetTarget()
-    // {
-    //     if(target ==null)
-    //     {
-    //         if(actorType ==ActorType.敌人)
-    //         {
-    //             target =Battle.Instance.playerActor;
-    //         }
-    //         else
-    //         {
-    //             target =Battle.Instance.enemy;
-    //         }
-    //     }
-    // }
+
     public bool WanaSpell(Skill skill)//想要施法一个法术，判断是否可以施放该法术
     {
         // Debug.LogWarning("wanaSpell");
@@ -1606,10 +1589,7 @@ public class Actor : MonoBehaviour
         {
             mpBar.changeHPBar((int)MpCurrent,true);
         }
-        if(this.actorType ==ActorType.玩家角色)
-        {
-            UIBattle.Instance.CheckButtonMP();
-        }
+        
     }
     public void OnHitMiss()
     {

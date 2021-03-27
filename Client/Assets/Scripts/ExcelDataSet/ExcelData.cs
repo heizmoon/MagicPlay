@@ -49,6 +49,7 @@ public class AbilityData
     public int level;
     public int buffID;
     public bool targetSelf;
+    public int buffNum;
 }
 [System.Serializable]
 public class SkillData{
