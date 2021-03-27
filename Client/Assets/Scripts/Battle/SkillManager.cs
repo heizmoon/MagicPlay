@@ -254,9 +254,11 @@ public class SkillManager : MonoBehaviour
             List<int> list =_list[rank];
     
             int r =UnityEngine.Random.Range(0,list.Count);
-            while (temp.Contains(r))
+            int randomTimes =0;
+            while (temp.Contains(r)&&randomTimes<4)
             {
                 r =UnityEngine.Random.Range(0,list.Count);
+                randomTimes++;
             }
             temp.Add(r);
             skillDatas[i] =GetInfo(list[r]);
@@ -303,10 +305,9 @@ public class SkillManager : MonoBehaviour
                         Debug.Log("r="+r+",buildIDs["+j+"]= _buildList["+i+"]="+_buildList[i]);
                     }
                 }
-            }
-            
+            }    
         }
-        
+        Debug.LogError("流派随机出现问题！");
         return buildIDs;
 
     }
@@ -363,6 +364,8 @@ public class SkillManager : MonoBehaviour
         for (int i = 0; i < Player.instance.playerActor.UsingSkillsID.Count; i++)
         {
             int _key =int.Parse (GetInfo(Player.instance.playerActor.UsingSkillsID[i],"buildID"));
+            if(_key==0)
+            continue;
             if(playerBuildDic.ContainsKey(_key))
             playerBuildDic[_key] += Configs.instance.cardWeightAddition;
             else

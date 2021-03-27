@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 
 public class UIBattle : MonoBehaviour
@@ -55,12 +56,18 @@ public class UIBattle : MonoBehaviour
     bool isBoss;
     [SerializeField]
     Dictionary<int,bool> cardPos =new Dictionary<int, bool>();
-
-    public int UseAttackCardTimes =0;
-    public int UseCardTimes =0;
     bool battleStart;
     public float BattleTime =0;
     bool ifFirstDeal =true;
+    public event Action<int,int> OnUseCardAction;
+    public event Action<int> OnLegacyCardAction;
+    public event Action<int> OnThrowCardAction;
+    public event Action<int> OnDealCardAction;
+    Dictionary<int,int> useCardTimes;
+    int legacyCardTimes;
+    int dealCardTimes;
+
+
     void Awake()
     {
         Instance = this;
@@ -515,21 +522,58 @@ public class UIBattle : MonoBehaviour
         }
         return null;
     }
+    public void OnUseCard(SkillCard skillCard)
+    {
+        int type = skillCard.skill.skillData.type;
+        if(useCardTimes.ContainsKey(type))
+        {
+            useCardTimes[type]++;
+        }
+        else
+        {
+            useCardTimes.Add(type,1);
+        }
+
+        if(OnUseCardAction!=null)
+        {
+            OnUseCardAction(type,useCardTimes[type]);
+        } 
+    }
+    public void OnLegacyCard()
+    {
+        legacyCardTimes++;
+        if(OnLegacyCardAction!=null)
+        {
+            OnLegacyCardAction(legacyCardTimes);
+        } 
+    }
+    public void OnThorwCard(int num)
+    {
+        if(OnUseCardAction!=null)
+        {
+            OnThrowCardAction(num);
+        } 
+    }
     ///<summary>抽齐4张手牌(补牌)</summary>
     public void DealCards()
     {
-        Debug.Log("开始补牌");
+        dealCardTimes++;
+        Debug.Log("第"+dealCardTimes+"次补牌");
+        if(OnDealCardAction!=null)
+        {
+            OnDealCardAction(dealCardTimes);
+        }
         //检测当补牌时就触发的buff，道具
-        if(playerActor.abilities.Contains(7))//樱桃罐头
-        {
-            Skill skill =SkillManager.TryGetFromPool(26,playerActor);
-            skill.ComputeHeal();
-        }
-        if(playerActor.abilities.Contains(6))//凸透镜
-        {
-            Skill skill =SkillManager.TryGetFromPool(27,playerActor);
-            skill.ComputeDamage();
-        }
+        // if(playerActor.abilities.Contains(7))//樱桃罐头
+        // {
+        //     Skill skill =SkillManager.TryGetFromPool(26,playerActor);
+        //     skill.ComputeHeal();
+        // }
+        // if(playerActor.abilities.Contains(6))//凸透镜
+        // {
+        //     Skill skill =SkillManager.TryGetFromPool(27,playerActor);
+        //     skill.ComputeDamage();
+        // }
         //检查补牌前是否有卡牌被【遗留】
         if(playerActor.handCards.Count>0)
         {
@@ -636,7 +680,7 @@ public class UIBattle : MonoBehaviour
     }
     SkillCard RandomSelectACard()
     {
-        int r = Random.Range(0,playerActor.handCards.Count);
+        int r =UnityEngine.Random.Range(0,playerActor.handCards.Count);
         return playerActor.handCards[r];
     }
     ///<summary>临时创建一张特殊ID的牌</summary>
@@ -703,7 +747,7 @@ public class UIBattle : MonoBehaviour
         Debug.Log("洗牌~");
         for (int i = 0; i < cardsList.Count; i++)
         {
-            int r =Random.Range(i,cardsList.Count);
+            int r =UnityEngine.Random.Range(i,cardsList.Count);
             SkillCard temp = cardsList[r];
             cardsList[r] =cardsList[i];
             cardsList[i] = temp;

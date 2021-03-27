@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class SkillCard : MonoBehaviour
 {
@@ -181,6 +182,7 @@ public class SkillCard : MonoBehaviour
                 return;
             }
             _enable = false;
+            UIBattle.Instance.OnUseCard(this);
             //移除的技能移除
             if(skill.usedToRemove)
             RemoveCard();
@@ -227,6 +229,7 @@ public class SkillCard : MonoBehaviour
                 if(throwNum>0)
                 {
                     //执行每当弃牌时就XX的事件
+                    UIBattle.Instance.OnThorwCard(throwNum);
                     if(_skill.id == 107)//技能--质能转换
                     {
                         _skill.target.AddMp(throwNum);//每弃一张牌回复1点能量
@@ -344,17 +347,26 @@ public class SkillCard : MonoBehaviour
     }
     public void LegacyCard()//遗留效果
     {
+        int temp =0;
         if(skill.skillData.ELCDamage!=0)
         {
             skill.IncreaseDamage(skill.skillData.ELCDamage);
+            temp++;
         }
         if(skill.skillData.ELCMP!=0)
         {
             skill.ReduceMPCost(skill.skillData.ELCMP);
+            temp++;
         }
         if(skill.skillData.ELCHeal!=0)
         {
             skill.IncreaseHeal(skill.skillData.ELCHeal);
+            temp++;
+        }
+        if(temp>0)
+        {
+            Debug.Log("有牌被遗留了！");
+            UIBattle.Instance.OnLegacyCard();
         }
         RefeashCardShow();
     }

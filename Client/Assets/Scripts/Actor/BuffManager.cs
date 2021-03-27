@@ -47,7 +47,11 @@ public enum BuffType
     技能暴击后触发技能=37,
     被攻击触发技能 =38,
     移除指定ID的BUFF=39,
-    BUFF叠加到最大层触发技能=40
+    BUFF叠加到最大层触发技能=40,
+    每出X张Y牌时自己触发技能=41,
+    弃牌大于X时自己触发技能=42,
+    每X次补牌时自己触发技能=43,
+    每X次遗留时自己触发技能 =44
 
 }
 public class BuffManager : MonoBehaviour

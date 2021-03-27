@@ -137,8 +137,6 @@ public class Buff
                 target.OnActorHasHit+=BuffTriggerSkill;
             break;
             case BuffType.移除指定ID的BUFF:
-            // Debug.Log("触发移除指定ID的Buff");
-            
             BuffManager.instance.BuffRemoveBuff(this);
             break;
             case BuffType.BUFF叠加到最大层触发技能:
@@ -147,9 +145,20 @@ public class Buff
                 else
                 target.target.OnBuffMax+=BuffMax;
             break;
+            case BuffType.每出X张Y牌时自己触发技能:
+            UIBattle.Instance.OnUseCardAction+=UseCardTriggerSkill;
+            break;
+            case BuffType.弃牌大于X时自己触发技能:
+            UIBattle.Instance.OnThrowCardAction+=ThrowCardTriggerSkill;
+            break;
+            case BuffType.每X次补牌时自己触发技能:
+            UIBattle.Instance.OnDealCardAction+=DealCardsTriggerSkill;
+            break;
+            case BuffType.每X次遗留时自己触发技能:
+            UIBattle.Instance.OnLegacyCardAction+=LegacyCardTriggerSkill;
+            break;
         }
         
-
     }
     public void OnBuffEnd()
     {
@@ -265,11 +274,22 @@ public class Buff
             break;
             case BuffType.BUFF叠加到最大层触发技能:
                 if(buffData.value==0)
-                target.OnBuffMax+=BuffMax;
+                target.OnBuffMax-=BuffMax;
                 else
-                target.target.OnBuffMax+=BuffMax;
+                target.target.OnBuffMax-=BuffMax;
             break;
-            
+            case BuffType.每出X张Y牌时自己触发技能:
+            UIBattle.Instance.OnUseCardAction-=UseCardTriggerSkill;
+            break;
+            case BuffType.弃牌大于X时自己触发技能:
+            UIBattle.Instance.OnThrowCardAction-=ThrowCardTriggerSkill;
+            break;
+            case BuffType.每X次补牌时自己触发技能:
+            UIBattle.Instance.OnDealCardAction-=DealCardsTriggerSkill;
+            break;
+            case BuffType.每X次遗留时自己触发技能:
+            UIBattle.Instance.OnLegacyCardAction-=LegacyCardTriggerSkill;
+            break;
         }
         
         // if(buffData.id==15)
@@ -384,6 +404,61 @@ public class Buff
         UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
         Debug.LogWarning(buffData.name+"--暴击触发:"+skill.skillName);
 
+    }
+    void UseCardTriggerSkill(int type,int num)
+    {
+        if(type != (int)buffData.value||num%(int)buffData.effectInterval!=0)
+        {
+            return;
+        }
+        Skill skill;
+        skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+        skill.caster.OnSkillSpellFinish(skill);
+        SkillCard.CardThrowCard(skill);
+        SkillCard.CardCreateCard(skill);
+        if(skill.usedChooseCard>0)
+        UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);    
+    }
+    void LegacyCardTriggerSkill(int num)
+    {
+        if(num%(int)buffData.effectInterval!=0)
+        {
+            return;
+        }
+        Skill skill;
+        skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+        skill.caster.OnSkillSpellFinish(skill);
+        SkillCard.CardThrowCard(skill);
+        SkillCard.CardCreateCard(skill);
+        if(skill.usedChooseCard>0)
+        UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+    }
+    void ThrowCardTriggerSkill(int num)
+    {
+        if(num>=(int)buffData.value)
+        {
+            Skill skill;
+            skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+            skill.caster.OnSkillSpellFinish(skill);
+            SkillCard.CardThrowCard(skill);
+            SkillCard.CardCreateCard(skill);
+            if(skill.usedChooseCard>0)
+            UIBattle.Instance.SelectSomeCards(skill.usedChooseCard); 
+        }
+    }
+    void DealCardsTriggerSkill(int num)
+    {
+        if(num%(int)buffData.effectInterval!=0)
+        {
+            return;
+        }
+        Skill skill;
+        skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+        skill.caster.OnSkillSpellFinish(skill);
+        SkillCard.CardThrowCard(skill);
+        SkillCard.CardCreateCard(skill);
+        if(skill.usedChooseCard>0)
+        UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
     }
     void BuffMax(Buff _buff)
     {
