@@ -539,7 +539,7 @@ public class UIBattle : MonoBehaviour
     }
     public void OnThorwCard(int num)
     {
-        if(OnUseCardAction!=null)
+        if(OnThrowCardAction!=null)
         {
             OnThrowCardAction(num);
         } 
@@ -547,10 +547,11 @@ public class UIBattle : MonoBehaviour
     ///<summary>抽齐4张手牌(补牌)</summary>
     public void DealCards()
     {
-        dealCardTimes++;
-        Debug.Log("第"+dealCardTimes+"次补牌");
+        
         if(OnDealCardAction!=null)
         {
+            dealCardTimes++;
+            Debug.Log("第"+dealCardTimes+"次补牌");
             OnDealCardAction(dealCardTimes);
         }
         //检测当补牌时就触发的buff，道具
