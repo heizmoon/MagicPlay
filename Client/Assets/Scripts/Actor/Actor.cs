@@ -325,6 +325,17 @@ public class Actor : MonoBehaviour
 
         }
     }
+    public void AddAttack(int number)
+    {
+        basicAttack +=number;
+        if(actorType==ActorType.玩家角色)
+        {
+            foreach (var item in UIBattle.Instance.allCards)
+            {
+                item.RefeashCardShow();
+            } 
+        }
+    }
     public void AddArmor(int number)
     {
         armor +=number;

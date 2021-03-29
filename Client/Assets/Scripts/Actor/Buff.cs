@@ -57,7 +57,7 @@ public class Buff
             }
             break;
             case BuffType.影响攻击力:
-            target.basicAttack+=(int)buffData.value;
+            target.AddAttack((int)buffData.value);
             Debug.LogWarning("增加了攻击力："+(int)buffData.value);
             break;
             case BuffType.影响耐力:
@@ -175,7 +175,7 @@ public class Buff
             }
             break;
             case BuffType.影响攻击力:
-            target.basicAttack-=(int)buffData.value;
+            target.AddAttack(-(int)buffData.value);
             break;
             case BuffType.影响耐力:
             target.AddStamina(-(int)buffData.value);
