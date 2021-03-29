@@ -1339,7 +1339,7 @@ public class Actor : MonoBehaviour
         //如果最终判断掉血了
         if(num>0)
         {
-            if(OnTakeDamageAndReduceHP!=null)
+            if(OnTakeDamageAndReduceHP!=null&&TakenSkill.ifActive)//只有主动技能可以触发
             {
                 OnTakeDamageAndReduceHP(num);
             }
