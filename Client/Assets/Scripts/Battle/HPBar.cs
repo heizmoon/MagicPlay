@@ -31,7 +31,7 @@ public class HPBar : MonoBehaviour
     float timeCurrentInterval;
     float intervalPercent;
 
-    private int changeValue;//每次变化的值
+    private float changeValue;
     float changeInterval;
     Timer timer;
     private Actor actor;//此条的拥有者
@@ -108,12 +108,12 @@ public class HPBar : MonoBehaviour
             {
                 ImgCurrent.fillAmount+=changeInterval;
                 timeCurrentInterval=0;
-
+                HpCurrent+= changeValue;
                 if(ImgCurrent.fillAmount>=1)
                 {
                     isChanging = false;
                     
-                    HpCurrent =100;
+                    HpCurrent =HpMax;
                     setHpBarNormal();
                     onChangeEnd();
                     StartCoroutine(WaitForResetBar());
@@ -232,14 +232,26 @@ public class HPBar : MonoBehaviour
     /// <param name="time">每0.05秒执行一次变化，共执行time秒</param>
     public void changeHPBar(float time)//每0.05秒执行一次变化，共执行time秒
     {
-        changeValue =100/Mathf.CeilToInt(time/0.16f);
+        HpCurrent =0;
+        HpMax = (int)time*100;
         changeInterval = 0.16f/time;
         // Debug.LogFormat("动作条开始了,间隔为{0}",changeValue);
         // timer.start(0.16f,Mathf.CeilToInt(time/0.16f),onTimerInterval,onTimerComplete); 
-        isChanging=true;
         timeInterval = 0.16f;
+        changeValue =HpMax*changeInterval;
+        isChanging=true;
     }
-
+    public void DelayHPBar(float time)
+    {
+        if(!isChanging)
+        {
+            return;
+        }
+        HpMax+=(int)time*100;
+        // changeValue =HpMax*changeInterval;
+        changeInterval =changeValue/HpMax;
+        ImgCurrent.fillAmount = HpCurrent/HpMax;
+    }
     public void stopChanging(bool immediately)
     // immediately=true：立即停止血条变化，数值停留在当前值；
     // immediately=false:数值停留在变化的最终值；
@@ -259,11 +271,11 @@ public class HPBar : MonoBehaviour
         // timer.onCompleteEvent =null;
         // timer.onIntervalEvent =null;
     }
-    void onTimerInterval(Timer timer)
-    {
-        HpCurrent+=changeValue;
-        setHpBarNormal();
-    }
+    // void onTimerInterval(Timer timer)
+    // {
+    //     HpCurrent+=changeValue;
+    //     setHpBarNormal();
+    // }
     void onChangeEnd()
     {
         onBarEvent(this,barEventTrue);
@@ -272,17 +284,17 @@ public class HPBar : MonoBehaviour
     {
         onBarEvent(this,barEventFalse);
     }
-    void onTimerComplete(Timer timer)
-    {
-        // Debug.LogError("动作条到了");
+    // void onTimerComplete(Timer timer)
+    // {
+    //     // Debug.LogError("动作条到了");
         
-        // timer.gameObject.GetComponent<Skill>();
-        HpCurrent =100;
-        setHpBarNormal();
-        onChangeEnd();
-        StartCoroutine(WaitForResetBar());
+    //     // timer.gameObject.GetComponent<Skill>();
+    //     HpCurrent =100;
+    //     setHpBarNormal();
+    //     onChangeEnd();
+    //     StartCoroutine(WaitForResetBar());
         
-    }
+    // }
     
     IEnumerator WaitForResetBar()
     {

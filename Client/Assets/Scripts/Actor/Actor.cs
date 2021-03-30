@@ -90,6 +90,7 @@ public class Actor : MonoBehaviour
     int state;
     int tempState =-1;
     int behaviour;
+    int AIStep;
     ///<summary>手牌列表</summary>
     public List<SkillCard> handCards;
     ///<summary>维持技能最低限制</summary>
@@ -374,30 +375,64 @@ public class Actor : MonoBehaviour
         {
             SetStateBuff();
             tempState = state;
+            AIStep =0;
         }
-        //随机出一项当前要进行的行为
-        behaviour =GetBehaviour(state);
-        // Debug.LogWarning("behaviour="+behaviour);
-        float speed =3f;
+        float AImode =0;
+        Debug.LogWarning("state = "+state);
         switch (state)
         {
             case 1:
-            speed =monsterData.speed1;
+            AImode =monsterData.AIMode1;
             break;
             case 2:
-            speed =monsterData.speed2;
+            AImode =monsterData.AIMode2;
             break;
             case 3:
-            speed =monsterData.speed3;
+            AImode =monsterData.AIMode3;
             break;
         }
-        
+        if(AImode==0)
+        //随机出一项当前要进行的行为
+        behaviour =GetBehaviour(state);
+        // Debug.LogWarning("behaviour="+behaviour);
+        if(AImode==1)
+        {
+            if(state == 1)
+            {
+                behaviour =monsterData.m_aitype1[AIStep];
+                AIStep++;
+                if(AIStep>monsterData.m_aitype1.Count-1)
+                {
+                    AIStep = 0;
+                }
+            }
+            else if(state == 2)
+            {
+                behaviour =monsterData.m_aitype2[AIStep];
+                AIStep++;
+                if(AIStep>monsterData.m_aitype2.Count-1)
+                {
+                    AIStep = 0;
+                }
+            }
+            else
+            {
+                behaviour =monsterData.m_aitype2[AIStep];
+                AIStep++;
+                if(AIStep>monsterData.m_aitype2.Count-1)
+                {
+                    AIStep = 0;
+                }
+            }
+            
+        }
         if(behaviour<4)
         {
-            castingbar.changeHPBar(speed);
             wanaSkill = GetSpecialSkill(state,behaviour);
+            castingbar.changeHPBar(wanaSkill.orginSpellTime);
             UIBattle.Instance.SetEnemyBarText(behaviour,wanaSkill.damage);
         }
+        
         else//休息2秒然后再次判断
         {
             StartCoroutine(IEEnemySleep());
@@ -681,11 +716,6 @@ public class Actor : MonoBehaviour
     }
     #endregion
 
-
-    public Skill GetSkills(int id)
-    {
-        return skills[id+1];
-    }
     public void GetActorSpellBar()
     {
         //获取角色施法条
@@ -1106,6 +1136,10 @@ public class Actor : MonoBehaviour
                     }
                 }
                 
+            }
+            if(skill.skillData.delaySpell>0)//延缓目标读条时间
+            {
+                target.castingbar.DelayHPBar(skill.skillData.delaySpell);
             }
             // Check1110(skill);
             //火系技能添加点燃buff

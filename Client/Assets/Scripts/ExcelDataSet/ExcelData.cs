@@ -125,6 +125,7 @@ public class SkillData{
     public int createCardType;
     public int keepManaCost;
     public int critTriggerSkill;
+    public float delaySpell;
 
 
 }
@@ -228,7 +229,7 @@ public struct MonsterTypeData
     public int crit;
     public int switchCondition1;
     public string addBuffList1;
-    public float speed1;
+    public int AIMode1;
     public string AIType1;
     public string listAttack1;
     public string listDefend1;
@@ -237,7 +238,7 @@ public struct MonsterTypeData
     public int switchCondition2;
     public string addBuffList2;
     public string removeBuffList2;
-    public float speed2;
+    public int AIMode2;
     public string AIType2;
     public string listAttack2;
     public string listDefend2;
@@ -246,7 +247,7 @@ public struct MonsterTypeData
     public int switchCondition3;
     public string addBuffList3;
     public string removeBuffList3;
-    public float speed3;
+    public int AIMode3;
     public string AIType3;
     public string listAttack3;
     public string listDefend3;

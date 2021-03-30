@@ -36,7 +36,7 @@ public class Skill : MonoBehaviour
     public Actor target;//技能的目标
     public Actor caster;//技能的释放者
     public Summoned casterSummon;
-    public float orginSpellTime;
+    public float orginSpellTime; 
     public float damageDelay;
     public string hitEffect;
     public int realManaCost;
