@@ -1137,7 +1137,7 @@ public class Actor : MonoBehaviour
                 }
                 
             }
-            if(skill.skillData.delaySpell>0)//延缓目标读条时间
+            if(skill.skillData.delaySpell>0&&target.actorType ==ActorType.敌人)//延缓目标读条时间
             {
                 target.castingbar.DelayHPBar(skill.skillData.delaySpell);
             }
