@@ -242,31 +242,31 @@ public class UIRandomEvent : MonoBehaviour
         if(effList.Contains(15))
         {
             int level = BattleScene.instance.steps;//------换算公式未定
-            AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,0);
             strs[15]=(abilities[0].name).ToString();
         }
         if(effList.Contains(16))
         {
             int level = BattleScene.instance.steps;//------换算公式未定
-            AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,0);
             strs[16]=(abilities[0].name).ToString();
         }
         if(effList.Contains(17))
         {
             int level = BattleScene.instance.steps;//------换算公式未定
-            AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,0);
             strs[17]=(abilities[0].name).ToString();
         }
         if(effList.Contains(18))
         {
             int level = BattleScene.instance.steps;//------换算公式未定
-            AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,0);
             strs[18]=(abilities[0].name).ToString();
         }
         if(effList.Contains(19))
         {
             int level = BattleScene.instance.steps;//------换算公式未定
-            AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,0);
             strs[19]=(abilities[0].name).ToString();
         }
         if(effList.Contains(20))

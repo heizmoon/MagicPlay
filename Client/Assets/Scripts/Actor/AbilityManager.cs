@@ -8,6 +8,8 @@ public class AbilityManager : MonoBehaviour
     public static AbilityManager instance;
     AbilityDataSet manager;
     Dictionary<int,List<int>> levelAbility; 
+    ///<summary>流派，级别，技能列表</summary>
+    Dictionary<int,List<int>[]> buildAbilityDic =new Dictionary<int, List<int>[]>();
     
     //已解锁的道具集合
     //不同等级的道具集合
@@ -20,34 +22,37 @@ public class AbilityManager : MonoBehaviour
         manager = Resources.Load<AbilityDataSet>("DataAssets/Ability");
         
     }
+    public void SeparateSkillFromLevel()
+    {
+        StartCoroutine(IESeparateSkillFromLevel());
+    }
+    IEnumerator IESeparateSkillFromLevel()
+    {
+        yield return new WaitForSeconds(2f);
+        for (int i = 0; i < Configs.instance.buildNumber+1; i++)//所有流派
+        {
+            List<int>[] list =new List<int>[5];
+            list[0] = new List<int>();
+            list[1] = new List<int>();
+            list[2] = new List<int>();
+            list[3] = new List<int>();
+            list[4] = new List<int>();
+            foreach (var item in manager.dataArray)//所有技能循环
+            {
+                if(item.buildID ==i)//角色技能列表循环
+                {
+                    list[item.rank].Add(item.id);
+                    Debug.Log("收录--流派["+i+"]的["+item.rank+"]级别【遗物】列表：id="+item.id+","+item.name);
+                }
+            }
+            buildAbilityDic.Add(i,list);
+        }
+        //
+
+    }
     void Start()
     {
-        levelAbility =new Dictionary<int, List<int>>();
-        //分类别
-        List<int> level0 = new List<int>();
-        List<int> level1 = new List<int>();
-        List<int> level2 = new List<int>();
-
-
-        foreach (var item in manager.dataArray)
-        {
-            if(item.level ==0)
-            {
-                level0.Add(item.id);
-            }
-            else if(item.level ==1)
-            {
-                level1.Add(item.id);
-            }
-            else if(item.level ==2)
-            {
-                level2.Add(item.id);
-            }
-        }
-        levelAbility.Add(0,level0);
-        levelAbility.Add(1,level1);
-        levelAbility.Add(2,level2);
-
+        SeparateSkillFromLevel();
     }
     public AbilityData GetInfo(int id)
     {
@@ -71,55 +76,62 @@ public class AbilityManager : MonoBehaviour
             return data.name;
             case "icon":
             return data.icon;
-
+            case "buildID":
+            return data.buildID.ToString();
         }
         return "";
     }
-    ///<summary>随机N个能力，不包含列表中的能力</summary>
-    public AbilityData[] GetRandomAbility(int number,List<int> ids)
+    ///<summary>随机N个rank级的能力</summary>
+    public AbilityData[] GetRandomAbility(int N,int rank)
     {
-        List<int> list =new List<int>();
-        AbilityData[] datas = new AbilityData[number];
-        //排除传入的ids中已有的id
-        if(ids.Count>0)
+        if(N<1)
+        return null;
+        AbilityData[] datas = new AbilityData[N];
+        List<int> _buildList = Player.instance.playerActor.character.data._buildList;
+        // 随机出本次要从那个流派中抽牌
+        int[] buildIDs =SkillManager.GetRandomWeight(_buildList,SkillManager.CheckPlayerSkillBuild(),N);
+        List<int> temp =new List<int>();
+
+        for (int i = 0; i < N; i++)
         {
-            foreach (var outer in ids)
+            List<int>[] _list = buildAbilityDic[buildIDs[i]];
+            List<int> list =_list[rank];
+    
+            int r =UnityEngine.Random.Range(0,list.Count);
+            int randomTimes =0;
+            while (temp.Contains(r)&&randomTimes<4)
             {
-                foreach (var inner in manager.dataArray)
-                {
-                    if(outer != inner.id)
-                    {
-                        list.Add(inner.id);
-                    }
-                }
-            }
-        }
-        else
-        {
-            foreach (var inner in manager.dataArray)
-                {
-                    list.Add(inner.id);
-                }
-        }
-        
-        for (int i = 0; i < number; i++)
-        {
-            int r = Random.Range(0,list.Count);
-            List<int> temp =new List<int>();
-            while(temp.Contains(r))
-            {
-                r = Random.Range(0,list.Count);
+                r =UnityEngine.Random.Range(0,list.Count);
+                randomTimes++;
             }
             temp.Add(r);
-            Debug.Log("I="+i+",number="+number+",r="+r+",list.count="+list.Count);
             datas[i] =GetInfo(list[r]);
+            Debug.Log("流派为"+buildIDs[i]+",从"+list.Count+"张牌中随机到了"+rank+"级技能："+datas[i].name);
             
         }
-
         return datas;
     }
+    public AbilityData[] GetRandomAbilityFromSpecialPool(int N,List<int> list)
+    {
+       AbilityData[] abilityDatas =new AbilityData[N];
+        // List<int> list = Player.instance.playerActor.character.allSkillsList;
+        if(N<1)
+        return null;
+        List<int> temp =new List<int>();
+        for(int i =0;i<N;i++)
+        {
+            int r =UnityEngine.Random.Range(1,list.Count);
+            while (temp.Contains(r))
+            {
+                r =UnityEngine.Random.Range(1,list.Count);
+            }
+            temp.Add(r);
+            abilityDatas[i] =GetInfo(list[r]);
+        }
+        return abilityDatas;
+    }
 ///<summary>随机N个X级能力，不包含玩家已拥有的能力，能力必须已经解锁</summary>
-public AbilityData[] GetRandomAbilityFromLevel(int number,int level)
+public AbilityData[] GetRandomAbilityFromLevel(int number,int type)
 {
     List<int> list =new List<int>();
         AbilityData[] datas = new AbilityData[number];
@@ -130,7 +142,7 @@ public AbilityData[] GetRandomAbilityFromLevel(int number,int level)
         {
             foreach (var outer in ids)
             {
-                foreach (var inner in levelAbility[level])
+                foreach (var inner in levelAbility[type])
                 {
                     if(outer != inner&&unlocks.Contains(inner))
                     {
@@ -141,7 +153,7 @@ public AbilityData[] GetRandomAbilityFromLevel(int number,int level)
         }
         else
         {
-            foreach (var inner in levelAbility[level])
+            foreach (var inner in levelAbility[type])
                 {
                     if(unlocks.Contains(inner))
                     list.Add(inner);

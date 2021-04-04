@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
+
 public class UIBasicBanner : MonoBehaviour
 {
     public static UIBasicBanner instance;

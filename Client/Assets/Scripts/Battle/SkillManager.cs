@@ -166,36 +166,6 @@ public class SkillManager : MonoBehaviour
         Debug.LogWarning("没有随到合适的技能");
         return null;
     }
-    
-    public delegate List<int> Mydegete();
-    public delegate List<int> skillDelegate(int i);
-    public List<int> GetLockedPassiveSkills()
-    {
-        return null;
-    }
-    public List<int> GetUnlockPassiveSkills()
-    {
-        return null;
-    }
-    public List<int> GetLockedActiveSkills()
-    {
-        return null;
-    }
-    public List<int> GetUnlockActiveSkills()
-    {
-        return null;
-    }
-    public List<int> GetActerNumberSkills(int actorNumber)
-    {
-
-        return null;
-    }
-    
-    public int GetRandomEquipCard()
-    {
-        int r =UnityEngine.Random.Range(1,equipCardsList.Count);
-        return r;
-    }
     public int GetRandomSkillByType(int charID,int type)
     {
         int r =UnityEngine.Random.Range(0,typeSkillDic[charID][type].Count);
@@ -268,7 +238,7 @@ public class SkillManager : MonoBehaviour
         
         return skillDatas;
     }
-    int[] GetRandomWeight(List<int> _buildList,Dictionary<int,int> playerBuildDic,int N)
+    public static int[] GetRandomWeight(List<int> _buildList,Dictionary<int,int> playerBuildDic,int N)
     {
         List<int> _list =new List<int>();
         foreach (var item in _buildList)
@@ -359,12 +329,22 @@ public class SkillManager : MonoBehaviour
     list 12345 weight 
     → 
   */
-    public Dictionary<int,int> CheckPlayerSkillBuild()
+    public static Dictionary<int,int> CheckPlayerSkillBuild()
     {
         Dictionary<int,int> playerBuildDic =new Dictionary<int, int>();
         for (int i = 0; i < Player.instance.playerActor.UsingSkillsID.Count; i++)
         {
-            int _key =int.Parse (GetInfo(Player.instance.playerActor.UsingSkillsID[i],"buildID"));
+            int _key =int.Parse (SkillManager.instance.GetInfo(Player.instance.playerActor.UsingSkillsID[i],"buildID"));
+            if(_key==0)
+            continue;
+            if(playerBuildDic.ContainsKey(_key))
+            playerBuildDic[_key] += Configs.instance.cardWeightAddition;
+            else
+            playerBuildDic.Add(_key,Configs.instance.cardWeightAddition);
+        }
+        for (int i = 0; i < Player.instance.playerActor.abilities.Count; i++)
+        {
+            int _key =int.Parse(AbilityManager.instance.GetInfo(Player.instance.playerActor.abilities[i],"buildID"));
             if(_key==0)
             continue;
             if(playerBuildDic.ContainsKey(_key))

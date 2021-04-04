@@ -46,10 +46,12 @@ public class AbilityData
     public string describe;
     public string icon;
     public int price;
-    public int level;
     public int buffID;
     public bool targetSelf;
     public int buffNum;
+    public int rank;
+    public int buildID;
+
 }
 [System.Serializable]
 public class SkillData{

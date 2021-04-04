@@ -208,7 +208,7 @@ public class UIBattle : MonoBehaviour
             target =Enemy;
             for (int j = 0; j < ability.buffNum; j++)
             {
-                BuffManager.instance.CreateBuffForActor(ability.buffID,Enemy);   
+                BuffManager.instance.CreateBuffForActor(ability.buffID,target);   
             }
         }
     }

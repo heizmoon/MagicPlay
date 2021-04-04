@@ -895,11 +895,11 @@ namespace EditorTool {
             data.describe = collect[i][2].ToString();
             data.icon = collect[i][3].ToString();
             data.price =collect[i][4].ToString()==""?0:int.Parse(collect[i][4].ToString());
-            data.level =collect[i][5].ToString()==""?0:int.Parse(collect[i][5].ToString());
-            data.buffID =collect[i][6].ToString()==""?0:int.Parse(collect[i][6].ToString());
-            data.targetSelf =collect[i][7].ToString()==""?false:true;
-            data.buffNum =collect[i][8].ToString()==""?0:int.Parse(collect[i][8].ToString());
-
+            data.buffID =collect[i][5].ToString()==""?0:int.Parse(collect[i][5].ToString());
+            data.targetSelf =collect[i][6].ToString()==""?false:true;
+            data.buffNum =collect[i][7].ToString()==""?0:int.Parse(collect[i][7].ToString());
+            data.rank =collect[i][8].ToString()==""?0:int.Parse(collect[i][8].ToString());
+            data.buildID =collect[i][9].ToString()==""?0:int.Parse(collect[i][9].ToString());
 
             array[i - 2] = data;
             }

@@ -19,10 +19,7 @@ public class UITreasure : MonoBehaviour
         BTNReturn.onClick.AddListener(OnReturn);
         BTNReTry.onClick.AddListener(OnRetry);
         Init();
-        Gframe.SetActive(false);
-        
-
-        
+        Gframe.SetActive(false);    
     }
 
     // Update is called once per frame
@@ -35,22 +32,22 @@ public class UITreasure : MonoBehaviour
         //根据情况随机出宝物
         int level = BattleScene.instance.steps;
         //先确定随机出道具还是技能卡
-        if(Random.Range(0,5)>3)
-        {
-            //随机出技能卡
-            SkillData[] datas =SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,0);
-            item.Init(datas[0]);
-            type =0;
-            id = datas[0].id;
-        }
-        else
-        {
+        // if(Random.Range(0,5)>3)
+        // {
+        //     //随机出技能卡
+        //     SkillData[] datas =SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,0);
+        //     item.Init(datas[0]);
+        //     type =0;
+        //     id = datas[0].id;
+        // }
+        // else
+        // {
             //随机出道具
-            AbilityData[] datas = AbilityManager.instance.GetRandomAbilityFromLevel(1,0);
+            AbilityData[] datas = AbilityManager.instance.GetRandomAbility(1,Configs.instance.GetCardRank(BattleScene.instance.steps));
             item.Init(datas[0]);
             type =1;
             id = datas[0].id;
-        }
+        // }
         item.HideToggleSelect();
 
     }

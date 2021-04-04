@@ -45,20 +45,25 @@ public class UIBattleReward : MonoBehaviour
         this.steps =steps;
         this.isBoss =isBoss;
         goldText.text =string.Format("{0}",steps*Configs.instance.battleLevelGold);
-        if(!isBoss)
-        {
-            relicFrame.SetActive(false);
-            needChooseStep =1;
-        }
-        if(isBoss)
-        {
-            needChooseStep =2;
-            foreach (var item in abilityItemBoxes)
-            {
-                item.button.onClick.AddListener(delegate () {GetItem(item);});
-            } 
-        }
-        foreach (var item in skillItemBoxes)
+        // if(!isBoss)
+        // {
+        //     relicFrame.SetActive(false);
+        //     needChooseStep =1;
+        // }
+        // if(isBoss)
+        // {
+        //     needChooseStep =2;
+        //     foreach (var item in abilityItemBoxes)
+        //     {
+        //         item.button.onClick.AddListener(delegate () {GetItem(item);});
+        //     } 
+        // }
+        // foreach (var item in skillItemBoxes)
+        // {
+        //     item.button.onClick.AddListener(delegate () {GetItem(item);});
+        // }
+        needChooseStep =1;
+        foreach (var item in abilityItemBoxes)
         {
             item.button.onClick.AddListener(delegate () {GetItem(item);});
         }
@@ -67,26 +72,27 @@ public class UIBattleReward : MonoBehaviour
     }
     void Refreash()
     {
-        if(isBoss&&!hasChoosenRelic)
+        // if(isBoss&&!hasChoosenRelic)
+        // {
+            
+        // }
+        AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,rewardCardRank);
+        for (int i = 0; i < Adatas.Length; i++)
         {
-            AbilityData[] Adatas = AbilityManager.instance.GetRandomAbilityFromLevel(3,0);
-            for (int i = 0; i < Adatas.Length; i++)
-            {
-                abilityItemBoxes[i].Reset();
-                abilityItemBoxes[i].Init(Adatas[i]);
-                abilityItemBoxes[i].InReward();
-            }
+            abilityItemBoxes[i].Reset();
+            abilityItemBoxes[i].Init(Adatas[i]);
+            abilityItemBoxes[i].InReward();
         }
-        if(!hasChoosenCard)
-        {
-            SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
-            for (int i = 0; i < Sdatas.Length; i++)
-            {
-                skillItemBoxes[i].Reset();
-                skillItemBoxes[i].Init(Sdatas[i]);
-                skillItemBoxes[i].InReward();
-            }
-        }
+        // if(!hasChoosenCard)
+        // {
+        //     SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
+        //     for (int i = 0; i < Sdatas.Length; i++)
+        //     {
+        //         skillItemBoxes[i].Reset();
+        //         skillItemBoxes[i].Init(Sdatas[i]);
+        //         skillItemBoxes[i].InReward();
+        //     }
+        // }
     }
     void GetItem(ItemBox item)
     {
