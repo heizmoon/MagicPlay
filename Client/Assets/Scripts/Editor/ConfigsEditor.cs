@@ -22,9 +22,8 @@ public class ConfigsEditor : Editor {
         drawProperty("campRestoreHP", "营地回血百分比(小数)");
         drawProperty("executeRestoreHP", "斩杀回血数值");
         drawProperty("eneryCubeRestoreMP", "能量块回复能量数值");
-        drawProperty("levelUpAddAttack", "每级增加攻击力");
-        drawProperty("levelUpAddDefence", "每级增加防御力");
-        drawProperty("levelUpNeedSteps", "每多少步提升1级");
+        drawProperty("levelUpAddTalentPoint", "每级增加天赋点数");
+        drawProperty("everyStepAddEXP", "每步增加多少经验值");
         drawProperty("cardWeightAddition", "获得卡牌时每张现有牌的权重加成");
         drawProperty("buildNumber", "全部流派数量");
 

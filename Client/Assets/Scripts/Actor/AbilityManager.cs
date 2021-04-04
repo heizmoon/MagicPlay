@@ -39,11 +39,14 @@ public class AbilityManager : MonoBehaviour
             list[4] = new List<int>();
             foreach (var item in manager.dataArray)//所有技能循环
             {
-                if(item.buildID ==i)//角色技能列表循环
+                foreach (var buildID in item._buildList)
                 {
-                    list[item.rank].Add(item.id);
-                    Debug.Log("收录--流派["+i+"]的["+item.rank+"]级别【遗物】列表：id="+item.id+","+item.name);
-                }
+                    if(buildID ==i)//角色技能列表循环
+                    {
+                        list[item.rank].Add(item.id);
+                        Debug.Log("收录--流派["+i+"]的["+item.rank+"]级别【遗物】列表：id="+item.id+","+item.name);
+                    }
+                }    
             }
             buildAbilityDic.Add(i,list);
         }
@@ -76,10 +79,13 @@ public class AbilityManager : MonoBehaviour
             return data.name;
             case "icon":
             return data.icon;
-            case "buildID":
-            return data.buildID.ToString();
         }
         return "";
+    }
+    public List<int> GetBuildList(int id)
+    {
+        AbilityData data =GetInfo(id);
+        return data._buildList;
     }
     ///<summary>随机N个rank级的能力</summary>
     public AbilityData[] GetRandomAbility(int N,int rank)

@@ -525,6 +525,27 @@ namespace EditorTool {
             AssetDatabase.Refresh();
         }
     }
+    public class LevelDataBuild : Editor {
+ 
+        [MenuItem("生成表格数据/Level表")]
+        public static void CreateItemAsset() {
+            LevelDataSet manager = ScriptableObject.CreateInstance<LevelDataSet>();
+            //赋值
+            ExcelTool.CreateItemArrayWithExcel(ExcelConfig.excelsFolderPath + "Level.xlsx","LevelData");
+            manager.dataArray = ExcelTool.GetLevelArray();
+            //确保文件夹存在
+            if(!Directory.Exists(ExcelConfig.assetPath)) {
+                Directory.CreateDirectory(ExcelConfig.assetPath);
+            }
+ 
+            //asset文件的路径 要以"Assets/..."开始，否则CreateAsset会报错
+            string assetPath = string.Format("{0}{1}.asset", ExcelConfig.assetPath, "Level");
+            //生成一个Asset文件
+            AssetDatabase.CreateAsset(manager, assetPath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+    }
     public class AllBuild : Editor 
     {
  
@@ -552,6 +573,7 @@ namespace EditorTool {
         SummonBuild.CreateItemAsset();
         RandomEventBuild.CreateItemAsset();
         ShopDataBuild.CreateItemAsset();
+        LevelDataBuild.CreateItemAsset();
 
 
         Debug.Log("-----所有表格生成完毕----");

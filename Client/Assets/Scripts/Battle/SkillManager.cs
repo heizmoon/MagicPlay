@@ -344,13 +344,16 @@ public class SkillManager : MonoBehaviour
         }
         for (int i = 0; i < Player.instance.playerActor.abilities.Count; i++)
         {
-            int _key =int.Parse(AbilityManager.instance.GetInfo(Player.instance.playerActor.abilities[i],"buildID"));
-            if(_key==0)
-            continue;
-            if(playerBuildDic.ContainsKey(_key))
-            playerBuildDic[_key] += Configs.instance.cardWeightAddition;
-            else
-            playerBuildDic.Add(_key,Configs.instance.cardWeightAddition);
+            List<int> _keys =AbilityManager.instance.GetBuildList(Player.instance.playerActor.abilities[i]);
+            foreach (var item in _keys)
+            {
+                if(item==0)
+                continue;
+                if(playerBuildDic.ContainsKey(item))
+                playerBuildDic[item] += Configs.instance.cardWeightAddition;
+                else
+                playerBuildDic.Add(item,Configs.instance.cardWeightAddition);
+            }    
         }
         return playerBuildDic;
     }

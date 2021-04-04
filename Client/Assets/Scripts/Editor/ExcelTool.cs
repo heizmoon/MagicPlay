@@ -32,6 +32,7 @@ namespace EditorTool {
         static SummonData[] summonDatas;
         static RandomEvent[] randomEventArray;
         static ShopData[] shopDatas;
+        static LevelData[] levelDatas;
 
 
 
@@ -108,8 +109,11 @@ namespace EditorTool {
                 case "RandomEvent":
                 CreateRandomEventArray(filePath);
                 break;
-                 case "ShopData":
+                case "ShopData":
                 CreateShopArray(filePath);
+                break;
+                case "LevelData":
+                CreateLevelArray(filePath);
                 break;
 
             }
@@ -173,6 +177,28 @@ namespace EditorTool {
                 array[i - 2] = item;
             }
             droupGroupArray =array;
+        }
+        public static void CreateLevelArray(string filePath) 
+        {
+            //获得表数据
+            int columnNum = 0, rowNum = 0;
+            DataRowCollection collect = ReadExcel(filePath, ref columnNum, ref rowNum);
+ 
+            //根据excel的定义，第二行开始才是数据
+            LevelData[] array = new LevelData[rowNum - 2];
+            for(int i = 2; i < rowNum; i++) 
+            {
+                LevelData item = new LevelData();
+                //解析每列的数据
+                item.level = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
+                item.exp = collect[i][1].ToString()==""?0:int.Parse(collect[i][1].ToString());
+                item.addAttack = collect[i][2].ToString()==""?0:int.Parse(collect[i][2].ToString());
+                item.addDefence = collect[i][3].ToString()==""?0:int.Parse(collect[i][3].ToString());
+                item.addHPMax= collect[i][4].ToString()==""?0:int.Parse(collect[i][4].ToString());
+
+                array[i - 2] = item;
+            }
+            levelDatas =array;
         }
         public static void CreateRandomEventArray(string filePath) 
         {
@@ -899,8 +925,8 @@ namespace EditorTool {
             data.targetSelf =collect[i][6].ToString()==""?false:true;
             data.buffNum =collect[i][7].ToString()==""?0:int.Parse(collect[i][7].ToString());
             data.rank =collect[i][8].ToString()==""?0:int.Parse(collect[i][8].ToString());
-            data.buildID =collect[i][9].ToString()==""?0:int.Parse(collect[i][9].ToString());
-
+            data.buildIDList =collect[i][9].ToString();
+            data._buildList = GetListIntFromString(data.buildIDList);
             array[i - 2] = data;
             }
             abilityDatas =array;
@@ -1037,6 +1063,10 @@ namespace EditorTool {
         public static ShopData[] GetShopDataArray()
         {
             return shopDatas;
+        }
+        public static LevelData[] GetLevelArray()
+        {
+            return levelDatas;
         }
         /// <summary>
         /// 读取excel文件内容

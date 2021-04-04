@@ -396,9 +396,6 @@
     <Reference Include="DOTweenPro">
         <HintPath>C:/Users/snowm/Documents/GitHub/MagicPlay/Client/Assets/Plugins/Demigiant/DOTweenPro/DOTweenPro.dll</HintPath>
     </Reference>
-    <Reference Include="DOTweenProEditor">
-        <HintPath>C:/Users/snowm/Documents/GitHub/MagicPlay/Client/Assets/Plugins/Demigiant/DOTweenPro/Editor/DOTweenProEditor.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework">
         <HintPath>C:/Users/snowm/Documents/GitHub/MagicPlay/Client/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
@@ -802,11 +799,6 @@
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{8441f412-22a4-275f-22e6-507969043f15}</Project>
       <Name>Assembly-CSharp</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
-      <Project>{6c069222-a403-3357-4636-43653c20a180}</Project>
-      <Name>Assembly-CSharp-Editor-firstpass</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>

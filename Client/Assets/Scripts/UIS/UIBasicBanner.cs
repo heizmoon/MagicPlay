@@ -17,6 +17,7 @@ public class UIBasicBanner : MonoBehaviour
     Text text_level;
     Text text_attack;
     Text text_defence;
+    Text text_talent;
 
 
     public Text textMap;
@@ -37,6 +38,7 @@ public class UIBasicBanner : MonoBehaviour
         text_level =transform.Find("LevelUpFrame/LevleText").GetComponent<Text>();
         text_attack =transform.Find("LevelUpFrame/AttackText").GetComponent<Text>();
         text_defence =transform.Find("LevelUpFrame/DefenceText").GetComponent<Text>();
+        text_talent =transform.Find("LevelUpFrame/TalentText").GetComponent<Text>();
 
         F_LevelUp.SetActive(false);
         RegisterButton();
@@ -180,8 +182,15 @@ public class UIBasicBanner : MonoBehaviour
         talent_new.SetActive(true);
         F_LevelUp.SetActive(true);
         text_level.text =string.Format("Lv{0}→Lv{1}",Player.instance.playerActor.level-1,Player.instance.playerActor.level);
+        if(CharacterManager.instance.GetLevelData(Player.instance.playerActor.level-1).addAttack>0)
         text_attack.text =string.Format("攻击力:{0}→{1}",Player.instance.playerActor.basicAttack-1,Player.instance.playerActor.basicAttack);
+        else
+        text_attack.text ="";
+        if(CharacterManager.instance.GetLevelData(Player.instance.playerActor.level-1).addDefence>0)
         text_defence.text =string.Format("防御力:{0}→{1}",Player.instance.playerActor.basicDefence-1,Player.instance.playerActor.basicDefence);
+        else
+        text_defence.text ="";
+        text_defence.text =string.Format("获得{0}点天赋点数",Configs.instance.levelUpAddTalentPoint);
 
     }
     void CloseLevelUpFrame()

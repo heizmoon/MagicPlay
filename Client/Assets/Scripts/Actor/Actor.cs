@@ -1833,13 +1833,13 @@ public class Actor : MonoBehaviour
         if(UIBattle.Instance!=null)
         {
             ActorBackUp backUp = UIBattle.Instance.GetComponent<ActorBackUp>();
-            backUp.basicAttack+=Configs.instance.levelUpAddAttack;
-            backUp.basicDefence+=Configs.instance.levelUpAddDefence;
+            backUp.basicAttack+=Configs.instance.levelUpAddTalentPoint;
         }
-        basicAttack+=Configs.instance.levelUpAddAttack;
-        basicDefence+=Configs.instance.levelUpAddDefence;
+        basicAttack+=CharacterManager.instance.GetLevelData(level).addAttack;
+        basicDefence+=CharacterManager.instance.GetLevelData(level).addDefence;
+        HpMax+=CharacterManager.instance.GetLevelData(level).addHPMax;
         level++;
-        BattleScene.instance.talentPoint++;
+        BattleScene.instance.talentPoint+=Configs.instance.levelUpAddTalentPoint;
     }
     
 }

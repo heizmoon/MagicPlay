@@ -12,6 +12,7 @@ public class CharacterManager : MonoBehaviour
 
     public List<Character> characters =new List<Character>();
     CharacterDataSet manager;
+    LevelDataSet levelDataSet;
     void Awake()
     {
         instance =this;
@@ -20,8 +21,7 @@ public class CharacterManager : MonoBehaviour
         unlockCharacters.Add(1);
         unlockCharacters.Add(2);
         unlockCharacters.Add(3);
-
-
+        levelDataSet = Resources.Load<LevelDataSet>("DataAssets/Level");
     }
     public void GetUnlockCharacter()
     {
@@ -145,6 +145,17 @@ public class CharacterManager : MonoBehaviour
         foreach (var item in characters)
         {
             if(item.data.id == id)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+    public LevelData GetLevelData(int level)
+    {
+        foreach (var item in levelDataSet.dataArray)
+        {
+            if(item.level == level)
             {
                 return item;
             }

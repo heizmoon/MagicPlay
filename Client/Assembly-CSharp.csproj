@@ -91,6 +91,7 @@
      <Compile Include="Assets\Scripts\ExcelDataSet\ExcelData.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\GuildDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\IdealDataSet.cs" />
+     <Compile Include="Assets\Scripts\ExcelDataSet\LevelDataSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\MonsterGroupSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\MonsterTypeSet.cs" />
      <Compile Include="Assets\Scripts\ExcelDataSet\QuestionDataSet.cs" />

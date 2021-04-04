@@ -15,9 +15,8 @@ public class Configs : MonoBehaviour
     public float campRestoreHP;
     public int executeRestoreHP;
     public float eneryCubeRestoreMP;
-    public int levelUpAddAttack;
-    public int levelUpAddDefence;
-    public int levelUpNeedSteps;
+    public int levelUpAddTalentPoint;
+    public int everyStepAddEXP;
     public int cardWeightAddition;
     public int buildNumber;
 

@@ -50,7 +50,8 @@ public class AbilityData
     public bool targetSelf;
     public int buffNum;
     public int rank;
-    public int buildID;
+    public string buildIDList;
+    public List<int> _buildList;
 
 }
 [System.Serializable]
@@ -143,7 +144,16 @@ public class SummonData
     public int skill;
     
 }
-
+[System.Serializable]
+public class LevelData
+{
+    public int level;
+    public int exp;
+    public int addAttack;
+    public int addDefence;
+    public int addHPMax;
+    
+}
 [System.Serializable]
 public class CharacterData
 {            
