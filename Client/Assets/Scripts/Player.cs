@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 	
 	///<summary>玩家的级别</summary>
 	public int rank;
-	///<summary>由资产加成，不会受到理想影响的部分</summary>
+	
 	public Actor playerActor;
 	public string playerNow="";//玩家正在做的事，进入各个界面时会发生改变#无用
 	public List<int> playerAssests =new List<int>();//玩家拥有的资产

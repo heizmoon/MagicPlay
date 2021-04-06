@@ -17,11 +17,12 @@ public class CharacterManager : MonoBehaviour
     {
         instance =this;
         manager = Resources.Load<CharacterDataSet>("DataAssets/Character");
+        levelDataSet = Resources.Load<LevelDataSet>("DataAssets/Level");
         unlockCharacters.Add(0);
         unlockCharacters.Add(1);
         unlockCharacters.Add(2);
         unlockCharacters.Add(3);
-        levelDataSet = Resources.Load<LevelDataSet>("DataAssets/Level");
+        
     }
     public void GetUnlockCharacter()
     {
