@@ -41,7 +41,7 @@ public class UICamp : MonoBehaviour
     }
     void OnRemoveCard()
     {
-        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UICardRemove"));
+        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UICardExchange"));
         go.transform.SetParent(Main.instance.allScreenUI); 
 		go.transform.localScale =Vector3.one;
         go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;

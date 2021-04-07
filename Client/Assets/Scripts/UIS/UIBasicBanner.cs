@@ -196,5 +196,16 @@ public class UIBasicBanner : MonoBehaviour
     void CloseLevelUpFrame()
     {
         F_LevelUp.SetActive(false);
+        OnExchangeCard();
+    }
+    void OnExchangeCard()
+    {
+        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIBattleReward"));
+        go.transform.SetParent(Main.instance.allScreenUI);
+        go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+        go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        go.transform.localScale =Vector3.one;
+        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,false);
+
     }
 }

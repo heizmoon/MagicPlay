@@ -748,14 +748,20 @@ public class UIBattle : MonoBehaviour
 
     void ShowReward()
     {
-        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIBattleReward"));
-        go.transform.SetParent(Main.instance.allScreenUI);
+        // GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIBattleReward"));
+        // go.transform.SetParent(Main.instance.allScreenUI);
+        // go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+        // go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        // go.transform.localScale =Vector3.one;
+        // go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,isBoss);
+        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UICardExchange"));
+        go.transform.SetParent(Main.instance.allScreenUI); 
+		go.transform.localScale =Vector3.one;
         go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-        go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-        go.transform.localScale =Vector3.one;
-        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,isBoss);
+		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
 
     }
+
     void OnShieldTips()
     {
         UIBuffDetail.CreateUIBuffDetail("每1点护甲可以减少1点伤害,但无法减少穿透伤害");
