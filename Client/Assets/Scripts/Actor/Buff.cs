@@ -316,7 +316,8 @@ public class Buff
         
         //引发技能
         //若技能的数值与层数相关，则使用num
-
+        Debug.Log("移除buff"+buffData.name);
+        buffIcon.OnEffectReduce(1);
         //移除自己----------??
         BuffManager.RemoveBuffFromActor(this,target);
     }

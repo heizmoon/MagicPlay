@@ -178,10 +178,12 @@ public class BuffIcon : MonoBehaviour
         {
             OnBuffAction(buffID,"end",0,buff.target.actorType);
         }
+        Debug.LogWarning("移除BuffIcon");
         Destroy(this.gameObject);
     }
     public void OnEffectReduce(int num)
     {
+        textBuffNum.text =string.Format("{0}",buffNum-num); 
         if(OnBuffAction!=null)
         OnBuffAction(buffID,"end",buffNum-num,buff.target.actorType);
     }

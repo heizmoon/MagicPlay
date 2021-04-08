@@ -98,29 +98,51 @@ public class BuffManager : MonoBehaviour
     IEnumerator IEWaitForRemoveBuff(Buff buff)
     {
         yield return new WaitForSeconds(0.1f);
+        Debug.Log("开始移除BUFF:"+buff.buffData.abilityID);
         if(buff.buffData.abilityID ==33)
         {
             buff.target.AddCold(-(int)buff.buffData.value);    
         }
         else
         {
-            for (int i = 0; i < buff.buffData.value; i++)
+            Buff m_buff =FindBuff(buff.buffData.abilityID,buff.target);
+            if(m_buff.buffData.removeType ==0)
             {
-                Buff _buff = BuffManager.FindBuff(buff.buffData.abilityID,buff.target);
-                if(_buff!=null)
+                m_buff.buffIcon.OnEffectEnd();
+            }
+            else
+            {
+                int num =(int)buff.buffData.value;
+                int i =0;
+                for (int j = buff.target.buffs.Count-1; j >=0 ; j--)
                 {
-                    Debug.Log("移除一层"+_buff.buffData.name);
-                    _buff.OnBuffEnd();
-                    if(_buff.buffIcon.buffs.Count==0)
+                    
+                    Buff _buff =buff.target.buffs[j];
+                    if(_buff.buffData.id == buff.buffData.abilityID)
                     {
-                        _buff.buffIcon.OnEffectEnd();
+                        Debug.Log("发现一层"+_buff.buffData.name);
+                        if(_buff!=null)
+                        {
+                            Debug.Log("移除一层"+_buff.buffData.name);
+                            _buff.OnBuffEnd();
+                            i++;
+                            if(_buff.buffIcon.buffs.Count==0)
+                            {
+                                _buff.buffIcon.OnEffectEnd();
+                            }
+                            if(i == num)
+                            {
+                                break;
+                            }
+                        }
+
                     }
-                }
-                else
-                {
-                    break;
+                    
                 }
             }
+            
+            
+            
         }
         
     }
