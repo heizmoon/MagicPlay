@@ -19,6 +19,7 @@ public class Configs : MonoBehaviour
     public int everyStepAddEXP;
     public int cardWeightAddition;
     public int buildNumber;
+    public bool ifChangMode;
 
     void Awake()
     {

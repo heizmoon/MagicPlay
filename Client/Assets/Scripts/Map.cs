@@ -49,7 +49,7 @@ public class Map : MonoBehaviour
         {
             Player.instance.playerActor.LevelUp();
             BattleScene.instance.ifLevelUp =false;
-            // UIBasicBanner.instance.F_LevelUp.SetActive(true);
+            UIBasicBanner.instance.F_LevelUp.SetActive(true);
             UIBasicBanner.instance.ShowNewTalent();
         }
     }
@@ -58,11 +58,11 @@ public class Map : MonoBehaviour
         local.DOLocalMove(point.transform.localPosition,0.75f,false);
         Refresh();
         BattleScene.instance.steps++;
-        BattleScene.instance.exp+= Configs.instance.everyStepAddEXP;
-        if(BattleScene.instance.exp>=CharacterManager.instance.GetLevelData(Player.instance.playerActor.level).exp)
-        {
-           BattleScene.instance.ifLevelUp = true; 
-        }
+        // BattleScene.instance.exp+= Configs.instance.everyStepAddEXP;
+        // if(BattleScene.instance.exp>=CharacterManager.instance.GetLevelData(Player.instance.playerActor.level).exp)
+        // {
+        //    BattleScene.instance.ifLevelUp = true; 
+        // }
         StartCoroutine(WaitForPoint(point));
     }
     IEnumerator WaitForPoint(MapPoint point)

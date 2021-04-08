@@ -174,6 +174,11 @@ public class SkillCard : MonoBehaviour
             ExploreSkillCard();
             return;
         }
+        if(UIBattle.Instance.ifPause)
+        {
+            ExploreSkillCard();
+            return;
+        }
         if(Player.instance.playerActor.WanaSpell(skill))
         {
             //已经使用，不可再次点击

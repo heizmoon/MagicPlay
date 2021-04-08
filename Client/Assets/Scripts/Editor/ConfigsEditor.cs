@@ -26,6 +26,7 @@ public class ConfigsEditor : Editor {
         drawProperty("everyStepAddEXP", "每步增加多少经验值");
         drawProperty("cardWeightAddition", "获得卡牌时每张现有牌的权重加成");
         drawProperty("buildNumber", "全部流派数量");
+        drawProperty("ifChangMode", "是否采用换牌模式");
 
 
         // 只读属性

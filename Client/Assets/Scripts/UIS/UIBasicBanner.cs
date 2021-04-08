@@ -17,8 +17,8 @@ public class UIBasicBanner : MonoBehaviour
     Text text_level;
     Text text_attack;
     Text text_defence;
-    Text text_talent;
-
+    Text text_HPmax;
+    GameObject levleTextObjects;
 
     public Text textMap;
 
@@ -34,11 +34,12 @@ public class UIBasicBanner : MonoBehaviour
     {
         goldText =transform.Find("up/goldText").GetComponent<Text>();
         F_LevelUp =transform.Find("LevelUpFrame").gameObject;
-        BTN_LevelUp =transform.Find("LevelUpFrame/Button").GetComponent<Button>();
-        text_level =transform.Find("LevelUpFrame/LevleText").GetComponent<Text>();
-        text_attack =transform.Find("LevelUpFrame/AttackText").GetComponent<Text>();
-        text_defence =transform.Find("LevelUpFrame/DefenceText").GetComponent<Text>();
-        text_talent =transform.Find("LevelUpFrame/TalentText").GetComponent<Text>();
+        BTN_LevelUp =transform.Find("LevelUpFrame/Texts/Button").GetComponent<Button>();
+        levleTextObjects =transform.Find("LevelUpFrame/Texts").gameObject;
+        text_level =transform.Find("LevelUpFrame/Texts/LevleText").GetComponent<Text>();
+        text_attack =transform.Find("LevelUpFrame/Texts/AttackText").GetComponent<Text>();
+        text_defence =transform.Find("LevelUpFrame/Texts/DefenceText").GetComponent<Text>();
+        text_HPmax =transform.Find("LevelUpFrame/Texts/TalentText").GetComponent<Text>();
 
         F_LevelUp.SetActive(false);
         RegisterButton();
@@ -61,7 +62,7 @@ public class UIBasicBanner : MonoBehaviour
         T_AbilityGroup.onValueChanged.AddListener(isOn => OpenUIAbilityGroup(T_AbilityGroup.isOn));
         T_Map.onValueChanged.AddListener(isOn => OpenUIMap(T_Map.isOn));
         T_Talent.onValueChanged.AddListener(isOn => OpenUITalent(T_Talent.isOn));
-        BTN_LevelUp.onClick.AddListener(CloseLevelUpFrame);
+        BTN_LevelUp.onClick.AddListener(GoOn);
     }
     void OpenUICardGroup(bool IsOn)
     {
@@ -179,33 +180,47 @@ public class UIBasicBanner : MonoBehaviour
     }
     public void ShowNewTalent()
     {
-        talent_new.SetActive(true);
+        Debug.Log("升级了");
+        // talent_new.SetActive(true);
         F_LevelUp.SetActive(true);
+        levleTextObjects.SetActive(true);
         text_level.text =string.Format("Lv{0}→Lv{1}",Player.instance.playerActor.level-1,Player.instance.playerActor.level);
-        if(CharacterManager.instance.GetLevelData(Player.instance.playerActor.level-1).addAttack>0)
-        text_attack.text =string.Format("攻击力:{0}→{1}",Player.instance.playerActor.basicAttack-1,Player.instance.playerActor.basicAttack);
+        int addAttack =CharacterManager.instance.GetLevelData(Player.instance.playerActor.level-1).addAttack;
+        if(addAttack>0)
+        {
+            text_attack.text =string.Format("攻击力:{0}→{1}",Player.instance.playerActor.basicAttack-1,Player.instance.playerActor.basicAttack);
+        }
         else
         text_attack.text ="";
-        if(CharacterManager.instance.GetLevelData(Player.instance.playerActor.level-1).addDefence>0)
-        text_defence.text =string.Format("防御力:{0}→{1}",Player.instance.playerActor.basicDefence-1,Player.instance.playerActor.basicDefence);
+        int addDefence =CharacterManager.instance.GetLevelData(Player.instance.playerActor.level-1).addDefence;
+        if(addDefence>0)
+        {
+            text_defence.text =string.Format("防御力:{0}→{1}",Player.instance.playerActor.basicDefence-addDefence,Player.instance.playerActor.basicDefence);
+        }
         else
         text_defence.text ="";
-        text_defence.text =string.Format("获得{0}点天赋点数",Configs.instance.levelUpAddTalentPoint);
-
+        int addHPMax =CharacterManager.instance.GetLevelData(Player.instance.playerActor.level-1).addHPMax;
+        if(addHPMax>0)
+        {
+            text_HPmax.text =string.Format("最大生命值{0}→{1}",Player.instance.playerActor.HpMax-addHPMax,Player.instance.playerActor.HpMax);
+        }
+        else
+        text_HPmax.text ="";
     }
-    void CloseLevelUpFrame()
+    void GoOn()
     {
-        F_LevelUp.SetActive(false);
-        OnExchangeCard();
+        // F_LevelUp.SetActive(false);
+        levleTextObjects.SetActive(false);
+        OnReward();
     }
-    void OnExchangeCard()
+    void OnReward()
     {
         GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIBattleReward"));
         go.transform.SetParent(Main.instance.allScreenUI);
         go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
         go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         go.transform.localScale =Vector3.one;
-        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,false);
+        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,true);
 
     }
 }

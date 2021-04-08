@@ -315,30 +315,6 @@ public class UIBattle : MonoBehaviour
         // Battle.Instance.ShowStatisticDamage(0);
         // Battle.Instance.ShowStatisticDamage(1);
         ifPause = true;
-        if(result==1)
-        {
-            //胜利了
-            //如果不是最终BOSS，选择能力奖励
-            //怎样判断是否是最终BOSS？
-            if(BattleScene.instance.beatBossNumber>1&&isBoss)
-            {
-                //最终BOSS，跳过
-            }
-            else
-            {
-                ShowReward();
-            }
-            
-            BattleScene.instance.BattleEnd(isBoss);
-        }
-        else
-        {
-            //失败了
-            //显示失败UI
-            UIBattleFail.CreateUI();
-        }
-
-        // BuffManager.RemovePlayerActorTempBuff();
         BuffManager.RemovePlayerActorAllBuff();//------------移除所有buff
         BuffManager.RemoveActorAllBuff(Enemy);
         playerActor.cardMpReduce =0;
@@ -353,6 +329,34 @@ public class UIBattle : MonoBehaviour
         playerActor.armor =0;
         RecoverActor();//还原角色备份
         Enemy.gameObject.SetActive(false);
+        
+        if(result==1)
+        {
+            //胜利了
+            //如果不是最终BOSS，选择能力奖励
+            //怎样判断是否是最终BOSS？
+            if(BattleScene.instance.beatBossNumber>1&&isBoss)
+            {
+                //最终BOSS，跳过
+            }
+            else
+            {
+                if(!Configs.instance.ifChangMode)
+                ShowReward();
+                else
+                ShowChangeCard();
+            }
+            
+            BattleScene.instance.BattleEnd(isBoss);
+        }
+        else
+        {
+            //失败了
+            //显示失败UI
+            UIBattleFail.CreateUI();
+        }
+        // BuffManager.RemovePlayerActorTempBuff();
+        OnBattleGoOn();
 
     }
     ///<summary>创建一条结算数据信息</summary>
@@ -748,18 +752,21 @@ public class UIBattle : MonoBehaviour
 
     void ShowReward()
     {
-        // GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIBattleReward"));
-        // go.transform.SetParent(Main.instance.allScreenUI);
-        // go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-        // go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-        // go.transform.localScale =Vector3.one;
-        // go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,isBoss);
+        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIBattleReward"));
+        go.transform.SetParent(Main.instance.allScreenUI);
+        go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+        go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        go.transform.localScale =Vector3.one;
+        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,false);
+        
+    }
+    void ShowChangeCard()
+    {
         GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UICardExchange"));
         go.transform.SetParent(Main.instance.allScreenUI); 
 		go.transform.localScale =Vector3.one;
         go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-
     }
 
     void OnShieldTips()
