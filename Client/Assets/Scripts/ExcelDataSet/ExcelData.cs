@@ -51,6 +51,13 @@ public class AbilityData
     public int buffNum;
     public int rank;
     public string buildIDList;
+    public int attack;
+    public int defence;
+    public int hpMax;
+    public int mpMax;
+    public float reMp;
+    public float crit;
+
     public List<int> _buildList;
 
 }

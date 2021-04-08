@@ -65,6 +65,16 @@ public class UITreasure : MonoBehaviour
         if(type==1)
         {
             Player.instance.playerActor.abilities.Add(id);
+            AbilityData ability = AbilityManager.instance.GetInfo(id);
+            Player.instance.playerActor.basicAttack+=ability.attack;
+            Player.instance.playerActor.basicDefence+=ability.defence;
+            Player.instance.playerActor.HpMax+=ability.hpMax;
+            Player.instance.playerActor.MpMax+=ability.mpMax;
+            Player.instance.playerActor.Crit+=ability.crit;
+            float reMp =ability.reMp/5;
+            int temp = (int)(reMp*100);
+            reMp =temp/100f;
+            Player.instance.playerActor.autoReduceMPAmount+= reMp;
         }
         BattleScene.instance.OpenMap();
         Destroy(gameObject);

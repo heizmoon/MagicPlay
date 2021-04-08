@@ -164,6 +164,17 @@ public class UIBattleReward : MonoBehaviour
         {
             hasChoosenRelic =true;
             Player.instance.playerActor.abilities.Add(item.id);
+            AbilityData ability = AbilityManager.instance.GetInfo(item.id);
+            Player.instance.playerActor.basicAttack+=ability.attack;
+            Player.instance.playerActor.basicDefence+=ability.defence;
+            Player.instance.playerActor.HpMax+=ability.hpMax;
+            Player.instance.playerActor.MpMax+=ability.mpMax;
+            Player.instance.playerActor.Crit+=ability.crit;
+            float reMp =ability.reMp/5;
+            int temp = (int)(reMp*100);
+            reMp =temp/100f;
+            Player.instance.playerActor.autoReduceMPAmount+= reMp;
+
             for (int i = 0; i < abilityItemBoxes.Count; i++)
             {
                 abilityItemBoxes[i].Disable();

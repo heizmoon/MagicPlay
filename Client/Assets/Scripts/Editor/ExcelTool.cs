@@ -926,6 +926,13 @@ namespace EditorTool {
             data.buffNum =collect[i][7].ToString()==""?0:int.Parse(collect[i][7].ToString());
             data.rank =collect[i][8].ToString()==""?0:int.Parse(collect[i][8].ToString());
             data.buildIDList =collect[i][9].ToString();
+            data.attack =collect[i][10].ToString()==""?0:int.Parse(collect[i][10].ToString());
+            data.defence =collect[i][11].ToString()==""?0:int.Parse(collect[i][11].ToString());
+            data.hpMax =collect[i][12].ToString()==""?0:int.Parse(collect[i][12].ToString());
+            data.mpMax =collect[i][13].ToString()==""?0:int.Parse(collect[i][13].ToString());
+            data.reMp =collect[i][14].ToString()==""?0:float.Parse(collect[i][14].ToString());
+            data.crit =collect[i][15].ToString()==""?0:float.Parse(collect[i][15].ToString());
+
             data._buildList = GetListIntFromString(data.buildIDList);
             array[i - 2] = data;
             }

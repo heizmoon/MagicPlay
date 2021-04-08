@@ -120,7 +120,6 @@ public class BuffManager : MonoBehaviour
                     Buff _buff =buff.target.buffs[j];
                     if(_buff.buffData.id == buff.buffData.abilityID)
                     {
-                        Debug.Log("发现一层"+_buff.buffData.name);
                         if(_buff!=null)
                         {
                             Debug.Log("移除一层"+_buff.buffData.name);
@@ -140,9 +139,7 @@ public class BuffManager : MonoBehaviour
                     
                 }
             }
-            
-            
-            
+    
         }
         
     }
