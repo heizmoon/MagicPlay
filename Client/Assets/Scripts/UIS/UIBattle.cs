@@ -105,6 +105,15 @@ public class UIBattle : MonoBehaviour
         {
             BattleTime+=Time.deltaTime;
         }
+        if(Main.instance.ifNewBird==0)//新手引导1
+        {
+            if(playerActor.MpCurrent>3.3f)
+            {
+                Main.instance.ifNewBird++;
+                NewBird.LoadNewBird(0);
+            }
+        }
+        
     }
     ///<summary>//初始化UI</summary>
     public void Init(Actor enemy,int scene,bool isBoss)
@@ -175,12 +184,54 @@ public class UIBattle : MonoBehaviour
         // Debug.LogFormat("角色当前生命值为：{0}",playerActor.HpCurrent);
         
     }
-    void StartBattle()
+    void StartBattle()//--------------包含新手引导部分-----------------------------
     {
         battleStart=true;
         //开战物品生效
         StartCoroutine(IEWaitForOpenAbility());
         Shuffle();//洗牌
+        if(Main.instance.ifNewBird==0)
+        {
+            //关闭可以点击屏幕暂停的功能！
+            //手动发牌，3张攻击
+
+            CreateNewCardAndGiveToHand(2,0);
+            CreateNewCardAndGiveToHand(2,1);
+            CreateNewCardAndGiveToHand(2,2);
+
+            //怪物初始行为：发呆
+            //当能量超过1张攻击牌的消耗时，暂停游戏，引导玩家使用一张攻击牌。-----------newbird00
+
+            //当怪物受到1张攻击牌伤害后，怪物开始不停防御
+            //当怪物第一次成功释放防御后，暂停游戏，告诉玩家护甲值可以抵挡攻击，并且护甲值会随时间自动消失-----------newbird01
+
+            //当玩家手牌为1张时，模拟发牌，并暂停游戏，告诉玩家当手牌小于等于1张的时候，会自动补牌-----------newbird02
+            //补牌会补充2张格挡 1张攻击
+
+            //补牌结束后，怪物正好开始攻击，攻击即将结束时，提醒玩家使用格挡 来阻挡怪物的攻击？？？可以不提醒
+
+            //后续补牌变为正常
+        }
+        if(Main.instance.ifNewBird==1)
+        {
+            //开启可以点击屏幕暂停的功能
+            //怪物行为：发呆 buff:护甲持续时间无限，并初始拥有20层护甲
+            //暂停，提醒玩家点击屏幕中心可以暂停战斗
+            //提醒玩家观察怪物BUFF
+            //当玩家关闭buff提示后，告诉玩家暂停状态时点击卡牌，可以查看卡牌效果详情
+            //玩家拥有穿透伤害的牌，打断的牌
+            //战斗结束后升级 给玩家防御流的遗物
+            //使用后能量消耗降低，并复制一张
+            //
+        }
+        if(Main.instance.ifNewBird==2)
+        {
+            //战斗开始前先播剧情
+            //当怪物生命值到50%时再播剧情
+            //结束战斗
+            DealCards();//发牌
+        }
+        else
         DealCards();//发牌
     }
     IEnumerator IEWaitForOpenAbility()
@@ -224,11 +275,14 @@ public class UIBattle : MonoBehaviour
             skillCard.Init(playerActor.skills[i]);
             cardsList.Add(skillCard);
             allCards.Add(skillCard);
-        }
-        
+        }   
     }
     void PauseBattle()
     {
+        if(Main.instance.ifNewBird<=3)
+        {
+            return;
+        }
         ifPause = true;
         btn_play.gameObject.SetActive(true);
         btn_pause.gameObject.SetActive(false);
@@ -240,7 +294,6 @@ public class UIBattle : MonoBehaviour
         btn_play.gameObject.SetActive(false);
         btn_pause.gameObject.SetActive(true);
         Time.timeScale = 1f;
-
     }
     public void SetEnemyBarText(int state,int damage)
     {
@@ -407,7 +460,15 @@ public class UIBattle : MonoBehaviour
         // {
         //     BattleEvent.instance.GetBattleResult(result);
         // }
-        
+        if(Main.instance.ifNewBird==3)
+        {
+            playerActor.UsingSkillsID.Add(2);
+            playerActor.UsingSkillsID.Add(2);
+            playerActor.UsingSkillsID.Add(2);
+            playerActor.UsingSkillsID.Add(102);
+            playerActor.UsingSkillsID.Add(102);
+
+        }
         
         
         Destroy(this.gameObject);
@@ -692,10 +753,10 @@ public class UIBattle : MonoBehaviour
         skillCard.CheckBuffCardWhileCreateCard();
         return skillCard;
     }
-    public void CreateNewCardAndGiveToHand(int id)
+    public void CreateNewCardAndGiveToHand(int id,int delayNumber)
     {
         if(playerActor.handCards.Count<8)
-        SelectCard(CreateNewCardTemp(id),0);
+        SelectCard(CreateNewCardTemp(id),delayNumber);
         else
         CreateNewCardTemp(id).ThrowCard();
     }
@@ -785,5 +846,19 @@ public class UIBattle : MonoBehaviour
             allCards[i].RefeashCardShow();
 
         }
+    }
+    public void NewBird_02()
+    {
+        StartCoroutine(IENewBird_02());
+    }
+    IEnumerator IENewBird_02()
+    {
+        UIBattle.Instance.CreateNewCardAndGiveToHand(102,0);
+        UIBattle.Instance.CreateNewCardAndGiveToHand(102,1);
+        UIBattle.Instance.CreateNewCardAndGiveToHand(2,2);
+        yield return new WaitForSeconds(1f);
+        Main.instance.ifNewBird++;
+        NewBird.LoadNewBird(2);
+        
     }
 }

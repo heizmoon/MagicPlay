@@ -36,6 +36,7 @@ public class Main : MonoBehaviour {
 
 	///<summary>游戏是否已经加载完毕，若没有加载完毕，则关闭游戏的时候，不会执行保存数据（视为没有开启游戏）</summary>
 	private bool awakeFinish;
+	public int ifNewBird;
 	void Awake()
 	{
 		instance =this;
@@ -45,6 +46,7 @@ public class Main : MonoBehaviour {
 		
 		//锁定FPS
 		Application.targetFrameRate = LockFPS;
+		ifNewBird = PlayerPrefs.GetInt("ifNew",0);
 	}
 
 	void Start ()
@@ -131,10 +133,10 @@ public class Main : MonoBehaviour {
 		// InitUIPlayer();
 		CharacterManager.instance.CreateCharacters();
 
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(0.5f);
 		SkillManager.instance.SeparateSkillFromLevel();
 
-		yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(1f);
 		
 		//等到全部加载完毕，全部隐藏
 		
@@ -163,7 +165,16 @@ public class Main : MonoBehaviour {
 	}
 	void JudgeWhatsDoing()
 	{
+		//如果新手没过，那么开始新手教程
+		//直接进入第一场战斗
+		if(ifNewBird<5)
+		{
+			UIChooseCharacter.OnChooseCharacter(0,"Map_00");
+			Map.instance.MoveLocal(Map.instance.startPos.GetComponent<MapPoint>());
+			
+		}
 		//--------打开主界面
+		else
 		InitUIChooseCharacter();
 	}
 	
@@ -181,7 +192,7 @@ public class Main : MonoBehaviour {
 	{
 		yield return new WaitForSeconds(3f);
 		UILoading.SetActive(false);
-		if(Player.instance.playerActor!=null)
+		if(Player.instance.playerActor!=null&&ifNewBird>5)
 		{
 			Destroy(Player.instance.playerActor.gameObject);
 		}
@@ -392,10 +403,7 @@ public class Main : MonoBehaviour {
 	void CloseOhterUIs()
 	{
 		UIState =0;
-		
 
-		
-		
 		if(UIPlayer.instance)
 		{
 			UIPlayer.instance.transform.SetParent(BottomUI);

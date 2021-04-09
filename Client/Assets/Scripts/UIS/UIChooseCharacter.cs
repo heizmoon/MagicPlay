@@ -36,23 +36,32 @@ public class UIChooseCharacter : MonoBehaviour
     }
     void OnChooseCharacter()
     {
+        OnChooseCharacter(nowCharacter,"Map_01");
+    }
+    public static void OnChooseCharacter(int charID,string mapName)
+    {
 		// UIBasicBanner.instance.ChangeGoldText();
-        string avaterName =CharacterManager.instance.GetInfo(nowCharacter,"prefab");
+        string avaterName =CharacterManager.instance.GetInfo(charID,"prefab");
         Actor playerActor = Instantiate((GameObject)Resources.Load("Prefabs/"+avaterName)).GetComponent<Actor>();
         playerActor.actorType =ActorType.玩家角色;
         Player.instance.playerActor =playerActor;
-		playerActor.InitPlayerActor(CharacterManager.instance.GetCharacter(nowCharacter));
-        Player.instance.CharID =nowCharacter;
+		playerActor.InitPlayerActor(CharacterManager.instance.GetCharacter(charID));
+        Player.instance.CharID =charID;
         playerActor.transform.SetParent(Main.instance.BottomUI);
         playerActor.transform.localPosition =Vector3.zero;
         playerActor.transform.localScale =Vector3.one;
         //直接选择角色完毕，进入战斗流程
-		BattleScene.instance.ChangeMap("Map_01");
+		BattleScene.instance.ChangeMap(mapName);
         //获得初始金币
         Player.instance.AddGold(Configs.instance.initGold);
-        gameObject.SetActive(false);
-        Destroy(gameObject);
+        if(UIChooseCharacter.instance)
+        {
+            UIChooseCharacter.instance.gameObject.SetActive(false);
+            Destroy(UIChooseCharacter.instance.gameObject);
+        }
+        
     }
+
     public void OnPointerDown()
     {
         mouseX = Input.mousePosition.x;

@@ -80,6 +80,7 @@
      <Compile Include="Assets\Scripts\Configs.cs" />
      <Compile Include="Assets\Scripts\DateManager.cs" />
      <Compile Include="Assets\Scripts\Events\EventManager.cs" />
+     <Compile Include="Assets\Scripts\Events\NewBird.cs" />
      <Compile Include="Assets\Scripts\Events\RandomEventManager.cs" />
      <Compile Include="Assets\Scripts\Events\ShopManager.cs" />
      <Compile Include="Assets\Scripts\Events\TypeEventTool.cs" />
@@ -110,6 +111,17 @@
      <Compile Include="Assets\Scripts\Main.cs" />
      <Compile Include="Assets\Scripts\Map.cs" />
      <Compile Include="Assets\Scripts\MapPoint.cs" />
+     <Compile Include="Assets\Scripts\Performs\Perform.cs" />
+     <Compile Include="Assets\Scripts\Performs\TimeLineActorController.cs" />
+     <Compile Include="Assets\Scripts\Performs\TimeLineActorControllerAssets.cs" />
+     <Compile Include="Assets\Scripts\Performs\TimeLineDialogue.cs" />
+     <Compile Include="Assets\Scripts\Performs\TimeLineDialogueAssets.cs" />
+     <Compile Include="Assets\Scripts\Performs\TimeLineEnd.cs" />
+     <Compile Include="Assets\Scripts\Performs\TimeLineEndAssets.cs" />
+     <Compile Include="Assets\Scripts\Performs\TimeLineHideDialogue.cs" />
+     <Compile Include="Assets\Scripts\Performs\TimeLineHideDialogueAssets.cs" />
+     <Compile Include="Assets\Scripts\Performs\TimeLineSwitch.cs" />
+     <Compile Include="Assets\Scripts\Performs\TimeLineSwitchAssets.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\Prepare.cs" />
      <Compile Include="Assets\Scripts\TextTool.cs" />

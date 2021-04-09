@@ -574,7 +574,7 @@ namespace EditorTool {
         RandomEventBuild.CreateItemAsset();
         ShopDataBuild.CreateItemAsset();
         LevelDataBuild.CreateItemAsset();
-
+        DialogueBuild.CreateItemAsset();
 
         Debug.Log("-----所有表格生成完毕----");
     }

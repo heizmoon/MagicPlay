@@ -215,11 +215,11 @@ public class SkillCard : MonoBehaviour
                     {
                         int r =SkillManager.instance.GetRandomSkillByType(_skill.skillData.createCardChar,_skill.skillData.createCardType);
                         Debug.LogWarning("随机到卡牌id为"+r);
-                        UIBattle.Instance.CreateNewCardAndGiveToHand(r);
+                        UIBattle.Instance.CreateNewCardAndGiveToHand(r,0);
                     }
                     else
                     {
-                        UIBattle.Instance.CreateNewCardAndGiveToHand(_skill.skillData.createCardID);
+                        UIBattle.Instance.CreateNewCardAndGiveToHand(_skill.skillData.createCardID,0);
                     } 
                 }
                     
@@ -344,12 +344,19 @@ public class SkillCard : MonoBehaviour
     ///<summary>检查手牌数量是否小于自动补牌阈值，小于则自动补牌</summary>
     public static void CheckIfNeedSelectCard()
     {
+        
         Debug.Log("手牌数量："+Player.instance.playerActor.handCards.Count); 
         if(Player.instance.playerActor.handCards.Count <=Player.instance.playerActor.autoDealCardsMinValue)
         {
+            if(Main.instance.ifNewBird<3)
+            {
+                UIBattle.Instance.NewBird_02();
+                return;
+            }
             UIBattle.Instance.DealCards();
         }
     }
+    
     public void LegacyCard()//遗留效果
     {
         int temp =0;

@@ -342,6 +342,17 @@ public class Actor : MonoBehaviour
         armor +=number;
         if(armor<0)
         armor =0;
+        if(Main.instance.ifNewBird==1)
+        {
+            StartCoroutine(NewBird01());
+        }
+    }
+    IEnumerator NewBird01()
+    {
+        yield return new WaitForSeconds(0.1f);
+        
+            Main.instance.ifNewBird++;
+            NewBird.LoadNewBird(1);    
     }
     public void AddStamina(int number)
     {
@@ -1090,7 +1101,7 @@ public class Actor : MonoBehaviour
             //增加护甲
             if(skill.addArmor>0)
             {
-                skill.target.armor+=skill.addArmor+basicDefence;
+                skill.target.AddArmor(skill.addArmor+basicDefence);
                 skill.target.RefeashArmorAutoDecayTime();
                 // 如果身上有获得护甲后触发的buff，那么此时触发
                 BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(skill.target,BuffType.获得护甲后触发技能);
@@ -1520,7 +1531,7 @@ public class Actor : MonoBehaviour
         //增加护甲
         if(skill.addArmor>0)
         {
-            skill.target.armor+=skill.addArmor+basicDefence;
+            skill.target.AddArmor(skill.addArmor+basicDefence);
             skill.target.RefeashArmorAutoDecayTime();
             // 如果身上有获得护甲后触发的buff，那么此时触发
             BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(skill.target,BuffType.获得护甲后触发技能);

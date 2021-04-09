@@ -58,6 +58,7 @@ public class Map : MonoBehaviour
         local.DOLocalMove(point.transform.localPosition,0.75f,false);
         Refresh();
         BattleScene.instance.steps++;
+        
         // BattleScene.instance.exp+= Configs.instance.everyStepAddEXP;
         // if(BattleScene.instance.exp>=CharacterManager.instance.GetLevelData(Player.instance.playerActor.level).exp)
         // {
