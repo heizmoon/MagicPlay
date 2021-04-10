@@ -1626,6 +1626,11 @@ public class Actor : MonoBehaviour
         {
             skill.IncreaseHeal(skill.skillData.EUSHeal);
         }
+        //每次使用改变自身护甲的技能
+        if(skill.skillData.EUSArmor!= 0)
+        {
+            skill.IncreaseArmor(skill.skillData.EUSArmor);
+        }
            
     }
     public void AddMp(float num)

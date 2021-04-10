@@ -87,6 +87,22 @@ public class UIBattleReward : MonoBehaviour
         // {
             
         // }
+        if(Main.instance.ifNewBird <=4)
+        {
+            SkillData[] Sdatas =new SkillData[3]; 
+            Sdatas[0]= SkillManager.instance.GetInfo(169);
+            Sdatas[1]= SkillManager.instance.GetInfo(170);
+            Sdatas[2]= SkillManager.instance.GetInfo(171);
+
+            for (int i = 0; i < Sdatas.Length; i++)
+            {
+                skillItemBoxes[i].Reset();
+                skillItemBoxes[i].Init(Sdatas[i]);
+                skillItemBoxes[i].InReward();
+            }
+            Main.instance.ifNewBird++;
+            return;
+        }
         if(!isRelic)
         {
             SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);

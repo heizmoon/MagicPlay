@@ -198,6 +198,7 @@ public class UIBattle : MonoBehaviour
             CreateNewCardAndGiveToHand(2,0);
             CreateNewCardAndGiveToHand(2,1);
             CreateNewCardAndGiveToHand(2,2);
+            CreateNewCardAndGiveToHand(2,3);
 
             //怪物初始行为：发呆
             //当能量超过1张攻击牌的消耗时，暂停游戏，引导玩家使用一张攻击牌。-----------newbird00
@@ -212,19 +213,21 @@ public class UIBattle : MonoBehaviour
 
             //后续补牌变为正常
         }
-        if(Main.instance.ifNewBird==1)
+        else if(Main.instance.ifNewBird==5)
         {
+            DealCards();
+            NewBird_03();
             //开启可以点击屏幕暂停的功能
             //怪物行为：发呆 buff:护甲持续时间无限，并初始拥有20层护甲
             //暂停，提醒玩家点击屏幕中心可以暂停战斗
             //提醒玩家观察怪物BUFF
             //当玩家关闭buff提示后，告诉玩家暂停状态时点击卡牌，可以查看卡牌效果详情
+            //当怪物使用强化的时候，提醒玩家打断
             //玩家拥有穿透伤害的牌，打断的牌
             //战斗结束后升级 给玩家防御流的遗物
             //使用后能量消耗降低，并复制一张
-            //
         }
-        if(Main.instance.ifNewBird==2)
+        else if(Main.instance.ifNewBird==2)
         {
             //战斗开始前先播剧情
             //当怪物生命值到50%时再播剧情
@@ -460,14 +463,14 @@ public class UIBattle : MonoBehaviour
         // {
         //     BattleEvent.instance.GetBattleResult(result);
         // }
-        if(Main.instance.ifNewBird==3)
+        if(Main.instance.ifNewBird<=4)
         {
             playerActor.UsingSkillsID.Add(2);
             playerActor.UsingSkillsID.Add(2);
             playerActor.UsingSkillsID.Add(2);
             playerActor.UsingSkillsID.Add(102);
             playerActor.UsingSkillsID.Add(102);
-
+            Main.instance.ifNewBird++;
         }
         
         
@@ -859,6 +862,17 @@ public class UIBattle : MonoBehaviour
         yield return new WaitForSeconds(1f);
         Main.instance.ifNewBird++;
         NewBird.LoadNewBird(2);
+        
+    }
+    public void NewBird_03()
+    {
+        StartCoroutine(IENewBird_03());
+    }
+    IEnumerator IENewBird_03()
+    {
+        yield return new WaitForSeconds(1f);
+        Main.instance.ifNewBird++;
+        NewBird.LoadNewBird(3);
         
     }
 }

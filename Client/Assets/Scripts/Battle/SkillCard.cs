@@ -132,6 +132,16 @@ public class SkillCard : MonoBehaviour
         }
         else
         skill.describe =string.Format(skill.skillData.describe,"<color=red>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence));
+        
+        if(skill.addArmor>skill.skillData.addArmor)
+        skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=cyan>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>");//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
+        else if(skill.addArmor==skill.skillData.addArmor)
+        {
+            // Debug.Log("技能显示恢复正常");
+            skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=white>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>");
+        }
+        else
+        skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=red>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>");
         if(textSkillDescribe!=null)
         textSkillDescribe.text =skill.describe;
 
@@ -373,6 +383,11 @@ public class SkillCard : MonoBehaviour
         if(skill.skillData.ELCHeal!=0)
         {
             skill.IncreaseHeal(skill.skillData.ELCHeal);
+            temp++;
+        }
+        if(skill.skillData.ELCArmor!=0)
+        {
+            skill.IncreaseArmor(skill.skillData.ELCArmor);
             temp++;
         }
         if(temp>0)
