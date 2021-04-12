@@ -10,7 +10,16 @@ public class NewBird : MonoBehaviour
     Button button;
     float currentTime =0;
     float delayTime;
+    public int type;
     void Start()
+    {
+        if(type ==0)
+        {
+            Init();
+        }
+        
+    }
+    void Init()
     {
         Time.timeScale=0;
         button = GetComponent<Button>();
@@ -19,14 +28,17 @@ public class NewBird : MonoBehaviour
         delayTime =1f;
         currentTime = Time.realtimeSinceStartup;
     }
-
     // Update is called once per frame
     void Update()
     {
-        if(Time.realtimeSinceStartup>=delayTime+currentTime)
+        if(type ==0)
         {
-            CanContrl(0);
+            if(Time.realtimeSinceStartup>=delayTime+currentTime)
+            {
+                CanContrl(0);
+            }
         }
+        
     }
     void CanContrl(float delayTime)
     {
@@ -39,13 +51,15 @@ public class NewBird : MonoBehaviour
         Time.timeScale =1f;
         Destroy(gameObject);
     }
-    public static void LoadNewBird(int i)
+    public static NewBird LoadNewBird(int i)
     {
-        GameObject go = Instantiate((GameObject)Resources.Load("Prefabs/NewBird/NewBird_0"+i));
+        GameObject go = Instantiate((GameObject)Resources.Load("Prefabs/NewBird/NewBird_"+i));
         go.transform.SetParent(Main.instance.allScreenUI);
         go.transform.localPosition =Vector3.zero;
         go.transform.localScale =Vector3.one;
         go.GetComponent<RectTransform>().sizeDelta =Vector2.one;
         go.GetComponent<RectTransform>().anchoredPosition =Vector2.zero;
+        return go.GetComponent<NewBird>();
     }
+
 }

@@ -105,12 +105,12 @@ public class UIBattle : MonoBehaviour
         {
             BattleTime+=Time.deltaTime;
         }
-        if(Main.instance.ifNewBird==0)//新手引导1
+        if(Main.instance.ifNewBird==2)//新手引导1
         {
             if(playerActor.MpCurrent>3.3f)
             {
                 Main.instance.ifNewBird++;
-                NewBird.LoadNewBird(0);
+                NewBird.LoadNewBird(2);
             }
         }
         
@@ -190,33 +190,34 @@ public class UIBattle : MonoBehaviour
         //开战物品生效
         StartCoroutine(IEWaitForOpenAbility());
         Shuffle();//洗牌
-        if(Main.instance.ifNewBird==0)
+        if(Main.instance.ifNewBird==1)
         {
             //关闭可以点击屏幕暂停的功能！
             //手动发牌，3张攻击
-
+            Main.instance.ifNewBird++;
             CreateNewCardAndGiveToHand(2,0);
             CreateNewCardAndGiveToHand(2,1);
             CreateNewCardAndGiveToHand(2,2);
             CreateNewCardAndGiveToHand(2,3);
 
             //怪物初始行为：发呆
-            //当能量超过1张攻击牌的消耗时，暂停游戏，引导玩家使用一张攻击牌。-----------newbird00
+            //当能量超过1张攻击牌的消耗时，暂停游戏，引导玩家使用一张攻击牌。-----------newbird2
 
             //当怪物受到1张攻击牌伤害后，怪物开始不停防御
-            //当怪物第一次成功释放防御后，暂停游戏，告诉玩家护甲值可以抵挡攻击，并且护甲值会随时间自动消失-----------newbird01
+            //当怪物第一次成功释放防御后，暂停游戏，告诉玩家护甲值可以抵挡攻击，并且护甲值会随时间自动消失-----------newbird3
 
-            //当玩家手牌为1张时，模拟发牌，并暂停游戏，告诉玩家当手牌小于等于1张的时候，会自动补牌-----------newbird02
+            //当玩家手牌为1张时，模拟发牌，并暂停游戏，告诉玩家当手牌小于等于1张的时候，会自动补牌-----------newbird4
             //补牌会补充2张格挡 1张攻击
 
-            //补牌结束后，怪物正好开始攻击，攻击即将结束时，提醒玩家使用格挡 来阻挡怪物的攻击？？？可以不提醒
+            //补牌结束后，怪物正好开始攻击，攻击即将结束时，提醒玩家使用格挡 来阻挡怪物的攻击-----------newbird5
 
-            //后续补牌变为正常
+            //怪物死亡获得特定的奖励-----------newbird06
+
         }
-        else if(Main.instance.ifNewBird==5)
+        else if(Main.instance.ifNewBird==7)
         {
             DealCards();
-            NewBird_03();
+            NewBird_7();
             //开启可以点击屏幕暂停的功能
             //怪物行为：发呆 buff:护甲持续时间无限，并初始拥有20层护甲
             //暂停，提醒玩家点击屏幕中心可以暂停战斗
@@ -282,7 +283,7 @@ public class UIBattle : MonoBehaviour
     }
     void PauseBattle()
     {
-        if(Main.instance.ifNewBird<=3)
+        if(Main.instance.ifNewBird<=6)
         {
             return;
         }
@@ -463,7 +464,7 @@ public class UIBattle : MonoBehaviour
         // {
         //     BattleEvent.instance.GetBattleResult(result);
         // }
-        if(Main.instance.ifNewBird<=4)
+        if(Main.instance.ifNewBird<=6)
         {
             playerActor.UsingSkillsID.Add(2);
             playerActor.UsingSkillsID.Add(2);
@@ -850,29 +851,41 @@ public class UIBattle : MonoBehaviour
 
         }
     }
-    public void NewBird_02()
+    ///<summary>模拟发牌，给玩家发2张格挡，1张普通攻击</summary>
+    public void NewBird_4()
     {
-        StartCoroutine(IENewBird_02());
+        Main.instance.ifNewBird++;
+        StartCoroutine(IENewBird_4());
     }
-    IEnumerator IENewBird_02()
+    IEnumerator IENewBird_4()
     {
         UIBattle.Instance.CreateNewCardAndGiveToHand(102,0);
         UIBattle.Instance.CreateNewCardAndGiveToHand(102,1);
         UIBattle.Instance.CreateNewCardAndGiveToHand(2,2);
         yield return new WaitForSeconds(1f);
-        Main.instance.ifNewBird++;
-        NewBird.LoadNewBird(2);
+        NewBird.LoadNewBird(4);
         
     }
-    public void NewBird_03()
+    ///<summary>新手-点击屏幕暂停</summary>
+    public void NewBird_7()
     {
-        StartCoroutine(IENewBird_03());
+        Main.instance.ifNewBird++;
+        StartCoroutine(IENewBird_7());
     }
-    IEnumerator IENewBird_03()
+    IEnumerator IENewBird_7()
     {
         yield return new WaitForSeconds(1f);
+        NewBird.LoadNewBird(7);
+    }
+    ///<summary>新手-暂停，在合适的时机格挡</summary>
+    public void NewBird_5()
+    {
         Main.instance.ifNewBird++;
-        NewBird.LoadNewBird(3);
-        
+        StartCoroutine(IENewBird_5());
+    }
+    IEnumerator IENewBird_5()
+    {
+        yield return new WaitForSeconds(2.5f);
+        NewBird.LoadNewBird(5);
     }
 }

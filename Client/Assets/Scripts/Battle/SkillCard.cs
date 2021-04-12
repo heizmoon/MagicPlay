@@ -358,9 +358,9 @@ public class SkillCard : MonoBehaviour
         Debug.Log("手牌数量："+Player.instance.playerActor.handCards.Count); 
         if(Player.instance.playerActor.handCards.Count <=Player.instance.playerActor.autoDealCardsMinValue)
         {
-            if(Main.instance.ifNewBird<3)
+            if(Main.instance.ifNewBird<=5)
             {
-                UIBattle.Instance.NewBird_02();
+                UIBattle.Instance.NewBird_4();
                 return;
             }
             UIBattle.Instance.DealCards();

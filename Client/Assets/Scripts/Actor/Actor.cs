@@ -91,6 +91,7 @@ public class Actor : MonoBehaviour
     int tempState =-1;
     int behaviour;
     int AIStep;
+    bool AI_monsterHasHit;
     ///<summary>手牌列表</summary>
     public List<SkillCard> handCards;
     ///<summary>维持技能最低限制</summary>
@@ -342,17 +343,17 @@ public class Actor : MonoBehaviour
         armor +=number;
         if(armor<0)
         armor =0;
-        if(Main.instance.ifNewBird==1)
+        if(Main.instance.ifNewBird==3)
         {
-            StartCoroutine(NewBird01());
+            StartCoroutine(NewBird_3());
         }
     }
-    IEnumerator NewBird01()
+    IEnumerator NewBird_3()
     {
         yield return new WaitForSeconds(0.1f);
         
             Main.instance.ifNewBird++;
-            NewBird.LoadNewBird(1);    
+            NewBird.LoadNewBird(3);    
     }
     public void AddStamina(int number)
     {
@@ -545,6 +546,11 @@ public class Actor : MonoBehaviour
             if(UIBattle.Instance.BattleTime>=20)
             state  =2;
         }
+        if(monsterData.switchCondition2==5)
+        {
+            if(AI_monsterHasHit)
+            state  =2;
+        }
         if(monsterData.switchCondition3==1)
         {
             if(HpCurrent<=Mathf.FloorToInt(HpMax/2))
@@ -595,6 +601,11 @@ public class Actor : MonoBehaviour
                 {
                     case 1:
                         skillId = monsterData.m_attackSkills2[GetRandomFromIntList(monsterData.m_weightAttackSkills2)];
+                        Debug.LogWarning("Attack");
+                        if(Main.instance.ifNewBird<=5)
+                        {
+                            UIBattle.Instance.NewBird_5();
+                        }
                     break;
                     case 2:
                         skillId = monsterData.m_defendSkills2[GetRandomFromIntList(monsterData.m_weightDefendSkills2)];
@@ -1190,6 +1201,11 @@ public class Actor : MonoBehaviour
         if(OnActorHasHit!=null)
         {
             OnActorHasHit(0);
+        }
+        //怪物如果受到攻击
+        if(actorType == ActorType.敌人)
+        {
+            AI_monsterHasHit = true;
         }
         //基础防御力减免
         if(num-Stamina>0)

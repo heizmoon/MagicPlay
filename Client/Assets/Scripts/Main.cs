@@ -61,7 +61,14 @@ public class Main : MonoBehaviour {
 		//初始化
 		
 		gameObject.AddComponent<DateManager>();
-		StartLoadingUI();
+		if(ifNewBird==0)
+		{
+			NewBird_0();
+		}
+		else
+		{
+			StartLoadingUI();
+		}
 		//加载表格
 		
 		// if(!ExcelAbility.instance)
@@ -69,7 +76,6 @@ public class Main : MonoBehaviour {
         //     gameObject.AddComponent<ExcelAbility>().LoadInfo("Assets/Data/Ability.xlsx");
         // }
 
-		
 		gameObject.AddComponent<AbilityManager>();
 		gameObject.AddComponent<CharacterManager>();
 		gameObject.AddComponent<ReformManager>();
@@ -170,7 +176,7 @@ public class Main : MonoBehaviour {
 		if(ifNewBird<5)
 		{
 			UIChooseCharacter.OnChooseCharacter(0,"Map_00");
-			Map.instance.MoveLocal(Map.instance.startPos.GetComponent<MapPoint>());
+			Map.instance.MoveLocal(Map.instance.startPos.GetComponent<MapPoint>().nextPoint[0].GetComponent<MapPoint>());
 			
 		}
 		//--------打开主界面
@@ -196,6 +202,18 @@ public class Main : MonoBehaviour {
 		{
 			Destroy(Player.instance.playerActor.gameObject);
 		}
+	}
+	void NewBird_0()
+	{
+		ifNewBird++;
+		NewBird nb = NewBird.LoadNewBird(0);
+		StartCoroutine(StopNewBird_0(nb.gameObject));
+	}
+	IEnumerator StopNewBird_0(GameObject g)
+	{
+		yield return new WaitForSeconds(3f);
+		g.SetActive(false);
+		Destroy(g);
 	}
 	public void HideBasicBanner()
 	{
