@@ -124,24 +124,24 @@ public class SkillCard : MonoBehaviour
     public void RefeashCardShow()
     {
         if(skill.damage>skill.skillData.damage)
-        skill.describe =string.Format(skill.skillData.describe,"<color=cyan>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
+        skill.describe =string.Format(skill.skillData.describe,"<color=cyan>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence),skill.heal);//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=heal;{5}=seep;{6}=fast
         else if(skill.damage==skill.skillData.damage)
         {
             // Debug.Log("技能显示恢复正常");
-            skill.describe =string.Format(skill.skillData.describe,"<color=white>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence));
+            skill.describe =string.Format(skill.skillData.describe,"<color=white>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence),skill.heal);
         }
         else
-        skill.describe =string.Format(skill.skillData.describe,"<color=red>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence));
+        skill.describe =string.Format(skill.skillData.describe,"<color=red>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence),skill.heal);
         
         if(skill.addArmor>skill.skillData.addArmor)
-        skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=cyan>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>");//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
+        skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=cyan>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>",skill.heal);//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
         else if(skill.addArmor==skill.skillData.addArmor)
         {
             // Debug.Log("技能显示恢复正常");
-            skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=white>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>");
+            skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=white>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>",skill.heal);
         }
         else
-        skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=red>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>");
+        skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=red>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>",skill.heal);
         if(textSkillDescribe!=null)
         textSkillDescribe.text =skill.describe;
 

@@ -106,42 +106,41 @@ public class BuffManager : MonoBehaviour
         else
         {
             Buff m_buff =FindBuff(buff.buffData.abilityID,buff.target);
-            if(m_buff.buffData.removeType ==0)
+            if(m_buff !=null)
             {
-                m_buff.buffIcon.OnEffectEnd();
-            }
-            else
-            {
-                int num =(int)buff.buffData.value;
-                int i =0;
-                for (int j = buff.target.buffs.Count-1; j >=0 ; j--)
+                if(m_buff.buffData.removeType ==0)
                 {
-                    
-                    Buff _buff =buff.target.buffs[j];
-                    if(_buff.buffData.id == buff.buffData.abilityID)
+                    m_buff.buffIcon.OnEffectEnd();
+                }
+                else
+                {
+                    int num =(int)buff.buffData.value;
+                    int i =0;
+                    for (int j = buff.target.buffs.Count-1; j >=0 ; j--)
                     {
-                        if(_buff!=null)
+                        
+                        Buff _buff =buff.target.buffs[j];
+                        if(_buff.buffData.id == buff.buffData.abilityID)
                         {
-                            Debug.Log("移除一层"+_buff.buffData.name);
-                            _buff.OnBuffEnd();
-                            i++;
-                            if(_buff.buffIcon.buffs.Count==0)
+                            if(_buff!=null)
                             {
-                                _buff.buffIcon.OnEffectEnd();
+                                Debug.Log("移除一层"+_buff.buffData.name);
+                                _buff.OnBuffEnd();
+                                i++;
+                                if(_buff.buffIcon.buffs.Count==0)
+                                {
+                                    _buff.buffIcon.OnEffectEnd();
+                                }
+                                if(i == num)
+                                {
+                                    break;
+                                }
                             }
-                            if(i == num)
-                            {
-                                break;
-                            }
-                        }
-
+                        }    
                     }
-                    
                 }
             }
-    
-        }
-        
+        }    
     }
     //思路：Player中仅记录BUFFID，在各处需要判断时，仅判断是否拥有此BUFFID即可
     //战斗时需要显示BUFF图标，显示BUFF预设效果，然后在数值计算时判断BUFFID

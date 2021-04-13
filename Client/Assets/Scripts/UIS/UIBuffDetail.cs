@@ -46,7 +46,7 @@ public class UIBuffDetail : MonoBehaviour
         Time.timeScale=1;
     }
     //用于界面说明描述
-    public static void CreateUIBuffDetail(string str)
+    public static void CreateUIBuffDetail(string strDes,string strName)
     {
         UIBuffDetail ui = ((GameObject)Instantiate(Resources.Load("Prefabs/UIBuffDetail"))).GetComponent<UIBuffDetail>();
         ui.transform.SetParent(Main.instance.allScreenUI);
@@ -55,7 +55,8 @@ public class UIBuffDetail : MonoBehaviour
         ui.transform.localScale = Vector3.one;
         ui.transform.localPosition =Vector3.zero;
         // ui.nameText.text = buff.buffData.name;
-        ui.describe.text = str;
+        ui.describe.text = strDes;
+        ui.nameText.text = strName;
         //{0} = value {1} = time {2} = maxNum {3} = delay
     }
 

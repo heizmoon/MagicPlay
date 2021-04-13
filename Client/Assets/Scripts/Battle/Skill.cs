@@ -141,7 +141,7 @@ public class Skill : MonoBehaviour
         tempArmor= addArmor;
         tempBuffNum =buffNum;
         tempCBBuffNum =CBBuffNum;
-        describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost)+skillData.keepManaCost,Mathf.Abs(manaProduce),Mathf.Abs(addArmor));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
+        describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost)+skillData.keepManaCost,Mathf.Abs(manaProduce),Mathf.Abs(addArmor),heal);//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=heal;{5}=seep;{6}=fast
     }
     public void InitSkill(int _id,Summoned summoned)//根据ID从技能表中读取技能,获取技能释放者
     {
@@ -203,7 +203,7 @@ public class Skill : MonoBehaviour
         tempArmor= addArmor;
         tempBuffNum =buffNum;
         tempCBBuffNum =CBBuffNum;
-        describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost)+skillData.keepManaCost,Mathf.Abs(manaProduce),Mathf.Abs(addArmor));//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
+        describe =string.Format(describe,Mathf.Abs(damage),Mathf.Abs(realManaCost)+skillData.keepManaCost,Mathf.Abs(manaProduce),Mathf.Abs(addArmor),heal);//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
     }
     void GetTarget(Actor actor)//获取目标和施法者
     {

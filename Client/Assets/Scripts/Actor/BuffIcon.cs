@@ -238,6 +238,12 @@ public class BuffIcon : MonoBehaviour
             
         // }
         UIBuffDetail.CreateUIBuffDetail(buff);
+        if(Main.instance.ifNewBird==10)
+        {
+            Destroy(transform.GetComponentInChildren<NewBird>().gameObject);
+            NewBird.LoadNewBird(10);
+            Main.instance.ifNewBird++;
+        }
         
     }
     

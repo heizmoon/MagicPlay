@@ -87,7 +87,7 @@ public class UIBattleReward : MonoBehaviour
         // {
             
         // }
-        if(Main.instance.ifNewBird <=4)
+        if(Main.instance.ifNewBird <=6)
         {
             SkillData[] Sdatas =new SkillData[3]; 
             Sdatas[0]= SkillManager.instance.GetInfo(169);
@@ -101,8 +101,44 @@ public class UIBattleReward : MonoBehaviour
                 skillItemBoxes[i].InReward();
             }
             Main.instance.ifNewBird++;
+            Btn_retry.gameObject.SetActive(false);
             return;
         }
+        if(Main.instance.ifNewBird ==13)
+        {
+            SkillData[] Sdatas =new SkillData[3]; 
+            Sdatas[0]= SkillManager.instance.GetInfo(173);
+            Sdatas[1]= SkillManager.instance.GetInfo(174);
+            Sdatas[2]= SkillManager.instance.GetInfo(175);
+
+            for (int i = 0; i < Sdatas.Length; i++)
+            {
+                skillItemBoxes[i].Reset();
+                skillItemBoxes[i].Init(Sdatas[i]);
+                skillItemBoxes[i].InReward();
+            }
+            Main.instance.ifNewBird++;
+            Btn_retry.gameObject.SetActive(false);
+            return;
+        }
+        if(Main.instance.ifNewBird ==14)
+        {
+            AbilityData[] Adatas =new AbilityData[3]; 
+            Adatas[0]= AbilityManager.instance.GetInfo(23);
+            Adatas[1]= AbilityManager.instance.GetInfo(26);
+            Adatas[2]= AbilityManager.instance.GetInfo(28);
+
+            for (int i = 0; i < Adatas.Length; i++)
+            {
+                abilityItemBoxes[i].Reset();
+                abilityItemBoxes[i].Init(Adatas[i]);
+                abilityItemBoxes[i].InReward();
+            }
+            Main.instance.ifNewBird++;
+            Btn_retry.gameObject.SetActive(false);
+            return;
+        }
+
         if(!isRelic)
         {
             SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);

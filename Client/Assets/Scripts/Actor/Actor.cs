@@ -121,7 +121,7 @@ public class Actor : MonoBehaviour
     ///<summary>Buff叠到最大层</summary>
     public event Action<Buff> OnBuffMax;
     //怪物AI相关
-    Skill wanaSkill;
+    public Skill wanaSkill;
 
 
     void Start()
@@ -345,6 +345,7 @@ public class Actor : MonoBehaviour
         armor =0;
         if(Main.instance.ifNewBird==3)
         {
+            Main.instance.ifNewBird++;
             StartCoroutine(NewBird_3());
         }
     }
@@ -352,7 +353,6 @@ public class Actor : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         
-            Main.instance.ifNewBird++;
             NewBird.LoadNewBird(3);    
     }
     public void AddStamina(int number)
@@ -529,7 +529,15 @@ public class Actor : MonoBehaviour
         if(monsterData.switchCondition2==1)
         {
             if(HpCurrent<=Mathf.FloorToInt(HpMax/2))
-            state  =2;
+            {
+                state  =2;
+                if(Main.instance.ifNewBird==16)
+                {
+                    Main.instance.ifNewBird++;
+                    Debug.Log("该播片了");
+                    Perform.LoadPerform("perform_NewBird2");
+                }
+            }
         }
         if(monsterData.switchCondition2==2)
         {
@@ -588,7 +596,11 @@ public class Actor : MonoBehaviour
                         skillId = monsterData.m_defendSkills1[GetRandomFromIntList(monsterData.m_weightDefendSkills1)];
                     break;
                     case 3:
-                        skillId = monsterData.m_buffSkills1[GetRandomFromIntList(monsterData.m_weightBuffSkills1)];    
+                        skillId = monsterData.m_buffSkills1[GetRandomFromIntList(monsterData.m_weightBuffSkills1)];
+                        if(Main.instance.ifNewBird==11)
+                        {
+                            UIBattle.Instance.NewBird_11();
+                        }    
                     break;
                     case 4:
                         skillId = monsterData.m_nerfSkills1[GetRandomFromIntList(monsterData.m_weightNerfSkills1)];
@@ -601,7 +613,6 @@ public class Actor : MonoBehaviour
                 {
                     case 1:
                         skillId = monsterData.m_attackSkills2[GetRandomFromIntList(monsterData.m_weightAttackSkills2)];
-                        Debug.LogWarning("Attack");
                         if(Main.instance.ifNewBird<=5)
                         {
                             UIBattle.Instance.NewBird_5();
@@ -1089,7 +1100,7 @@ public class Actor : MonoBehaviour
         if(skill.skillData.critTriggerSkill>0)
         {
             Skill skill1 = SkillManager.TryGetFromPool(skill.skillData.critTriggerSkill,this);
-            OnSkillSpellFinish(skill1);
+            BeginSpell(skill1);
             SkillCard.CardThrowCard(skill);
             SkillCard.CardCreateCard(skill);
             if(skill.usedChooseCard>0)
@@ -1495,7 +1506,7 @@ public class Actor : MonoBehaviour
             if(Player.instance.playerActor.abilities.Contains(11))//勇气手环
             {
                 Skill tempSkill =SkillManager.TryGetFromPool(40,Player.instance.playerActor);
-                Player.instance.playerActor.OnSkillSpellFinish(tempSkill);
+                Player.instance.playerActor.BeginSpell(tempSkill);
             }
             
             Die();
@@ -1739,10 +1750,10 @@ public class Actor : MonoBehaviour
         if(mpBar)
         mpBar.initHpBar((int)MpCurrent,MpMax);
     }
-    void OnPracticeTimerComplete(Timer timer)
-    {
-        OnTimerComplete(skills[0]);
-    }
+    // void OnPracticeTimerComplete(Timer timer)
+    // {
+    //     OnTimerComplete(skills[0]);
+    // }
     public void AddBuff(Buff buff)
     {
         // if(!buffs.Contains(buff))

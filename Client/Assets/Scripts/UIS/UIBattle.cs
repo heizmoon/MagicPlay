@@ -29,6 +29,7 @@ public class UIBattle : MonoBehaviour
     public Text battleResult;
     public Transform t_playerPosition;
     public Transform t_enemyPosition;
+    public GameObject g_enemyCastingBar;
     public Transform t_playerBuffPosition;
     public Transform t_enemyBuffPosition;
     public Transform t_buffPool;
@@ -71,7 +72,7 @@ public class UIBattle : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        timer =gameObject.GetComponent<Timer>();
+        // timer =gameObject.GetComponent<Timer>();
         anim =gameObject.GetComponent<Animation>();
         btn_pause.onClick.AddListener(PauseBattle);
         btn_play.onClick.AddListener(ResumeBattle);
@@ -79,6 +80,7 @@ public class UIBattle : MonoBehaviour
         BTN_shieldTip_2.onClick.AddListener(OnShieldTips);
         BTN_coldTip_1.onClick.AddListener(OnColdTips);
         BTN_coldTip_2.onClick.AddListener(OnColdTips);
+        enemyBarText.GetComponentInChildren<Button>().onClick.AddListener(ShowEnemyBehavier);
     }
     public void OnPressSetting()
     {
@@ -184,7 +186,7 @@ public class UIBattle : MonoBehaviour
         // Debug.LogFormat("角色当前生命值为：{0}",playerActor.HpCurrent);
         
     }
-    void StartBattle()//--------------包含新手引导部分-----------------------------
+    public void StartBattle()//--------------包含新手引导部分-----------------------------
     {
         battleStart=true;
         //开战物品生效
@@ -199,7 +201,7 @@ public class UIBattle : MonoBehaviour
             CreateNewCardAndGiveToHand(2,1);
             CreateNewCardAndGiveToHand(2,2);
             CreateNewCardAndGiveToHand(2,3);
-
+            ifFirstDeal =false;
             //怪物初始行为：发呆
             //当能量超过1张攻击牌的消耗时，暂停游戏，引导玩家使用一张攻击牌。-----------newbird2
 
@@ -214,10 +216,10 @@ public class UIBattle : MonoBehaviour
             //怪物死亡获得特定的奖励-----------newbird06
 
         }
-        else if(Main.instance.ifNewBird==7)
+        else if(Main.instance.ifNewBird==8)
         {
             DealCards();
-            NewBird_7();
+            NewBird_8();
             //开启可以点击屏幕暂停的功能
             //怪物行为：发呆 buff:护甲持续时间无限，并初始拥有20层护甲
             //暂停，提醒玩家点击屏幕中心可以暂停战斗
@@ -228,13 +230,7 @@ public class UIBattle : MonoBehaviour
             //战斗结束后升级 给玩家防御流的遗物
             //使用后能量消耗降低，并复制一张
         }
-        else if(Main.instance.ifNewBird==2)
-        {
-            //战斗开始前先播剧情
-            //当怪物生命值到50%时再播剧情
-            //结束战斗
-            DealCards();//发牌
-        }
+        
         else
         DealCards();//发牌
     }
@@ -338,19 +334,38 @@ public class UIBattle : MonoBehaviour
         anim.Play();
         playerActor.animator.Play("run");        
         StartCoroutine(WaitForBattleReady());
+        if(Main.instance.ifNewBird==15)
+        {
+            //战斗开始前先播剧情
+            //当怪物生命值到50%时再播剧情
+            //结束战斗
+            NewBird_15();
+            UIBattle.Instance.isBattleOver =true;
+        }
     }
     IEnumerator WaitForBattleReady()
     {
         yield return new WaitForSeconds(1.25f);
         playerActor.animator.Play("idle");
         isBattleOver =false;
-        Enemy.RunAI();
-        StartBattle();       
+        if(Main.instance.ifNewBird==16)
+        {
+            
+        }
+        else
+        {
+            Debug.Log("???");
+            Enemy.RunAI();
+            StartBattle();
+        }
+               
     }
     public void BattleEnd(Actor actor)
     {
         //获取谁死了，然后判定谁胜利
         isBattleOver =true;
+        enemyBarText.gameObject.SetActive(false);
+        g_enemyCastingBar.SetActive(false);
         if(actor ==Enemy)
         {
             battleResult.text ="胜利";
@@ -464,11 +479,12 @@ public class UIBattle : MonoBehaviour
         // {
         //     BattleEvent.instance.GetBattleResult(result);
         // }
-        if(Main.instance.ifNewBird<=6)
+        if(Main.instance.ifNewBird<=7)
         {
             playerActor.UsingSkillsID.Add(2);
             playerActor.UsingSkillsID.Add(2);
             playerActor.UsingSkillsID.Add(2);
+            playerActor.UsingSkillsID.Add(84);
             playerActor.UsingSkillsID.Add(102);
             playerActor.UsingSkillsID.Add(102);
             Main.instance.ifNewBird++;
@@ -836,11 +852,11 @@ public class UIBattle : MonoBehaviour
 
     void OnShieldTips()
     {
-        UIBuffDetail.CreateUIBuffDetail("每1点护甲可以减少1点伤害,但无法减少穿透伤害");
+        UIBuffDetail.CreateUIBuffDetail("每1点护甲可以减少1点伤害,但无法减少穿透伤害","护甲");
     }
     void OnColdTips()
     {
-        UIBuffDetail.CreateUIBuffDetail("每1点寒冷可以减少1点造成的伤害,最多10点");
+        UIBuffDetail.CreateUIBuffDetail("每1点寒冷可以减少1点造成的伤害,最多10点","寒冷");
     }
     public void ReduceAllCardCost(int num)
     {
@@ -849,6 +865,15 @@ public class UIBattle : MonoBehaviour
             allCards[i].skill.ReduceMPCost(num);
             allCards[i].RefeashCardShow();
 
+        }
+    }
+    void ShowEnemyBehavier()
+    {
+        UIBuffDetail.CreateUIBuffDetail(Enemy.wanaSkill.describe,Enemy.wanaSkill.skillName);
+        if(Main.instance.ifNewBird==12)
+        {
+            Main.instance.ifNewBird++;
+            NewBird.LoadNewBird(12);
         }
     }
     ///<summary>模拟发牌，给玩家发2张格挡，1张普通攻击</summary>
@@ -861,21 +886,26 @@ public class UIBattle : MonoBehaviour
     {
         UIBattle.Instance.CreateNewCardAndGiveToHand(102,0);
         UIBattle.Instance.CreateNewCardAndGiveToHand(102,1);
-        UIBattle.Instance.CreateNewCardAndGiveToHand(2,2);
+        UIBattle.Instance.CreateNewCardAndGiveToHand(102,2);
         yield return new WaitForSeconds(1f);
         NewBird.LoadNewBird(4);
         
     }
     ///<summary>新手-点击屏幕暂停</summary>
-    public void NewBird_7()
+    public void NewBird_8()
     {
         Main.instance.ifNewBird++;
-        StartCoroutine(IENewBird_7());
+        StartCoroutine(IENewBird_8());
     }
-    IEnumerator IENewBird_7()
+    IEnumerator IENewBird_8()
     {
         yield return new WaitForSeconds(1f);
-        NewBird.LoadNewBird(7);
+        NewBird.LoadNewBird(8);
+        Transform t = NewBird.LoadNewBird(9).transform;
+        t.SetParent(t_enemyBuffPosition.GetComponentInChildren<BuffIcon>().transform);
+        t.localPosition =Vector3.zero;
+        t.localScale = Vector3.one;
+        Main.instance.ifNewBird++;
     }
     ///<summary>新手-暂停，在合适的时机格挡</summary>
     public void NewBird_5()
@@ -888,4 +918,32 @@ public class UIBattle : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
         NewBird.LoadNewBird(5);
     }
+    public void NewBird_11()
+    {
+        Main.instance.ifNewBird++;
+        StartCoroutine(IENewBird_11());
+    }
+    IEnumerator IENewBird_11()
+    {
+        yield return new WaitForSeconds(2f);
+        Transform t = NewBird.LoadNewBird(13).transform;
+        t.SetParent(enemyBarText.transform);
+        t.localPosition =Vector3.zero;
+        t.localScale = Vector3.one;
+        t.GetComponent<RectTransform>().sizeDelta =Vector2.one;
+        t.GetComponent<RectTransform>().anchoredPosition =Vector2.zero;
+        NewBird.LoadNewBird(11);
+    }
+    public void NewBird_15()
+    {
+        Main.instance.ifNewBird++;
+        StartCoroutine(IENewBird_15());
+    }
+    IEnumerator IENewBird_15()
+    {
+        yield return new WaitForSeconds(1f);
+        Perform.LoadPerform("perform_NewBird");
+        PlayerPrefs.SetInt("ifNew",15);
+    }
+    
 }

@@ -249,7 +249,7 @@ public class Buff
                     skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
                     else
                     skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
-                    skill.caster.OnSkillSpellFinish(skill);
+                    skill.caster.BeginSpell(skill);
                 }
                 
             break;
@@ -347,7 +347,7 @@ public class Buff
             skill.buffNum =num*skill.tempBuffNum;
             Debug.Log("触发的技能"+skill.skillName+"buff层数"+skill.buffNum);
             skill.CBBuffNum =num*skill.tempCBBuffNum;
-            skill.caster.OnSkillSpellFinish(skill);
+            skill.caster.BeginSpell(skill);
                 // skill.ComputeDamage();
             // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(currentValue),target,buffData._genreList[0]);
             // Battle.Instance.ReceiveSkillDamage(skill,skill.damage*num,false,false);
@@ -397,7 +397,7 @@ public class Buff
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
         }
         
-        skill.caster.OnSkillSpellFinish(skill);
+        skill.caster.BeginSpell(skill);
         
         SkillCard.CardThrowCard(skill);
         SkillCard.CardCreateCard(skill);
@@ -414,7 +414,7 @@ public class Buff
         }
         Skill skill;
         skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
-        skill.caster.OnSkillSpellFinish(skill);
+        skill.caster.BeginSpell(skill);
         SkillCard.CardThrowCard(skill);
         SkillCard.CardCreateCard(skill);
         if(skill.usedChooseCard>0)
@@ -428,7 +428,7 @@ public class Buff
         }
         Skill skill;
         skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
-        skill.caster.OnSkillSpellFinish(skill);
+        skill.caster.BeginSpell(skill);
         SkillCard.CardThrowCard(skill);
         SkillCard.CardCreateCard(skill);
         if(skill.usedChooseCard>0)
@@ -440,7 +440,7 @@ public class Buff
         {
             Skill skill;
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
-            skill.caster.OnSkillSpellFinish(skill);
+            skill.caster.BeginSpell(skill);
             SkillCard.CardThrowCard(skill);
             SkillCard.CardCreateCard(skill);
             if(skill.usedChooseCard>0)
@@ -455,7 +455,7 @@ public class Buff
         }
         Skill skill;
         skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
-        skill.caster.OnSkillSpellFinish(skill);
+        skill.caster.BeginSpell(skill);
         SkillCard.CardThrowCard(skill);
         SkillCard.CardCreateCard(skill);
         if(skill.usedChooseCard>0)

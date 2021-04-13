@@ -46,13 +46,12 @@ public class Perform : MonoBehaviour
         DialogueDataSet diaSet = Resources.Load<DialogueDataSet>("DataAssets/Dialogue/"+dialogueTable);
         dialogueData = diaSet.dataArray;
         StartCoroutine(WaitForLoad());
-        if(intoMode ==1)
-        {
-            transform.parent.SetParent(Main.instance.allScreenUI);
-            transform.parent.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-		    transform.parent.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-            transform.parent.localScale =Vector3.one;
-        }
+        
+        transform.parent.SetParent(Main.instance.allScreenUI);
+        transform.parent.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+        transform.parent.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        transform.parent.localScale =Vector3.one;
+        
     }
 
     // Update is called once per frame
@@ -62,7 +61,17 @@ public class Perform : MonoBehaviour
         {
             Player.instance.playerActor.transform.SetParent(playerActorPostion);
             Player.instance.playerActor.transform.localPosition =Vector3.zero;
-            Player.instance.playerActor.transform.localScale =Vector3.one;
+            if(intoMode ==0)
+            {
+                Player.instance.playerActor.transform.localScale =Vector3.one*1.5f;
+                UIBattle.Instance.Enemy.transform.SetParent(actorPositions[0]);
+                UIBattle.Instance.Enemy.transform.localPosition =Vector3.zero;
+                UIBattle.Instance.Enemy.transform.localScale =Vector3.one*1.5f;
+            }
+            else
+            {
+                Player.instance.playerActor.transform.localScale =Vector3.one;
+            }
             Player.instance.playerActor.GetComponent<Actor>().StopCasting();
         }
         for (int i = 0; i < actorList.Count; i++)
@@ -75,6 +84,14 @@ public class Perform : MonoBehaviour
         if(intoMode==0)
         {
             Main.instance.IntoStoryMode(intoMode);
+            UIBattle.Instance.g_enemyCastingBar.SetActive(false);
+            UIBattle.Instance.BTN_coldTip_1.gameObject.SetActive(false);
+            UIBattle.Instance.BTN_coldTip_2.gameObject.SetActive(false);
+            UIBattle.Instance.BTN_shieldTip_1.gameObject.SetActive(false);
+            UIBattle.Instance.BTN_shieldTip_2.gameObject.SetActive(false);
+            UIBattle.Instance.t_playerBuffPosition.gameObject.SetActive(false);
+            UIBattle.Instance.t_enemyBuffPosition.gameObject.SetActive(false);
+            UIBattle.Instance.enemyBarText.gameObject.SetActive(false);
         }
         director.Stop();
         
@@ -138,12 +155,21 @@ public class Perform : MonoBehaviour
         //playerActor归位
         if(playerActorPostion!=null)
         {
-                       
-            Player.instance.playerActor.transform.SetParent(Main.instance.BottomUI);
-            
-            Player.instance.playerActor.transform.localPosition =Vector3.zero;
-            Player.instance.playerActor.transform.localScale =Vector3.one;
+            if(intoMode!=0)
+            {
+                Player.instance.playerActor.transform.SetParent(Main.instance.BottomUI);
+            }
+            else
+            {
+                Player.instance.playerActor.transform.SetParent(UIBattle.Instance.t_playerPosition);
+                Player.instance.playerActor.transform.localPosition =Vector3.zero;
+                Player.instance.playerActor.transform.localScale =Vector3.one;
+                UIBattle.Instance.Enemy.transform.SetParent(UIBattle.Instance.t_enemyPosition);
+                UIBattle.Instance.Enemy.transform.localPosition =Vector3.zero;
+                UIBattle.Instance.Enemy.transform.localScale =Vector3.one;
+            }
         }
+        
         
         //结束时判断结果
         int result =0;
@@ -215,10 +241,34 @@ public class Perform : MonoBehaviour
         //     DestorySelf();
         //     return;
         // }
+        DestorySelf();
     }
     public void DestorySelf()
     {
         Main.instance.LeaveStoryMode();
+        if(intoMode==0)
+        {
+            UIBattle.Instance.g_enemyCastingBar.SetActive(true);
+            UIBattle.Instance.BTN_shieldTip_1.gameObject.SetActive(true);
+            UIBattle.Instance.BTN_shieldTip_2.gameObject.SetActive(true);
+            // UIBattle.Instance.BTN_coldTip_1.gameObject.SetActive(true);
+            // UIBattle.Instance.BTN_coldTip_2.gameObject.SetActive(true);
+            UIBattle.Instance.t_playerBuffPosition.gameObject.SetActive(true);
+            UIBattle.Instance.t_enemyBuffPosition.gameObject.SetActive(true);
+            UIBattle.Instance.enemyBarText.gameObject.SetActive(true);
+        
+            UIBattle.Instance.isBattleOver = false;
+            UIBattle.Instance.Enemy.RunAI();
+            UIBattle.Instance.StartBattle();
+        
+        }
+        if(Main.instance.ifNewBird ==17)
+        {
+            Main.instance.ifNewBird++;
+            UIBattle.Instance.OnBattleGoOn();
+            BattleScene.instance.BattleSceneOver();
+            Main.instance.InitUIChooseCharacter();
+        }
         Destroy(gameObject.transform.parent.gameObject);
     }
 
