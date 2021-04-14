@@ -20,6 +20,7 @@ public class Configs : MonoBehaviour
     public int cardWeightAddition;
     public int buildNumber;
     public bool ifChangMode;
+    public List<string> toolTips;
 
     void Awake()
     {

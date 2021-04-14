@@ -54,7 +54,11 @@ public class SkillCard : MonoBehaviour
         }
         else if(skill.type ==3)
         {
-            backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Special");
+            backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Bless");
+        }
+        else if(skill.type ==4)
+        {
+            backgroud.sprite = Resources.Load<Sprite>("Texture/UI/UI_Card_Spell");
         }
         icon.sprite = Resources.Load<Sprite>("Texture/Skills"+skill.icon);
         if(skill.rank <1)

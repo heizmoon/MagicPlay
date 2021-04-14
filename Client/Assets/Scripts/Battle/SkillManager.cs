@@ -87,6 +87,7 @@ public class SkillManager : MonoBehaviour
             list[1] = new List<int>();
             list[2] = new List<int>();
             list[3] = new List<int>();
+            list[4] = new List<int>();
             // list[4] = new List<int>();
             foreach (var item in manager.dataArray)//所有技能循环
             {

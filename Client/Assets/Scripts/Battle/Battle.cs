@@ -64,7 +64,7 @@ public class Battle : MonoBehaviour
             damage = ComputeDamageBuffStepOne(skill,damage);
             skill.caster.OnSkillHasHit(true,skill);
             float critRate = playerActor.Crit+skill.exCrit;//某些技能拥有额外暴击率加成
-            if(critRate>=Random.Range(0,101))
+            if(critRate>Random.Range(0,100))
             {
                 damage=Mathf.CeilToInt(damage*skill.caster.critBonus);
                 crit =true;

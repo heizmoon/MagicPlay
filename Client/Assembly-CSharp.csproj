@@ -123,7 +123,6 @@
      <Compile Include="Assets\Scripts\Performs\TimeLineSwitch.cs" />
      <Compile Include="Assets\Scripts\Performs\TimeLineSwitchAssets.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
-     <Compile Include="Assets\Scripts\Prepare.cs" />
      <Compile Include="Assets\Scripts\TextTool.cs" />
      <Compile Include="Assets\Scripts\Timer.cs" />
      <Compile Include="Assets\Scripts\UIS\ItemBox.cs" />
@@ -145,6 +144,7 @@
      <Compile Include="Assets\Scripts\UIS\UICardGroup.cs" />
      <Compile Include="Assets\Scripts\UIS\UICardRemove.cs" />
      <Compile Include="Assets\Scripts\UIS\UIChooseCharacter.cs" />
+     <Compile Include="Assets\Scripts\UIS\UILoading.cs" />
      <Compile Include="Assets\Scripts\UIS\UIOffLineRewards.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayer.cs" />
      <Compile Include="Assets\Scripts\UIS\UIRandomEvent.cs" />

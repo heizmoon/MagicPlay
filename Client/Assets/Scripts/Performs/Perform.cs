@@ -265,6 +265,7 @@ public class Perform : MonoBehaviour
         if(Main.instance.ifNewBird ==17)
         {
             Main.instance.ifNewBird++;
+            PlayerPrefs.SetInt("ifNew",18);
             UIBattle.Instance.OnBattleGoOn();
             BattleScene.instance.BattleSceneOver();
             Main.instance.InitUIChooseCharacter();

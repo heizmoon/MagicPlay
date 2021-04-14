@@ -943,7 +943,6 @@ public class UIBattle : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         Perform.LoadPerform("perform_NewBird");
-        PlayerPrefs.SetInt("ifNew",15);
     }
     
 }

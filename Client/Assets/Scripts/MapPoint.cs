@@ -12,6 +12,7 @@ public class MapPoint : MonoBehaviour
     //事件，怪物，随机id列表
     public int[] idList;
     public int realID;
+    bool canMove;
       
     void Awake()
     {
@@ -43,7 +44,7 @@ public class MapPoint : MonoBehaviour
     }
     public void SetButton(bool b)
     {
-        button.interactable = b;
+        canMove = b;
         if(b)
         {
             image.sprite =Resources.Load<Sprite>("Texture/Map/"+mapPointType+"_on");
@@ -55,6 +56,7 @@ public class MapPoint : MonoBehaviour
     }
     public void OnButton()
     {
+        if(canMove)
         //local移动到此为止
         Map.instance.MoveLocal(this);
     }
