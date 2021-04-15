@@ -183,6 +183,7 @@ public class BuffIcon : MonoBehaviour
     }
     public void OnEffectReduce(int num)
     {
+        if(textBuffNum!=null)
         textBuffNum.text =string.Format("{0}",buffNum-num); 
         if(OnBuffAction!=null)
         OnBuffAction(buffID,"end",buffNum-num,buff.target.actorType);

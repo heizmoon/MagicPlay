@@ -223,7 +223,8 @@ public class SkillManager : MonoBehaviour
         {
             List<int>[] _list = buildSkillDic[buildIDs[i]];
             List<int> list =_list[rank];
-    
+            if(list.Count<3)
+            Debug.LogError("流派【"+ buildIDs[i]+"】 rank 【"+rank+"】的牌数量不足！");
             int r =UnityEngine.Random.Range(0,list.Count);
             int randomTimes =0;
             while (temp.Contains(r)&&randomTimes<4)

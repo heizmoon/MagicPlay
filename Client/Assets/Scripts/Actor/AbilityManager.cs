@@ -102,6 +102,7 @@ public class AbilityManager : MonoBehaviour
         {
             List<int>[] _list = buildAbilityDic[buildIDs[i]];
             List<int> list =_list[rank];
+            Debug.LogError("流派【"+ buildIDs[i]+"】 rank 【"+rank+"】的遗物数量不足！");
     
             int r =UnityEngine.Random.Range(0,list.Count);
             int randomTimes =0;
@@ -112,6 +113,7 @@ public class AbilityManager : MonoBehaviour
             }
             temp.Add(r);
             datas[i] =GetInfo(list[r]);
+
             Debug.Log("流派为"+buildIDs[i]+",从"+list.Count+"张牌中随机到了"+rank+"级技能："+datas[i].name);
             
         }
