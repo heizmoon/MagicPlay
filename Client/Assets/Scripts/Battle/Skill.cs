@@ -339,6 +339,10 @@ public class Skill : MonoBehaviour
         }
         else
         {
+            if(!buffed)
+            {
+                return;//没有BUFF过的不需要移除BUFF
+            }
             IncreaseDamage(-skillData.CBDamage);
             IncreaseHeal(-skillData.CBHeal);
             ReduceMPCost(-skillData.CBManaCost);

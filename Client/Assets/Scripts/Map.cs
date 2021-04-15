@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public enum MapPointType
 {
@@ -33,6 +34,15 @@ public class Map : MonoBehaviour
         mapPoints =pointBase.GetComponentsInChildren<MapPoint>();
         local.transform.localPosition =startPos.localPosition;
         startPos.GetComponent<MapPoint>().isNowPoint = true;
+        Sprite sprite =Instantiate(Resources.Load<Sprite>("Texture/Character/Char_0"+Player.instance.CharID));
+        Debug.Log(Player.instance.playerActor.character.data.prefab);
+        float _width = sprite.texture.width;
+        float _height = sprite.texture.height;
+
+        Image localImage = local.GetComponent<Image>();
+        localImage.sprite =sprite;
+        localImage.GetComponent<RectTransform>().sizeDelta =new Vector2(_width,_height)*0.6f;
+        // +Player.instance.playerActor.character.data.prefab
         Refresh();
     }
     public void Refresh()
@@ -53,9 +63,10 @@ public class Map : MonoBehaviour
             UIBasicBanner.instance.ShowNewTalent();
         }
     }
+
     public void MoveLocal(MapPoint point)
     {
-        local.DOLocalMove(point.transform.localPosition,0.75f,false);
+        local.DOLocalMove(point.transform.localPosition,0.6f,false);
         Refresh();
         BattleScene.instance.steps++;
         

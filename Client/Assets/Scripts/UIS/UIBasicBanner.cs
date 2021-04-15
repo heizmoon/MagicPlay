@@ -26,6 +26,11 @@ public class UIBasicBanner : MonoBehaviour
     Transform T_down;
 
     Text goldText;
+    Text hpText;
+    Text expText;
+    Image expBar;
+
+
     void Awake()
     {
         instance = this;
@@ -33,6 +38,10 @@ public class UIBasicBanner : MonoBehaviour
     void Start()
     {
         goldText =transform.Find("up/goldText").GetComponent<Text>();
+        hpText =transform.Find("up/hpText").GetComponent<Text>();
+        expText =transform.Find("up/exp/expText").GetComponent<Text>();
+        expBar =transform.Find("up/exp/expBar/bar").GetComponent<Image>();
+
         F_LevelUp =transform.Find("LevelUpFrame").gameObject;
         BTN_LevelUp =transform.Find("LevelUpFrame/Texts/Button").GetComponent<Button>();
         levleTextObjects =transform.Find("LevelUpFrame/Texts").gameObject;
@@ -50,10 +59,14 @@ public class UIBasicBanner : MonoBehaviour
     {
         
     }
-    public void ChangeGoldText()
+    public void RefeashText()
     {
         // goldText.DOText(Player.instance.Gold.ToString(),2f,true,ScrambleMode.None,null);
         goldText.text = Player.instance.Gold.ToString();
+        hpText.text = string.Format("{0}/{1}",Player.instance.playerActor.HpCurrent,Player.instance.playerActor.HpMax);
+        expText.text =Player.instance.playerActor.level.ToString();
+        expBar.fillAmount = BattleScene.instance.exp*1f/CharacterManager.instance.GetLevelData(Player.instance.playerActor.level).exp;
+
     }
     void RegisterButton()
     {

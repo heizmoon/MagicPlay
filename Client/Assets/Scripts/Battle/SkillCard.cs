@@ -202,13 +202,12 @@ public class SkillCard : MonoBehaviour
             ExploreSkillCard();
             return;
         }
+        if(!_enable)//已经使用，不可再次点击
+        {
+            return;
+        }
         if(Player.instance.playerActor.WanaSpell(skill))
         {
-            //已经使用，不可再次点击
-            if(!_enable)
-            {
-                return;
-            }
             _enable = false;
             UIBattle.Instance.OnUseCard(this);
             //移除的技能移除

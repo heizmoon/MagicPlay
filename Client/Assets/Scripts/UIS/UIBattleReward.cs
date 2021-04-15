@@ -58,6 +58,7 @@ public class UIBattleReward : MonoBehaviour
         if(!isRelic)
         {
             relicFrame.SetActive(false);
+            Player.instance.AddGold(steps*Configs.instance.battleLevelGold);
             
             // needChooseStep =1;
         }
@@ -80,6 +81,7 @@ public class UIBattleReward : MonoBehaviour
         rewardCardRank =Configs.instance.GetCardRank(steps); 
         Refreash();
         ShowExpReward();
+        UIBasicBanner.instance.RefeashText();
     }
     void Refreash()
     {
@@ -243,7 +245,6 @@ public class UIBattleReward : MonoBehaviour
     void OnButtonReturn()
     {
         gameObject.SetActive(false);
-        Player.instance.AddGold(steps*Configs.instance.battleLevelGold);
         // UIBasicBanner.instance.ChangeGoldText();
         // BattleScene.instance.OpenMap();
         // if(UIBattle.Instance)

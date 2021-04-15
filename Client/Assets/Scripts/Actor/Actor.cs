@@ -123,7 +123,11 @@ public class Actor : MonoBehaviour
     //怪物AI相关
     public Skill wanaSkill;
 
+    void Awake()
+    {
+        animator =gameObject.GetComponent<Animator>();
 
+    }
     void Start()
     {
         
@@ -132,7 +136,6 @@ public class Actor : MonoBehaviour
     public void InitActor()
     {
         pool = GameObject.Find("Pool").transform;
-        animator =gameObject.GetComponent<Animator>();
         if(animator ==null)
         {
             animator =GetComponentInChildren<Animator>();
@@ -1887,6 +1890,7 @@ public class Actor : MonoBehaviour
         HpMax+=CharacterManager.instance.GetLevelData(level).addHPMax;
         level++;
         BattleScene.instance.talentPoint+=Configs.instance.levelUpAddTalentPoint;
+        UIBasicBanner.instance.RefeashText();
     }
     
 }

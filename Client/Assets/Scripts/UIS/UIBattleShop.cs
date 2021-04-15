@@ -158,7 +158,7 @@ public class UIBattleShop : MonoBehaviour
         }
         totalPrice  = 0;
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++金币UI显示变化
-        UIBasicBanner.instance.ChangeGoldText();
+        UIBasicBanner.instance.RefeashText();
         RefeashBuyButton();
     }
     void BuyItem(ItemBox item)

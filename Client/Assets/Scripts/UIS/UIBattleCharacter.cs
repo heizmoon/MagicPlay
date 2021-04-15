@@ -42,6 +42,7 @@ public class UIBattleCharacter : MonoBehaviour
         playerActor.transform.SetParent(charPoint);
         playerActor.transform.localScale =Vector3.one;
         playerActor.transform.localPosition=Vector3.zero;
+        playerActor.animator.Play("idle");
         charName.text = playerActor.character.data.name;
         charLevel.text =string.Format("等级：{0}",playerActor.level);
         charHP.text =string.Format("生命值：{0}/{1}",playerActor.HpCurrent,playerActor.HpMax);
