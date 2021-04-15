@@ -140,6 +140,10 @@ public class Actor : MonoBehaviour
         bt = gameObject.GetComponentInChildren<BattleText>();
         Transform btParent = transform.Find("TextPoint/BattleText");
         GameObject g = (GameObject)Instantiate(Resources.Load("Prefabs/battleText"));
+        spellPoint = transform.Find("SpellPoint");
+        castPoint =transform.Find("CastPoint");
+        hitPoint =transform.Find("HitPoint");
+
         g.transform.SetParent(btParent);
         g.transform.localPosition =Vector3.zero;
         g.transform.localScale =Vector3.one;

@@ -48,6 +48,7 @@ public class ItemBox : MonoBehaviour
         card.transform.SetParent(Titem);
         card.transform.localPosition =Vector3.zero;
         card.transform.localScale=Vector3.one;
+        card.SwitchCard();
         
         // toggle.targetGraphic = card.GetComponent<Image>();
         // toggle.graphic = skillMark.GetComponent<Image>();

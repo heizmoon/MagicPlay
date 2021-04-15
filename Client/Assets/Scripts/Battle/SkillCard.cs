@@ -20,18 +20,19 @@ public class SkillCard : MonoBehaviour
     public bool canShow;
     public GameObject _hightLight;
     bool _enable;
+    Animator animator;
     void Awake()
     {
         button =GetComponent<Button>();
-        backgroud =GetComponent<Image>();
+        backgroud =transform.Find("cardArts").GetComponent<Image>();
 
         button.onClick.AddListener(UseSkillCard);
-
-        textSkillName =transform.Find("cardName").GetComponent<Text>();
-        textSkillDescribe =transform.Find("cardDescribe").GetComponent<Text>();
-        textSkillCost =transform.Find("cardCost").GetComponent<Text>();
-        icon = transform.Find("icon").GetComponent<Image>();
-        rank =transform.Find("rank").GetComponent<Image>();
+        animator =GetComponent<Animator>();
+        textSkillName =transform.Find("cardArts/cardName").GetComponent<Text>();
+        textSkillDescribe =transform.Find("cardArts/cardDescribe").GetComponent<Text>();
+        textSkillCost =transform.Find("cardArts/cardCost").GetComponent<Text>();
+        icon = transform.Find("cardArts/icon").GetComponent<Image>();
+        rank =transform.Find("cardArts/rank").GetComponent<Image>();
         // _hightLight = transform.Find("HighLight").gameObject;
     }
     public void Init(Skill skill)
@@ -165,7 +166,11 @@ public class SkillCard : MonoBehaviour
         else
         textSkillCost.color = Color.green;
     }
+    public void SwitchCard()
+    {
+        animator.SetTrigger("switch");
 
+    }
     void Update()
     {
         if(UIBattle.Instance==null||UIBattle.Instance.ifPause)
@@ -292,7 +297,7 @@ public class SkillCard : MonoBehaviour
         Debug.Log(skill.skillName+"进入弃牌堆");
         if(Player.instance.playerActor.handCards.Contains(this))
         Player.instance.playerActor.handCards.Remove(this);
-
+        animator.SetTrigger("throw");
         if(!UIBattle.Instance.usedCardsList.Contains(this))
         UIBattle.Instance.usedCardsList.Add(this);
 
@@ -303,7 +308,7 @@ public class SkillCard : MonoBehaviour
     IEnumerator IEThrowCardToUsedPool()
     {
         
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.33f);
         transform.SetParent(UIBattle.Instance.t_cardsPool);
         transform.localPosition =Vector3.zero;
         transform.localScale =Vector3.one;
@@ -314,7 +319,7 @@ public class SkillCard : MonoBehaviour
     {
         if(Player.instance.playerActor.handCards.Contains(this))
         Player.instance.playerActor.handCards.Remove(this);
-
+        animator.SetTrigger("throw");
         if(UIBattle.Instance.usedCardsList.Contains(this))
         UIBattle.Instance.usedCardsList.Remove(this);
 
@@ -354,6 +359,7 @@ public class SkillCard : MonoBehaviour
         float _x =posID<4?80+(posID)*175:80+(posID-4)*175;
         float _y =posID>3?-375:-120;
         GetComponent<RectTransform>().anchoredPosition3D =new Vector3(_x,_y,0);
+        animator.SetTrigger("deal");
     }
     public void MaskCard(bool ifmask)
     {
