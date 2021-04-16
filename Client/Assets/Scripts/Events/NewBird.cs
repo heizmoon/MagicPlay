@@ -66,6 +66,7 @@ public class NewBird : MonoBehaviour
     void LeaveNewBird()
     {
         Time.timeScale =1f;
+        UIBattle.Instance.ResumeBattle();    
         UIBuffDetail g = Main.instance.allScreenUI.GetComponentInChildren<UIBuffDetail>();
         NewBird b = UIBattle.Instance.enemyBarText.GetComponentInChildren<NewBird>();
         if(g!=null)

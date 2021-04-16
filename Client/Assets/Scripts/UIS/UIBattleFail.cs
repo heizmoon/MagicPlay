@@ -56,19 +56,18 @@ public class UIBattleFail : MonoBehaviour
         //看广告复活
         Player.instance.playerActor.ReLiveActor();
 
-        if(UIBattle.Instance)
+        if(BattleScene.instance.ifDeadByBattle)
         {
-            UIBattle.Instance.OnBattleGoOn();
             BattleScene.instance.ReturnToBattle();
         }
         else
         {
             BattleScene.instance.OpenMap();
-
         }
-        
         CloseUI();
+        
     }
+
     void OnTrueOver()
     {
         CloseUI();

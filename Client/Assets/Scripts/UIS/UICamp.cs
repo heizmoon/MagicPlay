@@ -15,7 +15,10 @@ public class UICamp : MonoBehaviour
         BTNSleep.onClick.AddListener(OnSleep);
         BTNRemove.onClick.AddListener(OnRemoveCard);
         BTNGift.onClick.AddListener(OnGift);
-
+        if(Main.instance.ifNewBird<18)
+        {
+            BTNRemove.gameObject.SetActive(false);
+        }
 
     }
 

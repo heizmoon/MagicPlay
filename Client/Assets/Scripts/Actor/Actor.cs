@@ -445,7 +445,7 @@ public class Actor : MonoBehaviour
             }
             
         }
-        if(behaviour<4)
+        if(behaviour<=4)
         {
             wanaSkill = GetSpecialSkill(state,behaviour);
             castingbar.changeHPBar(wanaSkill.orginSpellTime);
@@ -604,7 +604,7 @@ public class Actor : MonoBehaviour
                     break;
                     case 3:
                         skillId = monsterData.m_buffSkills1[GetRandomFromIntList(monsterData.m_weightBuffSkills1)];
-                        if(Main.instance.ifNewBird==11)
+                        if(Main.instance.ifNewBird<=11)
                         {
                             UIBattle.Instance.NewBird_11();
                         }    
@@ -1128,13 +1128,13 @@ public class Actor : MonoBehaviour
                 Debug.LogWarning("该打晕了");
             }
             //增加护甲
-            if(skill.addArmor>0)
-            {
-                skill.target.AddArmor(skill.addArmor+basicDefence);
-                skill.target.RefeashArmorAutoDecayTime();
-                // 如果身上有获得护甲后触发的buff，那么此时触发
-                BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(skill.target,BuffType.获得护甲后触发技能);
-            }
+            // if(skill.addArmor>0)
+            // {
+            //     skill.target.AddArmor(skill.addArmor+basicDefence);
+            //     skill.target.RefeashArmorAutoDecayTime();
+            //     // 如果身上有获得护甲后触发的buff，那么此时触发
+            //     BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(skill.target,BuffType.获得护甲后触发技能);
+            // }
             //执行当技能命中目标时就xxx这类效果
             if(skill.buffID>0&&!skill.targetSelf)
             {

@@ -106,12 +106,12 @@ public class UIBattleReward : MonoBehaviour
             Btn_retry.gameObject.SetActive(false);
             return;
         }
-        if(Main.instance.ifNewBird ==13)
+        if(Main.instance.ifNewBird <=13)
         {
             SkillData[] Sdatas =new SkillData[3]; 
-            Sdatas[0]= SkillManager.instance.GetInfo(173);
-            Sdatas[1]= SkillManager.instance.GetInfo(174);
-            Sdatas[2]= SkillManager.instance.GetInfo(175);
+            Sdatas[0]= SkillManager.instance.GetInfo(200);
+            Sdatas[1]= SkillManager.instance.GetInfo(212);
+            Sdatas[2]= SkillManager.instance.GetInfo(354);
 
             for (int i = 0; i < Sdatas.Length; i++)
             {
@@ -119,14 +119,14 @@ public class UIBattleReward : MonoBehaviour
                 skillItemBoxes[i].Init(Sdatas[i]);
                 skillItemBoxes[i].InReward();
             }
-            Main.instance.ifNewBird++;
+            Main.instance.ifNewBird=14;
             Btn_retry.gameObject.SetActive(false);
             return;
         }
         if(Main.instance.ifNewBird ==14)
         {
             AbilityData[] Adatas =new AbilityData[3]; 
-            Adatas[0]= AbilityManager.instance.GetInfo(23);
+            Adatas[0]= AbilityManager.instance.GetInfo(24);
             Adatas[1]= AbilityManager.instance.GetInfo(26);
             Adatas[2]= AbilityManager.instance.GetInfo(28);
 

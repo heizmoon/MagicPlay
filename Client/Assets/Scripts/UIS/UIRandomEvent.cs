@@ -298,6 +298,7 @@ public class UIRandomEvent : MonoBehaviour
         //判断角色是否死亡
         if(Player.instance.playerActor.HpCurrent<=0||Player.instance.playerActor.HpMax<=0)
         {
+            BattleScene.instance.ifDeadByBattle = false;
             UIBattleFail.CreateUI();
         }
         else

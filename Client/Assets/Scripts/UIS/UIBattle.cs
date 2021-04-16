@@ -237,10 +237,10 @@ public class UIBattle : MonoBehaviour
     IEnumerator IEWaitForOpenAbility()
     {
         yield return new WaitForSeconds(0.1f);
-        // if(playerActor.abilities.Contains(5))//充能护符
-        // {
-        //     playerActor.AddMp(100);
-        // }
+        if(playerActor.abilities.Contains(5))//充能护符
+        {
+            playerActor.AddMp(100);
+        }
         // if(playerActor.abilities.Contains(7))//樱桃罐头
         // {
         //     BuffManager.instance.CreateBuffForActor(1012,playerActor);    
@@ -288,7 +288,7 @@ public class UIBattle : MonoBehaviour
         btn_pause.gameObject.SetActive(false);
         Time.timeScale = 0f;
     }
-    void ResumeBattle()
+    public void ResumeBattle()
     {
         ifPause = false;
         btn_play.gameObject.SetActive(false);
@@ -425,6 +425,7 @@ public class UIBattle : MonoBehaviour
         {
             //失败了
             //显示失败UI
+            BattleScene.instance.ifDeadByBattle =true;
             UIBattleFail.CreateUI();
         }
         // BuffManager.RemovePlayerActorTempBuff();
@@ -872,7 +873,7 @@ public class UIBattle : MonoBehaviour
         UIBuffDetail.CreateUIBuffDetail(Enemy.wanaSkill.describe,Enemy.wanaSkill.skillName);
         if(Main.instance.ifNewBird==12)
         {
-            Main.instance.ifNewBird++;
+            Main.instance.ifNewBird=13;
             NewBird.LoadNewBird(12);
         }
     }
@@ -920,7 +921,7 @@ public class UIBattle : MonoBehaviour
     }
     public void NewBird_11()
     {
-        Main.instance.ifNewBird++;
+        Main.instance.ifNewBird=12;
         StartCoroutine(IENewBird_11());
     }
     IEnumerator IENewBird_11()
@@ -936,7 +937,7 @@ public class UIBattle : MonoBehaviour
     }
     public void NewBird_15()
     {
-        Main.instance.ifNewBird++;
+        Main.instance.ifNewBird=16;
         StartCoroutine(IENewBird_15());
     }
     IEnumerator IENewBird_15()

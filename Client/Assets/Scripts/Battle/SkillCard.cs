@@ -228,6 +228,8 @@ public class SkillCard : MonoBehaviour
     }
     public static void CardCreateCard(Skill _skill)
     {
+        int cardChar=_skill.skillData.createCardChar;
+        int cardType=_skill.skillData.createCardType;
         if(_skill.skillData.createCardNum>0)
             {
             Debug.LogWarning("创建卡牌"+_skill.skillName);
@@ -235,7 +237,16 @@ public class SkillCard : MonoBehaviour
                 {
                     if(_skill.skillData.createCardID==0)
                     {
-                        int r =SkillManager.instance.GetRandomSkillByType(_skill.skillData.createCardChar,_skill.skillData.createCardType);
+                        if(_skill.skillData.createCardChar ==-1)//任意职业
+                        {
+                            cardChar =UnityEngine.Random.Range(0,3);
+                            if(cardChar>1)
+                            {
+                                cardChar =3;
+                            }
+                            cardType =UnityEngine.Random.Range(0,5);
+                        }
+                        int r =SkillManager.instance.GetRandomSkillByType(cardChar,cardType);
                         Debug.LogWarning("随机到卡牌id为"+r);
                         UIBattle.Instance.CreateNewCardAndGiveToHand(r,0);
                     }
@@ -267,6 +278,7 @@ public class SkillCard : MonoBehaviour
                         _skill.target.armor+= 4*(throwNum+1);
                         _skill.target.RefeashArmorAutoDecayTime();
                     }
+                    
                 }
             }
     }

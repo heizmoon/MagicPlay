@@ -59,11 +59,12 @@ public class Perform : MonoBehaviour
     {
         if(playerActorPostion!=null)
         {
-            if(intoMode ==0)
-            {
-                playerActorPostion.position = UIBattle.Instance.t_playerPosition.position;
-                actorPositions[0].position =UIBattle.Instance.t_enemyPosition.position;
-            }
+            // if(intoMode ==0)
+            // {
+            //     Debug.Log(UIBattle.Instance.t_playerPosition.position);
+            //     playerActorPostion.position = UIBattle.Instance.t_playerPosition.position;
+            //     actorPositions[0].position =UIBattle.Instance.t_enemyPosition.position;
+            // }
 
             Player.instance.playerActor.transform.SetParent(playerActorPostion);
             Player.instance.playerActor.transform.localPosition =Vector3.zero;

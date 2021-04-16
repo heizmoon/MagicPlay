@@ -14,6 +14,7 @@ public class BattleScene : MonoBehaviour
     public bool ifLevelUp;
     public int talentPoint;
     public int exp;
+    public bool ifDeadByBattle;
     void Awake()
     {
         instance = this;
@@ -21,12 +22,13 @@ public class BattleScene : MonoBehaviour
     void Start()
     {
         
-        
+        Reset();
     }
     public void Reset()
     {
         //选择角色结束后，playerActer = 选定的character
-        
+        if(SummonManager.instance!=null)
+        SummonManager.instance.Init();
         //如果是第一次游戏：新手流程
         steps =0;
         beatEnemyNumber =0;
@@ -36,6 +38,7 @@ public class BattleScene : MonoBehaviour
         isBoss =false;
         talentPoint =0;
         exp =0;
+
     }
     // public void ShowRandomAbilityUI()
     // {
@@ -161,6 +164,7 @@ public class BattleScene : MonoBehaviour
         }
         else
         {
+            Player.instance.playerActor.HpCurrent=Player.instance.playerActor.HpMax;
             beatBossNumber++;
             if(Map.instance.nextMap!="")
             ChangeMap(Map.instance.nextMap);

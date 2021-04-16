@@ -18,6 +18,10 @@ public class SummonManager : MonoBehaviour
     {
         
     }
+    public void Init()
+    {
+        playerSummoneds = new List<Summoned>();
+    }
 
     // Update is called once per frame
     void Update()
