@@ -63,8 +63,13 @@ public class UIBasicBanner : MonoBehaviour
     {
         // goldText.DOText(Player.instance.Gold.ToString(),2f,true,ScrambleMode.None,null);
         goldText.text = Player.instance.Gold.ToString();
+
+        if(Player.instance.playerActor==null)
+        {
+            return;
+        }
         hpText.text = string.Format("{0}/{1}",Player.instance.playerActor.HpCurrent,Player.instance.playerActor.HpMax);
-        expText.text =Player.instance.playerActor.level.ToString();
+        expText.text ="LV"+ Player.instance.playerActor.level.ToString();
         expBar.fillAmount = BattleScene.instance.exp*1f/CharacterManager.instance.GetLevelData(Player.instance.playerActor.level).exp;
 
     }
