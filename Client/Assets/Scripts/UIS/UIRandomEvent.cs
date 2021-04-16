@@ -127,12 +127,12 @@ public class UIRandomEvent : MonoBehaviour
     void DoEventEffect()
     {
         /*
-        1:获得随机50-100金钱
-        2:失去随机50-100金钱
-        3:回复随机25-50生命值
-        4:失去随机25-50生命值
-        5：提高随机10-20生命上限
-        6：降低随机10-20生命上限
+        1:获得随机10-50金钱
+        2:失去随机10-50金钱
+        3:回复随机10-30生命值
+        4:失去随机10-30生命值
+        5：提高随机5-15生命上限
+        6：降低随机5-15生命上限
         7：获得随机1-3张任意级别本职业技能卡
         8：失去随机1张技能卡
         9：获得随机1-3张rank0本职业技能卡
@@ -156,38 +156,38 @@ public class UIRandomEvent : MonoBehaviour
         */
         if(effList.Contains(1))
         {
-            int r =Random.Range(50,100);
+            int r =Random.Range(10,50);
             Player.instance.AddGold(r);
             strs[1]=r.ToString();
         }
         if(effList.Contains(2))
         {
-            int r =Random.Range(-50,-100);
+            int r =Random.Range(-10,-50);
             Player.instance.AddGold(r);
             strs[2]=(-r).ToString();
         }
         if(effList.Contains(3))
         {
-            int r =Random.Range(25,50);
+            int r =Random.Range(10,30);
             Player.instance.playerActor.AddHp(r);
             strs[3]=r.ToString();
 
         }
         if(effList.Contains(4))
         {
-            int r =Random.Range(-25,-50);
+            int r =Random.Range(-10,-30);
             Player.instance.playerActor.AddHp(r);
             strs[4]=(-r).ToString();
         }
         if(effList.Contains(5))
         {
-            int r =Random.Range(10,20);
+            int r =Random.Range(5,15);
             Player.instance.playerActor.AddMaxHP(r);
             strs[5]=(r).ToString();
         }
         if(effList.Contains(6))
         {
-            int r =Random.Range(-10,-20);
+            int r =Random.Range(-5,-15);
             Player.instance.playerActor.AddMaxHP(r);
             strs[6]=(-r).ToString();
         }
