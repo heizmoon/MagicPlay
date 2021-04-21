@@ -112,14 +112,17 @@ public class Actor : MonoBehaviour
     ///<summary>命令召唤物立即进行一次攻击,可传入附加的伤害</summary>
     public event Action<int> OnOrderSummonedAttack;//
     public event Action OnChannelSkillManaOut;
-    ///<summary>受到了技能伤害,可传入伤害值</summary>
-    public event Action<int> OnTakeDamageAndReduceHP;
+    ///<summary>受到了技能伤害,可传入伤害值,第几次造成伤害</summary>
+    public event Action<int[]> OnTakeDamageAndReduceHP;
+    int makeDamageTimes;
+    int totalDamage;
     ///<summary>技能造成了暴击,可传入伤害值</summary>
-    public event Action<int> OnSkillHasCritEvent;
-    ///<summary>角色被攻击了</summary>
-    public event Action<int> OnActorHasHit;
+    public event Action<int[]> OnSkillHasCritEvent;
+    ///<summary>角色被攻击了,可传入攻击伤害</summary>
+    public event Action<int[]> OnActorHasHit;
     ///<summary>Buff叠到最大层</summary>
     public event Action<Buff> OnBuffMax;
+    
     //怪物AI相关
     public Skill wanaSkill;
 
@@ -271,12 +274,18 @@ public class Actor : MonoBehaviour
     }
     public void AddMaxHP(int number)
     {
+        if(HpMax+number>0)
         HpMax+=number;
+        else
+        HpMax =1;
+        Die();
     }
     public void AddMaxMP(int number)
     {
+        if(MpMax+number>1)
         MpMax+=number;
-
+        else
+        MpMax =1;
     }
     public void AddCold(int number)
     {
@@ -1115,7 +1124,7 @@ public class Actor : MonoBehaviour
         }
         if(OnSkillHasCritEvent!=null)
         {
-            OnSkillHasCritEvent(damage);
+            OnSkillHasCritEvent(new int[]{damage});
         }
 
     }
@@ -1218,7 +1227,7 @@ public class Actor : MonoBehaviour
         }
         if(OnActorHasHit!=null)
         {
-            OnActorHasHit(0);
+            OnActorHasHit(new int[]{0});
         }
         //怪物如果受到攻击
         if(actorType == ActorType.敌人)
@@ -1429,9 +1438,12 @@ public class Actor : MonoBehaviour
         //如果最终判断掉血了
         if(num>0)
         {
+            totalDamage+=num;
+            makeDamageTimes++;
             if(OnTakeDamageAndReduceHP!=null&&TakenSkill.ifActive)//只有主动技能可以触发
             {
-                OnTakeDamageAndReduceHP(num);
+                int[] _data ={num,makeDamageTimes,totalDamage};
+                OnTakeDamageAndReduceHP(_data);
             }
             //执行当角色生命值低于50%，就xxx这类效果
             if(tempHP>0.5*HpMax&&HpCurrent<=0.5*HpMax)

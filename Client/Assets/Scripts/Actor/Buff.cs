@@ -157,6 +157,27 @@ public class Buff
             case BuffType.每X次遗留时自己触发技能:
             UIBattle.Instance.OnLegacyCardAction+=LegacyCardTriggerSkill;
             break;
+            case BuffType.改变能量上限:
+            target.AddMaxMP((int)buffData.value);
+            break;
+            case BuffType.每受到X次伤害触发技能:
+            target.OnTakeDamageAndReduceHP+=BuffTriggerSkill;
+            break;
+            case BuffType.每造成X次伤害触发技能:
+            target.target.OnTakeDamageAndReduceHP+=BuffTriggerSkill;
+            break;
+            case BuffType.造成的总伤害高于x触发技能:
+            target.target.OnTakeDamageAndReduceHP+=BuffTriggerSkill;
+            break;
+            case BuffType.受到的总伤害高于x触发技能:
+            target.OnTakeDamageAndReduceHP+=BuffTriggerSkill;
+            break;
+            case BuffType.受到的单次伤害高于x触发技能:
+            target.OnTakeDamageAndReduceHP+=BuffTriggerSkill;
+            break;
+            case BuffType.造成的单次伤害高于x触发技能:
+            target.target.OnTakeDamageAndReduceHP+=BuffTriggerSkill;
+            break;
         }
         
     }
@@ -290,6 +311,27 @@ public class Buff
             case BuffType.每X次遗留时自己触发技能:
             UIBattle.Instance.OnLegacyCardAction-=LegacyCardTriggerSkill;
             break;
+            case BuffType.改变能量上限:
+            target.AddMaxMP(-(int)buffData.value);
+            break;
+            case BuffType.每受到X次伤害触发技能:
+            target.OnTakeDamageAndReduceHP-=BuffTriggerSkill;
+            break;
+            case BuffType.每造成X次伤害触发技能:
+            target.target.OnTakeDamageAndReduceHP-=BuffTriggerSkill;
+            break;
+            case BuffType.造成的总伤害高于x触发技能:
+            target.target.OnTakeDamageAndReduceHP-=BuffTriggerSkill;
+            break;
+            case BuffType.受到的总伤害高于x触发技能:
+            target.OnTakeDamageAndReduceHP-=BuffTriggerSkill;
+            break;
+            case BuffType.受到的单次伤害高于x触发技能:
+            target.OnTakeDamageAndReduceHP-=BuffTriggerSkill;
+            break;
+            case BuffType.造成的单次伤害高于x触发技能:
+            target.target.OnTakeDamageAndReduceHP-=BuffTriggerSkill;
+            break;
         }
         
         // if(buffData.id==15)
@@ -379,10 +421,40 @@ public class Buff
     {
         buffIcon.OnEffectEnd();
     }
-    void BuffTriggerSkill(int num)
+    void BuffTriggerSkill(params int[] values)
     {
         Skill skill;
-        if(num==-1)
+        if(buffData._type ==BuffType.每受到X次伤害触发技能||buffData._type ==BuffType.每造成X次伤害触发技能)
+        {
+            int times =values[1];
+            if(times>0&&times%(int)buffData.value==0)
+            {
+                skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+            }
+            else
+            return;
+        }
+        else if(buffData._type ==BuffType.受到的总伤害高于x触发技能||buffData._type ==BuffType.造成的总伤害高于x触发技能)
+        {
+            int totalDamage =values[2];
+            if(totalDamage>=(int)buffData.value)
+            {
+                skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+            }
+            else
+            return;
+        }
+        else if(buffData._type ==BuffType.受到的单次伤害高于x触发技能||buffData._type ==BuffType.造成的单次伤害高于x触发技能)
+        {
+            int damage =values[0];
+            if(damage>=(int)buffData.value)
+            {
+                skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+            }
+            else
+            return;
+        }
+        else if(values[0]==-1)
         {
             if(buffData.value==0)
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
@@ -403,7 +475,6 @@ public class Buff
         SkillCard.CardCreateCard(skill);
         if(skill.usedChooseCard>0)
         UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
-        Debug.LogWarning(buffData.name+"--暴击触发:"+skill.skillName);
 
     }
     void UseCardTriggerSkill(int type,int num)

@@ -221,8 +221,8 @@ public class UIBattleReward : MonoBehaviour
             AbilityData ability = AbilityManager.instance.GetInfo(item.id);
             Player.instance.playerActor.basicAttack+=ability.attack;
             Player.instance.playerActor.basicDefence+=ability.defence;
-            Player.instance.playerActor.HpMax+=ability.hpMax;
-            Player.instance.playerActor.MpMax+=ability.mpMax;
+            Player.instance.playerActor.AddMaxHP(ability.hpMax);
+            Player.instance.playerActor.AddMaxMP(ability.mpMax);
             Player.instance.playerActor.Crit+=ability.crit;
             float reMp =ability.reMp/5;
             int temp = (int)(reMp*100);
