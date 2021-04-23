@@ -139,7 +139,7 @@ public class Battle : MonoBehaviour
         // damage +=tempd;
         foreach (var item in skill.caster.buffs)
         {
-            if(item.buffData._type == BuffType.数值增减附加的伤害 && item.buffData._genreList.Contains(skill.type))
+            if(item.buffData._type == BuffType.数值增减附加的伤害 )
             {
                 damage+=Mathf.CeilToInt(item.currentValue);
             }
@@ -156,7 +156,10 @@ public class Battle : MonoBehaviour
         damage=Mathf.RoundToInt(damage*(1+damageChangeValue));
         // Debug.LogWarning("伤害改变了："+damageChangeValue+"，改变后为："+damage);
 
-        
+        //计算寒冷层数
+        int temp =damage;
+        damage-=skill.caster.coldNum;
+        skill.caster.AddCold(-temp);
         return damage;
         
     }
@@ -170,17 +173,17 @@ public class Battle : MonoBehaviour
         //         damage+=Mathf.CeilToInt(item.currentValue);
         //     }
         // }
-        // foreach (var item in skill.target.buffs)
-        // {
-        //     if(item.buffData._type == BuffType.百分比增减受到的伤害)
-        //     {
-        //         damage+=Mathf.CeilToInt(item.currentValue);
-        //     }
-        // }
-        //计算寒冷层数
-        int temp =damage;
-        damage-=skill.caster.coldNum;
-        skill.caster.AddCold(-temp);
+        float damageChangeValue =0;
+        foreach (var item in skill.target.buffs)
+        {
+            if(item.buffData._type == BuffType.百分比增减受到的伤害)
+            {
+                damageChangeValue+=item.currentValue;
+            }
+        }
+        // Debug.LogWarning("原始伤害为："+damage);
+        damage=Mathf.RoundToInt(damage*(1+damageChangeValue));
+        
         return damage;
         
     }
