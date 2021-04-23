@@ -109,6 +109,7 @@ public class HPBar : MonoBehaviour
                 ImgCurrent.fillAmount+=changeInterval;
                 timeCurrentInterval=0;
                 HpCurrent+= changeValue;
+                
                 if(ImgCurrent.fillAmount>=1)
                 {
                     isChanging = false;
@@ -228,8 +229,8 @@ public class HPBar : MonoBehaviour
             ImgCurrent.color =new Color(r,g,b,1);
         }
     }
-    /// <summary> 改变血条 </summary>
-    /// <param name="time">每0.05秒执行一次变化，共执行time秒</param>
+    /// <summary> 改变施法条 </summary>
+    /// <param name="time">每0.16秒执行一次变化，共执行time秒</param>
     public void changeHPBar(float time)//每0.05秒执行一次变化，共执行time秒
     {
         HpCurrent =0;
@@ -240,6 +241,11 @@ public class HPBar : MonoBehaviour
         timeInterval = 0.16f;
         changeValue =HpMax*changeInterval;
         isChanging=true;
+        if(actor.ifProtectSpell)
+        ImgCurrent.color = Color.blue;
+        else
+        ImgCurrent.color = Color.yellow;
+
     }
     public void DelayHPBar(float time)
     {

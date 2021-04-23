@@ -78,9 +78,16 @@ public class SkillCard : MonoBehaviour
         {
             rank.sprite = Resources.Load<Sprite>("Texture/UI/UI_CardRank_Legend");
         }
-        if(skill.skillData.checkBuff>0)
+        if(skill.skillData.checkBuff > 0)
         {
             BuffIcon.OnBuffAction+=CheckBuffCard;
+        }
+        if(skill.skillData.checkBuff ==-1)
+        {
+            if(skill.skillData.checkSelf)
+            skill.caster.OnGetArmor+=CheckBuffArmorCard;
+            else
+            skill.caster.target.OnGetArmor+=CheckBuffArmorCard;
         }
         
         
@@ -460,6 +467,21 @@ public class SkillCard : MonoBehaviour
             {
                 return;
             }
+            skill.CheckBuffUpdate(false);
+            HighLightCard(false);
+        }
+        RefeashCardShow();
+    }
+    void CheckBuffArmorCard(int[] _data)
+    {
+        int armor =_data[2];
+        if(armor>=skill.skillData.buffNumLimit)
+        {
+            skill.CheckBuffUpdate(true);
+            HighLightCard(true);
+        }
+        else
+        {
             skill.CheckBuffUpdate(false);
             HighLightCard(false);
         }

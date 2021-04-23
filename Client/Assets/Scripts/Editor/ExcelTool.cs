@@ -869,6 +869,7 @@ namespace EditorTool {
                 skillData.keepManaCost =collect[i][56].ToString()==""?0:int.Parse(collect[i][56].ToString());
                 skillData.critTriggerSkill =collect[i][57].ToString()==""?0:int.Parse(collect[i][57].ToString());
                 skillData.delaySpell =collect[i][58].ToString()==""?0:float.Parse(collect[i][58].ToString());
+                skillData.protectSpell = collect[i][59].ToString()=="1"?true:false;
 
 
                 array[i - 2] = skillData;

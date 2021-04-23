@@ -92,6 +92,7 @@ public class Actor : MonoBehaviour
     int behaviour;
     int AIStep;
     bool AI_monsterHasHit;
+    public bool ifProtectSpell;
     ///<summary>手牌列表</summary>
     public List<SkillCard> handCards;
     ///<summary>维持技能最低限制</summary>
@@ -122,7 +123,9 @@ public class Actor : MonoBehaviour
     public event Action<int[]> OnActorHasHit;
     ///<summary>Buff叠到最大层</summary>
     public event Action<Buff> OnBuffMax;
-    
+    ///<summary>获得护甲事件，获得的护甲层数，累计护甲层数</summary>
+    public event Action<int[]> OnGetArmor;
+    int totalArmor;
     //怪物AI相关
     public Skill wanaSkill;
 
@@ -238,7 +241,7 @@ public class Actor : MonoBehaviour
             ArmorAutoDecayTime+=Time.deltaTime;
             if(ArmorAutoDecayTime>=constArmorDecayTime)
             {
-                armor =0;
+                AddArmor(-9999);
                 ArmorAutoDecayTime =0;
             }
         }
@@ -359,6 +362,13 @@ public class Actor : MonoBehaviour
         armor +=number;
         if(armor<0)
         armor =0;
+        if(number>0)
+        totalArmor+=number;
+        if(OnGetArmor!=null)
+        {
+            int[] _data =new int[]{number,totalArmor,armor};
+            OnGetArmor(_data);
+        }
         if(Main.instance.ifNewBird==3)
         {
             Main.instance.ifNewBird++;
@@ -457,6 +467,8 @@ public class Actor : MonoBehaviour
         if(behaviour<=4)
         {
             wanaSkill = GetSpecialSkill(state,behaviour);
+            if(wanaSkill.skillData.protectSpell)
+            ifProtectSpell =true;
             castingbar.changeHPBar(wanaSkill.orginSpellTime);
             UIBattle.Instance.SetEnemyBarText(behaviour,wanaSkill.damage);
         }
@@ -526,6 +538,7 @@ public class Actor : MonoBehaviour
         //决策条读完了
         // Debug.LogWarning("决策条读完了!");
         BarEventArgs eventArgs = e as BarEventArgs;
+        ifProtectSpell = false;
         if(eventArgs.IFComplete)
         //从当前行为中随机出一个要释放的技能
         WanaSpell(wanaSkill);
@@ -831,19 +844,19 @@ public class Actor : MonoBehaviour
         return true;
         
     }
-    IEnumerator WaitForBeginSpell(Skill skill)
-    {
-        yield return new WaitForEndOfFrame();
-        // Debug.LogWarning("WaitForBeginSpell");
-        // Debug.LogWarning("animState="+(int)animState);
-        if(animState!=AnimState.dead&&animState!=AnimState.dizzy)
-        {
-            animator.Play("attack");
-            BeginSpell(skill);
-            RunAI();
-        }
+    // IEnumerator WaitForBeginSpell(Skill skill)
+    // {
+    //     yield return new WaitForEndOfFrame();
+    //     // Debug.LogWarning("WaitForBeginSpell");
+    //     // Debug.LogWarning("animState="+(int)animState);
+    //     if(animState!=AnimState.dead&&animState!=AnimState.dizzy)
+    //     {
+    //         animator.Play("attack");
+    //         BeginSpell(skill);
+    //         RunAI();
+    //     }
         
-    }
+    // }
     public void BeginSpell(Skill skill)//开始施放X技能,需要传入一个技能
     {
         // if(Main.instance.UIState>0&&!DateManager.instance.timer.enabled)
@@ -865,6 +878,7 @@ public class Actor : MonoBehaviour
         //6.绑定技能和施法条
         // if(castingbar)
         // castingbar.BindHPBar(skill);
+        
 
     }
     public void ChannelSkill(float val)
@@ -914,6 +928,7 @@ public class Actor : MonoBehaviour
     //    if(this.isActiveAndEnabled)
     //    animator.Play("idle");
        //施法条停止运动
+       ifProtectSpell = false;
        if(castingbar)
        {
             castingbar.stopChanging(true);
@@ -1018,7 +1033,7 @@ public class Actor : MonoBehaviour
         
         // skill.ComputeDamage();
         //执行技能释放完毕事件
-        
+       ifProtectSpell = false;
         OnSkillSpellFinish(skill);
     }
     
@@ -1186,7 +1201,7 @@ public class Actor : MonoBehaviour
                 }
                 
             }
-            if(skill.skillData.delaySpell>0&&target.actorType ==ActorType.敌人)//延缓目标读条时间
+            if(skill.skillData.delaySpell>0&&target.actorType ==ActorType.敌人&&!target.ifProtectSpell)//延缓目标读条时间
             {
                 target.castingbar.DelayHPBar(skill.skillData.delaySpell);
             }

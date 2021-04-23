@@ -297,7 +297,7 @@ public class UIBattle : MonoBehaviour
     }
     public void SetEnemyBarText(int state,int damage)
     {
-        // Debug.LogWarning("敌人的状态是"+state);
+        Debug.LogWarning("敌人的状态是"+state);
         switch(state)
         {
             case 0:
@@ -316,6 +316,7 @@ public class UIBattle : MonoBehaviour
             enemyBarText.text ="准备<color=#f22223>削弱</color>";
             break;
         }
+        
     }
     public void SetEnemyBarText()
     {

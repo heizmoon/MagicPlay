@@ -13,7 +13,7 @@ public class UILoading : MonoBehaviour
         bar = transform.Find("Bar/BarImage").GetComponent<Image>();
         toolTipText =transform.Find("ToolTipText").GetComponent<Text>();
     }
-    void Start()
+    public void Reset()
     {
         bar.fillAmount =0;
         bar.DOFillAmount(1,2.8f);

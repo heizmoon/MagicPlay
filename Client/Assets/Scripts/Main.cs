@@ -192,6 +192,7 @@ public class Main : MonoBehaviour {
 	public void StartLoadingUI()
 	{
 		UILoading.SetActive(true);
+		UILoading.GetComponent<UILoading>().Reset();
 		StartCoroutine(Stoploading());
 	}
 	IEnumerator Stoploading()

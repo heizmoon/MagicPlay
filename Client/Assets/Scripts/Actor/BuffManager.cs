@@ -58,8 +58,10 @@ public enum BuffType
     造成的总伤害高于x触发技能 =48,
     受到的总伤害高于x触发技能 =49,
     造成的单次伤害高于x触发技能 =50,
-    受到的单次伤害高于x触发技能=51
-
+    受到的单次伤害高于x触发技能=51,
+    获得的总护甲层数大于x触发技能 =52,
+    当前护甲层数大于x获取BUFF =53
+    
 }
 public class BuffManager : MonoBehaviour
 {
@@ -223,7 +225,8 @@ public class BuffManager : MonoBehaviour
         }
         // buff.RemoveSlef();
         //--------------------------------------------此处需要移除BUFF绑定的所有事件！！！！！！！！
-        // buff.RemoveAllEvent();           
+        // buff.RemoveAllEvent();
+        Debug.Log("彻底移除BUFF："+buff.buffData.name);           
         buff =null;
         // EffectManager.TryThrowInPool(buff.buffData.triggerEffect);
         //EffectManager.TryThrowInPool(buff.buffData.prefab,actor.castPoint);

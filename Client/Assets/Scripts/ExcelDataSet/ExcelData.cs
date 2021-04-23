@@ -136,7 +136,7 @@ public class SkillData{
     public int keepManaCost;
     public int critTriggerSkill;
     public float delaySpell;
-
+    public bool protectSpell;
 
 }
 [System.Serializable]

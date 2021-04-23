@@ -14,6 +14,7 @@ public class Buff
     public Actor target;
     public List<Buff> childrenBuffs =new List<Buff>();
     public BuffIcon buffIcon;
+    Buff speicalBuff;
 
     // Update is called once per frame
     void Update()
@@ -51,9 +52,16 @@ public class Buff
         {
             case BuffType.昏迷:
             {
-                target.animState =AnimState.dizzy;
-                target.StopCasting();
-                target.ChangeAnimatorInteger(4);
+                if(target.ifProtectSpell)
+                {
+                    buffIcon.OnEffectEnd();
+                }
+                else
+                {
+                    target.animState =AnimState.dizzy;
+                    target.StopCasting();
+                    target.ChangeAnimatorInteger(4);
+                }    
             }
             break;
             case BuffType.影响攻击力:
@@ -169,6 +177,7 @@ public class Buff
             case BuffType.造成的总伤害高于x触发技能:
             target.target.OnTakeDamageAndReduceHP+=BuffTriggerSkill;
             break;
+            //造成的【总】伤害，【总】护甲，【总】治疗 这些 目前仅适用于 遗物，一开场就生效的类型，因为在获得buff的瞬间，并不会检测是否【已经】满足条件
             case BuffType.受到的总伤害高于x触发技能:
             target.OnTakeDamageAndReduceHP+=BuffTriggerSkill;
             break;
@@ -177,6 +186,12 @@ public class Buff
             break;
             case BuffType.造成的单次伤害高于x触发技能:
             target.target.OnTakeDamageAndReduceHP+=BuffTriggerSkill;
+            break;
+            case BuffType.获得的总护甲层数大于x触发技能:
+            target.OnGetArmor+=ArmorTriggerSkill;
+            break;
+            case BuffType.当前护甲层数大于x获取BUFF:
+            target.OnGetArmor+=ArmorTriggerBuff;
             break;
         }
         
@@ -332,6 +347,14 @@ public class Buff
             case BuffType.造成的单次伤害高于x触发技能:
             target.target.OnTakeDamageAndReduceHP-=BuffTriggerSkill;
             break;
+            case BuffType.获得的总护甲层数大于x触发技能:
+            target.OnGetArmor-=ArmorTriggerSkill;
+            break;
+            case BuffType.当前护甲层数大于x获取BUFF:
+            target.OnGetArmor-=ArmorTriggerBuff;
+            if(speicalBuff!=null)
+            speicalBuff.buffIcon.OnEffectEnd();
+            break;
         }
         
         // if(buffData.id==15)
@@ -410,10 +433,9 @@ public class Buff
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
             else
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
-            SkillCard.CardThrowCard(skill);
-            SkillCard.CardCreateCard(skill);
-            if(skill.usedChooseCard>0)
-            UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+            
+            TriggerSkill(skill);
+
         }
         
     }
@@ -469,12 +491,7 @@ public class Buff
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
         }
         
-        skill.caster.BeginSpell(skill);
-        
-        SkillCard.CardThrowCard(skill);
-        SkillCard.CardCreateCard(skill);
-        if(skill.usedChooseCard>0)
-        UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+        TriggerSkill(skill);
 
     }
     void UseCardTriggerSkill(int type,int num)
@@ -485,11 +502,8 @@ public class Buff
         }
         Skill skill;
         skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
-        skill.caster.BeginSpell(skill);
-        SkillCard.CardThrowCard(skill);
-        SkillCard.CardCreateCard(skill);
-        if(skill.usedChooseCard>0)
-        UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);    
+        TriggerSkill(skill);
+           
     }
     void LegacyCardTriggerSkill(int num)
     {
@@ -499,11 +513,7 @@ public class Buff
         }
         Skill skill;
         skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
-        skill.caster.BeginSpell(skill);
-        SkillCard.CardThrowCard(skill);
-        SkillCard.CardCreateCard(skill);
-        if(skill.usedChooseCard>0)
-        UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+        TriggerSkill(skill);
     }
     void ThrowCardTriggerSkill(int num)
     {
@@ -511,11 +521,8 @@ public class Buff
         {
             Skill skill;
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
-            skill.caster.BeginSpell(skill);
-            SkillCard.CardThrowCard(skill);
-            SkillCard.CardCreateCard(skill);
-            if(skill.usedChooseCard>0)
-            UIBattle.Instance.SelectSomeCards(skill.usedChooseCard); 
+            TriggerSkill(skill);
+
         }
     }
     void DealCardsTriggerSkill(int num)
@@ -526,11 +533,7 @@ public class Buff
         }
         Skill skill;
         skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
-        skill.caster.BeginSpell(skill);
-        SkillCard.CardThrowCard(skill);
-        SkillCard.CardCreateCard(skill);
-        if(skill.usedChooseCard>0)
-        UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
+        TriggerSkill(skill);
     }
     void BuffMax(Buff _buff)
     {
@@ -539,6 +542,43 @@ public class Buff
         {
             BuffTriggerSkill(-1);
         }
+    }
+    void ArmorTriggerSkill(int[] _data)
+    {
+        int totalArmor =_data[1];
+        if(totalArmor>=buffData.value)
+        {
+            Skill skill =SkillManager.TryGetFromPool(buffData.abilityID,target);
+            TriggerSkill(skill);
+        }
+    }
+    void ArmorTriggerBuff(int[] _data)
+    {
+        int armor = _data[2];
+
+        if(armor>=buffData.value)
+        {
+            if(speicalBuff ==null)
+            {
+               speicalBuff = BuffManager.instance.CreateBuffForActor(buffData.abilityID,target);
+            }
+        }
+        else
+        {
+            if(speicalBuff!=null)
+            {
+               speicalBuff.buffIcon.OnEffectEnd();
+               speicalBuff =null;
+            }
+        }
+    }
+    void TriggerSkill(Skill skill)
+    {
+        skill.caster.BeginSpell(skill);
+        SkillCard.CardThrowCard(skill);
+        SkillCard.CardCreateCard(skill);
+        if(skill.usedChooseCard>0)
+        UIBattle.Instance.SelectSomeCards(skill.usedChooseCard);
     }
     public void RemoveSlef()
     {
