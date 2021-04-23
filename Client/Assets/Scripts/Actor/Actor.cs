@@ -538,10 +538,15 @@ public class Actor : MonoBehaviour
         //决策条读完了
         // Debug.LogWarning("决策条读完了!");
         BarEventArgs eventArgs = e as BarEventArgs;
-        ifProtectSpell = false;
+        
         if(eventArgs.IFComplete)
-        //从当前行为中随机出一个要释放的技能
-        WanaSpell(wanaSkill);
+        {
+            WanaSpell(wanaSkill);
+            if(wanaSkill.skillData.protectSpell)
+            {
+                ifProtectSpell = false;
+            }
+        }
         else
         Debug.LogWarning("决策条被打断!");
 
@@ -928,7 +933,6 @@ public class Actor : MonoBehaviour
     //    if(this.isActiveAndEnabled)
     //    animator.Play("idle");
        //施法条停止运动
-       ifProtectSpell = false;
        if(castingbar)
        {
             castingbar.stopChanging(true);
@@ -1033,7 +1037,6 @@ public class Actor : MonoBehaviour
         
         // skill.ComputeDamage();
         //执行技能释放完毕事件
-       ifProtectSpell = false;
         OnSkillSpellFinish(skill);
     }
     

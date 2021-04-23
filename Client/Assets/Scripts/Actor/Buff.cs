@@ -193,6 +193,12 @@ public class Buff
             case BuffType.当前护甲层数大于x获取BUFF:
             target.OnGetArmor+=ArmorTriggerBuff;
             break;
+            case BuffType.获得保护状态:
+            target.ifProtectSpell = true;
+            break;
+            case BuffType.改变生命上限:
+            target.AddMaxHP(-(int)buffData.value);
+            break;
         }
         
     }
@@ -354,6 +360,12 @@ public class Buff
             target.OnGetArmor-=ArmorTriggerBuff;
             if(speicalBuff!=null)
             speicalBuff.buffIcon.OnEffectEnd();
+            break;
+            case BuffType.获得保护状态:
+            target.ifProtectSpell = false;
+            break;
+            case BuffType.改变生命上限:
+            target.AddMaxHP(-(int)buffData.value);
             break;
         }
         

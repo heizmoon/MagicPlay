@@ -60,7 +60,9 @@ public enum BuffType
     造成的单次伤害高于x触发技能 =50,
     受到的单次伤害高于x触发技能=51,
     获得的总护甲层数大于x触发技能 =52,
-    当前护甲层数大于x获取BUFF =53
+    当前护甲层数大于x获取BUFF =53,
+    获得保护状态 =54,
+    改变生命上限 =55
     
 }
 public class BuffManager : MonoBehaviour
