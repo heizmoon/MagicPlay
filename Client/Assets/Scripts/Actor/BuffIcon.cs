@@ -77,6 +77,10 @@ public class BuffIcon : MonoBehaviour
             iconHide.sprite = Resources.Load("Texture/Skills/"+buff.buffData.icon,typeof(Sprite)) as Sprite;
             iconShow.sprite = Resources.Load("Texture/Skills/"+buff.buffData.icon,typeof(Sprite)) as Sprite;
         }
+        if(buff.buffData._type==BuffType.昏迷&&buff.target.ifProtectSpell)
+        {
+            return;
+        }
         if(buff.buffData.prefab!="")
         {
             effect =EffectManager.TryGetFromPos(buff.buffData.prefab,buff.target.hitPoint);
@@ -125,6 +129,15 @@ public class BuffIcon : MonoBehaviour
         {
             OnBuffAction(buffID,"interval",buffNum,buff.target.actorType);
         }
+    }
+    public void WaitOnEffectEnd()
+    {
+        StartCoroutine(IEOnEffectEnd());
+    }
+    IEnumerator IEOnEffectEnd()
+    {
+        yield return new WaitForEndOfFrame();
+        OnEffectEnd();
     }
     public void OnEffectEnd()
     {
@@ -219,6 +232,10 @@ public class BuffIcon : MonoBehaviour
         //         //如果是修改数值的BUFF，不应该再重启一次，如果是触发伤害的BUFF，可以重启？
         //         buffs[i].OnBuffBegin();//???所有相同BUFF都重启一次？
         //     }
+        // }
+        // if(buff.buffData._type==BuffType.昏迷&&buff.target.ifProtectSpell)
+        // {
+        //     return;
         // }
         currentBuff.OnBuffBegin();
         if(effect!=null)

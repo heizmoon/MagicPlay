@@ -54,14 +54,15 @@ public class Buff
             {
                 if(target.ifProtectSpell)
                 {
-                    buffIcon.OnEffectEnd();
+                    Debug.Log("阻止打断");
+                    buffIcon.WaitOnEffectEnd();
                 }
                 else
                 {
                     target.animState =AnimState.dizzy;
                     target.StopCasting();
-                    target.ChangeAnimatorInteger(4);
-                }    
+                    target.ChangeAnimatorInteger(4); 
+                }       
             }
             break;
             case BuffType.影响攻击力:
@@ -208,6 +209,10 @@ public class Buff
         switch (buffData._type)
         {
             case BuffType.昏迷:
+            if(target.ifProtectSpell)
+            {
+                break;
+            }
             //解除昏迷
             if(target.animState!=AnimState.dead)
             {
@@ -398,7 +403,7 @@ public class Buff
         //移除自己----------??
         BuffManager.RemoveBuffFromActor(this,target);
     }
-    
+
     public void OnBuffInterval()
     {
 

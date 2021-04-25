@@ -541,11 +541,11 @@ public class Actor : MonoBehaviour
         
         if(eventArgs.IFComplete)
         {
-            WanaSpell(wanaSkill);
             if(wanaSkill.skillData.protectSpell)
             {
                 ifProtectSpell = false;
             }
+            WanaSpell(wanaSkill);    
         }
         else
         Debug.LogWarning("决策条被打断!");
