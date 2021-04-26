@@ -335,12 +335,12 @@ public class UIBattle : MonoBehaviour
         anim.Play();
         playerActor.animator.Play("run");        
         StartCoroutine(WaitForBattleReady());
-        if(Main.instance.ifNewBird==15)
+        if(Main.instance.ifNewBird==16)
         {
             //战斗开始前先播剧情
             //当怪物生命值到50%时再播剧情
             //结束战斗
-            NewBird_15();
+            NewBird_16();
             UIBattle.Instance.isBattleOver =true;
         }
     }
@@ -349,7 +349,7 @@ public class UIBattle : MonoBehaviour
         yield return new WaitForSeconds(1.25f);
         playerActor.animator.Play("idle");
         isBattleOver =false;
-        if(Main.instance.ifNewBird==16)
+        if(Main.instance.ifNewBird==17)
         {
             
         }
@@ -481,7 +481,7 @@ public class UIBattle : MonoBehaviour
         // {
         //     BattleEvent.instance.GetBattleResult(result);
         // }
-        if(Main.instance.ifNewBird<=7)
+        if(Main.instance.ifNewBird<=7)//模拟给玩家创建初始牌组
         {
             playerActor.UsingSkillsID.Add(2);
             playerActor.UsingSkillsID.Add(2);
@@ -871,10 +871,12 @@ public class UIBattle : MonoBehaviour
     }
     void ShowEnemyBehavier()
     {
+        if(Main.instance.ifNewBird<10)
+        return;
         UIBuffDetail.CreateUIBuffDetail(Enemy.wanaSkill.describe,Enemy.wanaSkill.skillName);
-        if(Main.instance.ifNewBird==12)
+        if(Main.instance.ifNewBird<=12)
         {
-            Main.instance.ifNewBird=13;
+            Main.instance.ifNewBird++;
             NewBird.LoadNewBird(12);
         }
     }
@@ -936,15 +938,25 @@ public class UIBattle : MonoBehaviour
         t.GetComponent<RectTransform>().anchoredPosition =Vector2.zero;
         NewBird.LoadNewBird(11);
     }
-    public void NewBird_15()
+    public void NewBird_16()
     {
-        Main.instance.ifNewBird=16;
-        StartCoroutine(IENewBird_15());
+        Main.instance.ifNewBird=17;
+        StartCoroutine(IENewBird_16());
     }
-    IEnumerator IENewBird_15()
+    IEnumerator IENewBird_16()
     {
         yield return new WaitForSeconds(1f);
         Perform.LoadPerform("perform_NewBird");
+    }
+    public void NewBird_17()
+    {
+        Main.instance.ifNewBird=18;
+        StartCoroutine(IENewBird_17());
+    }
+    IEnumerator IENewBird_17()
+    {
+        yield return new WaitForSeconds(1f);
+        NewBird.LoadNewBird(17);
     }
     
 }

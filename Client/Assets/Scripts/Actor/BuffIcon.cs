@@ -256,11 +256,17 @@ public class BuffIcon : MonoBehaviour
             
         // }
         UIBuffDetail.CreateUIBuffDetail(buff);
-        if(Main.instance.ifNewBird==10)
+        
+        if(Main.instance.ifNewBird<=13)//buff新手提醒对策说明
         {
-            Destroy(transform.GetComponentInChildren<NewBird>().gameObject);
-            NewBird.LoadNewBird(10);
-            Main.instance.ifNewBird++;
+            GameObject g = transform.GetComponentInChildren<NewBird>().gameObject;
+            if(g!=null)
+            {
+                Destroy(g);
+                NewBird.LoadNewBird(10);
+                Main.instance.ifNewBird++;
+            }
+            
         }
         
     }

@@ -390,7 +390,7 @@ public class SkillCard : MonoBehaviour
         Debug.Log("手牌数量："+Player.instance.playerActor.handCards.Count); 
         if(Player.instance.playerActor.handCards.Count <=Player.instance.playerActor.autoDealCardsMinValue)
         {
-            if(Main.instance.ifNewBird<=5)
+            if(Main.instance.ifNewBird<=5)//第一次补牌
             {
                 UIBattle.Instance.NewBird_4();
                 return;

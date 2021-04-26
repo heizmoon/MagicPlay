@@ -173,7 +173,7 @@ public class Main : MonoBehaviour {
 	{
 		//如果新手没过，那么开始新手教程
 		//直接进入第一场战斗
-		if(ifNewBird<5)
+		if(ifNewBird<7)
 		{
 			UIChooseCharacter.OnChooseCharacter(0,"Map_00");
 			Map.instance.MoveLocal(Map.instance.startPos.GetComponent<MapPoint>().nextPoint[0].GetComponent<MapPoint>());
@@ -204,7 +204,7 @@ public class Main : MonoBehaviour {
 			Destroy(Player.instance.playerActor.gameObject);
 		}
 	}
-	void NewBird_0()
+	void NewBird_0()//秘境深处
 	{
 		ifNewBird++;
 		NewBird nb = NewBird.LoadNewBird(0);

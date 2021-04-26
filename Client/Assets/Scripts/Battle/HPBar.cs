@@ -109,7 +109,10 @@ public class HPBar : MonoBehaviour
                 ImgCurrent.fillAmount+=changeInterval;
                 timeCurrentInterval=0;
                 HpCurrent+= changeValue;
-                
+                if(actor.ifProtectSpell)
+                ImgCurrent.color = Color.blue;
+                else
+                ImgCurrent.color = Color.yellow;
                 if(ImgCurrent.fillAmount>=1)
                 {
                     isChanging = false;

@@ -35,7 +35,7 @@ public class Actor : MonoBehaviour
     public Transform castPoint;
     public Transform hitPoint;
     public Transform summonPoint;
-
+    GameObject shieldPoint;
 	public List<int> UsingSkillsID;//角色携带的卡牌列表
     ///<summary>0=玩家角色；1=敌人；2=NPC</summary>
     public ActorType actorType;
@@ -132,6 +132,8 @@ public class Actor : MonoBehaviour
     void Awake()
     {
         animator =gameObject.GetComponent<Animator>();
+        shieldPoint =transform.Find("ShieldPoint").gameObject;
+        shieldPoint.SetActive(false);
 
     }
     void Start()
@@ -254,6 +256,14 @@ public class Actor : MonoBehaviour
             }
             
         }
+        if(armor>0)
+        {
+            shieldPoint.SetActive(true);
+        }
+        else
+        {
+            shieldPoint.SetActive(false);
+        }
     }
     // void AutoReduceHP()
     // {
@@ -280,8 +290,10 @@ public class Actor : MonoBehaviour
         if(HpMax+number>0)
         HpMax+=number;
         else
-        HpMax =1;
-        Die();
+        {
+            HpMax =1;
+            Die();
+        }
     }
     public void AddMaxMP(int number)
     {
@@ -369,7 +381,7 @@ public class Actor : MonoBehaviour
             int[] _data =new int[]{number,totalArmor,armor};
             OnGetArmor(_data);
         }
-        if(Main.instance.ifNewBird==3)
+        if(Main.instance.ifNewBird==3)//第一次加护甲
         {
             Main.instance.ifNewBird++;
             StartCoroutine(NewBird_3());
@@ -565,7 +577,7 @@ public class Actor : MonoBehaviour
             if(HpCurrent<=Mathf.FloorToInt(HpMax/2))
             {
                 state  =2;
-                if(Main.instance.ifNewBird==16)
+                if(Main.instance.ifNewBird==18)//剧情2
                 {
                     Main.instance.ifNewBird++;
                     Debug.Log("该播片了");
@@ -631,13 +643,17 @@ public class Actor : MonoBehaviour
                     break;
                     case 3:
                         skillId = monsterData.m_buffSkills1[GetRandomFromIntList(monsterData.m_weightBuffSkills1)];
-                        if(Main.instance.ifNewBird<=11)
+                        if(Main.instance.ifNewBird<=11)//敌人第一次强化
                         {
-                            UIBattle.Instance.NewBird_11();
+                            UIBattle.Instance.NewBird_11();//点击可以查看敌人即将施放的技能详情
                         }    
                     break;
                     case 4:
                         skillId = monsterData.m_nerfSkills1[GetRandomFromIntList(monsterData.m_weightNerfSkills1)];
+                        if(Main.instance.ifNewBird<=17)//敌人第一次削弱，蓝色技能条不会被打断
+                        {
+                            UIBattle.Instance.NewBird_17();
+                        } 
                     break;
                 }
             break;
@@ -647,7 +663,7 @@ public class Actor : MonoBehaviour
                 {
                     case 1:
                         skillId = monsterData.m_attackSkills2[GetRandomFromIntList(monsterData.m_weightAttackSkills2)];
-                        if(Main.instance.ifNewBird<=5)
+                        if(Main.instance.ifNewBird<=5)//第一次攻击行为
                         {
                             UIBattle.Instance.NewBird_5();
                         }
