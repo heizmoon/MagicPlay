@@ -1501,6 +1501,12 @@ public class Actor : MonoBehaviour
                 int[] _data ={num,makeDamageTimes,totalDamage};
                 OnTakeDamageAndReduceHP(_data);
             }
+            if(TakenSkill.skillName=="点燃伤害"&&Player.instance.playerActor.abilities.Contains(59))//炎龙脊髓
+            {
+                Skill _skill = SkillManager.TryGetFromPool(35,TakenSkill.caster);
+                _skill.heal =Mathf.RoundToInt(num/4);
+                TakenSkill.caster.BeginSpell(_skill);
+            }
             //执行当角色生命值低于50%，就xxx这类效果
             if(tempHP>0.5*HpMax&&HpCurrent<=0.5*HpMax)
             {
