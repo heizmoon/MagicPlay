@@ -98,7 +98,8 @@ public class UIBattle : MonoBehaviour
     public void OnQuitBattle()
     {
         Time.timeScale =1f;
-        StartCoroutine(WaitForShowBattleOver(0,2f));
+        g_settingPannel.SetActive(false);
+        StartCoroutine(WaitForShowBattleOver(0,0.2f));
     }
     // Update is called once per frame
     void Update()

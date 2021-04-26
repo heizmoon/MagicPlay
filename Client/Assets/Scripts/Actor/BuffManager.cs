@@ -129,7 +129,7 @@ public class BuffManager : MonoBehaviour
                     int i =0;
                     for (int j = buff.target.buffs.Count-1; j >=0 ; j--)
                     {
-                        Debug.Log("BUFF层数"+buff.target.buffs.Count);
+                        // Debug.Log("BUFF层数"+buff.target.buffs.Count);
                         Buff _buff =buff.target.buffs[j];
                         if(_buff.buffData.id == buff.buffData.abilityID)
                         {
@@ -137,7 +137,7 @@ public class BuffManager : MonoBehaviour
                             {
                                 Debug.Log("移除一层"+_buff.buffData.name);
                                 _buff.OnBuffEnd();
-                                Debug.Log("移除后剩余BUFF层数"+buff.target.buffs.Count);
+                                // Debug.Log("移除后剩余BUFF层数"+buff.target.buffs.Count);
                                 i++;
                                 if(_buff.buffIcon.buffs.Count==0)
                                 {
@@ -193,6 +193,7 @@ public class BuffManager : MonoBehaviour
                 buff.level =1;
                 buff.currentValue =item.value+item.valueGrow;
                 buff.target =target;
+                buff.effectInterval =item.effectInterval;
                 if(buff.buffData.delay>0)
                 {
                     StartCoroutine(WaitForAddBuff(buff));

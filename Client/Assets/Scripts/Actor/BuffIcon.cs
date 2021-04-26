@@ -48,7 +48,7 @@ public class BuffIcon : MonoBehaviour
         currentTime+=Time.deltaTime;
         invertTime+=Time.deltaTime;
         iconShow.fillAmount -=fillNum*Time.deltaTime;
-        if(buff.buffData.effectInterval>0&&invertTime>=buff.buffData.effectInterval)
+        if(buff.effectInterval>0&&invertTime>=buff.effectInterval)
         {
             OnEffectInterval();
         }
@@ -197,10 +197,17 @@ public class BuffIcon : MonoBehaviour
     public void OnEffectReduce(int num)
     {
         buffNum-=num;
+        // if(buffNum>0)
+        // {
+            
+        // }
+        // else
+        // OnEffectEnd();
         if(textBuffNum!=null)
         textBuffNum.text =string.Format("{0}",buffNum);
         if(OnBuffAction!=null)
         OnBuffAction(buffID,"end",buffNum,buff.target.actorType);
+        
     }
     public void ResetTime()
     {

@@ -15,6 +15,7 @@ public class Buff
     public List<Buff> childrenBuffs =new List<Buff>();
     public BuffIcon buffIcon;
     Buff speicalBuff;
+    public float effectInterval;
 
     // Update is called once per frame
     void Update()
@@ -629,54 +630,5 @@ public class Buff
         
         target =null;
     }
-    #region 移除事件相关
-//     public void RemoveAllEvent()
-//     {
-//         // System.Reflection.EventInfo myEvent =
-//         // Debug.LogError(this.GetType().GetEvents().ToString());    
-//         var events = this.GetType().GetEvents();
-//         if (events == null || events.Length < 1)
-//         {  
-//             return;
-//         }
-//         foreach (var info in events)
-//         {
-//             ClearEvents(this,info.Name);
-//         }
-
-//     }
-//     public static void ClearEvents(object objectHasEvents, string eventName)
-//     {  
-//         if (objectHasEvents == null)
-//         {  
-//             return;
-//         }  
-//         Delegate[] invokeList = GetObjectEventList(objectHasEvents, eventName);
-//         if (invokeList != null)
-//         {
-//             Type t = objectHasEvents.GetType();
-//             foreach (Delegate del in invokeList)
-//             {
-//                 t.GetEvent(eventName).RemoveEventHandler(objectHasEvents, del);
-//             }
-//         }
-//     }
-// private static Delegate[] GetObjectEventList(object p_Object, string p_EventName)
-// {
-// 	FieldInfo _Field = p_Object.GetType().GetField(p_EventName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static);
-// 	if (_Field == null)
-// 	{
-// 		return null;
-// 	}
-// 	object _FieldValue = _Field.GetValue(p_Object);
-// 	if (_FieldValue != null && _FieldValue is Delegate)
-// 	{
-// 		Delegate _ObjectDelegate = (Delegate)_FieldValue;
-// 		return _ObjectDelegate.GetInvocationList();
-// 	}
-// 	return null;
-// }
-#endregion
-
 
 }

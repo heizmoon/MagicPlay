@@ -36,8 +36,8 @@ public class UIBuffDetail : MonoBehaviour
         ui.transform.localScale = Vector3.one;
         ui.transform.localPosition =Vector3.zero;
         ui.nameText.text = buff.buffData.name;
-        ui.describe.text = string.Format(buff.buffData.describe,buff.buffData.value,buff.buffData.time,buff.buffData.maxNum,buff.buffData.delay); 
-        //{0} = value {1} = time {2} = maxNum {3} = delay
+        ui.describe.text = string.Format(buff.buffData.describe,buff.buffData.value,buff.buffData.time,buff.buffData.maxNum,buff.effectInterval); 
+        //{0} = value {1} = time {2} = maxNum {3} = effectInterval
     }
     void OnClose()
     {

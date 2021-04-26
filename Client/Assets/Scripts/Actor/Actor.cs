@@ -1182,6 +1182,18 @@ public class Actor : MonoBehaviour
         {
             OnSkillHasCritEvent(new int[]{damage});
         }
+        if(skill.caster.abilities.Contains(60))
+        {
+            Buff _buff= BuffManager.FindBuff(4,skill.target);
+            if(_buff!=null)
+            {
+                _buff.level++;
+                if(_buff.level>7)
+                _buff.level=7;
+                _buff.effectInterval-=level*0.25f; 
+            }
+        }
+
 
     }
     public void OnSkillHasHit(bool ifHit ,Skill skill)
