@@ -35,7 +35,7 @@ public class HPBar : MonoBehaviour
     float changeInterval;
     Timer timer;
     private Actor actor;//此条的拥有者
-    public bool playerActerMPBar;
+    public bool playerActorMPBar;
     public bool showArmor;
     float mpchangeInterval =0;
 
@@ -65,7 +65,7 @@ public class HPBar : MonoBehaviour
         {
             shadowImage =transform.Find("Shadow").GetComponent<Image>();
         }
-        if(playerActerMPBar)
+        if(playerActorMPBar)
         {
             minImage =transform.Find("Min").GetComponent<Image>();
         }
@@ -125,7 +125,7 @@ public class HPBar : MonoBehaviour
             }
             timeCurrentInterval+=Time.deltaTime;
         }
-        if(playerActerMPBar)
+        if(playerActorMPBar)
         {
             // mpchangeInterval+= Time.deltaTime;
             // if(mpchangeInterval>Player.instance.playerActor.autoReduceMPAmount)
@@ -146,6 +146,7 @@ public class HPBar : MonoBehaviour
         }
         if(hasShadow)
         {
+
             StartCoroutine(MoveShadow());
             if(shadowImage.fillAmount<ImgCurrent.fillAmount)
             {

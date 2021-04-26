@@ -288,12 +288,27 @@ public class Actor : MonoBehaviour
     public void AddMaxHP(int number)
     {
         if(HpMax+number>0)
-        HpMax+=number;
+        {
+            HpMax+=number;
+            if(HpCurrent>HpMax)
+            HpCurrent=HpMax;
+            if(hpBar!=null)
+            {
+                hpBar.changeHPBar(HpCurrent,HpMax);
+            }
+        }
         else
         {
             HpMax =1;
-            Die();
+            if(HpCurrent>HpMax)
+            HpCurrent=HpMax;
+            if(hpBar!=null)
+            {
+                hpBar.changeHPBar(0,HpMax);
+                Die();
+            }
         }
+        
     }
     public void AddMaxMP(int number)
     {
@@ -301,6 +316,12 @@ public class Actor : MonoBehaviour
         MpMax+=number;
         else
         MpMax =1;
+        if(MpCurrent>MpMax)
+        MpCurrent=MpMax;
+        if(mpBar!=null)
+        {
+            mpBar.changeHPBar(MpCurrent,MpMax);
+        }
     }
     public void AddCold(int number)
     {
@@ -1132,7 +1153,7 @@ public class Actor : MonoBehaviour
         }
         if(hpBar!=null)
         {
-            hpBar.changeHPBar(HpCurrent,true);
+            hpBar.changeHPBar(HpCurrent,HpMax);
         }
         // if(this.actorType == ActorType.敌人)
         if(num>0)

@@ -198,7 +198,7 @@ public class Buff
             target.ifProtectSpell = true;
             break;
             case BuffType.改变生命上限:
-            target.AddMaxHP(-(int)buffData.value);
+            target.AddMaxHP((int)buffData.value);
             break;
         }
         
