@@ -869,8 +869,8 @@ public class Actor : MonoBehaviour
             // Debug.LogFormat("魔法值不足,需要{0},当前为{1}",skill.realManaCost,MpCurrent);
             return false;
         }
-        if(actorType ==ActorType.玩家角色)
-        StopCasting();
+        // if(actorType ==ActorType.玩家角色)
+        // StopCasting();
         //如果目标已经死了
         if(target!=null&&target.animState ==AnimState.dead)
         {
@@ -878,7 +878,8 @@ public class Actor : MonoBehaviour
         }
         
         // StartCoroutine(WaitForBeginSpell(skill));
-        animator.Play("attack");
+        // animator.Play("attack");
+        animator.Play("castend");
         BeginSpell(skill);
         RunAI();
         // BeginSpell(skill);
