@@ -331,9 +331,9 @@ public class Main : MonoBehaviour {
 	}
 	public void InitUIChooseCharacter()
 	{
-		if(UIChooseCharacter.instance==null)
+		if(UIMain.instance==null)
 		{
-			GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UIChooseCharacter"));
+			GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UIMain"));
 			go.transform.SetParent(allScreenUI);
 			go.transform.localScale =Vector3.one;
 			go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
@@ -342,7 +342,7 @@ public class Main : MonoBehaviour {
 		}
 		else
 		{
-			UIChooseCharacter.instance.gameObject.SetActive(true);
+			UIMain.instance.gameObject.SetActive(true);
 		}
 		
 	}

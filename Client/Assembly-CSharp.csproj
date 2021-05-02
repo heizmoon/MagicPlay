@@ -126,6 +126,7 @@
      <Compile Include="Assets\Scripts\TextTool.cs" />
      <Compile Include="Assets\Scripts\Timer.cs" />
      <Compile Include="Assets\Scripts\UIS\ItemBox.cs" />
+     <Compile Include="Assets\Scripts\UIS\MovingActor.cs" />
      <Compile Include="Assets\Scripts\UIS\ToggleMagic.cs" />
      <Compile Include="Assets\Scripts\UIS\TraitBox.cs" />
      <Compile Include="Assets\Scripts\UIS\TraitCasket.cs" />
@@ -145,11 +146,11 @@
      <Compile Include="Assets\Scripts\UIS\UICardRemove.cs" />
      <Compile Include="Assets\Scripts\UIS\UIChooseCharacter.cs" />
      <Compile Include="Assets\Scripts\UIS\UILoading.cs" />
+     <Compile Include="Assets\Scripts\UIS\UIMain.cs" />
      <Compile Include="Assets\Scripts\UIS\UIOffLineRewards.cs" />
      <Compile Include="Assets\Scripts\UIS\UIPlayer.cs" />
      <Compile Include="Assets\Scripts\UIS\UIRandomEvent.cs" />
      <Compile Include="Assets\Scripts\UIS\UIStatisticLine.cs" />
-     <Compile Include="Assets\Scripts\UIS\UITalent.cs" />
      <Compile Include="Assets\Scripts\UIS\UITrait.cs" />
      <Compile Include="Assets\Scripts\UIS\UITreasure.cs" />
      <None Include="Assets\Anima2D\Readme.txt" />

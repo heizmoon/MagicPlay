@@ -102,7 +102,7 @@ public class UICardRemove : MonoBehaviour
         buttons.Remove(button);
         DestroyImmediate(itemBox.gameObject);
         Player.instance.AddGold(-price);
-        price+=25;
+        price+=Configs.instance.removeCardGold;
         StartCoroutine(WaitForDisableGridLayout());
     }
    void CloseUI()

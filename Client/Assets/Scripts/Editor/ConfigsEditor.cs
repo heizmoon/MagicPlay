@@ -27,6 +27,7 @@ public class ConfigsEditor : Editor {
         drawProperty("cardWeightAddition", "获得卡牌时每张现有牌的权重加成");
         drawProperty("buildNumber", "全部流派数量");
         drawProperty("ifChangMode", "是否采用换牌模式");
+        drawProperty("removeCardGold", "每次移除卡牌金钱增加");
         drawProperty("toolTips", "小提示");
 
 

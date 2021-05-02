@@ -99,6 +99,8 @@ public class Skill : MonoBehaviour
         addArmor =skillData.addArmor;
         damagePercent =skillData.damagePercent;
         damageDistribution = skillData.damageDistribution;
+        if(damageDistribution=="")
+        damageDistribution ="0.3,1";
         type =skillData.type;
         heal = skillData.heal;
         
@@ -166,6 +168,8 @@ public class Skill : MonoBehaviour
         addArmor =skillData.addArmor;
         damagePercent =skillData.damagePercent;
         damageDistribution = skillData.damageDistribution;
+        if(damageDistribution=="")
+        damageDistribution ="0.3,1";
         type =skillData.type;
         heal = skillData.heal;
         
