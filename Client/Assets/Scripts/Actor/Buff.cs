@@ -74,7 +74,7 @@ public class Buff
             target.AddStamina((int)buffData.value);
             break;
             case BuffType.数值吸收伤害:
-            target.armor+=(int)buffData.value+target.basicDefence;
+            target.AddArmor((int)buffData.value+target.basicDefence);
             target.RefeashArmorAutoDecayTime();
             // 如果身上有获得护甲后触发的buff，那么此时触发
             BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(target,BuffType.获得护甲后触发技能);     
@@ -86,7 +86,7 @@ public class Buff
                 target.Crit+=buffData.value;
             break;
             case BuffType.百分比影响护甲值:
-                target.armor+=(int)(buffData.value*target.armor);
+                target.AddArmor((int)(buffData.value*target.armor));
             break;
             case BuffType.影响全局能量消耗:
             {
@@ -200,6 +200,9 @@ public class Buff
             break;
             case BuffType.改变生命上限:
             target.AddMaxHP((int)buffData.value);
+            break;
+            case BuffType.下一个技能无效:
+            target.AddInvalidSkillNum((int)buffData.value);
             break;
         }
         

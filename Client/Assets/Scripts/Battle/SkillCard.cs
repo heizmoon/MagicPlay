@@ -282,7 +282,7 @@ public class SkillCard : MonoBehaviour
                     if(_skill.id == 110)//技能--破釜沉舟
                     {
                         //每弃一张牌获得4点护甲
-                        _skill.target.armor+= 4*(throwNum+1);
+                        _skill.target.AddArmor(4*(throwNum+1));
                         _skill.target.RefeashArmorAutoDecayTime();
                     }
                     

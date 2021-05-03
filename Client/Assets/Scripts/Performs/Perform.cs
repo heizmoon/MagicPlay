@@ -96,6 +96,8 @@ public class Perform : MonoBehaviour
             UIBattle.Instance.BTN_coldTip_2.gameObject.SetActive(false);
             UIBattle.Instance.BTN_shieldTip_1.gameObject.SetActive(false);
             UIBattle.Instance.BTN_shieldTip_2.gameObject.SetActive(false);
+            UIBattle.Instance.BTN_invalidTip_1.gameObject.SetActive(false);
+            UIBattle.Instance.BTN_invalidTip_2.gameObject.SetActive(false);
             UIBattle.Instance.t_playerBuffPosition.gameObject.SetActive(false);
             UIBattle.Instance.t_enemyBuffPosition.gameObject.SetActive(false);
             UIBattle.Instance.enemyBarText.gameObject.SetActive(false);

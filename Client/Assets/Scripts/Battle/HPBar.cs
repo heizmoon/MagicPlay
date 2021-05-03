@@ -47,6 +47,8 @@ public class HPBar : MonoBehaviour
     bool isChanging;
     GameObject coldFrame;
     Text coldNumber;
+    GameObject invalidFrame;
+    Text invalidNumber;
       
     void Awake()
     {
@@ -59,7 +61,8 @@ public class HPBar : MonoBehaviour
             armorText.transform.parent.gameObject.SetActive(true);
             coldFrame =transform.Find("ColdFrame").gameObject;
             coldNumber =transform.Find("ColdFrame/ColdNumber").GetComponent<Text>();
-
+            invalidFrame =transform.Find("InvalidFrame").gameObject;
+            invalidNumber =transform.Find("InvalidFrame/InvalidNumber").GetComponent<Text>();
         }
         if(hasShadow)
         {
@@ -165,8 +168,11 @@ public class HPBar : MonoBehaviour
     public void BindHPBar(Actor actor)//绑定HP条与角色
     {
         this.actor=actor;
-         if(showArmor)
-        ChangeCold();
+        if(showArmor)
+        {
+            ChangeCold();
+            ChangeInvalidSkill();
+        }
     }
     public void BindHPBar(Skill skill)//绑定施法条与技能
     {
@@ -327,6 +333,16 @@ public class HPBar : MonoBehaviour
         coldFrame.SetActive(true);
         coldNumber.text = actor.coldNum.ToString();
         
+    }
+    public void ChangeInvalidSkill()
+    {
+        if(actor.invalidSkillNum<=0)
+        {
+            invalidFrame.SetActive(false);
+            return;
+        }
+        invalidFrame.SetActive(true);
+        invalidNumber.text = actor.invalidSkillNum.ToString();
     }
 
 }

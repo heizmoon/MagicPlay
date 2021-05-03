@@ -98,6 +98,7 @@ public class Actor : MonoBehaviour
     ///<summary>维持技能最低限制</summary>
     public float manaMin;
     public int coldNum;
+    public int invalidSkillNum;
 
 #region 已经无用的属性
 //---------------已经无用--------------
@@ -365,7 +366,15 @@ public class Actor : MonoBehaviour
         hpBar.ChangeCold();
     }
 
-    
+    public void AddInvalidSkillNum(int number)
+    {
+        invalidSkillNum+=number;
+        if(invalidSkillNum<0)
+        {
+            invalidSkillNum=0;
+        }
+        hpBar.ChangeInvalidSkill();
+    }
     public void SetBasicAttack()
     {
         if(actorType ==ActorType.玩家角色)
@@ -915,14 +924,17 @@ public class Actor : MonoBehaviour
         
         //5.创建施法特效
         // CreateSpellEffect(skill);
+        if(invalidSkillNum>0&&skill.ifActive)
+        {
+            AddInvalidSkillNum(-1);
+            return;
+        }
         CreateCastEffect(skill);
         //执行技能释放完毕事件
         OnSkillSpellFinish(skill);
         //6.绑定技能和施法条
         // if(castingbar)
         // castingbar.BindHPBar(skill);
-        
-
     }
     public void ChannelSkill(float val)
     {
@@ -1459,7 +1471,7 @@ public class Actor : MonoBehaviour
             {
                 tempNum =armor;
                 num-=armor;
-                armor =0;
+                AddArmor(-1000);
             }
             if(armor == 0)//可执行破盾时就xxx这类效果
             {

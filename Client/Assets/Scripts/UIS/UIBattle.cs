@@ -24,6 +24,8 @@ public class UIBattle : MonoBehaviour
     public Button BTN_shieldTip_2;
     public Button BTN_coldTip_1;
     public Button BTN_coldTip_2;
+    public Button BTN_invalidTip_1;
+    public Button BTN_invalidTip_2;
 
     public Text enemyBarText;
     public Text battleResult;
@@ -80,6 +82,9 @@ public class UIBattle : MonoBehaviour
         BTN_shieldTip_2.onClick.AddListener(OnShieldTips);
         BTN_coldTip_1.onClick.AddListener(OnColdTips);
         BTN_coldTip_2.onClick.AddListener(OnColdTips);
+        BTN_invalidTip_1.onClick.AddListener(OnInvalidTips);
+        BTN_invalidTip_2.onClick.AddListener(OnInvalidTips);
+
         enemyBarText.GetComponentInChildren<Button>().onClick.AddListener(ShowEnemyBehavier);
     }
     public void OnPressSetting()
@@ -400,7 +405,7 @@ public class UIBattle : MonoBehaviour
         Player.instance.playerActor.transform.localPosition =Vector3.zero;
         playerActor.target =null;
         playerActor.ClearSummon();
-        playerActor.armor =0;
+        playerActor.AddArmor(-1000);
         RecoverActor();//还原角色备份
         Enemy.gameObject.SetActive(false);
         
@@ -860,6 +865,10 @@ public class UIBattle : MonoBehaviour
     void OnColdTips()
     {
         UIBuffDetail.CreateUIBuffDetail("每1点寒冷可以减少1点造成的伤害,最多10点","寒冷");
+    }
+    void OnInvalidTips()
+    {
+        UIBuffDetail.CreateUIBuffDetail("每1点疑惑使写下来的1次技能的施法无效化","疑惑");
     }
     public void ReduceAllCardCost(int num)
     {

@@ -273,7 +273,12 @@ public class Skill : MonoBehaviour
         {
             float _time = distribution[i]==""?0:float.Parse(distribution[i].Split(',')[0]);
             float _percent = float.Parse(distribution[i].Split(',')[1]);
-            int realDamage = damage+Mathf.FloorToInt(target.HpMax*damagePercent)+caster.basicAttack;
+            int realDamage =0;
+            if(target != caster)//不对自己造成伤害，受攻击力加成
+            realDamage= damage+Mathf.FloorToInt(target.HpMax*damagePercent)+caster.basicAttack;
+            else//对自己造成伤害，不受攻击力加成
+            realDamage= damage+Mathf.FloorToInt(target.HpMax*damagePercent);
+
             realDamage =Mathf.FloorToInt(realDamage*_percent);
             StartCoroutine(WaitForDamage(_time,realDamage,ifSeep));
             totalTime+=_time;

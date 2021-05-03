@@ -62,7 +62,9 @@ public enum BuffType
     获得的总护甲层数大于x触发技能 =52,
     当前护甲层数大于x获取BUFF =53,
     获得保护状态 =54,
-    改变生命上限 =55
+    改变生命上限 =55,
+    下一个技能无效 =56
+
     
 }
 public class BuffManager : MonoBehaviour
