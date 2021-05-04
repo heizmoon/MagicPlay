@@ -199,6 +199,8 @@ public class Main : MonoBehaviour {
 	{
 		yield return new WaitForSeconds(3f);
 		UILoading.SetActive(false);
+		if(UIMain.instance)
+		UIMain.instance.IntoMain();
 		if(Player.instance.playerActor!=null&&ifNewBird>5)
 		{
 			Destroy(Player.instance.playerActor.gameObject);

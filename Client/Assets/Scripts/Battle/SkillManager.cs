@@ -34,8 +34,8 @@ public class SkillManager : MonoBehaviour
     List<int> equipCardsList =new List<int>();
     ///<summary>（charID,List(skillid)[type]）</summary>
     Dictionary<int,List<int>[]> typeSkillDic =new Dictionary<int, List<int>[]>();
-    public List<int> initialUnlockSkill;
-    List<int> allSkillsList;
+    public List<int> initialUnlockSkill=new List<int>();
+    List<int> allSkillsList =new List<int>();
     void Awake()
     {
         instance =this;
@@ -44,21 +44,26 @@ public class SkillManager : MonoBehaviour
     }
     void Start()
     {
+        
+    }
+        //将各个角色的技能按照级别分列表储存
+    public void SeparateSkillFromLevel()
+    {
+        StartCoroutine(IESeparateSkillFromLevel());
+    }
+    void GetAllSkill()
+    {
         foreach (var item in manager.dataArray)//所有技能循环
         {
             if(item.ifActive)
             allSkillsList.Add(item.id);
         }
     }
-        //将各个角色的技能按照级别分列表储存
-    public void SeparateSkillFromLevel()
-    {
-        StartCoroutine(IESeparateSkillFromLevel());
-        GetInitialSkill();
-    }
     IEnumerator IESeparateSkillFromLevel()
     {
         yield return new WaitForSeconds(2f);
+        GetAllSkill();
+        GetInitialSkill();
         for (int i = 0; i < Configs.instance.buildNumber+1; i++)//所有流派
         {
             List<int>[] list =new List<int>[5];

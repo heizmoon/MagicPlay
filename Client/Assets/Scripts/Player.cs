@@ -67,6 +67,8 @@ public class Player : MonoBehaviour
 		// InputBasicProperty();
 		// LoadTraitList();
 		Crystal = PlayerPrefs.GetInt("Crystal");
+		if(UIMain.instance)
+		UIMain.instance.Refeash();
 		GetUnlockSkills();
 		GetUnlockAbility();
 

@@ -15,10 +15,10 @@ public class AbilityManager : MonoBehaviour
     //已解锁的道具集合
     //不同等级的道具集合
     //在随机时从不同等级的道具集合中随机，并判断随机到的道具是否已经解锁
-    public List<int> initialUnlockAbility;
+    public List<int> initialUnlockAbility=new List<int>();
     //已经解锁的列表
     //不会随机到角色身上已经有的道具
-    List<int> allAbilityList;
+    List<int> allAbilityList =new List<int>();
 
     void Awake()
     {
@@ -33,6 +33,8 @@ public class AbilityManager : MonoBehaviour
     IEnumerator IESeparateSkillFromLevel()
     {
         yield return new WaitForSeconds(2f);
+        GetAllAbility();
+        GetInitialAbility();
         for (int i = 0; i < Configs.instance.buildNumber+1; i++)//所有流派
         {
             List<int>[] list =new List<int>[5];
@@ -55,7 +57,7 @@ public class AbilityManager : MonoBehaviour
             buildAbilityDic.Add(i,list);
         }
         //
-        GetInitialAbility();
+        
     }
     void GetInitialAbility()
     {
@@ -69,11 +71,14 @@ public class AbilityManager : MonoBehaviour
     }
     void Start()
     {
+        SeparateSkillFromLevel();
+    }
+    void GetAllAbility()
+    {
         foreach (var item in manager.dataArray)//所有技能循环
         {
             allAbilityList.Add(item.id);
         }
-        SeparateSkillFromLevel();
     }
     public AbilityData GetInfo(int id)
     {

@@ -22,7 +22,7 @@ public class UIMain : MonoBehaviour
     Button _buttonSwitchLeft;
     Button _buttonSwitchRight;
     int charID;
-
+    Text _crystalText;
     void Awake()
     {
         instance = this;
@@ -48,7 +48,7 @@ public class UIMain : MonoBehaviour
         _buttonSwitchRight.gameObject.SetActive(false);
         _charName =transform.Find("ActiveUIs/CharName").GetComponent<Text>();
         _charName.gameObject.SetActive(false);
-
+        _crystalText = transform.Find("ActiveUIs/upFrame/TextCrystal").GetComponent<Text>();
     }
 
     // Update is called once per frame
@@ -74,6 +74,10 @@ public class UIMain : MonoBehaviour
             _spring.SetActive(false);
         }
     }
+    public void IntoMain()
+    {
+        background.GetComponent<Animation>().Play();
+    }
     public void DragMap()
     {
         
@@ -90,21 +94,21 @@ public class UIMain : MonoBehaviour
         moveDir.x = moveDir.x /moveSpeed.x;
         moveDir.y = moveDir.y /moveSpeed.y;
         background.Translate(moveDir);
-        if(background.localPosition.x>250)
+        if(background.localPosition.x>420)
         {
-            background.localPosition =new Vector3(250,background.localPosition.y,0);
+            background.localPosition =new Vector3(420,background.localPosition.y,0);
         }
-        if(background.localPosition.x<-250)
+        if(background.localPosition.x<-420)
         {
-            background.localPosition =new Vector3(-250,background.localPosition.y,0);
+            background.localPosition =new Vector3(-420,background.localPosition.y,0);
         }
-        if(background.localPosition.y>50)
+        if(background.localPosition.y>350)
         {
-            background.localPosition =new Vector3(background.localPosition.x,50,0);
+            background.localPosition =new Vector3(background.localPosition.x,350,0);
         }
-        if(background.localPosition.y<-50)
+        if(background.localPosition.y<-350)
         {
-            background.localPosition =new Vector3(background.localPosition.x,-50,0);
+            background.localPosition =new Vector3(background.localPosition.x,-350,0);
         }
         if (orginPoint != currentPoint)
         {
@@ -116,6 +120,11 @@ public class UIMain : MonoBehaviour
         orginPoint = new Vector3(Input.mousePosition.x,Input.mousePosition.y,0);
         Debug.Log("orginPoint="+orginPoint);
         
+    }
+    public void Refeash()
+    {
+        _crystalText.text =Player.instance.Crystal.ToString();
+        //更新事件显示相关
     }
     void OnPressActor(Button button)
     {
