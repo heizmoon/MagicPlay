@@ -89,5 +89,9 @@ public class MovingActor : MonoBehaviour
         tweener.Pause();
         actor.animator.Play("idle");
     }
+    public void Resume()
+    {
+        ifCanRun =true;
+    }
 
 }

@@ -41,6 +41,7 @@ public class Perform : MonoBehaviour
     //摘要：
     //    进入模式
     public int intoMode;
+    public int sceneMode;
     void Start()
     {
         DialogueDataSet diaSet = Resources.Load<DialogueDataSet>("DataAssets/Dialogue/"+dialogueTable);
@@ -54,10 +55,41 @@ public class Perform : MonoBehaviour
         
     }
 
-    // Update is called once per frame
+    void Update()
+    {
+        if(sceneMode==1)
+        {
+            UIMain.instance.background.localPosition = scene.transform.localPosition;
+            UIMain.instance.background.localScale = scene.transform.localScale;
+
+        }
+    }
     IEnumerator WaitForLoad()
     {
-        if(playerActorPostion!=null)
+        if(sceneMode==1)
+        {
+            UIMain.instance.StopActors(true);
+            UIMain.instance._actor1.GetComponentInChildren<Actor>().transform.SetParent(actorPositions[0]);
+            UIMain.instance._actor2.GetComponentInChildren<Actor>().transform.SetParent(actorPositions[1]);
+            UIMain.instance._actor3.GetComponentInChildren<Actor>().transform.SetParent(actorPositions[2]);
+            actorPositions[0].GetComponentInChildren<Actor>().transform.localPosition =Vector3.zero;
+            actorPositions[0].GetComponentInChildren<Actor>().transform.localScale =Vector3.one;
+            actorPositions[1].GetComponentInChildren<Actor>().transform.localPosition =Vector3.zero;
+            actorPositions[1].GetComponentInChildren<Actor>().transform.localScale =Vector3.one;
+            actorPositions[2].GetComponentInChildren<Actor>().transform.localPosition =Vector3.zero;
+            actorPositions[2].GetComponentInChildren<Actor>().transform.localScale =Vector3.one;
+            if(actorPositions.Count>3&&actorList.Count>0)
+            {
+                for (int i = 0; i < actorList.Count; i++)
+                {
+                    GameObject go= Instantiate(actorList[i]);
+                    go.transform.SetParent(actorPositions[i+3]);
+                    go.transform.localPosition =Vector3.zero;
+                    go.transform.localScale =Vector3.one;
+                }
+            }
+        }
+        if(playerActorPostion!=null&&sceneMode!=1)
         {
             // if(intoMode ==0)
             // {
@@ -65,7 +97,6 @@ public class Perform : MonoBehaviour
             //     playerActorPostion.position = UIBattle.Instance.t_playerPosition.position;
             //     actorPositions[0].position =UIBattle.Instance.t_enemyPosition.position;
             // }
-
             Player.instance.playerActor.transform.SetParent(playerActorPostion);
             Player.instance.playerActor.transform.localPosition =Vector3.zero;
             if(intoMode ==0)
@@ -80,28 +111,30 @@ public class Perform : MonoBehaviour
                 Player.instance.playerActor.transform.localScale =Vector3.one;
             }
             Player.instance.playerActor.GetComponent<Actor>().StopCasting();
+            for (int i = 0; i < actorList.Count; i++)
+            {
+                GameObject go= Instantiate(actorList[i]);
+                go.transform.SetParent(actorPositions[i]);
+                go.transform.localPosition =Vector3.zero;
+                go.transform.localScale =Vector3.one;
+            }
+            if(intoMode==0)
+            {
+                Main.instance.IntoStoryMode(intoMode);
+                UIBattle.Instance.g_enemyCastingBar.SetActive(false);
+                UIBattle.Instance.BTN_coldTip_1.gameObject.SetActive(false);
+                UIBattle.Instance.BTN_coldTip_2.gameObject.SetActive(false);
+                UIBattle.Instance.BTN_shieldTip_1.gameObject.SetActive(false);
+                UIBattle.Instance.BTN_shieldTip_2.gameObject.SetActive(false);
+                UIBattle.Instance.BTN_invalidTip_1.gameObject.SetActive(false);
+                UIBattle.Instance.BTN_invalidTip_2.gameObject.SetActive(false);
+                UIBattle.Instance.t_playerBuffPosition.gameObject.SetActive(false);
+                UIBattle.Instance.t_enemyBuffPosition.gameObject.SetActive(false);
+                UIBattle.Instance.enemyBarText.gameObject.SetActive(false);
+            }
+            
         }
-        for (int i = 0; i < actorList.Count; i++)
-        {
-            GameObject go= Instantiate(actorList[i]);
-            go.transform.SetParent(actorPositions[i]);
-            go.transform.localPosition =Vector3.zero;
-            go.transform.localScale =Vector3.one;
-        }
-        if(intoMode==0)
-        {
-            Main.instance.IntoStoryMode(intoMode);
-            UIBattle.Instance.g_enemyCastingBar.SetActive(false);
-            UIBattle.Instance.BTN_coldTip_1.gameObject.SetActive(false);
-            UIBattle.Instance.BTN_coldTip_2.gameObject.SetActive(false);
-            UIBattle.Instance.BTN_shieldTip_1.gameObject.SetActive(false);
-            UIBattle.Instance.BTN_shieldTip_2.gameObject.SetActive(false);
-            UIBattle.Instance.BTN_invalidTip_1.gameObject.SetActive(false);
-            UIBattle.Instance.BTN_invalidTip_2.gameObject.SetActive(false);
-            UIBattle.Instance.t_playerBuffPosition.gameObject.SetActive(false);
-            UIBattle.Instance.t_enemyBuffPosition.gameObject.SetActive(false);
-            UIBattle.Instance.enemyBarText.gameObject.SetActive(false);
-        }
+        
         director.Stop();
         
         if(intoMode==1)
@@ -109,7 +142,11 @@ public class Perform : MonoBehaviour
             // yield return new WaitForSeconds(3f);
             Main.instance.IntoStoryMode(intoMode);
         }
+        if(sceneMode!=1)
         yield return new WaitForSeconds(1.5f);
+        else
+        yield return new WaitForSeconds(0.2f);
+
         director.playableAsset =timeLine[0];
         director.Play();
     }
@@ -162,6 +199,21 @@ public class Perform : MonoBehaviour
     public void OnPerformEnd()
     {
         //playerActor归位
+        if(sceneMode==1)
+        {
+            actorPositions[0].GetComponentInChildren<Actor>().transform.SetParent(UIMain.instance._actor1.transform);
+            actorPositions[1].GetComponentInChildren<Actor>().transform.SetParent(UIMain.instance._actor2.transform);
+            actorPositions[2].GetComponentInChildren<Actor>().transform.SetParent(UIMain.instance._actor3.transform);
+            UIMain.instance._actor1.transform.GetChild(0).localPosition =Vector3.zero;
+            UIMain.instance._actor1.transform.GetChild(0).localScale =Vector3.one;
+            UIMain.instance._actor2.transform.GetChild(0).localPosition =Vector3.zero;
+            UIMain.instance._actor2.transform.GetChild(0).localScale =Vector3.one;
+            UIMain.instance._actor3.transform.GetChild(0).localPosition =Vector3.zero;
+            UIMain.instance._actor3.transform.GetChild(0).localScale =Vector3.one;
+            UIMain.instance.background.localScale =Vector3.one;
+            UIMain.instance.StopActors(false);
+
+        }
         if(playerActorPostion!=null)
         {
             if(intoMode!=0)
@@ -177,6 +229,7 @@ public class Perform : MonoBehaviour
                 UIBattle.Instance.Enemy.transform.localPosition =Vector3.zero;
                 UIBattle.Instance.Enemy.transform.localScale =Vector3.one;
             }
+            
         }
         
         

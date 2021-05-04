@@ -7,24 +7,29 @@ using UnityEngine.UI;
 public class UIMain : MonoBehaviour
 {
     public static UIMain instance;
-    Transform background;
+    public Transform background;
     Vector3 orginPoint;
     public Vector2 moveSpeed;
     GameObject _terminal;
     GameObject _market;
     GameObject _spring;
-    Button _actor1;
-    Button _actor2;
-    Button _actor3;
+    public Button _actor1;
+    public Button _actor2;
+    public Button _actor3;
     Animation _anim;
     Text _charName;
     Button _buttonGo;
     Button _buttonSwitchLeft;
     Button _buttonSwitchRight;
-    Button _buttonShop;
+    Button _buttonOpenShop;
+    Button _buttonOpenMatong;
+
+    Button _buttonCloseShop;
+    Button _buttonShopBuy;
 
     int charID;
     Text _crystalText;
+    GameObject _ShopPanel;
     void Awake()
     {
         instance = this;
@@ -32,6 +37,8 @@ public class UIMain : MonoBehaviour
     void Start()
     {
         background=transform.Find("background");
+        _ShopPanel=transform.Find("ActiveUIs/ShopPannel").gameObject;
+        _ShopPanel.SetActive(false);
         _actor1 =transform.Find("background/actor_1").GetComponent<Button>();     
         _actor1.onClick.AddListener(delegate{OnPressActor(_actor1);});
         _actor2 =transform.Find("background/actor_2").GetComponent<Button>();     
@@ -51,8 +58,14 @@ public class UIMain : MonoBehaviour
         _charName =transform.Find("ActiveUIs/CharName").GetComponent<Text>();
         _charName.gameObject.SetActive(false);
         _crystalText = transform.Find("ActiveUIs/upFrame/TextCrystal").GetComponent<Text>();
-        _buttonShop =transform.Find("background/Button_shop").GetComponent<Button>(); 
-        _buttonShop.onClick.AddListener(OnOpenBox);
+        _buttonOpenShop =transform.Find("background/Button_shop").GetComponent<Button>(); 
+        _buttonOpenShop.onClick.AddListener(OnOpenShop);
+        _buttonOpenMatong =transform.Find("background/Button_matong").GetComponent<Button>(); 
+        _buttonOpenMatong.onClick.AddListener(OnOpenMatong);
+        _buttonCloseShop =transform.Find("ActiveUIs/ShopPannel/block").GetComponent<Button>(); 
+        _buttonCloseShop.onClick.AddListener(OnCloseShop);
+        _buttonShopBuy =transform.Find("ActiveUIs/ShopPannel/ButtonBuy").GetComponent<Button>(); 
+        _buttonShopBuy.onClick.AddListener(OnOpenBox);
     }
 
     // Update is called once per frame
@@ -141,6 +154,21 @@ public class UIMain : MonoBehaviour
         _actor1.GetComponent<MovingActor>().Stop();
         _actor2.GetComponent<MovingActor>().Stop();
         _actor3.GetComponent<MovingActor>().Stop();    
+    }
+    public void StopActors(bool ifStop)
+    {
+        if(ifStop)
+        {
+            _actor1.GetComponent<MovingActor>().Stop();
+            _actor2.GetComponent<MovingActor>().Stop();
+            _actor3.GetComponent<MovingActor>().Stop();
+        }
+        else
+        {
+            _actor1.GetComponent<MovingActor>().Resume();
+            _actor2.GetComponent<MovingActor>().Resume();
+            _actor3.GetComponent<MovingActor>().Resume();
+        }
     }
     void TriggerChooseActor(Transform _transform)
     {
@@ -236,7 +264,15 @@ public class UIMain : MonoBehaviour
         }
         SwitchActor();
     }
-    #region 
+    #region
+    void OnOpenShop()
+    {
+        _ShopPanel.SetActive(true);
+    } 
+    void OnCloseShop()
+    {
+        _ShopPanel.SetActive(false);
+    }
     void OnOpenBox()
     {
         //箱子中能开出哪些东西？
@@ -271,4 +307,8 @@ public class UIMain : MonoBehaviour
         }
     }
     #endregion
+    void OnOpenMatong()
+    {
+        Perform.LoadPerform("matong");
+    }
 }
