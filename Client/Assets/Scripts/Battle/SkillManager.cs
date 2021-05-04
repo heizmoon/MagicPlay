@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Data;
-using System;
+using System.Linq;
 ///<summary>被动技能加成类型</summary>
 public enum SkillBuffType
 {
@@ -22,7 +22,6 @@ public class SkillManager : MonoBehaviour
     //每一系的总等级
     //0-8:水，火，风，土，心灵，能量，物质,时空，真理
     public int[] totalLevel=new int[]{0,0,0,0,0,0,0,0,0};
-    public List<int> unlockSkills =new List<int>();
     // public Dictionary<int,List<int>> rankSkills =new Dictionary<int, List<int>>();
     // struct CharSkillList
     // {
@@ -35,7 +34,8 @@ public class SkillManager : MonoBehaviour
     List<int> equipCardsList =new List<int>();
     ///<summary>（charID,List(skillid)[type]）</summary>
     Dictionary<int,List<int>[]> typeSkillDic =new Dictionary<int, List<int>[]>();
-
+    public List<int> initialUnlockSkill;
+    List<int> allSkillsList;
     void Awake()
     {
         instance =this;
@@ -44,11 +44,17 @@ public class SkillManager : MonoBehaviour
     }
     void Start()
     {
+        foreach (var item in manager.dataArray)//所有技能循环
+        {
+            if(item.ifActive)
+            allSkillsList.Add(item.id);
+        }
     }
         //将各个角色的技能按照级别分列表储存
     public void SeparateSkillFromLevel()
     {
         StartCoroutine(IESeparateSkillFromLevel());
+        GetInitialSkill();
     }
     IEnumerator IESeparateSkillFromLevel()
     {
@@ -63,7 +69,7 @@ public class SkillManager : MonoBehaviour
             list[4] = new List<int>();
             foreach (var item in manager.dataArray)//所有技能循环
             {
-                if(item.buildID ==i)//角色技能列表循环
+                if(item.buildID ==i&&item.ifActive)//角色技能列表循环
                 {
                     list[item.rank].Add(item.id);
                     Debug.Log("收录--流派["+i+"]的["+item.rank+"]级别牌列表：id="+item.id+","+item.name);
@@ -76,6 +82,16 @@ public class SkillManager : MonoBehaviour
         //
         IESeparateSkillFromType();
 
+    }
+    void GetInitialSkill()
+    {
+        foreach (var item in manager.dataArray)
+        {
+            if(item.initialUnlock)
+            {
+                initialUnlockSkill.Add(item.id);
+            }
+        }
     }
     //所有职业的类型牌List
     void IESeparateSkillFromType()
@@ -91,7 +107,7 @@ public class SkillManager : MonoBehaviour
             // list[4] = new List<int>();
             foreach (var item in manager.dataArray)//所有技能循环
             {
-                if(CharacterManager.instance.characters[i].allSkillsList.Contains(item.id) )//角色技能列表循环
+                if(CharacterManager.instance.characters[i].unlockSkillsList.Contains(item.id) )//角色技能列表循环
                 {
                     list[item.type].Add(item.id);
                     Debug.Log("收录--职业id:["+i+"]的["+item.type+"]类牌列表：id="+item.id+","+item.name);
@@ -190,7 +206,7 @@ public class SkillManager : MonoBehaviour
     public SkillData[] GetRandomSelfSkills(int N)
     {
         SkillData[] skillDatas =new SkillData[N];
-        List<int> list = Player.instance.playerActor.character.allSkillsList;
+        List<int> list = Player.instance.playerActor.character.unlockSkillsList;
         if(N<1)
         return null;
         List<int> temp =new List<int>();
@@ -223,6 +239,7 @@ public class SkillManager : MonoBehaviour
         {
             List<int>[] _list = buildSkillDic[buildIDs[i]];
             List<int> list =_list[rank];
+            list = list.Intersect(Player.instance.unlockSkills).ToList();
             if(list.Count<3)
             Debug.LogError("流派【"+ buildIDs[i]+"】 rank 【"+rank+"】的牌数量不足！");
             int r =UnityEngine.Random.Range(0,list.Count);
@@ -304,18 +321,32 @@ public class SkillManager : MonoBehaviour
         }
         return skillDatas;
     }
-    // public Ability[] GetRandomUnlockPassiveSkills(int N)
-    // {
-    //     Ability[] abilities =new Ability[N];
-    //     if(N<1)
-    //     return null;
-    //     for(int i =0;i<unlockSkills.Count;i++)
-    //     {
-    //         int r =UnityEngine.Random.Range(0,unlockSkills.Count-1);
-    //         abilities[i] =GetInfo(r);
-    //     }
-    //     return abilities;
-    // }
+    ///<summary>从所有未解锁的技能中随机N个</summary>
+    public SkillData[] GetRandomSkillFromLockSkill(int N)
+    {
+        SkillData[] skillDatas = new SkillData[N];
+        if(N<1)
+        return null;
+        List<int> list =allSkillsList;
+        list = list.Except(Player.instance.unlockSkills).ToList();//获取当前所有未解锁的技能
+        if(list.Count==0)
+        return null;
+        if(N>list.Count)
+        N=list.Count;
+        for(int i =0;i<N;i++)
+        {
+            int r =UnityEngine.Random.Range(1,list.Count);
+            int randomTimes =0;
+            while (list.Contains(r)&&randomTimes<4)
+            {
+                r =UnityEngine.Random.Range(1,list.Count);
+                randomTimes++;
+            }
+            list.Add(r);
+            skillDatas[i] =GetInfo(list[r]);
+        }
+        return skillDatas;
+    }
   /*获取技能卡的规则：
   根据当前拥有的牌，选出最适合组成BUILD的牌
   计算出当前牌的Build值

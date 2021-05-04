@@ -132,9 +132,7 @@ public class Actor : MonoBehaviour
 
     void Awake()
     {
-        animator =gameObject.GetComponent<Animator>();
-        shieldPoint =transform.Find("ShieldPoint").gameObject;
-        shieldPoint.SetActive(false);
+        InitActor();
 
     }
     void Start()
@@ -144,7 +142,9 @@ public class Actor : MonoBehaviour
     #region  初始化角色
     public void InitActor()
     {
-        pool = GameObject.Find("Pool").transform;
+        animator =gameObject.GetComponent<Animator>();
+        shieldPoint =transform.Find("ShieldPoint").gameObject;
+        shieldPoint.SetActive(false);
         if(animator ==null)
         {
             animator =GetComponentInChildren<Animator>();
@@ -345,7 +345,7 @@ public class Actor : MonoBehaviour
                         buffs[i].OnBuffEnd();    
                         break;
                     }
-                    buffs[i].OnBuffEnd();    
+                    buffs[i].OnBuffEnd();
                 }
             }
 
@@ -831,6 +831,7 @@ public class Actor : MonoBehaviour
 
     public void GetActorSpellBar()
     {
+        pool = GameObject.Find("Pool").transform;
         //获取角色施法条
         if(actorType==0)
         {   

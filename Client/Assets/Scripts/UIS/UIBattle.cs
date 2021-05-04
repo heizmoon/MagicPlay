@@ -168,11 +168,11 @@ public class UIBattle : MonoBehaviour
         playerActor.target =Enemy;
         Enemy.target =playerActor;
         BackUpActor();//备份角色数据
-        playerActor.InitActor();
+        // playerActor.InitActor();
         // playerActor.InitPlayerActor();
         playerActor.GetActorSpellBar();
         playerActor.InitMagic();
-        Enemy.InitActor();
+        // Enemy.InitActor();
         Enemy.GetActorSpellBar();
         SetEnemyBarText(0,0);
         Enemy.InitMagic();

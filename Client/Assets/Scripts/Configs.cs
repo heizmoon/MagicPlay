@@ -22,6 +22,8 @@ public class Configs : MonoBehaviour
     public bool ifChangMode;
     public int removeCardGold;
     public List<string> toolTips;
+    
+
 
     void Awake()
     {

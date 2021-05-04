@@ -148,11 +148,11 @@ namespace EditorTool {
                 item.portrait = collect[i][8].ToString();
                 item.reMp =collect[i][9].ToString()==""?0:float.Parse(collect[i][9].ToString());
                 item.crit =collect[i][10].ToString()==""?0:float.Parse(collect[i][10].ToString());
-                item.allSkills =collect[i][11].ToString();
+                item.initialUnlockSkills =collect[i][11].ToString();
                 item.relic =collect[i][12].ToString()==""?0:int.Parse(collect[i][12].ToString());
                 item.buildList =collect[i][13].ToString();
 
-                item.allSkillsList =GetListIntFromString(item.allSkills);
+                item.initialUnlockSkillsList =GetListIntFromString(item.initialUnlockSkills);
                 item._buildList =GetListIntFromString(item.buildList);
 
                 array[i - 2] = item;
@@ -870,6 +870,8 @@ namespace EditorTool {
                 skillData.critTriggerSkill =collect[i][57].ToString()==""?0:int.Parse(collect[i][57].ToString());
                 skillData.delaySpell =collect[i][58].ToString()==""?0:float.Parse(collect[i][58].ToString());
                 skillData.protectSpell = collect[i][59].ToString()=="1"?true:false;
+                skillData.initialUnlock = collect[i][60].ToString()=="1"?true:false;
+
 
 
                 array[i - 2] = skillData;
@@ -933,6 +935,7 @@ namespace EditorTool {
             data.mpMax =collect[i][13].ToString()==""?0:int.Parse(collect[i][13].ToString());
             data.reMp =collect[i][14].ToString()==""?0:float.Parse(collect[i][14].ToString());
             data.crit =collect[i][15].ToString()==""?0:float.Parse(collect[i][15].ToString());
+            data.initialUnlock =collect[i][16].ToString()==""?false:true;
 
             data._buildList = GetListIntFromString(data.buildIDList);
             array[i - 2] = data;

@@ -223,4 +223,37 @@ public class UIMain : MonoBehaviour
         }
         SwitchActor();
     }
+    #region 
+    void OnOpenBox()
+    {
+        //箱子中能开出哪些东西？
+    }
+    public void UnlockSkill()
+    {
+        //从所有没有解锁的技能中随机一个出来
+        SkillData[] skillDatas= SkillManager.instance.GetRandomSkillFromLockSkill(1);
+        if(skillDatas==null)
+        {
+            Debug.LogError("所有技能都已经被解锁");
+            return;
+        }
+        for (int i = 0; i < skillDatas.Length; i++)
+        {
+            Player.instance.UnlockSkill(skillDatas[i].id);
+        }
+    }
+    public void UnlockAbility()
+    {
+        AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromLockAbility(1);
+        if(abilities==null)
+        {
+            Debug.LogError("所有遗物都已经被解锁");
+            return;
+        }
+        for (int i = 0; i < abilities.Length; i++)
+        {
+            Player.instance.UnlockAbility(abilities[i].id);
+        }
+    }
+    #endregion
 }

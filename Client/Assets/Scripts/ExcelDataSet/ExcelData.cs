@@ -57,6 +57,7 @@ public class AbilityData
     public int mpMax;
     public float reMp;
     public float crit;
+    public bool initialUnlock;
 
     public List<int> _buildList;
 
@@ -137,6 +138,7 @@ public class SkillData{
     public int critTriggerSkill;
     public float delaySpell;
     public bool protectSpell;
+    public bool initialUnlock;
 
 }
 [System.Serializable]
@@ -175,9 +177,9 @@ public class CharacterData
     public string portrait;
     public float reMp;
     public float crit;
-    public string allSkills;
+    public string initialUnlockSkills;
     public int relic;
-    public List<int> allSkillsList;
+    public List<int> initialUnlockSkillsList;
     public string buildList;
     public List<int> _buildList;
 

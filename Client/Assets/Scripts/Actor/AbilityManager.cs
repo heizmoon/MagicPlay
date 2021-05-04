@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Data;
+using System.Linq;
 
 public class AbilityManager : MonoBehaviour
 {
@@ -14,7 +15,10 @@ public class AbilityManager : MonoBehaviour
     //已解锁的道具集合
     //不同等级的道具集合
     //在随机时从不同等级的道具集合中随机，并判断随机到的道具是否已经解锁
+    public List<int> initialUnlockAbility;
+    //已经解锁的列表
     //不会随机到角色身上已经有的道具
+    List<int> allAbilityList;
 
     void Awake()
     {
@@ -51,10 +55,24 @@ public class AbilityManager : MonoBehaviour
             buildAbilityDic.Add(i,list);
         }
         //
-
+        GetInitialAbility();
+    }
+    void GetInitialAbility()
+    {
+        foreach (var item in manager.dataArray)
+        {
+            if(item.initialUnlock)
+            {
+                initialUnlockAbility.Add(item.id);
+            }
+        }
     }
     void Start()
     {
+        foreach (var item in manager.dataArray)//所有技能循环
+        {
+            allAbilityList.Add(item.id);
+        }
         SeparateSkillFromLevel();
     }
     public AbilityData GetInfo(int id)
@@ -102,8 +120,11 @@ public class AbilityManager : MonoBehaviour
         {
             List<int>[] _list = buildAbilityDic[buildIDs[i]];
             List<int> list =_list[rank];
+            list.RemoveAll(it => Player.instance.playerActor.abilities.Contains(it));
+            list = list.Intersect(Player.instance.unlockAbility).ToList();
+            if(list.Count<3)
             Debug.LogError("流派【"+ buildIDs[i]+"】 rank 【"+rank+"】的遗物数量不足！");
-    
+
             int r =UnityEngine.Random.Range(0,list.Count);
             int randomTimes =0;
             while (temp.Contains(r)&&randomTimes<4)
@@ -183,6 +204,32 @@ public AbilityData[] GetRandomAbilityFromLevel(int number,int type)
         }
 
         return datas;
+    }
+    ///<summary>从所有未解锁的遗物中随机N个</summary>
+    public AbilityData[] GetRandomAbilityFromLockAbility(int N)
+    {
+        AbilityData[] abilities = new AbilityData[N];
+        if(N<1)
+        return null;
+        List<int> list =allAbilityList;
+        list = list.Except(Player.instance.unlockAbility).ToList();//获取当前所有未解锁的技能
+        if(list.Count==0)
+        return null;
+        if(N>list.Count)
+        N=list.Count;
+        for(int i =0;i<N;i++)
+        {
+            int r =UnityEngine.Random.Range(1,list.Count);
+            int randomTimes =0;
+            while (list.Contains(r)&&randomTimes<4)
+            {
+                r =UnityEngine.Random.Range(1,list.Count);
+                randomTimes++;
+            }
+            list.Add(r);
+            abilities[i] =GetInfo(list[r]);
+        }
+        return abilities;
     }
 
 }

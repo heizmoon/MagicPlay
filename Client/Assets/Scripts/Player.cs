@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
 
 	public static Player instance;
 	public int Gold{get;set;}
+	public int Power{get;set;}
+	public int Crystal{get;set;}
 	public int CharID =0;
 	
 	//各种技能的等级，存储方式：技能ID，对应等级
@@ -47,7 +49,7 @@ public class Player : MonoBehaviour
 		
 		// playerActor =GameObject.Find("Girl_01").GetComponent<Actor>();
 	}
-
+	///<summary>获取已经解锁的技能,遗物,各种玩家进度,数值</summary>
 	public void Init()
 	{
 		// if(PlayerPrefs.GetString("playerAvatar")=="")
@@ -64,6 +66,7 @@ public class Player : MonoBehaviour
 		//========================================================临时数值
 		// InputBasicProperty();
 		// LoadTraitList();
+		Crystal = PlayerPrefs.GetInt("Crystal");
 		GetUnlockSkills();
 		GetUnlockAbility();
 
@@ -220,6 +223,7 @@ public class Player : MonoBehaviour
 			return;
 		}
 		unlockSkills.Add(id);
+		SaveUnlockSkill();
 	}
 	public void SaveUnlockSkill()
 	{
@@ -240,13 +244,22 @@ public class Player : MonoBehaviour
 		string[] unlock =PlayerPrefs.GetString("unlockSkills").Split(',');
 		if(unlock[0] =="")
 		{
-			unlockSkills =new List<int>{1001,1002,1003,1021};//---------------------------初始解锁的
+			unlockSkills =SkillManager.instance.initialUnlockSkill;//---------------------------初始解锁的
 			return;
 		}
 		foreach (var item in unlock)
 		{
 			unlockSkills.Add(int.Parse(item));
 		}
+	}
+	public void UnlockAbility(int id)
+	{
+		if(unlockAbility.Contains(id))
+		{
+			return;
+		}
+		unlockAbility.Add(id);
+		SaveUnlockAbility();
 	}
 	public void SaveUnlockAbility()
 	{
@@ -267,7 +280,7 @@ public class Player : MonoBehaviour
 		string[] unlock =PlayerPrefs.GetString("unlockAbility").Split(',');
 		if(unlock[0] =="")
 		{
-			unlockAbility =new List<int>{1,2,3,4,5,6,7,8,9,10};//---------------------------初始解锁的
+			unlockAbility =AbilityManager.instance.initialUnlockAbility;//---------------------------初始解锁的
 			return;
 		}
 		foreach (var item in unlock)
@@ -324,6 +337,16 @@ public class Player : MonoBehaviour
 		Gold+=num;
 		if(UIBasicBanner.instance)
 		UIBasicBanner.instance.RefeashText();
+	}
+	public void AddCrystal(int num)
+	{
+		if(Crystal+num<=0)
+		{
+			Crystal =0;
+		}
+		else
+		Crystal+=num;
+		PlayerPrefs.SetInt("Crystal",Crystal);
 	}
 }
 

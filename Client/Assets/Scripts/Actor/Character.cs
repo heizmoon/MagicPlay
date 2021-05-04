@@ -11,7 +11,7 @@ public class Character : MonoBehaviour
     public int attack;
     public float reMP;
     public float crit;
-    public List<int> allSkillsList;
+    public List<int> unlockSkillsList;
     int[] reforms = new int[4];
     List<int> reformIds =new List<int>();
     List<int> reformResults =new List<int>();
@@ -65,11 +65,15 @@ public class Character : MonoBehaviour
         attack = data.attack;
         reMP =data.reMp;
         crit =data.crit;
-        allSkillsList = data.allSkillsList;
+        unlockSkillsList = data.initialUnlockSkillsList;
         Debug.LogWarning("基础攻击力是"+attack);
         loadReforms();
         AddReformPerporty();
         GetSkills();
+        
+    }
+    void GetUnlockSkills()
+    {
         
     }
     void GetSkills()
