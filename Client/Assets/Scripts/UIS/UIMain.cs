@@ -21,6 +21,8 @@ public class UIMain : MonoBehaviour
     Button _buttonGo;
     Button _buttonSwitchLeft;
     Button _buttonSwitchRight;
+    Button _buttonShop;
+
     int charID;
     Text _crystalText;
     void Awake()
@@ -49,6 +51,8 @@ public class UIMain : MonoBehaviour
         _charName =transform.Find("ActiveUIs/CharName").GetComponent<Text>();
         _charName.gameObject.SetActive(false);
         _crystalText = transform.Find("ActiveUIs/upFrame/TextCrystal").GetComponent<Text>();
+        _buttonShop =transform.Find("background/Button_shop").GetComponent<Button>(); 
+        _buttonShop.onClick.AddListener(OnOpenBox);
     }
 
     // Update is called once per frame
@@ -236,6 +240,8 @@ public class UIMain : MonoBehaviour
     void OnOpenBox()
     {
         //箱子中能开出哪些东西？
+        Player.instance.AddCrystal(10);
+        UnlockSkill();
     }
     public void UnlockSkill()
     {

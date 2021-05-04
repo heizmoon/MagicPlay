@@ -240,6 +240,7 @@ public class Player : MonoBehaviour
 		}
 		unlock = unlock.Remove(0,1);
 		PlayerPrefs.SetString("unlockSkills",unlock);
+		Debug.LogError("已解锁技能:"+unlock);
 	}
 	void GetUnlockSkills()
 	{
@@ -349,6 +350,8 @@ public class Player : MonoBehaviour
 		else
 		Crystal+=num;
 		PlayerPrefs.SetInt("Crystal",Crystal);
+		if(UIMain.instance)
+		UIMain.instance.Refeash();
 	}
 }
 
