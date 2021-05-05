@@ -19,6 +19,7 @@ public class UIMain : MonoBehaviour
     Animation _anim;
     Text _charName;
     Button _buttonGo;
+    Button _buttonCancel;
     Button _buttonSwitchLeft;
     Button _buttonSwitchRight;
     Button _buttonOpenShop;
@@ -66,6 +67,10 @@ public class UIMain : MonoBehaviour
         _buttonCloseShop.onClick.AddListener(OnCloseShop);
         _buttonShopBuy =transform.Find("ActiveUIs/ShopPannel/ButtonBuy").GetComponent<Button>(); 
         _buttonShopBuy.onClick.AddListener(OnOpenBox);
+        _buttonCancel = transform.Find("ActiveUIs/ButtonCancel").GetComponent<Button>();
+        _buttonCancel.onClick.AddListener(OnCancelChooseChar);
+        _buttonCancel.gameObject.SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -93,7 +98,7 @@ public class UIMain : MonoBehaviour
     }
     public void IntoMain()
     {
-        background.GetComponent<Animation>().Play();
+        GetComponent<Animation>().Play();
     }
     public void DragMap()
     {
@@ -239,6 +244,10 @@ public class UIMain : MonoBehaviour
             Destroy(UIMain.instance.gameObject);
         }
         
+    }
+    void OnCancelChooseChar()
+    {
+        _anim.Play("UI_Main_leaveChooseChar");
     }
     public void SwipeRight()
     {
