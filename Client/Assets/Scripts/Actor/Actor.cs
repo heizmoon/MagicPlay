@@ -1057,9 +1057,10 @@ public class Actor : MonoBehaviour
         {
             animator.SetInteger("anim",4);
         }
+        else
         animator.SetInteger("anim",i);
         // if(this != Player.instance.playerActor)
-        // Debug.LogWarningFormat("当前animator为：{0}",animator.GetInteger("anim"));
+        Debug.LogWarningFormat("当前animator为：{0}",animator.GetInteger("anim"));
     }
       //执行下一轮动作逻辑
     // IEnumerator NextTurn()

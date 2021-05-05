@@ -25,7 +25,7 @@ public class UIMain : MonoBehaviour
     Button _buttonOpenShop;
     Button _buttonOpenMatong;
 
-    Button _buttonCloseShop;
+    public Button _buttonCloseShop;
     Button _buttonShopBuy;
 
     int charID;
@@ -98,7 +98,7 @@ public class UIMain : MonoBehaviour
     }
     public void IntoMain()
     {
-        GetComponent<Animation>().Play();
+        GetComponent<Animation>().Play("UI_UIMain_into");
     }
     public void DragMap()
     {

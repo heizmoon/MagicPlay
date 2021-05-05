@@ -42,6 +42,7 @@ public class Perform : MonoBehaviour
     //    进入模式
     public int intoMode;
     public int sceneMode;
+    bool startSyncScene;
     void Start()
     {
         DialogueDataSet diaSet = Resources.Load<DialogueDataSet>("DataAssets/Dialogue/"+dialogueTable);
@@ -57,7 +58,7 @@ public class Perform : MonoBehaviour
 
     void Update()
     {
-        if(sceneMode==1)
+        if(sceneMode==1&&startSyncScene)
         {
             UIMain.instance.background.localPosition = scene.transform.localPosition;
             UIMain.instance.background.localScale = scene.transform.localScale;
@@ -68,16 +69,12 @@ public class Perform : MonoBehaviour
     {
         if(sceneMode==1)
         {
+            UIMain.instance.GetComponent<Animation>().Play("UI_UIMain_dark");
             UIMain.instance.StopActors(true);
             UIMain.instance._actor1.GetComponentInChildren<Actor>().transform.SetParent(actorPositions[0]);
             UIMain.instance._actor2.GetComponentInChildren<Actor>().transform.SetParent(actorPositions[1]);
             UIMain.instance._actor3.GetComponentInChildren<Actor>().transform.SetParent(actorPositions[2]);
-            actorPositions[0].GetComponentInChildren<Actor>().transform.localPosition =Vector3.zero;
-            actorPositions[0].GetComponentInChildren<Actor>().transform.localScale =Vector3.one;
-            actorPositions[1].GetComponentInChildren<Actor>().transform.localPosition =Vector3.zero;
-            actorPositions[1].GetComponentInChildren<Actor>().transform.localScale =Vector3.one;
-            actorPositions[2].GetComponentInChildren<Actor>().transform.localPosition =Vector3.zero;
-            actorPositions[2].GetComponentInChildren<Actor>().transform.localScale =Vector3.one;
+            
             if(actorPositions.Count>3&&actorList.Count>0)
             {
                 for (int i = 0; i < actorList.Count; i++)
@@ -137,7 +134,7 @@ public class Perform : MonoBehaviour
         
         director.Stop();
         
-        if(intoMode==1)
+        if(intoMode==1&&sceneMode!=1)
         {
             // yield return new WaitForSeconds(3f);
             Main.instance.IntoStoryMode(intoMode);
@@ -145,7 +142,21 @@ public class Perform : MonoBehaviour
         if(sceneMode!=1)
         yield return new WaitForSeconds(1.5f);
         else
-        yield return new WaitForSeconds(0.2f);
+        {
+            if(intoMode==1)
+            {
+                // yield return new WaitForSeconds(3f);
+                yield return new WaitForSeconds(1f);
+                Main.instance.IntoStoryMode(intoMode);
+                startSyncScene =true;
+                actorPositions[0].GetComponentInChildren<Actor>().transform.localPosition =Vector3.zero;
+                actorPositions[0].GetComponentInChildren<Actor>().transform.localScale =Vector3.one;
+                actorPositions[1].GetComponentInChildren<Actor>().transform.localPosition =Vector3.zero;
+                actorPositions[1].GetComponentInChildren<Actor>().transform.localScale =Vector3.one;
+                actorPositions[2].GetComponentInChildren<Actor>().transform.localPosition =Vector3.zero;
+                actorPositions[2].GetComponentInChildren<Actor>().transform.localScale =Vector3.one;
+            }
+        }
 
         director.playableAsset =timeLine[0];
         director.Play();
@@ -212,7 +223,7 @@ public class Perform : MonoBehaviour
             UIMain.instance._actor3.transform.GetChild(0).localScale =Vector3.one;
             UIMain.instance.background.localScale =Vector3.one;
             UIMain.instance.StopActors(false);
-
+            UIMain.instance.transform.Find("ActiveUIs/block").gameObject.SetActive(false);
         }
         if(playerActorPostion!=null)
         {

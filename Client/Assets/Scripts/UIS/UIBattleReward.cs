@@ -126,7 +126,7 @@ public class UIBattleReward : MonoBehaviour
         if(Main.instance.ifNewBird ==15)//创造固定奖励
         {
             AbilityData[] Adatas =new AbilityData[3]; 
-            Adatas[0]= AbilityManager.instance.GetInfo(24);
+            Adatas[0]= AbilityManager.instance.GetInfo(23);
             Adatas[1]= AbilityManager.instance.GetInfo(26);
             Adatas[2]= AbilityManager.instance.GetInfo(28);
 
