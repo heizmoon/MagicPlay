@@ -63,7 +63,9 @@ public enum BuffType
     当前护甲层数大于x获取BUFF =53,
     获得保护状态 =54,
     改变生命上限 =55,
-    下一个技能无效 =56
+    下一个技能无效 =56,
+    改变怪物阶段 =57,
+    改变角色形象 =58
 
     
 }
@@ -464,5 +466,72 @@ public class BuffManager : MonoBehaviour
     {
         if(buff!=null)
         buff.buffIcon.OnEffectEnd();
+    }
+    public void BuffChangeActor(Buff buff)
+    {
+        
+        string perfab =buff.buffData.triggerEffect;
+        Transform target =buff.target.transform;
+        string actorType ="";
+        if(buff.target.actorType==ActorType.玩家角色)
+        {
+            actorType ="Player";
+        }
+        else
+        {
+            actorType ="Enemy";
+        }
+        if(Main.instance.BottomUI.Find(actorType).childCount>0)
+        //如果已经处于变身状态，那么先变回去
+        {
+            BuffResumeActor(buff);
+            BuffChangeActor(buff);
+            return;
+        }
+        Transform _bone =target.Find("bone");
+        _bone.SetParent(Main.instance.BottomUI.Find(actorType));
+        Transform _body =target.Find("body");
+        _body.SetParent(Main.instance.BottomUI.Find(actorType));
+        _bone.localPosition =Vector3.zero;
+        GameObject g = Instantiate((GameObject)(Resources.Load("Prefabs/"+perfab)));
+        Transform bone =g.transform.Find("bone");
+        Transform body = g.transform.Find("body");
+        Vector3 tempScale = bone.localScale;
+        bone.SetParent(target);
+        body.SetParent(target);
+        bone.localPosition =Vector3.zero;
+        bone.localScale =tempScale;
+        // UnityEditorInternal.ComponentUtility.CopyComponent(g.GetComponent<Animator>());
+        // UnityEditorInternal.ComponentUtility.PasteComponentValues(target.GetComponent<Animator>());
+        target.GetComponent<Animator>().runtimeAnimatorController =g.GetComponent<Animator>().runtimeAnimatorController;
+        DestroyImmediate(g);
+        
+    }
+    IEnumerator WaitForChangeActor(Buff buff)
+    {
+        yield return new WaitForSeconds(0.1f);
+        
+    }
+    public void BuffResumeActor(Buff buff)
+    {
+        DestroyImmediate(buff.target.transform.Find("body").gameObject);
+        DestroyImmediate(buff.target.transform.Find("bone").gameObject);
+        string actorType ="";
+        if(buff.target.actorType==ActorType.玩家角色)
+        {
+            actorType ="Player";
+        }
+        else
+        {
+            actorType ="Enemy";
+        }
+        Transform _bone =Main.instance.BottomUI.Find(actorType+"/bone");
+        _bone.SetParent(buff.target.transform);
+        Transform _body =Main.instance.BottomUI.Find(actorType+"/body");
+        _body.SetParent(buff.target.transform);
+        _bone.localPosition =Vector3.zero;
+
+        buff.target.GetComponent<Animator>().runtimeAnimatorController  =buff.target.animatorController;
+        
     }
 }

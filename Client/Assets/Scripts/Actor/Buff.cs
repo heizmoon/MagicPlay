@@ -204,6 +204,13 @@ public class Buff
             case BuffType.下一个技能无效:
             target.AddInvalidSkillNum((int)buffData.value);
             break;
+            case BuffType.改变怪物阶段:
+            if(target.actorType == ActorType.敌人)
+            target.SetEnemyState((int)buffData.value);
+            break;
+            case BuffType.改变角色形象:
+            BuffManager.instance.BuffChangeActor(this);
+            break;
         }
         
     }
@@ -375,6 +382,9 @@ public class Buff
             break;
             case BuffType.改变生命上限:
             target.AddMaxHP(-(int)buffData.value);
+            break;
+            case BuffType.改变角色形象:
+            BuffManager.instance.BuffResumeActor(this);
             break;
         }
         

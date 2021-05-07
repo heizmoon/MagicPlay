@@ -240,7 +240,7 @@ public class Player : MonoBehaviour
 		}
 		unlock = unlock.Remove(0,1);
 		PlayerPrefs.SetString("unlockSkills",unlock);
-		Debug.LogError("已解锁技能:"+unlock);
+		// Debug.LogError("已解锁技能:"+unlock);
 	}
 	void GetUnlockSkills()
 	{

@@ -69,7 +69,7 @@ public class UIBattle : MonoBehaviour
     Dictionary<int,int> useCardTimes;
     int legacyCardTimes;
     int dealCardTimes;
-
+    int tempBehavier =-1;
 
     void Awake()
     {
@@ -112,6 +112,7 @@ public class UIBattle : MonoBehaviour
         if(battleStart)
         {
             BattleTime+=Time.deltaTime;
+            SetEnemyBarText();
         }
         if(Main.instance.ifNewBird==2)//新手引导1
         {
@@ -174,7 +175,6 @@ public class UIBattle : MonoBehaviour
         playerActor.InitMagic();
         // Enemy.InitActor();
         Enemy.GetActorSpellBar();
-        SetEnemyBarText(0,0);
         Enemy.InitMagic();
 
     }
@@ -301,16 +301,21 @@ public class UIBattle : MonoBehaviour
         btn_pause.gameObject.SetActive(true);
         Time.timeScale = 1f;
     }
-    public void SetEnemyBarText(int state,int damage)
+    public void SetEnemyBarText()
     {
-        Debug.LogWarning("敌人的状态是"+state);
-        switch(state)
+        if(tempBehavier == Enemy.behaviour)
+        {
+            return;
+        }
+        // Debug.LogError("敌人的状态是"+Enemy.behaviour);
+
+        switch(Enemy.behaviour)
         {
             case 0:
             enemyBarText.text ="";
             break;
             case 1:
-            enemyBarText.text =string.Format("准备<color=#f22223>攻击:{0}</color>",damage+Enemy.basicAttack);
+            enemyBarText.text =string.Format("准备<color=#f22223>攻击:{0}</color>",Enemy.wanaSkill.damage+Enemy.basicAttack);
             break;
             case 2:
             enemyBarText.text ="准备<color=#f22223>防御</color>";
@@ -321,13 +326,14 @@ public class UIBattle : MonoBehaviour
             case 4:
             enemyBarText.text ="准备<color=#f22223>削弱</color>";
             break;
+            case 5:
+            enemyBarText.text ="正在发呆…";
+            break;
         }
+        tempBehavier =Enemy.behaviour;
         
     }
-    public void SetEnemyBarText()
-    {
-        enemyBarText.text ="正在发呆…";
-    }
+    
 
     void CreateScene(int scene)
     {
@@ -406,6 +412,7 @@ public class UIBattle : MonoBehaviour
         playerActor.target =null;
         playerActor.ClearSummon();
         playerActor.AddArmor(-1000);
+        playerActor.AddInvalidSkillNum(-100);
         RecoverActor();//还原角色备份
         Enemy.gameObject.SetActive(false);
         
@@ -883,12 +890,20 @@ public class UIBattle : MonoBehaviour
     {
         if(Main.instance.ifNewBird<10)
         return;
-        UIBuffDetail.CreateUIBuffDetail(Enemy.wanaSkill.describe,Enemy.wanaSkill.skillName);
         if(Main.instance.ifNewBird<=12)
         {
+            UIBuffDetail.CreateUIBuffDetail(Enemy.wanaSkill.describe,Enemy.wanaSkill.skillName);
             Main.instance.ifNewBird++;
             NewBird.LoadNewBird(12);
+            return;
         }
+        if(Enemy.behaviour>4)
+        UIBuffDetail.CreateUIBuffDetail("发呆就是傻呆着","正在发呆");
+        else if(Enemy.behaviour==0)
+        return;
+        else
+        UIBuffDetail.CreateUIBuffDetail(Enemy.wanaSkill.describe,Enemy.wanaSkill.skillName);
+        
     }
     ///<summary>模拟发牌，给玩家发2张格挡，1张普通攻击</summary>
     public void NewBird_4()

@@ -88,8 +88,9 @@ public class Actor : MonoBehaviour
     public int startBattleDealCardsNumber =4;//初次发牌数
     public int autoDealCardsMinValue =1;
     int state;
+    int targetState;
     int tempState =-1;
-    int behaviour;
+    public int behaviour;
     int AIStep;
     bool AI_monsterHasHit;
     public bool ifProtectSpell;
@@ -99,6 +100,8 @@ public class Actor : MonoBehaviour
     public float manaMin;
     public int coldNum;
     public int invalidSkillNum;
+
+    public RuntimeAnimatorController animatorController;
 
 #region 已经无用的属性
 //---------------已经无用--------------
@@ -133,7 +136,6 @@ public class Actor : MonoBehaviour
     void Awake()
     {
         InitActor();
-
     }
     void Start()
     {
@@ -143,6 +145,7 @@ public class Actor : MonoBehaviour
     public void InitActor()
     {
         animator =gameObject.GetComponent<Animator>();
+        animatorController =animator.runtimeAnimatorController;
         shieldPoint =transform.Find("ShieldPoint").gameObject;
         shieldPoint.SetActive(false);
         if(animator ==null)
@@ -448,6 +451,8 @@ public class Actor : MonoBehaviour
         {
             return;
         }
+        StopCoroutine("IEEnemySleep");
+        // Debug.LogError("RunAI");
         //判断当前是否会切换阶段
         state = EnemyState();
         //状态切换了，加buff或者减buff
@@ -497,9 +502,9 @@ public class Actor : MonoBehaviour
             }
             else
             {
-                behaviour =monsterData.m_aitype2[AIStep];
+                behaviour =monsterData.m_aitype3[AIStep];
                 AIStep++;
-                if(AIStep>monsterData.m_aitype2.Count-1)
+                if(AIStep>monsterData.m_aitype3.Count-1)
                 {
                     AIStep = 0;
                 }
@@ -512,15 +517,24 @@ public class Actor : MonoBehaviour
             if(wanaSkill.skillData.protectSpell)
             ifProtectSpell =true;
             castingbar.changeHPBar(wanaSkill.orginSpellTime);
-            UIBattle.Instance.SetEnemyBarText(behaviour,wanaSkill.damage);
+            // UIBattle.Instance.SetEnemyBarText(behaviour,wanaSkill.damage);
         }
         
         else//休息2秒然后再次判断
         {
-            StartCoroutine(IEEnemySleep());
-            UIBattle.Instance.SetEnemyBarText();
+            StartCoroutine("IEEnemySleep");
+            behaviour=5;
+            // UIBattle.Instance.SetEnemyBarText();
         }
     
+    }
+    public void SetEnemyState(int i)
+    {
+        if(i==0)
+        return;
+        targetState =i;
+        StopCasting();//?切换状态是否要打断当前施法？
+        RunAI();
     }
     void SetStateBuff()
     {
@@ -596,6 +610,12 @@ public class Actor : MonoBehaviour
     int EnemyState()
     {
         int state =1;
+        if(targetState!=0)
+        {
+            state =targetState;
+            return state;
+        }
+        
         // Debug.LogWarning("判断阶段"+monsterData.switchCondition2);
         if(monsterData.switchCondition1==1)
         {
@@ -987,7 +1007,9 @@ public class Actor : MonoBehaviour
        if(castingbar)
        {
             castingbar.stopChanging(true);
-            UIBattle.Instance.SetEnemyBarText(0,0);
+            behaviour =0;
+            StopCoroutine("IEEnemySleep");
+            // UIBattle.Instance.SetEnemyBarText(0,0);
        }
         
        
