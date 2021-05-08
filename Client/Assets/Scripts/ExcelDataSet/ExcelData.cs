@@ -250,6 +250,7 @@ public struct MonsterTypeData
     public int crit;
     public int switchCondition1;
     public string addBuffList1;
+    public string removeBuffList1;
     public int AIMode1;
     public string AIType1;
     public string listAttack1;
@@ -305,6 +306,7 @@ public struct MonsterTypeData
     public List<int> m_addBuffList1;
     public List<int> m_addBuffList2;
     public List<int> m_addBuffList3;
+    public List<int> m_removeBuffList1;
     public List<int> m_removeBuffList2;
     public List<int> m_removeBuffList3;
 

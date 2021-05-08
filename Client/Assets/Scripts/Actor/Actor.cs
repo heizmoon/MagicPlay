@@ -541,13 +541,19 @@ public class Actor : MonoBehaviour
         switch(state)
         {
             case 1:
-            if(monsterData.m_addBuffList1.Count ==0)
+            if(monsterData.m_removeBuffList1.Count >0)
             {
-                return;
+                foreach (var item in monsterData.m_removeBuffList1)
+                {
+                    BuffManager.EndBuffFromActor(BuffManager.FindBuff(item,this),this);
+                }
             }
-            foreach (var item in monsterData.m_addBuffList1)
+            if(monsterData.m_addBuffList1.Count >0)
             {
-                BuffManager.instance.CreateBuffForActor(item,this);    
+                foreach (var item in monsterData.m_addBuffList1)
+                {
+                    BuffManager.instance.CreateBuffForActor(item,this);
+                }
             }
             break;
             case 2:

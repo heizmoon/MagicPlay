@@ -484,7 +484,14 @@ public class BuffManager : MonoBehaviour
         if(Main.instance.BottomUI.Find(actorType).childCount>0)
         //如果已经处于变身状态，那么先变回去
         {
-            BuffResumeActor(buff);
+            Buff _buff =null;
+            foreach (var item in buff.target.buffs)
+            {
+                if(item.buffData._type==BuffType.改变角色形象)
+                _buff =item;
+            }
+            BuffManager.EndBuffFromActor(_buff,buff.target);
+            
             BuffChangeActor(buff);
             return;
         }
@@ -514,10 +521,11 @@ public class BuffManager : MonoBehaviour
     }
     public void BuffResumeActor(Buff buff)
     {
-        DestroyImmediate(buff.target.transform.Find("body").gameObject);
-        DestroyImmediate(buff.target.transform.Find("bone").gameObject);
+        Actor _actor =buff.target;
+        DestroyImmediate(_actor.transform.Find("body").gameObject);
+        DestroyImmediate(_actor.transform.Find("bone").gameObject);
         string actorType ="";
-        if(buff.target.actorType==ActorType.玩家角色)
+        if(_actor.actorType==ActorType.玩家角色)
         {
             actorType ="Player";
         }
@@ -526,12 +534,12 @@ public class BuffManager : MonoBehaviour
             actorType ="Enemy";
         }
         Transform _bone =Main.instance.BottomUI.Find(actorType+"/bone");
-        _bone.SetParent(buff.target.transform);
+        _bone.SetParent(_actor.transform);
         Transform _body =Main.instance.BottomUI.Find(actorType+"/body");
-        _body.SetParent(buff.target.transform);
+        _body.SetParent(_actor.transform);
         _bone.localPosition =Vector3.zero;
 
-        buff.target.GetComponent<Animator>().runtimeAnimatorController  =buff.target.animatorController;
+        _actor.GetComponent<Animator>().runtimeAnimatorController  = _actor.animatorController;
         
     }
 }
