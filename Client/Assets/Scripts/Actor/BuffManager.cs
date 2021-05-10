@@ -360,7 +360,7 @@ public class BuffManager : MonoBehaviour
                 if(actor.buffs[i].buffData._type == buffType && actor.buffs[i].buffData._genreList.Contains(genre))
                 {
                     //显示特效
-                    Transform e = EffectManager.TryGetFromPool(actor.buffs[i].buffData.triggerEffect);
+                    Transform e = EffectManager.TryGetFromPool(actor.buffs[i].buffData.triggerEffect,actor.target);
                     if(e!=null)
                     {
                         e.SetParent(actor.target.hitPoint);
@@ -390,7 +390,7 @@ public class BuffManager : MonoBehaviour
                 if(actor.buffs[i].buffData._type == buffType)
                 {
                     //显示特效
-                    Transform e = EffectManager.TryGetFromPool(actor.buffs[i].buffData.triggerEffect);
+                    Transform e = EffectManager.TryGetFromPool(actor.buffs[i].buffData.triggerEffect,actor.target);
                     if(e!=null)
                     {
                         e.SetParent(actor.target.hitPoint);
@@ -418,7 +418,7 @@ public class BuffManager : MonoBehaviour
                 if(actor.buffs[i].buffData._type == buffType)
                 {
                     //显示特效
-                    Transform e = EffectManager.TryGetFromPool(actor.buffs[i].buffData.triggerEffect);
+                    Transform e = EffectManager.TryGetFromPool(actor.buffs[i].buffData.triggerEffect,actor.target);
                     if(e!=null)
                     {
                         e.SetParent(actor.target.hitPoint);
@@ -496,17 +496,19 @@ public class BuffManager : MonoBehaviour
             return;
         }
         Transform _bone =target.Find("bone");
+        Vector3 targetPosition =_bone.localPosition;
         _bone.SetParent(Main.instance.BottomUI.Find(actorType));
         Transform _body =target.Find("body");
         _body.SetParent(Main.instance.BottomUI.Find(actorType));
-        _bone.localPosition =Vector3.zero;
+        _bone.localPosition =targetPosition;
         GameObject g = Instantiate((GameObject)(Resources.Load("Prefabs/"+perfab)));
         Transform bone =g.transform.Find("bone");
         Transform body = g.transform.Find("body");
         Vector3 tempScale = bone.localScale;
+        Vector3 tempPosition = bone.localPosition;
         bone.SetParent(target);
         body.SetParent(target);
-        bone.localPosition =Vector3.zero;
+        bone.localPosition =tempPosition;
         bone.localScale =tempScale;
         // UnityEditorInternal.ComponentUtility.CopyComponent(g.GetComponent<Animator>());
         // UnityEditorInternal.ComponentUtility.PasteComponentValues(target.GetComponent<Animator>());
@@ -519,11 +521,8 @@ public class BuffManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         
     }
-    public void BuffResumeActor(Buff buff)
+    public void BuffResumeActor(Actor _actor)
     {
-        Actor _actor =buff.target;
-        DestroyImmediate(_actor.transform.Find("body").gameObject);
-        DestroyImmediate(_actor.transform.Find("bone").gameObject);
         string actorType ="";
         if(_actor.actorType==ActorType.玩家角色)
         {
@@ -533,13 +532,22 @@ public class BuffManager : MonoBehaviour
         {
             actorType ="Enemy";
         }
+        if(Main.instance.BottomUI.Find(actorType+"/bone")==null)
+        {
+            return;
+        }
+        DestroyImmediate(_actor.transform.Find("body").gameObject);
+        DestroyImmediate(_actor.transform.Find("bone").gameObject);
+        
         Transform _bone =Main.instance.BottomUI.Find(actorType+"/bone");
+        Vector3 orginPosition =_bone.localPosition;
         _bone.SetParent(_actor.transform);
         Transform _body =Main.instance.BottomUI.Find(actorType+"/body");
         _body.SetParent(_actor.transform);
-        _bone.localPosition =Vector3.zero;
+        _bone.localPosition =orginPosition;
 
         _actor.GetComponent<Animator>().runtimeAnimatorController  = _actor.animatorController;
         
     }
+
 }

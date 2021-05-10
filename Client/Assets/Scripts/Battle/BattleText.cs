@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class BattleText : MonoBehaviour
 {
     // Start is called before the first frame update
-    public GameObject _text;
+    Animation anim;
+    Text text;
     GameObject critPic;
     void Start()
     {
@@ -18,74 +19,61 @@ public class BattleText : MonoBehaviour
     {
         
     }
-    public void SetText(int num,bool crit)
+    public void SetText(int num,Transform ts,bool ifCrit,bool isDamage)
     {
-        GameObject bt =GameObject.Instantiate(_text.gameObject);
-        critPic =bt.GetComponentInChildren<Image>().gameObject;
-        Text t = bt.GetComponentInChildren<Text>();
-        bt.transform.SetParent(_text.transform.parent);
-        float x = Random.Range(-15f,15f);
-        float y = Random.Range(-15f,15f);
-        bt.transform.localScale =Vector3.one;
-        bt.transform.localPosition =new Vector3(x,y,0);
-        critPic.gameObject.SetActive(false);
-        
-        if(num>0)
+        anim =GetComponent<Animation>();
+        text =GetComponentInChildren<Text>();
+        if(isDamage)
+        text.text =string.Format("-{0}",num);
+        else
+        text.text =string.Format("+{0}",num);
+        transform.SetParent(ts);
+        float x = Random.Range(-10f,10f);
+        float y = Random.Range(-20f,20f);
+        transform.localPosition = new Vector3(x,y,0);
+        if(ifCrit)
         {
-            t.text = "-"+num.ToString();
-            if(crit)
-            {
-                t.color =new Color(1,0.29f,0.2f);
-                t.fontSize =42;
-                critPic.gameObject.SetActive(true);
-                critPic.transform.localScale =Vector3.one;
-            }
-        }
-        else if(num == 0)
-        {
-            t.text ="";
+            transform.localScale = new Vector3(1.5f,1.5f,1);
+            text.color = Color.red;
         }
         else
         {
-            t.color =Color.green;
-            t.text = "+"+Mathf.Abs(num).ToString();
-            if(crit)
-            {
-                //t.color =new Color(1,0.29f,0.2f);
-                t.fontSize =42;
-                
-            }
+            transform.localScale =Vector3.one;
+            if(isDamage)
+            text.color = Color.white;
+            else
+            text.color =Color.green;
         }
-        bt.gameObject.SetActive(false);
-        StartCoroutine(DestorySelf(bt));
+        int r = Random.Range(0,4);
+        anim.Play("text"+r);
+        StartCoroutine(DestorySelf());
+
     }
-    public void SetText(string s)
+    public void SetText(string str,Transform ts)
     {
-        GameObject bt =GameObject.Instantiate(_text.gameObject);
-        Text t = bt.GetComponentInChildren<Text>();
-        bt.transform.SetParent(_text.transform.parent);
-        float x = Random.Range(-15f,15f);
-        float y = Random.Range(-15f,15f);
-        bt.transform.localScale =Vector3.one;
-        bt.transform.localPosition =new Vector3(x,y,0);
-        t.text = s;
-        t.color =Color.white;
-        StartCoroutine(DestorySelf(bt));
+        anim =GetComponent<Animation>();
+        text =GetComponentInChildren<Text>();
+       
+        text.text =str;
+        transform.SetParent(ts);
+        float x = Random.Range(-10f,10f);
+        float y = Random.Range(-20f,20f);
+        transform.localPosition = new Vector3(x,y,0);
+        transform.localScale = Vector3.one;
+        text.color = Color.white;
+        int r = Random.Range(0,4);
+        anim.Play("text"+r);
+        StartCoroutine(DestorySelf());
+
     }
-    
-    IEnumerator DestorySelf(GameObject bt)
+    IEnumerator DestorySelf()
     {
-        Animation anim =bt.GetComponentInChildren<Animation>();
-        float r1 =Random.Range(0.7f,1.4f);
-        foreach(AnimationState s in anim)
-        {
-            s.speed=r1;
-        }
-        float r2 =Random.Range(0f,0.1f);
-        yield return new WaitForSeconds(r2);
-        anim.Play();
-        bt.SetActive(true);
-        yield return new  WaitForSeconds(1f);
-        Destroy(bt);
+        yield return new WaitForSeconds(0.9f);
+        Destroy(gameObject);
+    }
+    public static BattleText CreateBattleText()
+    {
+        BattleText bt = Instantiate((GameObject)Resources.Load("Prefabs/battleText")).GetComponent<BattleText>();
+        return bt;
     }
 }

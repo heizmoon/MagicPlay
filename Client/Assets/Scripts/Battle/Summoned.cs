@@ -175,7 +175,7 @@ public class Summoned : MonoBehaviour
         }
         
         
-        Transform f = EffectManager.TryGetFromPool(skill.castEffect);
+        Transform f = EffectManager.TryGetFromPool(skill.castEffect,skill.caster);
         if(f!=null)
         {
             f.SetParent(castPoint);

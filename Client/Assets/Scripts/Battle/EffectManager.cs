@@ -14,6 +14,7 @@ public class EffectManager : MonoBehaviour
     Transform end;
     float speed;
     bool fly;
+    Actor actor;
     string childEffect;
     bool channelEffect;
     void Awake()
@@ -57,7 +58,7 @@ public class EffectManager : MonoBehaviour
                 {
                     return;
                 }
-                Transform e = TryGetFromPool(childEffect);
+                Transform e = TryGetFromPool(childEffect,actor.target);
                 e.SetParent(end);
                 e.localPosition =Vector3.zero;
                 e.localScale =Vector3.one;
@@ -74,7 +75,7 @@ public class EffectManager : MonoBehaviour
         // transform.localScale =new Vector3(1,1,1);
         
     }
-    public static Transform TryGetFromPool(string effectName)//如果池子里面有该特效，那么就拿出来用
+    public static Transform TryGetFromPool(string effectName,Actor actor)//如果池子里面有该特效，那么就拿出来用
     {
         if(effectName =="")
         {
@@ -91,12 +92,13 @@ public class EffectManager : MonoBehaviour
                 if(pool.GetChild(i).gameObject.name.Split('(')[0] ==effectName)
                 {
                     pool.GetChild(i).gameObject.SetActive(true);
+                    pool.GetChild(i).GetComponent<EffectManager>().actor = actor;
                     return pool.GetChild(i);
                 }
             }
         }
         Transform ts =((GameObject)Instantiate(Resources.Load("Prefabs/Effects/"+effectName))).transform;
-
+        ts.GetComponent<EffectManager>().actor =actor;
         return ts;
     }
     public static Transform TryGetFromPos(string effectName, Transform pos)//如果该位置有该特效，那么就拿出来用
@@ -183,13 +185,39 @@ public class EffectManager : MonoBehaviour
     }
     public static void CastEffect(Transform effect,Transform hitPoint,float delay,string hitEffect)
     {
+        if(effect==null)
+        return;
         EffectManager e = effect.GetComponent<EffectManager>();
         e.end =hitPoint;
         float distance= Vector3.Distance(effect.position,e.end.position);
         e.speed =distance/delay;
         e.childEffect =hitEffect;
         e.fly =true;
-        if(hitPoint.parent.GetComponent<Actor>().actorType == ActorType.敌人)
+        if(e.actor==Player.instance.playerActor)
+        {
+            e.transform.localScale = Vector3.one;
+            for (int i = 0; i < e.transform.childCount; i++)
+            {
+                e.transform.GetChild(i).localScale =Vector3.one;
+            }
+        }
+        else
+        {
+            e.transform.localScale = new Vector3(-1,1,1);
+            for (int i = 0; i < e.transform.childCount; i++)
+            {
+                e.transform.GetChild(i).localScale =new Vector3(-1,1,1);
+            }
+        }
+        
+    }
+    public static void CastEffect(Transform effect,float delay)
+    {
+        if(effect==null)
+        return;
+        EffectManager e = effect.GetComponent<EffectManager>();
+        e.fly =false;
+        if(e.actor!=Player.instance.playerActor)
         {
             e.transform.localScale = Vector3.one;
             for (int i = 0; i < e.transform.childCount-1; i++)
@@ -204,14 +232,7 @@ public class EffectManager : MonoBehaviour
             {
                 e.transform.GetChild(i).localScale =new Vector3(-1,1,1);
             }
-        }
-        
-    }
-    public static void CastEffect(Transform effect)
-    {
-        EffectManager e = effect.GetComponent<EffectManager>();
-        e.fly =false;
-        e.channelEffect =true;
+        }        
     }
     // public void effectFly()
     // {

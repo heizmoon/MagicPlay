@@ -384,7 +384,7 @@ public class Buff
             target.AddMaxHP(-(int)buffData.value);
             break;
             case BuffType.改变角色形象:
-            BuffManager.instance.BuffResumeActor(this);
+            BuffManager.instance.BuffResumeActor(target);
             break;
         }
         

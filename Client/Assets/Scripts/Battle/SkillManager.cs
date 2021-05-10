@@ -655,7 +655,7 @@ public class SkillManager : MonoBehaviour
     IEnumerator WaitForSimulateEffect(float delay,string effectName,Actor actor)
     {
         yield return new WaitForSeconds(delay);
-        Transform e =EffectManager.TryGetFromPool(effectName);
+        Transform e =EffectManager.TryGetFromPool(effectName,actor);
         if(e!=null)
         {
             e.SetParent(actor.hitPoint);

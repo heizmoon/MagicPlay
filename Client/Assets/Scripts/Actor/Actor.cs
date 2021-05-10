@@ -31,10 +31,17 @@ public class Actor : MonoBehaviour
     public float dodge;
     public float critBonus =1.5f;
     ///<summary>获得护甲时，提高获得的护甲值</summary>
+    [HideInInspector]
     public Transform spellPoint;
+    [HideInInspector]
     public Transform castPoint;
+    [HideInInspector]
     public Transform hitPoint;
+    [HideInInspector]
     public Transform summonPoint;
+    [HideInInspector]
+    public Transform textPoint;
+
     GameObject shieldPoint;
 	public List<int> UsingSkillsID;//角色携带的卡牌列表
     ///<summary>0=玩家角色；1=敌人；2=NPC</summary>
@@ -50,8 +57,7 @@ public class Actor : MonoBehaviour
     HPBar castingbar;//角色的施法条
     HPBar hpBar;
     HPBar mpBar;
-    public BattleText bt;
-
+    
     public AnimState animState ;
 
     ///<summary>角色将要改变成的动作状态 0=idle,1=spell,2=casting,3=castEnd,4=dizzy,5=dead</summary>
@@ -152,17 +158,12 @@ public class Actor : MonoBehaviour
         {
             animator =GetComponentInChildren<Animator>();
         }
-        bt = gameObject.GetComponentInChildren<BattleText>();
-        Transform btParent = transform.Find("TextPoint/BattleText");
-        GameObject g = (GameObject)Instantiate(Resources.Load("Prefabs/battleText"));
+        
         spellPoint = transform.Find("SpellPoint");
         castPoint =transform.Find("CastPoint");
         hitPoint =transform.Find("HitPoint");
-
-        g.transform.SetParent(btParent);
-        g.transform.localPosition =Vector3.zero;
-        g.transform.localScale =Vector3.one;
-
+        textPoint =transform.Find("TextPoint");
+        
         // timer =gameObject.GetComponent<Timer>();
         summonPoint =transform.Find("SummonPoint");
     }
@@ -977,7 +978,7 @@ public class Actor : MonoBehaviour
         {
             return;
         }
-        Transform e = EffectManager.TryGetFromPool(skill.spellEffect);
+        Transform e = EffectManager.TryGetFromPool(skill.spellEffect,this);
         if(e!=null)
         {
             e.SetParent(spellPoint);
@@ -1128,7 +1129,7 @@ public class Actor : MonoBehaviour
         }
         
         
-        Transform f = EffectManager.TryGetFromPool(skill.castEffect);
+        Transform f = EffectManager.TryGetFromPool(skill.castEffect,this);
         if(f!=null)
         {
             f.SetParent(castPoint);
@@ -1527,21 +1528,23 @@ public class Actor : MonoBehaviour
         if(ifAbsorb)
         {
             if(num<=0)
-            bt.SetText("吸收"+tempNum);
+            {
+                BattleText.CreateBattleText().SetText("吸收"+tempNum,textPoint);
+            }
             else
-            bt.SetText(-num+"("+tempNum+"吸收)");
+            BattleText.CreateBattleText().SetText(-num+"("+tempNum+"吸收)",textPoint);
             //格挡成功事件
             BuffManager.Check_SpecialTypeBuff_ToTriggerSkill(this,BuffType.成功格挡后触发技能);
         }
         else
         {
-            bt.SetText(num,crit);
+            BattleText.CreateBattleText().SetText(num,textPoint,crit,true);
         }
         
         Debug.LogFormat("角色：{0}的当前生命值：{1}",name,HpCurrent);
         if(!ifAbsorb&&num<=0)
         {
-            bt.SetText("0");
+            BattleText.CreateBattleText().SetText("0",textPoint);
             return 0;
         }
         
@@ -1593,7 +1596,7 @@ public class Actor : MonoBehaviour
             if(buffs[i].buffData._type == BuffType.死亡后复活并恢复百分比生命)
             {
                 //显示特效
-                Transform e = EffectManager.TryGetFromPool(buffs[i].buffData.triggerEffect);
+                Transform e = EffectManager.TryGetFromPool(buffs[i].buffData.triggerEffect,this);
                 if(e!=null)
                 {
                     e.SetParent(hitPoint);
@@ -1668,7 +1671,7 @@ public class Actor : MonoBehaviour
         // if(buffs[i].buffData.id)
         int realNum = -AddHp(num);
         OnTakeHeal(num);
-        bt.SetText(realNum,false);
+        BattleText.CreateBattleText().SetText(realNum,textPoint,false,false);
         return num;
 
     }
@@ -1821,13 +1824,13 @@ public class Actor : MonoBehaviour
     public void OnHitMiss()
     {
         //显示文字 未命中
-        bt.SetText("闪避");
+        BattleText.CreateBattleText().SetText("闪避",textPoint);
         //执行当角色闪避攻击时就xxx这类效果
     }
     public void OnHitResistance()
     {
         //显示文字 抵抗
-        bt.SetText("0");
+        BattleText.CreateBattleText().SetText("0",textPoint);
         //执行当角色抵抗技能时就xxx这类效果
     }
     void Die()
@@ -1875,6 +1878,7 @@ public class Actor : MonoBehaviour
     public void ReLiveActor(int hp)
     {
         //复活
+        // BuffManager.instance.BuffResumeActor(this);
         animState =AnimState.idle;
         // animator.SetInteger("anim",0);
         animator.Play("idle");

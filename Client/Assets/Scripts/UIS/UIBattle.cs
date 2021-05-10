@@ -478,7 +478,7 @@ public class UIBattle : MonoBehaviour
     public void OnBattleGoOn()
     {
         //移除所有临时buff
-        
+        BuffManager.instance.BuffResumeActor(playerActor);
         EffectManager.TryThrowInPool(playerActor.castPoint);
         EffectManager.TryThrowInPool(playerActor.spellPoint);
         EffectManager.TryThrowInPool(playerActor.hitPoint);

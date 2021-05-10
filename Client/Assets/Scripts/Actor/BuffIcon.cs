@@ -86,7 +86,7 @@ public class BuffIcon : MonoBehaviour
             effect =EffectManager.TryGetFromPos(buff.buffData.prefab,buff.target.hitPoint);
             if(effect ==null)
             {
-                effect = EffectManager.TryGetFromPool(buff.buffData.prefab);
+                effect = EffectManager.TryGetFromPool(buff.buffData.prefab,buff.target);
             }
             effect.SetParent(buff.target.hitPoint);
             effect.localPosition =Vector3.zero;
@@ -113,13 +113,14 @@ public class BuffIcon : MonoBehaviour
                 else if(tempBuff ==null)
                 {
                     buffs[i].OnBuffInterval();
+                    // Debug.LogError("当前处理的BUFF为"+buffs[i].buffData.name);
                     tempBuff =buffs[i];
                 }
             }
         }
-        if(triggerEffectString!="")
+        if(triggerEffectString!=""&&buff.buffData._type!=BuffType.改变角色形象)
         {
-            triggerEffect =EffectManager.TryGetFromPool(triggerEffectString);
+            triggerEffect =EffectManager.TryGetFromPool(triggerEffectString,buff.target);
             triggerEffect.SetParent(buff.target.hitPoint);
             triggerEffect.localPosition =Vector3.zero;
             triggerEffect.localScale =Vector3.one;
