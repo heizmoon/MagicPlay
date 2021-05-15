@@ -13,7 +13,7 @@ public class UIBattleReward : MonoBehaviour
     GameObject expFrame;
     Image expBar;
     int steps;//物品随机等级
-    bool isRelic;
+    int type;
     Text goldText;
     Text expText;
     public List<ItemBox> abilityItemBoxes;
@@ -50,17 +50,15 @@ public class UIBattleReward : MonoBehaviour
     {
         
     }
-    public void Init(int steps,bool isRelic)
+    public void Init(int steps,int type)
     {
         this.steps =steps;
-        this.isRelic =isRelic;
+        this.type = type;
         goldText.text =string.Format("{0}",steps*Configs.instance.battleLevelGold);
-        if(!isRelic)
+        if(type==0)
         {
             relicFrame.SetActive(false);
-            Player.instance.AddGold(steps*Configs.instance.battleLevelGold);
-            
-            // needChooseStep =1;
+            Player.instance.AddGold(steps * Configs.instance.battleLevelGold);
         }
         else
         {
@@ -68,6 +66,14 @@ public class UIBattleReward : MonoBehaviour
             skillFrame.SetActive(false);
             goldFrame.SetActive(false);
             expFrame.SetActive(false);
+        }
+        if(type!=2)
+        {
+            needChooseStep =1;
+        }
+        else
+        {
+            needChooseStep =2;
         }
         foreach (var item in skillItemBoxes)
         {
@@ -141,7 +147,17 @@ public class UIBattleReward : MonoBehaviour
             return;
         }
 
-        if(!isRelic)
+        if(type==0)
+        {
+            SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
+            for (int i = 0; i < Sdatas.Length; i++)
+            {
+                skillItemBoxes[i].Reset();
+                skillItemBoxes[i].Init(Sdatas[i]);
+                skillItemBoxes[i].InReward();
+            }
+        }
+        else if(type ==2&&chooseStep==0)
         {
             SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
             for (int i = 0; i < Sdatas.Length; i++)
@@ -169,7 +185,7 @@ public class UIBattleReward : MonoBehaviour
     }
     void ShowExpReward()
     {
-        if(isRelic)
+        if(!expFrame.activeSelf)
         {
             return;
         }
@@ -183,6 +199,7 @@ public class UIBattleReward : MonoBehaviour
         {
             endFill = (startExp+addExp)*1f/maxExp;
             expBar.DOFillAmount(endFill,0.6f);
+            BattleScene.instance.exp+= addExp;
         }
         else
         {
@@ -195,19 +212,15 @@ public class UIBattleReward : MonoBehaviour
 			    expBar.DOFillAmount(endFill,0.3f);
                 expText.text = string.Format("等级:<color=green>Lv{0}</color>",Player.instance.playerActor.level);
             };
-
-        }
-        BattleScene.instance.exp+= Configs.instance.everyStepAddEXP;
-        if(BattleScene.instance.exp>=CharacterManager.instance.GetLevelData(Player.instance.playerActor.level).exp)
-        {
+            BattleScene.instance.exp= startExp+addExp-maxExp;
             BattleScene.instance.ifLevelUp = true;
-        } 
+        }
     }
     void GetItem(ItemBox item)
     {
         if(item.type ==1)
         {
-            hasChoosenCard =true;
+            // hasChoosenCard =true;
             Player.instance.playerActor.UsingSkillsID.Add(item.id);
             for (int i = 0; i < skillItemBoxes.Count; i++)
             {
@@ -216,7 +229,7 @@ public class UIBattleReward : MonoBehaviour
         }
         else if(item.type ==2)
         {
-            hasChoosenRelic =true;
+            // hasChoosenRelic =true;
             Player.instance.playerActor.abilities.Add(item.id);
             AbilityData ability = AbilityManager.instance.GetInfo(item.id);
             Player.instance.playerActor.basicAttack+=ability.attack;
@@ -234,12 +247,15 @@ public class UIBattleReward : MonoBehaviour
                 abilityItemBoxes[i].Disable();
             }
         }
-        // chooseStep++;
-        // if(chooseStep==needChooseStep)
-        // {
-        //     OnButtonReturn();
-        // }
-        OnButtonReturn();
+        chooseStep++;
+        if(chooseStep==needChooseStep)
+        {
+            OnButtonReturn();
+        }
+        else
+        {
+            Refreash();
+        }
 
     }
     void OnButtonReturn()
@@ -249,7 +265,7 @@ public class UIBattleReward : MonoBehaviour
         // BattleScene.instance.OpenMap();
         // if(UIBattle.Instance)
         // UIBattle.Instance.OnBattleGoOn();
-        if(isRelic)
+        if(type==1)
         UIBasicBanner.instance.F_LevelUp.SetActive(false);
         Destroy(gameObject);
     }

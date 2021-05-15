@@ -176,6 +176,7 @@
      <Compile Include="Assets\Scripts\Editor\DataSetBuilder.cs" />
      <Compile Include="Assets\Scripts\Editor\ExcelConfig.cs" />
      <Compile Include="Assets\Scripts\Editor\ExcelTool.cs" />
+     <Compile Include="Assets\Scripts\Editor\MapEditor.cs" />
      <Compile Include="Assets\Scripts\Editor\TimerEditor.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.2f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

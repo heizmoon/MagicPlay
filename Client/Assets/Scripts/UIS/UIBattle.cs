@@ -56,7 +56,7 @@ public class UIBattle : MonoBehaviour
     int result;
     public bool isBattleOver =true;
     Animation anim;
-    bool isBoss;
+    int battleType;
     [SerializeField]
     Dictionary<int,bool> cardPos =new Dictionary<int, bool>();
     bool battleStart;
@@ -125,7 +125,7 @@ public class UIBattle : MonoBehaviour
         
     }
     ///<summary>//初始化UI</summary>
-    public void Init(Actor enemy,int scene,bool isBoss)
+    public void Init(Actor enemy,int scene,int battleType)
     {
         cardPos.Clear();
         for (int i = 0; i < 8; i++)
@@ -141,7 +141,7 @@ public class UIBattle : MonoBehaviour
         ShowPropertys();
         InitSkillCards();
         CreateScene(scene);
-        this.isBoss = isBoss;
+        this.battleType = battleType;
         //清理手牌
         
         
@@ -421,19 +421,27 @@ public class UIBattle : MonoBehaviour
             //胜利了
             //如果不是最终BOSS，选择能力奖励
             //怎样判断是否是最终BOSS？
-            if(BattleScene.instance.beatBossNumber>1&&isBoss)
+            if(BattleScene.instance.beatBossNumber>1&&battleType==2)
             {
                 //最终BOSS，跳过
+            }
+            else if(battleType==1)
+            {
+                ShowReward(1);
+            }
+            else if(battleType==2)
+            {
+                ShowReward(2);
             }
             else
             {
                 if(!Configs.instance.ifChangMode)
-                ShowReward();
+                ShowReward(0);
                 else
                 ShowChangeCard();
             }
             
-            BattleScene.instance.BattleEnd(isBoss);
+            BattleScene.instance.BattleEnd(battleType);
         }
         else
         {
@@ -846,14 +854,14 @@ public class UIBattle : MonoBehaviour
     }
     //技能牌因手牌过多而无法加入手牌
 
-    void ShowReward()
+    void ShowReward(int type)
     {
         GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIBattleReward"));
         go.transform.SetParent(Main.instance.allScreenUI);
         go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
         go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         go.transform.localScale =Vector3.one;
-        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,false);
+        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,type);
         
     }
     void ShowChangeCard()

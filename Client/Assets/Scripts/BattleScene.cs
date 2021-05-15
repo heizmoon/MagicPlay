@@ -10,7 +10,7 @@ public class BattleScene : MonoBehaviour
     public int beatBossNumber{get;set;}
     int currentMonsterId;
     int currentSceneId;
-    bool isBoss;
+    int battleType;
     public bool ifLevelUp;
     public int talentPoint;
     public int exp;
@@ -35,7 +35,7 @@ public class BattleScene : MonoBehaviour
         beatBossNumber=0;
         currentMonsterId=0;
         currentSceneId=0;
-        isBoss =false;
+        battleType =0;
         talentPoint =0;
         exp =0;
 
@@ -50,12 +50,12 @@ public class BattleScene : MonoBehaviour
     //     //使用随机出的3个能力
     //     AbilityManager.instance.GetRandomAbility(3,Player.instance.playerActor.abilities);
     // }
-    public void InitBattle(int monsterID,int sceneID,bool isBoss)
+    public void InitBattle(int monsterID,int sceneID,int battleType)
 	{
         //备份当前战斗信息；
         currentMonsterId=monsterID;
         currentSceneId = sceneID;
-        this.isBoss =isBoss;
+        this.battleType = battleType;
 
 		Actor enemy =CreateEnemy(monsterID,1);
 		GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/UIBattle"));
@@ -63,13 +63,13 @@ public class BattleScene : MonoBehaviour
 		go.transform.localScale =Vector3.one;
 		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-        UIBattle.Instance.Init(enemy,sceneID,isBoss);
+        UIBattle.Instance.Init(enemy, sceneID, battleType);
         
         UIBattle.Instance.BattleBegin();
 	}
     public void ReturnToBattle()
     {
-        InitBattle(currentMonsterId,currentSceneId,isBoss);
+        InitBattle(currentMonsterId,currentSceneId,battleType);
     }
 	Actor CreateEnemy(int id,int level)
     {
@@ -146,19 +146,20 @@ public class BattleScene : MonoBehaviour
         GameObject go  = Instantiate((GameObject)Resources.Load("Prefabs/Maps/"+mapName));
         go.transform.SetParent(Main.instance.MiddleUI);
 		go.transform.localScale =Vector3.one;
-		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+        go.transform.localPosition =Vector3.zero;
+		// go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         go.GetComponent<Map>().InitMap();
         UIBasicBanner.instance.textMap.text ="地图";
     }
-    public void BattleEnd(bool isBoss)
+    public void BattleEnd(int type)
     {
         beatEnemyNumber++;
 
         //如果不是BOSS结束，打开当前地图，
         //如果是BOSS结束，尝试打开新地图，
         //如果没有新地图，则整个场景完结
-        if(!isBoss)
+        if(type !=2)
         {
             OpenMap();
         }

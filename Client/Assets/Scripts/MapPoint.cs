@@ -45,13 +45,36 @@ public class MapPoint : MonoBehaviour
     public void SetButton(bool b)
     {
         canMove = b;
-        if(b)
+        SetIcon();
+    }
+    public void SetIcon()
+    {
+        if(image == null)
+        image =GetComponent<Image>();
+        if(canMove)
         {
             image.sprite =Resources.Load<Sprite>("Texture/Map/"+mapPointType+"_on");
         }
         else
         {
             image.sprite =Resources.Load<Sprite>("Texture/Map/"+mapPointType+"_off");
+        }
+        
+    }
+    public void AutoSetNextPoint(List<GameObject> _list)
+    {
+        if(nextPoint.Length>0)
+        {
+            return;
+        }
+        if(_list == null)
+        {
+            return;
+        }
+        nextPoint =new GameObject[_list.Count];
+        for (int i = 0; i < nextPoint.Length; i++)
+        {
+            nextPoint[i] =_list[i];
         }
     }
     public void OnButton()

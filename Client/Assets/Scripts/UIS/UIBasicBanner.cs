@@ -70,7 +70,7 @@ public class UIBasicBanner : MonoBehaviour
         }
         hpText.text = string.Format("{0}/{1}",Player.instance.playerActor.HpCurrent,Player.instance.playerActor.HpMax);
         expText.text ="LV"+ Player.instance.playerActor.level.ToString();
-        expBar.fillAmount = BattleScene.instance.exp*1f/CharacterManager.instance.GetLevelData(Player.instance.playerActor.level).exp;
+        expBar.fillAmount = BattleScene.instance.exp*1f/CharacterManager.instance.GetLevelData(Player.instance.playerActor.level).exp*1f;
 
     }
     void RegisterButton()
@@ -238,7 +238,7 @@ public class UIBasicBanner : MonoBehaviour
         go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
         go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
         go.transform.localScale =Vector3.one;
-        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,true);
+        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,1);
 
     }
 }
