@@ -189,6 +189,10 @@ public class MapEditor : EditorWindow
                 }
             }
         }
+        else if(mapList[currentLine+1].Count ==1)
+        {
+             _list.Add(mapList[currentLine+1][0].gameObject);
+        }
         return _list;
     }
     int GetNumber()
