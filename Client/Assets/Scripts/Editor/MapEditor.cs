@@ -39,9 +39,11 @@ public class MapEditor : EditorWindow
 
         //绘制标题
         GUILayout.Space(10);
-        GUI.skin.label.fontSize = 24;
+        GUI.skin.label.fontSize = 16;
         GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-        GUILayout.Label("地图编辑器");
+        GUILayout.Label("请在打开地图预设的情况下使用");
+        GUILayout.Label("需要至少有一个标准命名的点位（Point1-1）,一个路径");
+        GUILayout.Label("以及一个起始点和一个结束点");
 
         
 
@@ -53,25 +55,30 @@ public class MapEditor : EditorWindow
         // //绘制描述文本区域
         GUILayout.Space(10);
         GUILayout.BeginHorizontal();
-        GUI.skin.label.fontSize = 16;
+        GUI.skin.label.fontSize = 12;
         GUI.skin.label.alignment = TextAnchor.MiddleLeft;
         GUILayout.Label("下一行点位数");
         nextPointNumber= EditorGUILayout.IntField(nextPointNumber);
         GUILayout.EndHorizontal();
-
+        GUILayout.Label("点击[新增一行]增加的点位数量为[下一行点位数]");
         EditorGUILayout.Space();
 
         //添加名为"Save Bug"按钮，用于调用SaveBug()函数
         if(GUILayout.Button("新增一行")){
             CreateALine();
         }
-
         EditorGUILayout.Space();
 
         if(GUILayout.Button("刷新路径")){
             Refeash();
         }
+        EditorGUILayout.Space();
 
+        if(GUILayout.Button("重置所有连接")){
+            DeleteAllLink();
+        }
+       
+        GUILayout.Label("第一次使用[重置所有连接]前请先点击[刷新路径]");
         GUILayout.EndVertical();
         MapPoint _mapPoint =UnityEditor.SceneManagement.StageUtility.GetCurrentStageHandle().FindComponentOfType<MapPoint>();
         if(_mapPoint ==null)
@@ -168,7 +175,7 @@ public class MapEditor : EditorWindow
         List<GameObject> _list = new List<GameObject>();
         int _x = GetIndex(point.transform);
         //如果当前这一行的点的数量为1，那么下一行的所有点都是nextPoint
-        Debug.Log(point.name+"点数："+LineNumber+"_x="+_x);
+        // Debug.Log(point.name+"点数："+LineNumber+"_x="+_x);
         if(LineNumber==1)
         {
             for (int i = 0; i < mapList[currentLine+1].Count; i++)
@@ -180,7 +187,7 @@ public class MapEditor : EditorWindow
         {
             for (int i = 0; i < mapList[currentLine+1].Count; i++)
             {
-                Debug.Log("测试_x="+GetIndex(mapList[currentLine+1][i].transform));
+                // Debug.Log("测试_x="+GetIndex(mapList[currentLine+1][i].transform));
                 if(GetIndex(mapList[currentLine+1][i].transform) == _x)
                 {
                     _list.Add(mapList[currentLine+1][i].gameObject);
@@ -284,5 +291,21 @@ public class MapEditor : EditorWindow
             angle *= dir;
             r.transform.localEulerAngles = new Vector3(0,0,angle);
         }
+    }
+    void DeleteAllLink()
+    {
+        for (int i = 0; i < mapList.Count; i++)
+        {
+            foreach (var item in mapList[i])
+            {
+                item.nextPoint =new GameObject[0];
+            }
+        }
+        //删除所有旧连线
+        for (int i = _line.childCount-1; i >0; i--)
+        {
+            DestroyImmediate(_line.GetChild(0).gameObject);
+        }
+        road =_line.GetChild(0).gameObject;
     }
 }
