@@ -193,7 +193,18 @@ public class UIBattleReward : MonoBehaviour
         int startExp = BattleScene.instance.exp;
         int maxExp = CharacterManager.instance.GetLevelData(Player.instance.playerActor.level).exp;
         expBar.fillAmount = startExp*1f/maxExp;
+        
         int addExp = Configs.instance.everyStepAddEXP;
+        addExp=(int)(Player.instance.ExpAdditon*addExp);
+        if(Player.instance.ExpAdditon>1)
+        {
+            Player.instance.ExpAdditonTimes--;
+            if(Player.instance.ExpAdditonTimes ==0)
+            {
+                Player.instance.ExpAdditon =1;
+            }
+        }
+
         float endFill =0;
         if(startExp+addExp<maxExp)
         {

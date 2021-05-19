@@ -145,6 +145,7 @@ public class AbilityManager : MonoBehaviour
         }
         return datas;
     }
+    ///<summary>从某个特殊的池子中随机N个遗物，用于商店</summary>
     public AbilityData[] GetRandomAbilityFromSpecialPool(int N,List<int> list)
     {
        AbilityData[] abilityDatas =new AbilityData[N];
@@ -210,7 +211,7 @@ public AbilityData[] GetRandomAbilityFromLevel(int number,int type)
 
         return datas;
     }
-    ///<summary>从所有未解锁的遗物中随机N个</summary>
+    ///<summary>从所有未解锁的遗物中随机N个,用于解锁遗物</summary>
     public AbilityData[] GetRandomAbilityFromLockAbility(int N)
     {
         AbilityData[] abilities = new AbilityData[N];

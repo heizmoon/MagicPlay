@@ -20,6 +20,8 @@ public class UIRandomEvent : MonoBehaviour
     RandomEvent _event;
     List<int> effList;
     string[] strs =new string[26];
+    int rewardCardRank;
+
     void Awake()
     {
         _describe =transform.Find("background/describe").GetComponent<Text>();
@@ -57,6 +59,7 @@ public class UIRandomEvent : MonoBehaviour
         _ch3Btn.gameObject.SetActive(false);
         if(_event.des4=="")
         _ch4Btn.gameObject.SetActive(false);
+        rewardCardRank =Configs.instance.GetCardRank(BattleScene.instance.steps);
         
     }
     void OnChooseEvent(Button button)
@@ -127,45 +130,23 @@ public class UIRandomEvent : MonoBehaviour
     void DoEventEffect()
     {
         /*
-        1:获得随机10-50金钱
-        2:失去随机10-50金钱
-        3:回复随机10-30生命值
-        4:失去随机10-30生命值
-        5：提高随机5-15生命上限
-        6：降低随机5-15生命上限
-        7：获得随机1-3张任意级别本职业技能卡
-        8：失去随机1张技能卡
-        9：获得随机1-3张rank0本职业技能卡
-        10：获得随机1-3张rank1本职业技能卡
-        11：获得随机1-3张rank2本职业技能卡
-        12：获得随机1-3张rank3本职业技能卡
-        13：获得随机1-3张rank4本职业技能卡
-        14：获得随机1-3张rank5本职业技能卡
-        15：获得随机当前未持有的圣遗物
-        16：获得随机宝箱当前未持有圣遗物
-        17：获得随机商店当前未持有圣遗物
-        18：获得随机精英当前未持有圣遗物
-        19：获得随机BOSS当前未持有圣遗物
-        20:失去角色初始圣遗物
-        21：接下来每场战斗结束后看广告
-        22：接下来每场战斗结束后金钱奖励翻倍
-        23：获得一次重生能力
-        24：完全恢复
-        25：失去所有金钱
-        26：获得随机诅咒圣遗物（当前未持有）
+
         */
+        //1:获得随机10-50金钱
         if(effList.Contains(1))
         {
             int r =Random.Range(10,50);
             Player.instance.AddGold(r);
             strs[1]=r.ToString();
         }
+        //2:失去随机10-50金钱
         if(effList.Contains(2))
         {
             int r =Random.Range(-10,-50);
             Player.instance.AddGold(r);
             strs[2]=(-r).ToString();
         }
+        //3:回复随机10-30生命值
         if(effList.Contains(3))
         {
             int r =Random.Range(10,30);
@@ -173,125 +154,184 @@ public class UIRandomEvent : MonoBehaviour
             strs[3]=r.ToString();
 
         }
+        //4:失去随机10-30生命值
         if(effList.Contains(4))
         {
             int r =Random.Range(-10,-30);
             Player.instance.playerActor.AddHp(r);
             strs[4]=(-r).ToString();
         }
+        //5：提高随机5-15生命上限
         if(effList.Contains(5))
         {
             int r =Random.Range(5,15);
             Player.instance.playerActor.AddMaxHP(r);
             strs[5]=(r).ToString();
         }
+        //6：降低随机5-15生命上限
         if(effList.Contains(6))
         {
             int r =Random.Range(-5,-15);
             Player.instance.playerActor.AddMaxHP(r);
             strs[6]=(-r).ToString();
         }
+        //7：获得随机1-3张任意级别本职业技能卡
         if(effList.Contains(7))
         {
-            int r =Random.Range(1,4);
-            SkillManager.instance.GetRandomSelfSkills(r);
-            strs[7]=(r).ToString();
+            SkillData[] skillDatas =SkillManager.instance.GetRandomSelfSkills(1);
+            AddSkillForPlayerActor(skillDatas);
+            strs[7]=(skillDatas[0].name).ToString();
         }
+        //8：失去随机1张技能卡
         if(effList.Contains(8))
         {
             int r =Random.Range(0,Player.instance.playerActor.UsingSkillsID.Count);
+            string _name = SkillManager.instance.GetInfo(Player.instance.playerActor.UsingSkillsID[r],"name");
             Player.instance.playerActor.UsingSkillsID.RemoveAt(r);
-            strs[8]=(r).ToString();
+            strs[8]=_name;
         }
+        //9：获得随机1-3张rank0本职业技能卡
         if(effList.Contains(9))
         {
             int r =Random.Range(1,4);
-            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,0);
-            strs[9]=(r).ToString();
+            SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,0);
+            AddSkillForPlayerActor(skillDatas);
+            strs[9]=(skillDatas[0].name).ToString();
         }
+        //10：获得随机1-3张rank1本职业技能卡
         if(effList.Contains(10))
         {
             int r =Random.Range(1,4);
-            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,1);
-            strs[10]=(r).ToString();
+            SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,1);
+            AddSkillForPlayerActor(skillDatas);
+            strs[10]=(skillDatas[0].name).ToString();
         }
+        //11：获得随机1-3张rank2本职业技能卡
         if(effList.Contains(11))
         {
             int r =Random.Range(1,4);
-            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,2);
-            strs[11]=(r).ToString();
+            SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,2);
+            AddSkillForPlayerActor(skillDatas);
+            strs[11]=(skillDatas[0].name).ToString();
         }
+        //12：获得随机1-3张rank3本职业技能卡
         if(effList.Contains(12))
         {
             int r =Random.Range(1,4);
-            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,3);
-            strs[12]=(r).ToString();
+            SkillData[] skillDatas =  SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,3);
+            AddSkillForPlayerActor(skillDatas);
+            strs[12]=(skillDatas[0].name).ToString();
         }
+        //13：获得随机1-3张rank4本职业技能卡
         if(effList.Contains(13))
         {
-            int r =Random.Range(1,4);
-            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,4);
-            strs[13]=(r).ToString();
+            SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,4);
+            AddSkillForPlayerActor(skillDatas);
+            strs[13]=(skillDatas[0].name).ToString();
         }
-        if(effList.Contains(14))//---------随机获得1-3张符合当前等级的牌
+        //获得随机1张当前级别本职业技能卡
+        if(effList.Contains(14))
         {
-            int r =Random.Range(1,4);
-            SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,5);
-            strs[14]=(r).ToString();
+            SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,rewardCardRank);
+            AddSkillForPlayerActor(skillDatas);
+            strs[14]=(skillDatas[0].name).ToString();
         }
+        //15：随机获得当前级别的未持有的圣遗物
         if(effList.Contains(15))
         {
-            int level = BattleScene.instance.steps;//------换算公式未定
-            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,0);
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,rewardCardRank);
+            AddAbilityForPlayerActor(abilities);
             strs[15]=(abilities[0].name).ToString();
         }
+        //16：获得随机rank0当前未持有圣遗物
         if(effList.Contains(16))
         {
-            int level = BattleScene.instance.steps;//------换算公式未定
             AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,0);
+            AddAbilityForPlayerActor(abilities);
             strs[16]=(abilities[0].name).ToString();
         }
+        //17：获得随机rank1当前未持有圣遗物
         if(effList.Contains(17))
         {
-            int level = BattleScene.instance.steps;//------换算公式未定
-            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,0);
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,1);
+            AddAbilityForPlayerActor(abilities);
             strs[17]=(abilities[0].name).ToString();
         }
+        //18：获得随机rank2当前未持有圣遗物
         if(effList.Contains(18))
         {
-            int level = BattleScene.instance.steps;//------换算公式未定
-            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,0);
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,2);
+            AddAbilityForPlayerActor(abilities);
             strs[18]=(abilities[0].name).ToString();
         }
+        //19：获得随机rank3当前未持有圣遗物
         if(effList.Contains(19))
         {
-            int level = BattleScene.instance.steps;//------换算公式未定
-            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,0);
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,3);
+            AddAbilityForPlayerActor(abilities);
             strs[19]=(abilities[0].name).ToString();
         }
+        //20:失去角色初始圣遗物
         if(effList.Contains(20))
         {
             Player.instance.playerActor.abilities.RemoveAt(0);
             strs[20]=(AbilityManager.instance.GetInfo(Player.instance.playerActor.character.data.relic).name).ToString();
         }
        /* 21：接下来每场战斗结束后看广告
-        22：接下来每场战斗结束后金钱奖励翻倍
+        22：接下来战斗结束后金钱奖励翻倍，持续1-3场战斗
         23：获得一次重生能力
-        24：完全恢复
-        25：失去所有金钱
-        26：获得随机诅咒圣遗物（当前未持有）*/
+        28：经验奖励增加50%,持续1-3场战斗
+        29：经验奖励减少50%,持续1-3场战斗
+        30：提升一级
+        31：无法再获得经验值
+        32：后续怪物的强度增加
+        33：
+        */
+
+        //24：完全恢复
         if(effList.Contains(24))
         {
             Player.instance.playerActor.AddHp(Player.instance.playerActor.HpMax);
             // strs[24]=().ToString();
         }
+        //25：失去所有金钱
         if(effList.Contains(25))
         {
             Player.instance.AddGold(-100000);
             // strs[24]=().ToString();
         }
+        //26：获得随机诅咒圣遗物（当前未持有）
+        if(effList.Contains(26))
+        {
+            ShopData shopData = ShopManager.instance.GetInfo(9);
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbilityFromSpecialPool(1,shopData._sellRelicList);
+            AddAbilityForPlayerActor(abilities);
+            strs[19]=(abilities[0].name).ToString();
+        }
+        //27：获得随机rank4当前未持有圣遗物
+        if(effList.Contains(27))
+        {
+            AbilityData[] abilities= AbilityManager.instance.GetRandomAbility(1,4);
+            AddAbilityForPlayerActor(abilities);
+            strs[27]=(abilities[0].name).ToString();
+        }
+        
         
 
+    }
+    void AddSkillForPlayerActor(SkillData[] skillDatas)
+    {
+        foreach (var item in skillDatas)
+        {
+            Player.instance.playerActor.UsingSkillsID.Add(item.id);
+        }
+    }
+    void AddAbilityForPlayerActor(AbilityData[] abilities)
+    {
+        foreach (var item in abilities)
+        {
+            Player.instance.playerActor.abilities.Add(item.id);
+        }
     }
     void OnClose()
     {

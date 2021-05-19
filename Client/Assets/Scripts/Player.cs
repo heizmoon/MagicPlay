@@ -6,8 +6,11 @@ public class Player : MonoBehaviour
 {
 
 	public static Player instance;
+	///<summary>金币，局内货币</summary>
 	public int Gold{get;set;}
+	///<summary>算力，用于上交</summary>
 	public int Power{get;set;}
+	///<summary>水晶，局外货币</summary>
 	public int Crystal{get;set;}
 	public int CharID =0;
 	
@@ -40,6 +43,14 @@ public class Player : MonoBehaviour
 	//玩家拥有哪些护符  护符 = 可以带进关卡，或者在关卡外也可以发挥效果的道具
 	//玩家解锁了哪些遗物（能力/道具） 此处的遗物用ability  
 	public List<int> unlockAbility =new List<int>();
+	///<summary>经验获取加成</summary>
+	public float ExpAdditon =1f;
+	///<summary>经验获取加成次数</summary>
+	public int ExpAdditonTimes =0;
+	///<summary>金币获取加成</summary>
+	public float GoldAdditon =1f;
+	///<summary>金币获取加成次数</summary>
+	public int GoldAdditonTimes =0;
 
 	//玩家打通了多少关卡
 	//玩家开启了哪些场景
