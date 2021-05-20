@@ -82,6 +82,7 @@ public class BuffManager : MonoBehaviour
     BuffData[] buffDatas;
     public event Action<Buff> OnSummonedAddBuff;//
     public event Action<Buff> OnSummonedRemoveBuff;//
+    public event Action<int> OnBuffRemoveCastSkill;
     void Awake()
     {
         instance = this;
@@ -116,7 +117,8 @@ public class BuffManager : MonoBehaviour
         Debug.Log("开始移除BUFF:"+buff.buffData.abilityID);
         if(buff.buffData.abilityID ==33)
         {
-            buff.target.AddCold(-(int)buff.buffData.value);    
+            int i = buff.target.AddCold(-(int)buff.buffData.value);
+            OnBuffRemoveCastSkill(i);    
         }
         else
         {
@@ -150,6 +152,13 @@ public class BuffManager : MonoBehaviour
                                 if(i == num)
                                 {
                                     Debug.Log("一共移除了"+num+"层"+_buff.buffData.name);
+                                    OnBuffRemoveCastSkill(i);
+                                    break;
+                                }
+                                else if(i<num&&j==0)
+                                {
+                                    Debug.Log("一共移除了"+i+"层"+_buff.buffData.name);
+                                    OnBuffRemoveCastSkill(i);
                                     break;
                                 }
                             }
@@ -271,6 +280,7 @@ public class BuffManager : MonoBehaviour
         }
         actor.buffs.Clear();
     }
+    
     // public void OnBuffMax(Buff buff)
     // {
     //     //检查冻结

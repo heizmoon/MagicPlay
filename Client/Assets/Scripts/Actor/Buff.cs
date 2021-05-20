@@ -147,6 +147,7 @@ public class Buff
                 target.OnActorHasHit+=BuffTriggerSkill;
             break;
             case BuffType.移除指定ID的BUFF:
+            BuffManager.instance.OnBuffRemoveCastSkill+=BuffRemoveCastSkill;
             BuffManager.instance.BuffRemoveBuff(this);
             break;
             case BuffType.BUFF叠加到最大层触发技能:
@@ -335,6 +336,9 @@ public class Buff
                 target.OnBuffMax-=BuffMax;
                 else
                 target.target.OnBuffMax-=BuffMax;
+            break;
+            case BuffType.移除指定ID的BUFF:
+                BuffManager.instance.OnBuffRemoveCastSkill-=BuffRemoveCastSkill;
             break;
             case BuffType.每出X张Y牌时自己触发技能:
             UIBattle.Instance.OnUseCardAction-=UseCardTriggerSkill;
@@ -642,6 +646,25 @@ public class Buff
         }
         
         target =null;
+    }
+    public void BuffRemoveCastSkill(int num)
+    {
+        Debug.Log("移除BUFF触发技能");
+        if(num>0&&(int)buffData.effectInterval>0)
+        {
+            Skill skill;
+            if(buffData.valueGrow==0)
+            skill = SkillManager.TryGetFromPool((int)buffData.effectInterval,target);
+            else
+            skill = SkillManager.TryGetFromPool((int)buffData.effectInterval,target.target);
+            if(skill.buffID>0)
+            skill.buffNum = num;
+            if(skill.damage>0)
+            skill.damage =num*skill.skillData.damage;
+            if(skill.heal>0)
+            skill.heal =num*skill.skillData.heal;
+            TriggerSkill(skill);
+        }
     }
 
 }

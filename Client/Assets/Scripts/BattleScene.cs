@@ -38,6 +38,10 @@ public class BattleScene : MonoBehaviour
         battleType =0;
         talentPoint =0;
         exp =0;
+        Player.instance.ExpAdditon =1;
+        Player.instance.ExpAdditonTimes =0;
+        Player.instance.GoldAdditon =1;
+        Player.instance.GoldAdditonTimes =0;    
 
     }
     // public void ShowRandomAbilityUI()

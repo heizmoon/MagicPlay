@@ -229,7 +229,7 @@ public class UIRandomEvent : MonoBehaviour
             AddSkillForPlayerActor(skillDatas);
             strs[13]=(skillDatas[0].name).ToString();
         }
-        //获得随机1张当前级别本职业技能卡
+        //14.获得随机1张当前级别本职业技能卡
         if(effList.Contains(14))
         {
             SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,rewardCardRank);
@@ -282,8 +282,6 @@ public class UIRandomEvent : MonoBehaviour
         23：获得一次重生能力
         28：经验奖励增加50%,持续1-3场战斗
         29：经验奖励减少50%,持续1-3场战斗
-        30：提升一级
-        31：无法再获得经验值
         32：后续怪物的强度增加
         33：
         */
@@ -315,7 +313,21 @@ public class UIRandomEvent : MonoBehaviour
             AddAbilityForPlayerActor(abilities);
             strs[27]=(abilities[0].name).ToString();
         }
-        
+        //30：提升一级
+        if(effList.Contains(30))
+        {
+            BattleScene.instance.ifLevelUp = true;
+        }
+        //31：无法再获得经验值
+        if(effList.Contains(31))
+        {
+            Player.instance.ExpAdditonTimes =100;
+            Player.instance.ExpAdditon =0;
+        }
+        if(effList.Contains(32))
+        {
+            
+        }
         
 
     }

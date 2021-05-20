@@ -71,7 +71,7 @@ public class Map : MonoBehaviour,IBeginDragHandler,IDragHandler
 
     public void MoveLocal(MapPoint point)
     {
-        local.DOLocalMove(point.transform.localPosition,0.6f,false);
+        local.DOMove(point.transform.position,0.6f,false);
         Refresh();
         BattleScene.instance.steps++;
         

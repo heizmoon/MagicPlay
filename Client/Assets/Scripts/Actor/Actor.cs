@@ -328,12 +328,13 @@ public class Actor : MonoBehaviour
             mpBar.changeHPBar(MpCurrent,MpMax);
         }
     }
-    public void AddCold(int number)
+    public int AddCold(int number)
     {
         int tempNum =coldNum;
+        int realNumber =0;
         if(number<0&&coldNum>0)
         {
-            int realNumber =-number>coldNum?coldNum:-number;
+            realNumber =-number>coldNum?coldNum:-number;
             //冰冷数值减少时，移除对应数量的冰冷BUFF
             int j =0;
             
@@ -368,6 +369,7 @@ public class Actor : MonoBehaviour
             }
         }
         hpBar.ChangeCold();
+        return realNumber;
     }
 
     public void AddInvalidSkillNum(int number)
