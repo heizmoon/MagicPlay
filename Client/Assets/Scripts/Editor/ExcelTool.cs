@@ -981,10 +981,16 @@ namespace EditorTool {
             data.id = collect[i][0].ToString()==""?0:int.Parse(collect[i][0].ToString());
             data.SellCardList = collect[i][1].ToString();
             data.SellRelicList = collect[i][2].ToString();
-
+            data.SellCardList1 = collect[i][3].ToString();
+            data.SellRelicList1 = collect[i][4].ToString();
+            data.SellCardList2 = collect[i][5].ToString();
+            data.SellRelicList2 = collect[i][6].ToString();
             data._sellCardList =GetListIntFromString(data.SellCardList); 
             data._sellRelicList =GetListIntFromString(data.SellRelicList); 
-
+            data._sellCardList_mage =GetListIntFromString(data.SellCardList1); 
+            data._sellRelicList_mage =GetListIntFromString(data.SellRelicList1); 
+            data._sellCardList_robort =GetListIntFromString(data.SellCardList2); 
+            data._sellRelicList_robort =GetListIntFromString(data.SellRelicList2); 
             array[i - 2] = data;
             }
             shopDatas =array;

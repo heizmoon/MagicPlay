@@ -16,6 +16,9 @@ public class UIBattleShop : MonoBehaviour
     public Button retryButton;
     int totalPrice=0;
     ShopData shopData;
+    List<int> _sellCardList;
+    List<int> _sellRelicList;
+
     private void Start() 
     {
         // Init();
@@ -37,15 +40,30 @@ public class UIBattleShop : MonoBehaviour
             item.button.onClick.AddListener(delegate () {BuyItem(item);});
         } 
         shopData = ShopManager.instance.GetInfo(realID);
+        switch (Player.instance.CharID)
+        {
+            case 0:
+                _sellCardList =shopData._sellCardList;
+                _sellRelicList =shopData._sellRelicList;
+            break;
+            case 1:
+                _sellRelicList =shopData._sellRelicList_robort;
+                _sellCardList =shopData._sellCardList_robort;
+            break;
+            case 2:
+                _sellRelicList =shopData._sellRelicList_mage;
+                _sellCardList =shopData._sellCardList_mage;
+            break;
+        }
 
         Refreash();
     }
     
     void Refreash()
     {
-        AbilityData[] Adatas = AbilityManager.instance.GetRandomAbilityFromSpecialPool(3,shopData._sellRelicList);
+        AbilityData[] Adatas = AbilityManager.instance.GetRandomAbilityFromSpecialPool(3,_sellRelicList);
 
-        SkillData[] Sdatas = SkillManager.instance.GetRandomSkillFromSpecialPool(3,shopData._sellCardList);
+        SkillData[] Sdatas = SkillManager.instance.GetRandomSkillFromSpecialPool(3,_sellCardList);
 
         // choosenItemBox.Clear();
         

@@ -617,8 +617,16 @@ public class ShopData
     public int id;
     public string SellCardList;
     public string SellRelicList;
+    public string SellCardList1;
+    public string SellRelicList1;
+    public string SellCardList2;
+    public string SellRelicList2;
     public List<int> _sellCardList;
     public List<int> _sellRelicList;
+    public List<int> _sellCardList_mage;
+    public List<int> _sellRelicList_mage;
+    public List<int> _sellCardList_robort;
+    public List<int> _sellRelicList_robort;
 
 
 }
