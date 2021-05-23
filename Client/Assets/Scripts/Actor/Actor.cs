@@ -135,7 +135,14 @@ public class Actor : MonoBehaviour
     public event Action<Buff> OnBuffMax;
     ///<summary>获得护甲事件，获得的护甲层数，累计护甲层数</summary>
     public event Action<int[]> OnGetArmor;
+    ///<summary>攻击力改变事件，获得的攻击力数，累计攻击力获得数</summary>
+    public event Action<int[]> OnChangeAttack;
+    ///<summary>消耗能量事件，消耗的能量数，累计消耗的能量数</summary>
+    public event Action<int[]> OnUseMP;
+
     int totalArmor;
+    int extraAttack;
+    int totalUseMP;
     //怪物AI相关
     public Skill wanaSkill;
 
@@ -403,6 +410,12 @@ public class Actor : MonoBehaviour
             {
                 item.RefeashCardShow();
             } 
+        }
+        extraAttack+=number;
+        if(OnChangeAttack!=null)
+        {
+            int[] _data =new int[]{number,extraAttack,basicAttack};
+            OnChangeAttack(_data);
         }
     }
     public void AddArmor(int number)
@@ -1820,6 +1833,15 @@ public class Actor : MonoBehaviour
         if(mpBar!=null)
         {
             mpBar.changeHPBar((int)MpCurrent,true);
+        }
+        if(num<0)
+        {
+            totalUseMP+=-(int)num;
+        }
+        if(num<0&&OnUseMP!=null)
+        {
+           int[] _data =new int[]{(int)num,totalUseMP};
+           OnUseMP(_data); 
         }
         
     }

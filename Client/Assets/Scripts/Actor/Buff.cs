@@ -212,6 +212,30 @@ public class Buff
             case BuffType.改变角色形象:
             BuffManager.instance.BuffChangeActor(this);
             break;
+            case BuffType.单次获得额外攻击大于x点时触发技能:
+            if(buffData.value==0)
+            target.OnChangeAttack+=ChangeAttackTriggerSkill;
+            else
+            target.target.OnChangeAttack+=ChangeAttackTriggerSkill;
+            break;
+            case BuffType.当前额外攻击大于x点时获得buff:
+            if(buffData.value==0)
+            target.OnChangeAttack+=ChangeAtttackTriggerBuff;
+            else
+            target.target.OnChangeAttack+=ChangeAtttackTriggerBuff;
+            break;
+            case BuffType.能量消耗大于x点时触发技能:
+            if(target.actorType == ActorType.玩家角色)
+                target.OnUseMP+=UseMpTriggerSkill;
+            else
+                target.target.OnUseMP+=UseMpTriggerSkill;
+            break;
+            case BuffType.总能量消耗大于x点时触发技能:
+            if(target.actorType == ActorType.玩家角色)
+                target.OnUseMP+=TotalUseMpTriggerSkill;
+            else
+                target.target.OnUseMP+=TotalUseMpTriggerSkill;
+            break;
         }
         
     }
@@ -390,6 +414,30 @@ public class Buff
             case BuffType.改变角色形象:
             BuffManager.instance.BuffResumeActor(target);
             break;
+            case BuffType.单次获得额外攻击大于x点时触发技能:
+            if(buffData.value==0)
+            target.OnChangeAttack-=ChangeAttackTriggerSkill;
+            else
+            target.target.OnChangeAttack-=ChangeAttackTriggerSkill;
+            break;
+            case BuffType.当前额外攻击大于x点时获得buff:
+            if(buffData.value==0)
+            target.OnChangeAttack-=ChangeAtttackTriggerBuff;
+            else
+            target.target.OnChangeAttack-=ChangeAtttackTriggerBuff;
+            break;
+            case BuffType.能量消耗大于x点时触发技能:
+            if(target.actorType == ActorType.玩家角色)
+                target.OnUseMP-=UseMpTriggerSkill;
+            else
+                target.target.OnUseMP-=UseMpTriggerSkill;
+            break;
+            case BuffType.总能量消耗大于x点时触发技能:
+            if(target.actorType == ActorType.玩家角色)
+                target.OnUseMP-=TotalUseMpTriggerSkill;
+            else
+                target.target.OnUseMP-=TotalUseMpTriggerSkill;
+            break;
         }
         
         // if(buffData.id==15)
@@ -513,10 +561,10 @@ public class Buff
         }
         else if(values[0]==-1)
         {
-            if(buffData.value==0)
-            skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
-            else
+            if(buffData.valueGrow==0)
             skill = SkillManager.TryGetFromPool(buffData.abilityID,target);
+            else
+            skill = SkillManager.TryGetFromPool(buffData.abilityID,target.target);
         }
         else
         {
@@ -605,6 +653,67 @@ public class Buff
                speicalBuff.buffIcon.OnEffectEnd();
                speicalBuff =null;
             }
+        }
+    }
+    void ChangeAttackTriggerSkill(int[] _data)
+    {
+        int extraAttack =_data[0];
+        if(extraAttack>=buffData.effectInterval)
+        {
+            Skill skill;
+            if(buffData.valueGrow==0)
+            skill =SkillManager.TryGetFromPool(buffData.abilityID,target);
+            else
+            skill =SkillManager.TryGetFromPool(buffData.abilityID,target.target);
+            TriggerSkill(skill);
+        }
+    }
+    void ChangeAtttackTriggerBuff(int[] _data)
+    {
+        int extraAttack =_data[1];
+        if(extraAttack>=buffData.effectInterval)
+        {
+            if(speicalBuff ==null)
+            {
+                if(buffData.valueGrow==0)
+                speicalBuff = BuffManager.instance.CreateBuffForActor(buffData.abilityID,target);
+                else
+                speicalBuff = BuffManager.instance.CreateBuffForActor(buffData.abilityID,target.target);
+            }
+        }
+        else
+        {
+            if(speicalBuff!=null)
+            {
+               speicalBuff.buffIcon.OnEffectEnd();
+               speicalBuff =null;
+            }
+        }
+    }
+    void UseMpTriggerSkill(int[] _data)
+    {
+        int useMp = _data[0];
+        if(useMp>= buffData.effectInterval)
+        {
+            Skill skill;
+            if(buffData.value ==0)
+            skill =SkillManager.TryGetFromPool(buffData.abilityID,target);
+            else
+            skill =SkillManager.TryGetFromPool(buffData.abilityID,target.target);
+            TriggerSkill(skill);
+        }
+    }
+    void TotalUseMpTriggerSkill(int[] _data)
+    {
+        int totalUseMp = _data[1];
+        if(totalUseMp>= buffData.effectInterval)
+        {
+            Skill skill;
+            if(buffData.value ==0)
+            skill =SkillManager.TryGetFromPool(buffData.abilityID,target);
+            else
+            skill =SkillManager.TryGetFromPool(buffData.abilityID,target.target);
+            TriggerSkill(skill);
         }
     }
     void TriggerSkill(Skill skill)
