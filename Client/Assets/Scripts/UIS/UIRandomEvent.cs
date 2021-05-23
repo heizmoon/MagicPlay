@@ -193,32 +193,29 @@ public class UIRandomEvent : MonoBehaviour
         //9：获得随机1-3张rank0本职业技能卡
         if(effList.Contains(9))
         {
-            int r =Random.Range(1,4);
-            SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,0);
+            // int r =Random.Range(1,4);
+            SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,0);
             AddSkillForPlayerActor(skillDatas);
             strs[9]=(skillDatas[0].name).ToString();
         }
         //10：获得随机1-3张rank1本职业技能卡
         if(effList.Contains(10))
         {
-            int r =Random.Range(1,4);
-            SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,1);
+            SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,1);
             AddSkillForPlayerActor(skillDatas);
             strs[10]=(skillDatas[0].name).ToString();
         }
         //11：获得随机1-3张rank2本职业技能卡
         if(effList.Contains(11))
         {
-            int r =Random.Range(1,4);
-            SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,2);
+            SkillData[] skillDatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,2);
             AddSkillForPlayerActor(skillDatas);
             strs[11]=(skillDatas[0].name).ToString();
         }
         //12：获得随机1-3张rank3本职业技能卡
         if(effList.Contains(12))
         {
-            int r =Random.Range(1,4);
-            SkillData[] skillDatas =  SkillManager.instance.GetRandomSelfSkillsLevelLimit(r,3);
+            SkillData[] skillDatas =  SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,3);
             AddSkillForPlayerActor(skillDatas);
             strs[12]=(skillDatas[0].name).ToString();
         }

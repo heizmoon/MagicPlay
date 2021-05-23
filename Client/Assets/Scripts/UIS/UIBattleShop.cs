@@ -42,15 +42,15 @@ public class UIBattleShop : MonoBehaviour
         shopData = ShopManager.instance.GetInfo(realID);
         switch (Player.instance.CharID)
         {
-            case 0:
+            case 1:
                 _sellCardList =shopData._sellCardList;
                 _sellRelicList =shopData._sellRelicList;
             break;
-            case 1:
+            case 2:
                 _sellRelicList =shopData._sellRelicList_robort;
                 _sellCardList =shopData._sellCardList_robort;
             break;
-            case 2:
+            case 3:
                 _sellRelicList =shopData._sellRelicList_mage;
                 _sellCardList =shopData._sellCardList_mage;
             break;
