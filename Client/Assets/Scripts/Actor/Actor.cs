@@ -1496,7 +1496,7 @@ public class Actor : MonoBehaviour
             //     }
             // }
             #endregion
-            
+           
             //法力护盾：减少能量值来吸收伤害，当能量值空时，不再吸收伤害,法力护盾吸收的优先级低于普通护甲
 
 
@@ -1525,6 +1525,8 @@ public class Actor : MonoBehaviour
             }
         }
         #endregion
+        //召唤物分摊伤害
+        num-=SummonManager.instance.TakeDamage(num,this);
         //执行{受到伤害时就xxx这类效果}
         
         //执行 {受到暴击时就xxx}

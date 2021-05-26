@@ -17,8 +17,9 @@ public class UICamp : MonoBehaviour
         BTNGift.onClick.AddListener(OnGift);
         if(Main.instance.ifNewBird<18)
         {
-            BTNRemove.gameObject.SetActive(false);
+            
         }
+        BTNRemove.gameObject.SetActive(false);
 
     }
 

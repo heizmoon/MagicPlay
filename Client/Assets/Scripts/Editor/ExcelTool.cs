@@ -963,6 +963,9 @@ namespace EditorTool {
             data.power = collect[i][4].ToString()==""?0:int.Parse(collect[i][4].ToString());
             data.speed =collect[i][5].ToString()==""?0:float.Parse(collect[i][5].ToString());
             data.skill = collect[i][6].ToString()==""?0:int.Parse(collect[i][6].ToString());
+            data.HP = collect[i][7].ToString()==""?0:int.Parse(collect[i][7].ToString());
+            data.isTaunt =collect[i][8].ToString()==""?false:true;
+            data.isVoid =collect[i][9].ToString()==""?false:true;
 
             array[i - 2] = data;
             }

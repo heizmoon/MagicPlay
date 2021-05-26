@@ -151,6 +151,10 @@ public class SummonData
     public int power;
     public float speed;
     public int skill;
+    public int HP;
+    public bool isTaunt;
+    public bool isVoid;
+
     
 }
 [System.Serializable]

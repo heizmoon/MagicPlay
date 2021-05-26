@@ -124,6 +124,12 @@ public class ItemBox : MonoBehaviour
         itemName.color = Color.white;
         button.gameObject.SetActive(false);
     }
+    public void CantChoose()
+    {
+        skillMark.SetActive(true);
+        toggle.interactable =false;
+        button.gameObject.SetActive(false);
+    }
     public void Reset()
     {
         // try

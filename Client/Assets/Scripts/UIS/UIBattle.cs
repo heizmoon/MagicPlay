@@ -425,20 +425,26 @@ public class UIBattle : MonoBehaviour
             {
                 //最终BOSS，跳过
             }
-            else if(battleType==1)
+            else if(battleType==1)//精英怪
             {
-                ShowReward(1);
+                if(!Configs.instance.ifChangMode)
+                UIBattleReward.CreateUIBattleReward(1);
+                else
+                UICardExchange.CreateUICardExchange(1);
             }
-            else if(battleType==2)
+            else if(battleType==2)//BOSS
             {
-                ShowReward(2);
+                if(!Configs.instance.ifChangMode)
+                UIBattleReward.CreateUIBattleReward(2);
+                else
+                UICardExchange.CreateUICardExchange(2);
             }
             else
             {
                 if(!Configs.instance.ifChangMode)
-                ShowReward(0);
+                UIBattleReward.CreateUIBattleReward(0);
                 else
-                ShowChangeCard();
+                UICardExchange.CreateUICardExchange(0);
             }
             
             BattleScene.instance.BattleEnd(battleType);
@@ -854,23 +860,10 @@ public class UIBattle : MonoBehaviour
     }
     //技能牌因手牌过多而无法加入手牌
 
-    void ShowReward(int type)
-    {
-        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIBattleReward"));
-        go.transform.SetParent(Main.instance.allScreenUI);
-        go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-        go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-        go.transform.localScale =Vector3.one;
-        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,type);
-        
-    }
+
     void ShowChangeCard()
     {
-        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UICardExchange"));
-        go.transform.SetParent(Main.instance.allScreenUI); 
-		go.transform.localScale =Vector3.one;
-        go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        
     }
 
     void OnShieldTips()

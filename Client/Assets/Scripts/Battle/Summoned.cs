@@ -21,6 +21,10 @@ public class Summoned : MonoBehaviour
     Animator animator;
     List<Buff> buffs =new List<Buff>();
     public SkillCard skillCard;
+    int HpMax;
+    int HpCurrent;
+    public bool isTaunt;
+    public bool isVoid;
     void Start()
     {
         //事件订阅
@@ -40,6 +44,11 @@ public class Summoned : MonoBehaviour
         this.skillCard =summonSkill.skillCard;
         target = master.target;
         LifeTime =summonData.lifeTime+lifeTimePlus;
+        this.HpMax = summonData.HP;
+        this.HpCurrent =HpMax;
+        this.isTaunt =summonData.isTaunt;
+        this.isVoid =summonData.isVoid;
+
         Power =summonData.power;
         attackSpeed =summonData.speed;
         
@@ -196,5 +205,21 @@ public class Summoned : MonoBehaviour
             return;
         }
 
+    }
+    public void TakeDamage(int _damage)
+    {
+        HpCurrent-=_damage;
+        //显示血条
+        ShowHPBar(HpCurrent);
+        if(HpCurrent<=0)
+        {
+            HpCurrent=0;
+            Death();
+        }
+    }
+    void ShowHPBar(int hp)
+    {
+        //如果血条没显示，那么显示血条
+        
     }
 }

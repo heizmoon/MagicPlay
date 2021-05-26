@@ -55,25 +55,33 @@ public class UIBattleReward : MonoBehaviour
         this.steps =steps;
         this.type = type;
         goldText.text =string.Format("{0}",steps*Configs.instance.battleLevelGold);
-        if(type==0)
+        if(!Configs.instance.ifChangMode)
         {
-            relicFrame.SetActive(false);
-            Player.instance.AddGold(steps * Configs.instance.battleLevelGold);
+            if(type==0)
+            {
+                relicFrame.SetActive(false);
+                Player.instance.AddGold(steps * Configs.instance.battleLevelGold);
+            }
+            else
+            {
+                skillFrame.SetActive(false);
+                goldFrame.SetActive(false);
+                expFrame.SetActive(false);
+            }
+            if(type!=2)
+            {
+                needChooseStep =1;
+            }
+            else
+            {
+                needChooseStep =2;
+            }
         }
-        else
+        else//换牌模式
         {
-            // needChooseStep =2;
             skillFrame.SetActive(false);
             goldFrame.SetActive(false);
             expFrame.SetActive(false);
-        }
-        if(type!=2)
-        {
-            needChooseStep =1;
-        }
-        else
-        {
-            needChooseStep =2;
         }
         foreach (var item in skillItemBoxes)
         {
@@ -146,28 +154,40 @@ public class UIBattleReward : MonoBehaviour
             Btn_retry.gameObject.SetActive(false);
             return;
         }
-
-        if(type==0)
+        if(!Configs.instance.ifChangMode)
         {
-            SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
-            for (int i = 0; i < Sdatas.Length; i++)
+            if(type==0)
             {
-                skillItemBoxes[i].Reset();
-                skillItemBoxes[i].Init(Sdatas[i]);
-                skillItemBoxes[i].InReward();
+                SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
+                for (int i = 0; i < Sdatas.Length; i++)
+                {
+                    skillItemBoxes[i].Reset();
+                    skillItemBoxes[i].Init(Sdatas[i]);
+                    skillItemBoxes[i].InReward();
+                }
+            }
+            else if(type ==2&&chooseStep==0)
+            {
+                SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
+                for (int i = 0; i < Sdatas.Length; i++)
+                {
+                    skillItemBoxes[i].Reset();
+                    skillItemBoxes[i].Init(Sdatas[i]);
+                    skillItemBoxes[i].InReward();
+                }
+            }
+            else
+            {
+                AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,rewardCardRank);
+                for (int i = 0; i < Adatas.Length; i++)
+                {
+                    abilityItemBoxes[i].Reset();
+                    abilityItemBoxes[i].Init(Adatas[i]);
+                    abilityItemBoxes[i].InReward();
+                }
             }
         }
-        else if(type ==2&&chooseStep==0)
-        {
-            SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
-            for (int i = 0; i < Sdatas.Length; i++)
-            {
-                skillItemBoxes[i].Reset();
-                skillItemBoxes[i].Init(Sdatas[i]);
-                skillItemBoxes[i].InReward();
-            }
-        }
-        else
+        else//换牌模式
         {
             AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,rewardCardRank);
             for (int i = 0; i < Adatas.Length; i++)
@@ -177,6 +197,7 @@ public class UIBattleReward : MonoBehaviour
                 abilityItemBoxes[i].InReward();
             }
         }
+        
         
         // if(!hasChoosenCard)
         // {
@@ -229,18 +250,49 @@ public class UIBattleReward : MonoBehaviour
     }
     void GetItem(ItemBox item)
     {
-        if(item.type ==1)
+        if(!Configs.instance.ifChangMode)
         {
-            // hasChoosenCard =true;
-            Player.instance.playerActor.UsingSkillsID.Add(item.id);
-            for (int i = 0; i < skillItemBoxes.Count; i++)
+            if(item.type ==1)
             {
-                skillItemBoxes[i].Disable();
+                // hasChoosenCard =true;
+                Player.instance.playerActor.UsingSkillsID.Add(item.id);
+                for (int i = 0; i < skillItemBoxes.Count; i++)
+                {
+                    skillItemBoxes[i].Disable();
+                }
+            }
+            else if(item.type ==2)
+            {
+                // hasChoosenRelic =true;
+                Player.instance.playerActor.abilities.Add(item.id);
+                AbilityData ability = AbilityManager.instance.GetInfo(item.id);
+                Player.instance.playerActor.basicAttack+=ability.attack;
+                Player.instance.playerActor.basicDefence+=ability.defence;
+                Player.instance.playerActor.AddMaxHP(ability.hpMax);
+                Player.instance.playerActor.AddMaxMP(ability.mpMax);
+                Player.instance.playerActor.Crit+=ability.crit;
+                float reMp =ability.reMp/5;
+                int temp = (int)(reMp*100);
+                reMp =temp/100f;
+                Player.instance.playerActor.autoReduceMPAmount+= reMp;
+
+                for (int i = 0; i < abilityItemBoxes.Count; i++)
+                {
+                    abilityItemBoxes[i].Disable();
+                }
+            }
+            chooseStep++;
+            if(chooseStep==needChooseStep)
+            {
+                OnButtonReturn();
+            }
+            else
+            {
+                Refreash();
             }
         }
-        else if(item.type ==2)
+        else//换牌模式
         {
-            // hasChoosenRelic =true;
             Player.instance.playerActor.abilities.Add(item.id);
             AbilityData ability = AbilityManager.instance.GetInfo(item.id);
             Player.instance.playerActor.basicAttack+=ability.attack;
@@ -257,15 +309,7 @@ public class UIBattleReward : MonoBehaviour
             {
                 abilityItemBoxes[i].Disable();
             }
-        }
-        chooseStep++;
-        if(chooseStep==needChooseStep)
-        {
             OnButtonReturn();
-        }
-        else
-        {
-            Refreash();
         }
 
     }
@@ -284,5 +328,14 @@ public class UIBattleReward : MonoBehaviour
     {
         //播放广告，重置货品
         Refreash();
+    }
+    public static void CreateUIBattleReward(int type)
+    {
+        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UIBattleReward"));
+        go.transform.SetParent(Main.instance.allScreenUI);
+        go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+        go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        go.transform.localScale =Vector3.one;
+        go.GetComponent<UIBattleReward>().Init(BattleScene.instance.steps,type);
     }
 }

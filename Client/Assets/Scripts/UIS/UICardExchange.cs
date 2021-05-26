@@ -22,7 +22,8 @@ public class UICardExchange : MonoBehaviour
     bool hasChoosenCard;
     int needChooseStep =2;
     int chooseID;
-    void Start()
+    int type =0;
+    void Awake()
     {
         buttonRemove =transform.Find("ButtonRemove").GetComponent<Button>();
         BTNClose =transform.Find("ButtonClose").GetComponent<Button>();
@@ -31,8 +32,14 @@ public class UICardExchange : MonoBehaviour
         BTNRetry.onClick.AddListener(OnRetry);
 
         content=transform.Find("CardList/Viewport/Content");
-    
-        transform.DOPunchScale(new Vector3(0.2f,0.2f,0.2f),0.5f,2,1);
+    }
+    void Start()
+    {
+        transform.DOPunchScale(new Vector3(0.2f,0.2f,0.2f),0.5f,2,1); 
+    }
+    void Init(int type)
+    {
+        this.type = type;
         rewardCardRank =Configs.instance.GetCardRank(BattleScene.instance.steps);
         foreach (var item in skillItemBoxes)
         {
@@ -46,13 +53,50 @@ public class UICardExchange : MonoBehaviour
     }
     public void Refreash()
     {
-        SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
-        for (int i = 0; i < Sdatas.Length; i++)
+        if(Main.instance.ifNewBird <=7)//创造固定奖励
         {
-            skillItemBoxes[i].Reset();
-            skillItemBoxes[i].Init(Sdatas[i]);
-            skillItemBoxes[i].InReward();
+            SkillData[] Sdatas =new SkillData[3]; 
+            Sdatas[0]= SkillManager.instance.GetInfo(169);
+            Sdatas[1]= SkillManager.instance.GetInfo(170);
+            Sdatas[2]= SkillManager.instance.GetInfo(171);
+
+            for (int i = 0; i < Sdatas.Length; i++)
+            {
+                skillItemBoxes[i].Reset();
+                skillItemBoxes[i].Init(Sdatas[i]);
+                skillItemBoxes[i].InReward();
+            }
+            Main.instance.ifNewBird++;
+            BTNRetry.gameObject.SetActive(false);
+            return;
         }
+        else if(Main.instance.ifNewBird <=14)//创造固定奖励
+        {
+            SkillData[] Sdatas =new SkillData[3]; 
+            Sdatas[0]= SkillManager.instance.GetInfo(200);
+            Sdatas[1]= SkillManager.instance.GetInfo(212);
+            Sdatas[2]= SkillManager.instance.GetInfo(354);
+
+            for (int i = 0; i < Sdatas.Length; i++)
+            {
+                skillItemBoxes[i].Reset();
+                skillItemBoxes[i].Init(Sdatas[i]);
+                skillItemBoxes[i].InReward();
+            }
+            Main.instance.ifNewBird=15;
+            BTNRetry.gameObject.SetActive(false);
+            return;
+        }
+        else
+        {
+            SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
+            for (int i = 0; i < Sdatas.Length; i++)
+            {
+                skillItemBoxes[i].Reset();
+                skillItemBoxes[i].Init(Sdatas[i]);
+                skillItemBoxes[i].InReward();
+            }
+        }   
     }
     void SortList()
     {
@@ -81,12 +125,26 @@ public class UICardExchange : MonoBehaviour
     {
         chooseID = item.id;
         item.button.GetComponentInChildren<Text>().text ="已选择";
+        
         for (int i = 0; i < skillItemBoxes.Count; i++)
         {
+            skillItemBoxes[i].button.onClick.RemoveAllListeners();
             if(skillItemBoxes[i]!= item)
-            skillItemBoxes[i].Disable();
+            skillItemBoxes[i].CantChoose();
         }
+        item.button.onClick.AddListener(delegate () {CancelChoose(item);});
+
         AddButton();
+    }
+    void CancelChoose(ItemBox item)
+    {
+        item.button.onClick.RemoveAllListeners();
+        item.button.GetComponentInChildren<Text>().text ="选择";
+        foreach (var i in skillItemBoxes)
+        {
+            i.Reset();
+            i.button.onClick.AddListener(delegate () {GetItem(item);});
+        }
     }
     void RefeashPrice()
     {
@@ -127,21 +185,29 @@ public class UICardExchange : MonoBehaviour
         //     Main.instance.ShowNotEnoughGoldTip();
         //     return;//钱不够
         // }
+
         ItemBox itemBox =button.GetComponentInParent<ItemBox>();
         Player.instance.playerActor.UsingSkillsID.Remove(itemBox.id);
         Player.instance.playerActor.UsingSkillsID.Add(chooseID);
-        // buttons.Remove(button);
-        // DestroyImmediate(itemBox.gameObject);
-        // Player.instance.AddGold(-price);
-        // price+=25;
-        // StartCoroutine(WaitForDisableGridLayout());
+        //播放动画，两张牌位置互换。然后选择框中的牌悉数消失
         CloseUI();
     }
    void CloseUI()
    {
-       if(UIBattle.Instance)
-       UIBattle.Instance.OnBattleGoOn();
-       Destroy(gameObject);
+        if(UIBattle.Instance)
+        UIBattle.Instance.OnBattleGoOn();
+        if(type>0)
+        UIBattleReward.CreateUIBattleReward(type);
+        Destroy(gameObject);
+   }
+   public static void CreateUICardExchange(int type)
+   {
+        GameObject go =(GameObject)Instantiate(Resources.Load("Prefabs/UICardExchange"));
+        go.transform.SetParent(Main.instance.allScreenUI); 
+        go.transform.localScale =Vector3.one;
+        go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+        go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+        go.GetComponent<UICardExchange>().Init(type);
    }
     
 }
