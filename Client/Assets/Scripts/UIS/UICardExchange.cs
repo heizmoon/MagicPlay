@@ -15,7 +15,6 @@ public class UICardExchange : MonoBehaviour
     Button buttonRemove;
     Button BTNClose;
     Button BTNRetry;
-    public int price;
     int rewardCardRank =0;
     public List<ItemBox> skillItemBoxes;
     int chooseStep;
@@ -23,6 +22,7 @@ public class UICardExchange : MonoBehaviour
     int needChooseStep =2;
     int chooseID;
     int type =0;
+    public GameObject _cards;
     void Awake()
     {
         buttonRemove =transform.Find("ButtonRemove").GetComponent<Button>();
@@ -144,13 +144,6 @@ public class UICardExchange : MonoBehaviour
         {
             i.Reset();
             i.button.onClick.AddListener(delegate () {GetItem(item);});
-        }
-    }
-    void RefeashPrice()
-    {
-        foreach (var item in buttons)
-        {
-            item.GetComponentInChildren<Text>().text =price>0?string.Format("{0}",price):"免费";   
         }
     }
     void CreateCards()

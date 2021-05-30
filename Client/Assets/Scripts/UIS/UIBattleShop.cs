@@ -12,13 +12,18 @@ public class UIBattleShop : MonoBehaviour
 
     public Button sureButton;
     public Button cannelButton;
+    public GameObject _playerCards;
     List<ItemBox> choosenItemBox =new List<ItemBox>();
     public Button retryButton;
     int totalPrice=0;
     ShopData shopData;
     List<int> _sellCardList;
     List<int> _sellRelicList;
-
+    List<int> cardList = new List<int>();
+    public Transform content;
+    List<Button> buttons =new List<Button>();
+    int chooseID;
+    public Button buttonRemove;
     private void Start() 
     {
         // Init();
@@ -179,6 +184,75 @@ public class UIBattleShop : MonoBehaviour
         UIBasicBanner.instance.RefeashText();
         RefeashBuyButton();
     }
+    void ShowCards()
+    {
+        _playerCards.SetActive(true);
+        cardList = Player.instance.playerActor.UsingSkillsID;
+        SortList();
+    }
+    void SortList()
+    {
+        cardList.Sort((x,y)=>x.CompareTo(y));
+        CreateCards();
+        StartCoroutine(WaitForDisableGridLayout());
+    }
+    IEnumerator WaitForDisableGridLayout()
+    {
+        content.GetComponent<GridLayoutGroup>().enabled = true;
+        yield return new WaitForSeconds(0.2f);
+        content.GetComponent<GridLayoutGroup>().enabled = false;
+        // RefeashPrice();
+    }
+    void CreateCards()
+    {
+        foreach (var item in cardList)
+        {
+            ItemBox itemBox = ((GameObject)Instantiate(Resources.Load("Prefabs/itemBox"))).GetComponent<ItemBox>();
+            itemBox.transform.SetParent(content);
+            itemBox.transform.localScale = Vector3.one;
+            itemBox.Init(SkillManager.instance.GetInfo(item));
+            itemBox.HideToggleSelect();
+        }
+        content.GetComponent<RectTransform>().sizeDelta =new Vector2(0,285*((int)(cardList.Count/3)+1));
+        AddButton();
+    }
+    void AddButton()
+    {
+        ItemBox[] itemBoxes = content.GetComponentsInChildren<ItemBox>();
+        foreach (var item in itemBoxes)
+        {
+            Button button =Instantiate(buttonRemove);
+            button.transform.SetParent(item.transform);
+            button.transform.localPosition =new Vector3(0,-140,0);
+            button.transform.localScale =Vector3.one;
+            button.onClick.AddListener(delegate(){RemoveCard(button);});
+            buttons.Add(button);
+        }
+    }
+    void RemoveCard(Button button)
+    {
+        // if(Player.instance.Gold<price)
+        // {
+        //     Main.instance.ShowNotEnoughGoldTip();
+        //     return;//钱不够
+        // }
+
+        ItemBox itemBox =button.GetComponentInParent<ItemBox>();
+        Player.instance.playerActor.UsingSkillsID.Remove(itemBox.id);
+        // Player.instance.playerActor.UsingSkillsID.Add(chooseID);
+        //播放动画，两张牌位置互换。然后选择框中的牌悉数消失
+        _playerCards.SetActive(false);
+        ClearButton();
+    }
+    void ClearButton()
+    {
+        ItemBox[] itemBoxes = content.GetComponentsInChildren<ItemBox>();
+        for (int i = itemBoxes.Length-1; i >=0 ; i--)
+        {
+            Destroy(itemBoxes[i].gameObject); 
+        }
+        buttons.Clear();
+    }
     void BuyItem(ItemBox item)
     {
         if(item.price>Player.instance.Gold)
@@ -193,6 +267,7 @@ public class UIBattleShop : MonoBehaviour
         else if(item.type ==2)
         Player.instance.playerActor.abilities.Add(item.id);
 
+        ShowCards();
     }
     void OnButtonReturn()
     {

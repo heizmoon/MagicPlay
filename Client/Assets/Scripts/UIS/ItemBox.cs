@@ -112,6 +112,7 @@ public class ItemBox : MonoBehaviour
     }
     public void Disable()
     {
+        
         skillMark.SetActive(false);
         if(Titem.childCount>0)
         Destroy(Titem.GetChild(0).gameObject);
@@ -126,7 +127,7 @@ public class ItemBox : MonoBehaviour
     }
     public void CantChoose()
     {
-        skillMark.SetActive(true);
+        GetComponentInChildren<SkillCard>().mask.SetActive(false);
         toggle.interactable =false;
         button.gameObject.SetActive(false);
     }
@@ -157,7 +158,8 @@ public class ItemBox : MonoBehaviour
 
         //     skillMark.SetActive(true);
         // }
-
+        if(contentType==1)
+        GetComponentInChildren<SkillCard>().mask.SetActive(true);
         icon.gameObject.SetActive(true);
         // toggle.targetGraphic =icon;
         price =0;

@@ -180,7 +180,7 @@ public class SummonManager : MonoBehaviour
             _list = enemySummoneds;
         }
         if(_list.Count==0)
-        return _damage;
+        return 0;
         else
         {
             
