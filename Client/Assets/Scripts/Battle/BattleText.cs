@@ -26,7 +26,7 @@ public class BattleText : MonoBehaviour
         if(isDamage)
         text.text =string.Format("-{0}",num);
         else
-        text.text =string.Format("+{0}",num);
+        text.text =string.Format("+{0}",-num);
         transform.SetParent(ts);
         float x = Random.Range(-10f,10f);
         float y = Random.Range(-20f,20f);

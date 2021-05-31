@@ -46,10 +46,39 @@ public class UICardExchange : MonoBehaviour
             item.button.onClick.AddListener(delegate () {GetItem(item);});
         }
         cardList = Player.instance.playerActor.UsingSkillsID;
+
+        Player.instance.AddGold(BattleScene.instance.steps * Configs.instance.battleLevelGold);
+        UIBasicBanner.instance.RefeashText();
+        
         //按照数字ID排序
         SortList();
 
         Refreash();
+    }
+    void EXPReward()
+    {
+        int startExp = BattleScene.instance.exp;
+        int maxExp = CharacterManager.instance.GetLevelData(Player.instance.playerActor.level).exp;
+        int addExp = Configs.instance.everyStepAddEXP;
+        addExp=(int)(Player.instance.ExpAdditon*addExp);
+        if(Player.instance.ExpAdditon>1)
+        {
+            Player.instance.ExpAdditonTimes--;
+            if(Player.instance.ExpAdditonTimes ==0)
+            {
+                Player.instance.ExpAdditon =1;
+            }
+        }
+        if(startExp+addExp<maxExp)
+        {
+            BattleScene.instance.exp+= addExp;
+        }
+        else
+        {
+            BattleScene.instance.exp= startExp+addExp-maxExp;
+            BattleScene.instance.ifLevelUp = true;
+        }
+        
     }
     public void Refreash()
     {

@@ -239,7 +239,7 @@ public class UIBattleShop : MonoBehaviour
 
         ItemBox itemBox =button.GetComponentInParent<ItemBox>();
         Player.instance.playerActor.UsingSkillsID.Remove(itemBox.id);
-        // Player.instance.playerActor.UsingSkillsID.Add(chooseID);
+        Player.instance.playerActor.UsingSkillsID.Add(chooseID);
         //播放动画，两张牌位置互换。然后选择框中的牌悉数消失
         _playerCards.SetActive(false);
         ClearButton();
@@ -263,11 +263,14 @@ public class UIBattleShop : MonoBehaviour
         item.Disable();
         Player.instance.AddGold(-item.price);
         if(item.type ==1)
-        Player.instance.playerActor.UsingSkillsID.Add(item.id);
+        {
+            // Player.instance.playerActor.UsingSkillsID.Add(item.id);
+            chooseID =item.id;
+            ShowCards();
+        }
         else if(item.type ==2)
         Player.instance.playerActor.abilities.Add(item.id);
-
-        ShowCards();
+        
     }
     void OnButtonReturn()
     {
