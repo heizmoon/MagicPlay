@@ -22,6 +22,7 @@ public class Configs : MonoBehaviour
     public bool ifChangMode;
     public int removeCardGold;
     public List<string> toolTips;
+    public int shopRestoreCost;
     
 
 

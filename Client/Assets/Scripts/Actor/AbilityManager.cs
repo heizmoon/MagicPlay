@@ -237,6 +237,68 @@ public AbilityData[] GetRandomAbilityFromLevel(int number,int type)
         }
         return abilities;
     }
+    public void EquipRelic(int id)
+    {
+        AbilityData ability = AbilityManager.instance.GetInfo(id);
+        Player.instance.playerActor.basicAttack+=ability.attack;
+        Player.instance.playerActor.basicDefence+=ability.defence;
+        Player.instance.playerActor.AddMaxHP(ability.hpMax);
+        Player.instance.playerActor.AddMaxMP(ability.mpMax);
+
+        Player.instance.playerActor.Crit+=ability.crit;
+        if(Player.instance.playerActor.Crit<0)
+        Player.instance.playerActor.Crit =0;
+
+        float reMp =ability.reMp/5;
+        int temp = (int)(reMp*100);
+        reMp =temp/100f;
+        Player.instance.playerActor.autoReduceMPAmount+= reMp;
+        if(Player.instance.playerActor.autoReduceMPAmount<0)
+        Player.instance.playerActor.autoReduceMPAmount=0;
+
+        Player.instance.playerActor.autoDealCardsMinValue+= ability.autoDealCardsMinValue;
+        if(Player.instance.playerActor.autoDealCardsMinValue<0)
+        Player.instance.playerActor.autoDealCardsMinValue=0;
+
+        Player.instance.playerActor.dealCardsNumber+= ability.dealCardsNumber;
+        if(Player.instance.playerActor.dealCardsNumber<0)
+        Player.instance.playerActor.dealCardsNumber=0;
+
+        Player.instance.playerActor.startBattleDealCardsNumber+= ability.startBattleDealCardsNumber;
+        if(Player.instance.playerActor.startBattleDealCardsNumber<1)
+        Player.instance.playerActor.startBattleDealCardsNumber=1;
+    }
+    public void UnEquipRelic(int id)
+    {
+        AbilityData ability = AbilityManager.instance.GetInfo(id);
+        Player.instance.playerActor.basicAttack-=ability.attack;
+        Player.instance.playerActor.basicDefence-=ability.defence;
+        Player.instance.playerActor.AddMaxHP(-ability.hpMax);
+        Player.instance.playerActor.AddMaxMP(-ability.mpMax);
+        
+        Player.instance.playerActor.Crit-=ability.crit;
+        if(Player.instance.playerActor.Crit<0)
+        Player.instance.playerActor.Crit =0;
+
+        float reMp =ability.reMp/5;
+        int temp = (int)(reMp*100);
+        reMp =temp/100f;
+        Player.instance.playerActor.autoReduceMPAmount-= reMp;
+        if(Player.instance.playerActor.autoReduceMPAmount<0)
+        Player.instance.playerActor.autoReduceMPAmount=0;
+
+        Player.instance.playerActor.autoDealCardsMinValue-= ability.autoDealCardsMinValue;
+        if(Player.instance.playerActor.autoDealCardsMinValue<0)
+        Player.instance.playerActor.autoDealCardsMinValue=0;
+
+        Player.instance.playerActor.dealCardsNumber-= ability.dealCardsNumber;
+        if(Player.instance.playerActor.dealCardsNumber<0)
+        Player.instance.playerActor.dealCardsNumber=0;
+
+        Player.instance.playerActor.startBattleDealCardsNumber-= ability.startBattleDealCardsNumber;
+        if(Player.instance.playerActor.startBattleDealCardsNumber<1)
+        Player.instance.playerActor.startBattleDealCardsNumber=1;
+    }
 
 }
 

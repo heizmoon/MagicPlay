@@ -467,6 +467,10 @@ public class Buff
         Debug.Log("移除buff"+buffData.name);
         buffIcon.OnEffectReduce(1);
         //移除自己----------??
+        if(buffIcon!=null&&buffIcon.buffs.Count==1)
+        {
+            buffIcon.DestoryBuffIcon();
+        }
         BuffManager.RemoveBuffFromActor(this,target);
     }
 

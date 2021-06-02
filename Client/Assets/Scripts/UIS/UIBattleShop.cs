@@ -11,6 +11,7 @@ public class UIBattleShop : MonoBehaviour
     public List<ItemBox> skillItemBoxes;
 
     public Button sureButton;
+    public Button restoreButton;
     public Button cannelButton;
     public GameObject _playerCards;
     List<ItemBox> choosenItemBox =new List<ItemBox>();
@@ -30,10 +31,12 @@ public class UIBattleShop : MonoBehaviour
     }
     public void Init(int realID)
     {
+        restoreButton.onClick.AddListener(OnButtonRestore);
         sureButton.onClick.AddListener(OnButtonBuy);
         cannelButton.onClick.AddListener(OnButtonReturn);
         retryButton.onClick.AddListener(OnRetry);
-        sureButton.interactable =false;   
+        sureButton.interactable =false;
+        restoreButton.transform.Find("price").GetComponent<Text>().text =Configs.instance.shopRestoreCost.ToString();   
         foreach (var item in abilityItemBoxes)
         {
             // item.toggle.onValueChanged.AddListener(isOn=>OnToggle(item));
@@ -269,7 +272,10 @@ public class UIBattleShop : MonoBehaviour
             ShowCards();
         }
         else if(item.type ==2)
-        Player.instance.playerActor.abilities.Add(item.id);
+        {
+            Player.instance.playerActor.abilities.Add(item.id);
+            AbilityManager.instance.EquipRelic(item.id);
+        }
         
     }
     void OnButtonReturn()
@@ -285,5 +291,17 @@ public class UIBattleShop : MonoBehaviour
         Refreash();
         totalPrice  = 0;
 
+    }
+    void OnButtonRestore()
+    {
+        if(Configs.instance.shopRestoreCost>Player.instance.Gold)
+        {
+            Main.instance.ShowNotEnoughGoldTip();
+            return;
+        }
+        
+        Player.instance.AddGold(-Configs.instance.shopRestoreCost);
+        Player.instance.playerActor.AddHp(15);
+        restoreButton.gameObject.SetActive(false);
     }
 }

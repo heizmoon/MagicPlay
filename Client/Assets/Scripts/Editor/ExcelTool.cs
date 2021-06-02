@@ -938,6 +938,9 @@ namespace EditorTool {
             data.reMp =collect[i][14].ToString()==""?0:float.Parse(collect[i][14].ToString());
             data.crit =collect[i][15].ToString()==""?0:float.Parse(collect[i][15].ToString());
             data.initialUnlock =collect[i][16].ToString()==""?false:true;
+            data.dealCardsNumber =collect[i][17].ToString()==""?0:int.Parse(collect[i][17].ToString());
+            data.startBattleDealCardsNumber =collect[i][18].ToString()==""?0:int.Parse(collect[i][18].ToString());
+            data.autoDealCardsMinValue =collect[i][19].ToString()==""?0:int.Parse(collect[i][19].ToString());
 
             data._buildList = GetListIntFromString(data.buildIDList);
             array[i - 2] = data;

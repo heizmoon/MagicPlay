@@ -150,20 +150,19 @@ public class BuffManager : MonoBehaviour
                                 _buff.OnBuffEnd();
                                 // Debug.Log("移除后剩余BUFF层数"+buff.target.buffs.Count);
                                 i++;
-                                if(_buff.buffIcon.buffs.Count==0)
-                                {
-                                    _buff.buffIcon.OnEffectEnd();
-                                }
+                                
                                 if(i == num)
                                 {
                                     Debug.Log("一共移除了"+num+"层"+_buff.buffData.name);
                                     OnBuffRemoveCastSkill(i);
+                                    
                                     break;
                                 }
                                 else if(i<num&&j==0)
                                 {
                                     Debug.Log("一共移除了"+i+"层"+_buff.buffData.name);
                                     OnBuffRemoveCastSkill(i);
+                                    
                                     break;
                                 }
                             }

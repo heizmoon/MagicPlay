@@ -247,8 +247,18 @@ public class SkillManager : MonoBehaviour
             list = list.Intersect(Player.instance.unlockSkills).ToList();
             if(list.Count<3)
             Debug.LogError("流派【"+ buildIDs[i]+"】 rank 【"+rank+"】的牌数量不足！");
-            int r =UnityEngine.Random.Range(0,list.Count);
+
+            int r=0;
             int randomTimes =0;
+
+            if(list.Count==0)
+            {
+                Debug.LogError("流派【"+ buildIDs[i]+"】 rank 【"+rank+"】的牌一张都没有了！");
+                list =Player.instance.playerActor.UsingSkillsID;
+            }
+
+            r =UnityEngine.Random.Range(0,list.Count);
+            
             while (temp.Contains(r)&&randomTimes<4)
             {
                 r =UnityEngine.Random.Range(0,list.Count);

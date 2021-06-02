@@ -192,7 +192,11 @@ public class Actor : MonoBehaviour
             UsingSkillsID.Add(int.Parse(str[i]));
         }
         if(character.data.relic>0)
-        abilities.Add(character.data.relic);
+        {
+            abilities.Add(character.data.relic);
+            AbilityManager.instance.EquipRelic(character.data.relic);
+        }
+        
     }
     public void InitEnemy(MonsterTypeData data)
     {
@@ -228,6 +232,15 @@ public class Actor : MonoBehaviour
             Skill sk =SkillManager.CreateSkillForActor(UsingSkillsID[i],this);
             skills.Add(sk);
         }
+        ResetTempData();
+    }
+    void ResetTempData()
+    {
+        totalArmor =0;
+        extraAttack=0;
+        totalUseMP=0;
+        makeDamageTimes=0;
+        totalDamage=0;
     }
     #endregion
 

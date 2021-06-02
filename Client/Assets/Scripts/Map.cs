@@ -37,7 +37,8 @@ public class Map : MonoBehaviour,IBeginDragHandler,IDragHandler
     {
         mapHeight =GetComponent<RectTransform>().sizeDelta.y;
         mapPoints =pointBase.GetComponentsInChildren<MapPoint>();
-        local.transform.localPosition =new Vector3(startPos.localPosition.x,startPos.localPosition.y+1280,0) ;
+        // local.transform.localPosition =new Vector3(startPos.localPosition.x,startPos.localPosition.y+1280,0) ;
+        local.transform.position = startPos.position;
         startPos.GetComponent<MapPoint>().isNowPoint = true;
         Sprite sprite =Instantiate(Resources.Load<Sprite>("Texture/Character/Char_0"+Player.instance.CharID));
         Debug.Log(Player.instance.playerActor.character.data.prefab);

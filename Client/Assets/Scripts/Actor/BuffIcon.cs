@@ -186,13 +186,18 @@ public class BuffIcon : MonoBehaviour
         //     BuffManager.RemoveBuffFromActor(buffs[0],buffs[0].target);
         // }
         // Debug.LogWarningFormat("移除{0}个,共有{1}个",num,buffs.Count+num);
-
+        DestoryBuffIcon();
+        
+    }
+    public void DestoryBuffIcon()
+    {
         EffectManager.TryThrowInPool(effect,true);
         if(OnBuffAction!=null)
         {
             OnBuffAction(buffID,"end",0,buff.target.actorType);
         }
-        Debug.LogWarning("移除BuffIcon");
+        // Debug.LogWarning("移除BuffIcon");
+        gameObject.SetActive(false);
         Destroy(this.gameObject);
     }
     public void OnEffectReduce(int num)

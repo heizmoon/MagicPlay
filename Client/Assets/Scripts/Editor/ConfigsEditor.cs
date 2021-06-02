@@ -29,6 +29,8 @@ public class ConfigsEditor : Editor {
         drawProperty("ifChangMode", "是否采用换牌模式");
         drawProperty("removeCardGold", "每次移除卡牌金钱增加");
         drawProperty("toolTips", "小提示");
+        drawProperty("shopRestoreCost", "商店治疗费用");
+
 
 
         // 只读属性

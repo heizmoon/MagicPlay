@@ -265,17 +265,7 @@ public class UIBattleReward : MonoBehaviour
             {
                 // hasChoosenRelic =true;
                 Player.instance.playerActor.abilities.Add(item.id);
-                AbilityData ability = AbilityManager.instance.GetInfo(item.id);
-                Player.instance.playerActor.basicAttack+=ability.attack;
-                Player.instance.playerActor.basicDefence+=ability.defence;
-                Player.instance.playerActor.AddMaxHP(ability.hpMax);
-                Player.instance.playerActor.AddMaxMP(ability.mpMax);
-                Player.instance.playerActor.Crit+=ability.crit;
-                float reMp =ability.reMp/5;
-                int temp = (int)(reMp*100);
-                reMp =temp/100f;
-                Player.instance.playerActor.autoReduceMPAmount+= reMp;
-
+                AbilityManager.instance.EquipRelic(item.id);
                 for (int i = 0; i < abilityItemBoxes.Count; i++)
                 {
                     abilityItemBoxes[i].Disable();
@@ -294,17 +284,7 @@ public class UIBattleReward : MonoBehaviour
         else//换牌模式
         {
             Player.instance.playerActor.abilities.Add(item.id);
-            AbilityData ability = AbilityManager.instance.GetInfo(item.id);
-            Player.instance.playerActor.basicAttack+=ability.attack;
-            Player.instance.playerActor.basicDefence+=ability.defence;
-            Player.instance.playerActor.AddMaxHP(ability.hpMax);
-            Player.instance.playerActor.AddMaxMP(ability.mpMax);
-            Player.instance.playerActor.Crit+=ability.crit;
-            float reMp =ability.reMp/5;
-            int temp = (int)(reMp*100);
-            reMp =temp/100f;
-            Player.instance.playerActor.autoReduceMPAmount+= reMp;
-
+            AbilityManager.instance.EquipRelic(item.id);
             for (int i = 0; i < abilityItemBoxes.Count; i++)
             {
                 abilityItemBoxes[i].Disable();

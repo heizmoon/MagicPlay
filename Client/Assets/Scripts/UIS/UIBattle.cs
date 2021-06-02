@@ -415,7 +415,24 @@ public class UIBattle : MonoBehaviour
         playerActor.AddInvalidSkillNum(-100);
         RecoverActor();//还原角色备份
         Enemy.gameObject.SetActive(false);
-        
+
+        if(Main.instance.ifNewBird<=7)//模拟给玩家创建初始牌组
+        {
+            playerActor.UsingSkillsID.Add(2);
+            playerActor.UsingSkillsID.Add(2);
+            playerActor.UsingSkillsID.Add(2);
+            playerActor.UsingSkillsID.Add(2);
+
+            playerActor.UsingSkillsID.Add(84);
+            playerActor.UsingSkillsID.Add(84);
+            playerActor.UsingSkillsID.Add(102);
+            playerActor.UsingSkillsID.Add(102);
+            playerActor.UsingSkillsID.Add(102);
+            playerActor.UsingSkillsID.Add(102);
+
+            Main.instance.ifNewBird++;
+        }
+
         if(result==1)
         {
             //胜利了
@@ -508,16 +525,7 @@ public class UIBattle : MonoBehaviour
         // {
         //     BattleEvent.instance.GetBattleResult(result);
         // }
-        if(Main.instance.ifNewBird<=7)//模拟给玩家创建初始牌组
-        {
-            playerActor.UsingSkillsID.Add(2);
-            playerActor.UsingSkillsID.Add(2);
-            playerActor.UsingSkillsID.Add(2);
-            playerActor.UsingSkillsID.Add(84);
-            playerActor.UsingSkillsID.Add(102);
-            playerActor.UsingSkillsID.Add(102);
-            Main.instance.ifNewBird++;
-        }
+        
         
         
         Destroy(this.gameObject);

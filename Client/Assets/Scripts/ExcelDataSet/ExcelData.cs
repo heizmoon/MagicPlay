@@ -58,6 +58,9 @@ public class AbilityData
     public float reMp;
     public float crit;
     public bool initialUnlock;
+    public int dealCardsNumber;
+    public int startBattleDealCardsNumber;
+    public int autoDealCardsMinValue;
 
     public List<int> _buildList;
 
