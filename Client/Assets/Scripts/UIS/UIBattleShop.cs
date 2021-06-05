@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using DG.Tweening;
 
 public class UIBattleShop : MonoBehaviour
 {
@@ -25,9 +26,13 @@ public class UIBattleShop : MonoBehaviour
     List<Button> buttons =new List<Button>();
     int chooseID;
     public Button buttonRemove;
+    Transform _getCard;
+    Transform _loseCard;
+    bool ifBuying;
+    bool isContrl;
     private void Start() 
     {
-        // Init();
+        isContrl= true;
     }
     public void Init(int realID)
     {
@@ -94,6 +99,8 @@ public class UIBattleShop : MonoBehaviour
         RandomDiscountSkill(Random.Range(0,3));
         totalPrice =0;
 
+        CloseCardList();
+        
     }
     void DiscountItem()
     {
@@ -216,7 +223,7 @@ public class UIBattleShop : MonoBehaviour
             itemBox.Init(SkillManager.instance.GetInfo(item));
             itemBox.HideToggleSelect();
         }
-        content.GetComponent<RectTransform>().sizeDelta =new Vector2(0,285*((int)(cardList.Count/3)+1));
+        content.GetComponent<RectTransform>().sizeDelta =new Vector2(0,285*((int)(cardList.Count/4)+1));
         AddButton();
     }
     void AddButton()
@@ -239,13 +246,44 @@ public class UIBattleShop : MonoBehaviour
         //     Main.instance.ShowNotEnoughGoldTip();
         //     return;//钱不够
         // }
-
+        if(!isContrl)
+        return;
+        isContrl =false;
         ItemBox itemBox =button.GetComponentInParent<ItemBox>();
+        _loseCard =itemBox.transform.Find("Item");
+        if(_getCard!=null)
+        {
+            Vector3 end =_loseCard.transform.position;
+            Vector3 start =_getCard.transform.position;
+
+            _getCard.DOMove(end,0.5f,false);
+            _loseCard.gameObject.SetActive(false);
+            StartCoroutine(WaitForExChange(start));
+        }
         Player.instance.playerActor.UsingSkillsID.Remove(itemBox.id);
         Player.instance.playerActor.UsingSkillsID.Add(chooseID);
         //播放动画，两张牌位置互换。然后选择框中的牌悉数消失
+        
+    }
+    IEnumerator WaitForExChange(Vector3 vector)
+    {
+        yield return new WaitForSeconds(0.75f);
+        ItemBox itemBox =_getCard.parent.GetComponent<ItemBox>();
+        foreach (var item in skillItemBoxes)
+        {
+            item.ChooseState(true);
+        }
+        itemBox.Disable();
+        _getCard.transform.position =vector;
+        CloseCardList();
+    }
+    void CloseCardList()
+    {
         _playerCards.SetActive(false);
         ClearButton();
+        _loseCard =null;
+        ifBuying =false;
+        isContrl =true;
     }
     void ClearButton()
     {
@@ -258,25 +296,36 @@ public class UIBattleShop : MonoBehaviour
     }
     void BuyItem(ItemBox item)
     {
-        if(item.price>Player.instance.Gold)
+        if(ifBuying)
         {
-            Main.instance.ShowNotEnoughGoldTip();
+            Main.instance.ShowNotEnoughGoldTip("请从牌库选择一张牌进行交换");
             return;
         }
-        item.Disable();
+        if(item.price>Player.instance.Gold)
+        {
+            Main.instance.ShowNotEnoughGoldTip("");
+            return;
+        }
+        // item.Disable();...点一个之后，需要换完牌，才能再点下一个
         Player.instance.AddGold(-item.price);
         if(item.type ==1)
         {
             // Player.instance.playerActor.UsingSkillsID.Add(item.id);
+            ifBuying=true;
             chooseID =item.id;
+            _getCard =item.transform.Find("Item");
             ShowCards();
+            foreach (var i in skillItemBoxes)
+            {
+                if(i!=item)
+                i.ChooseState(false);
+            }
         }
         else if(item.type ==2)
         {
             Player.instance.playerActor.abilities.Add(item.id);
             AbilityManager.instance.EquipRelic(item.id);
         }
-        
     }
     void OnButtonReturn()
     {
@@ -296,12 +345,13 @@ public class UIBattleShop : MonoBehaviour
     {
         if(Configs.instance.shopRestoreCost>Player.instance.Gold)
         {
-            Main.instance.ShowNotEnoughGoldTip();
+            Main.instance.ShowNotEnoughGoldTip("");
             return;
         }
         
         Player.instance.AddGold(-Configs.instance.shopRestoreCost);
         Player.instance.playerActor.AddHp(15);
         restoreButton.gameObject.SetActive(false);
+        UIBasicBanner.instance.RefeashText();
     }
 }

@@ -722,6 +722,7 @@ public class Buff
     }
     void TriggerSkill(Skill skill)
     {
+        Debug.Log("buff触发了技能"+skill.skillName);
         skill.caster.BeginSpell(skill);
         SkillCard.CardThrowCard(skill);
         SkillCard.CardCreateCard(skill);
@@ -762,7 +763,7 @@ public class Buff
     }
     public void BuffRemoveCastSkill(int num)
     {
-        Debug.Log("移除BUFF触发技能");
+        Debug.Log("准备移除BUFF触发技能");
         if(num>0&&(int)buffData.effectInterval>0)
         {
             Skill skill;

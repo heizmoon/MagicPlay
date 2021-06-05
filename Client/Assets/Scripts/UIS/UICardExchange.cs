@@ -23,6 +23,10 @@ public class UICardExchange : MonoBehaviour
     int chooseID;
     int type =0;
     public GameObject _cards;
+    int animStep;
+    Transform _getCard;
+    Transform _loseCard;
+    bool isContrl;
     void Awake()
     {
         buttonRemove =transform.Find("ButtonRemove").GetComponent<Button>();
@@ -35,7 +39,8 @@ public class UICardExchange : MonoBehaviour
     }
     void Start()
     {
-        transform.DOPunchScale(new Vector3(0.2f,0.2f,0.2f),0.5f,2,1); 
+        // transform.DOPunchScale(new Vector3(0.2f,0.2f,0.2f),0.5f,2,1); 
+        isContrl =true;
     }
     void Init(int type)
     {
@@ -125,7 +130,25 @@ public class UICardExchange : MonoBehaviour
                 skillItemBoxes[i].Init(Sdatas[i]);
                 skillItemBoxes[i].InReward();
             }
-        }   
+        }
+        if(buttons.Count>0)
+        {
+            foreach (var button in buttons)
+            {
+                button.gameObject.SetActive(false);
+            }
+        }
+        
+        if(_getCard!=null)
+        {
+            foreach (var item in skillItemBoxes)
+            {
+                item.button.onClick.RemoveAllListeners();
+                item.button.onClick.AddListener(delegate () {GetItem(item);});
+            }
+        }
+        _getCard=null;
+        
     }
     void SortList()
     {
@@ -147,32 +170,50 @@ public class UICardExchange : MonoBehaviour
     }
     void OnRetry()
     {
+        if(!isContrl)
+        return;
         //播放广告，重置货品
         Refreash();
     }
     void GetItem(ItemBox item)
     {
+        if(!isContrl)
+        return;
+
+        if(animStep==0)//第一次选中某张牌的时候，播放下一步动画
+        {
+            animStep++;
+            GetComponent<Animation>().Play("choose");
+        }
         chooseID = item.id;
-        item.button.GetComponentInChildren<Text>().text ="已选择";
+        item.button.GetComponentInChildren<Text>().text ="取消选择";
         
         for (int i = 0; i < skillItemBoxes.Count; i++)
         {
             skillItemBoxes[i].button.onClick.RemoveAllListeners();
             if(skillItemBoxes[i]!= item)
-            skillItemBoxes[i].CantChoose();
+            skillItemBoxes[i].ChooseState(false);
         }
         item.button.onClick.AddListener(delegate () {CancelChoose(item);});
-
+        _getCard = item.transform.Find("Item");
         AddButton();
     }
     void CancelChoose(ItemBox item)
     {
+        if(!isContrl)
+        return;
+
         item.button.onClick.RemoveAllListeners();
         item.button.GetComponentInChildren<Text>().text ="选择";
         foreach (var i in skillItemBoxes)
         {
-            i.Reset();
-            i.button.onClick.AddListener(delegate () {GetItem(item);});
+            i.ChooseState(true);
+            i.button.onClick.AddListener(delegate () {GetItem(i);});
+        }
+        _getCard = null;
+        foreach (var button in buttons)
+        {
+            button.gameObject.SetActive(false);
         }
     }
     void CreateCards()
@@ -185,10 +226,18 @@ public class UICardExchange : MonoBehaviour
             itemBox.Init(SkillManager.instance.GetInfo(item));
             itemBox.HideToggleSelect();
         }
-        content.GetComponent<RectTransform>().sizeDelta =new Vector2(0,285*((int)(cardList.Count/3)+1));
+        content.GetComponent<RectTransform>().sizeDelta =new Vector2(0,285*((int)(cardList.Count/4)+1));
     }
     void AddButton()
     {
+        if(buttons.Count>0)
+        {
+            foreach (var button in buttons)
+            {
+                button.gameObject.SetActive(true);
+            }
+            return;
+        }
         ItemBox[] itemBoxes = content.GetComponentsInChildren<ItemBox>();
         foreach (var item in itemBoxes)
         {
@@ -207,11 +256,32 @@ public class UICardExchange : MonoBehaviour
         //     Main.instance.ShowNotEnoughGoldTip();
         //     return;//钱不够
         // }
-
+        if(!isContrl)
+        return;
+        isContrl =false;
         ItemBox itemBox =button.GetComponentInParent<ItemBox>();
+        _loseCard =itemBox.transform.Find("Item");
+        if(_getCard!=null)
+        {
+            Vector3 end =_loseCard.transform.position;
+            Vector3 start =_getCard.transform.position;
+
+            
+            _getCard.DOMove(end,0.5f,false);
+            _loseCard.gameObject.SetActive(false);
+
+        }
+
         Player.instance.playerActor.UsingSkillsID.Remove(itemBox.id);
         Player.instance.playerActor.UsingSkillsID.Add(chooseID);
         //播放动画，两张牌位置互换。然后选择框中的牌悉数消失
+        StartCoroutine(WaitForClose());
+    }
+    IEnumerator WaitForClose()
+    {
+        yield return new WaitForSeconds(0.5f);
+        GetComponent<CanvasGroup>().DOFade(0,0.5f);
+        yield return new WaitForSeconds(0.5f);
         CloseUI();
     }
    void CloseUI()

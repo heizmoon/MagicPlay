@@ -94,7 +94,7 @@ public class UICardRemove : MonoBehaviour
     {
         if(Player.instance.Gold<price)
         {
-            Main.instance.ShowNotEnoughGoldTip();
+            Main.instance.ShowNotEnoughGoldTip("");
             return;//钱不够
         }
         ItemBox itemBox =button.GetComponentInParent<ItemBox>();

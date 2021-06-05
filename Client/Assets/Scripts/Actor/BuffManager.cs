@@ -158,7 +158,7 @@ public class BuffManager : MonoBehaviour
                                     
                                     break;
                                 }
-                                else if(i<num&&j==0)
+                                else if(j==0&&i<num)
                                 {
                                     Debug.Log("一共移除了"+i+"层"+_buff.buffData.name);
                                     OnBuffRemoveCastSkill(i);
@@ -166,6 +166,12 @@ public class BuffManager : MonoBehaviour
                                     break;
                                 }
                             }
+                        }
+                        else if(j==0)
+                        {
+                            Debug.Log("一共移除了"+i+"层"+_buff.buffData.name);
+                            OnBuffRemoveCastSkill(i);
+                            break;
                         }    
                     }
                 }

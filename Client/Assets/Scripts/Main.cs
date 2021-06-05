@@ -397,14 +397,19 @@ public class Main : MonoBehaviour {
 	{
 		yield return new WaitForSeconds(0.5f);
 	}
-	public void ShowNotEnoughGoldTip()
+	public void ShowNotEnoughGoldTip(string s)
 	{
 		GameObject g =(GameObject)Instantiate(Resources.Load("Prefabs/NotEnoughGoldTip"));
 		g.transform.SetParent(allScreenUI);
 		g.transform.localPosition=Vector3.zero;
 		g.transform.localScale=Vector3.one;
+		if(s!="")
+		{
+			g.transform.Find("image/Text").GetComponent<Text>().text =s;
+		}
 		StartCoroutine(WaitForDestoryNotEnoughGoldTip(g));
 	}
+	
 	IEnumerator WaitForDestoryNotEnoughGoldTip(GameObject g)
 	{
 		yield return new WaitForSeconds(1f);

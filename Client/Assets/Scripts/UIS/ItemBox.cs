@@ -125,11 +125,16 @@ public class ItemBox : MonoBehaviour
         itemName.color = Color.white;
         button.gameObject.SetActive(false);
     }
-    public void CantChoose()
+    public void ChooseState(bool state)
     {
-        GetComponentInChildren<SkillCard>().mask.SetActive(false);
-        toggle.interactable =false;
-        button.gameObject.SetActive(false);
+        SkillCard sk =transform.Find("Item").GetComponentInChildren<SkillCard>();
+        if(sk!=null)
+        {
+            sk.mask.SetActive(!state);
+            toggle.interactable =state;
+            button.gameObject.SetActive(state);
+        }
+        
     }
     public void Reset()
     {
@@ -158,8 +163,8 @@ public class ItemBox : MonoBehaviour
 
         //     skillMark.SetActive(true);
         // }
-        if(contentType==1)
-        GetComponentInChildren<SkillCard>().mask.SetActive(true);
+        // if(contentType==1)
+        // transform.Find("Item").GetComponentInChildren<SkillCard>().mask.SetActive(true);
         icon.gameObject.SetActive(true);
         // toggle.targetGraphic =icon;
         price =0;
