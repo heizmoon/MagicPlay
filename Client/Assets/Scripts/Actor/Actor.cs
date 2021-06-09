@@ -1855,7 +1855,7 @@ public class Actor : MonoBehaviour
         }
         if(num<0&&OnUseMP!=null)
         {
-           int[] _data =new int[]{(int)num,totalUseMP};
+           int[] _data =new int[]{-(int)num,totalUseMP};
            OnUseMP(_data); 
         }
         

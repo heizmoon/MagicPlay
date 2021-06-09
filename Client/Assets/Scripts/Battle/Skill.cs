@@ -275,11 +275,11 @@ public class Skill : MonoBehaviour
             float _percent = float.Parse(distribution[i].Split(',')[1]);
             int realDamage =0;
             if(target != caster)//不对自己造成伤害，受攻击力加成
-            realDamage= damage+Mathf.FloorToInt(target.HpMax*damagePercent)+caster.basicAttack;
+            realDamage= damage+Mathf.RoundToInt(target.HpMax*damagePercent)+caster.basicAttack;
             else//对自己造成伤害，不受攻击力加成
-            realDamage= damage+Mathf.FloorToInt(target.HpMax*damagePercent);
+            realDamage= damage+Mathf.RoundToInt(target.HpMax*damagePercent);
 
-            realDamage =Mathf.FloorToInt(realDamage*_percent);
+            realDamage =Mathf.RoundToInt(realDamage*_percent);
             StartCoroutine(WaitForDamage(_time,realDamage,ifSeep));
             totalTime+=_time;
             // if(id ==105)
@@ -321,7 +321,7 @@ public class Skill : MonoBehaviour
     }
     void ExportHeal(float _percent)
     {
-        int realHeal = Mathf.FloorToInt(heal*_percent);
+        int realHeal = Mathf.RoundToInt(heal*_percent);
         target.TakeHeal(realHeal);
     }
     ///<summary>用于检测有BUFF时技能的变化</summary>

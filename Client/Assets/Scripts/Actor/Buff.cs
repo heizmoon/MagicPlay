@@ -697,8 +697,10 @@ public class Buff
     void UseMpTriggerSkill(int[] _data)
     {
         int useMp = _data[0];
+        // Debug.Log("技能消耗为"+useMp);
         if(useMp>= buffData.effectInterval)
         {
+            // Debug.Log("技能消耗大于x释放技能");
             Skill skill;
             if(buffData.value ==0)
             skill =SkillManager.TryGetFromPool(buffData.abilityID,target);

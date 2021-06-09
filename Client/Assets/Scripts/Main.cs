@@ -37,6 +37,8 @@ public class Main : MonoBehaviour {
 	///<summary>游戏是否已经加载完毕，若没有加载完毕，则关闭游戏的时候，不会执行保存数据（视为没有开启游戏）</summary>
 	private bool awakeFinish;
 	public int ifNewBird;
+	bool openSplash;
+	public GameObject splash;
 	void Awake()
 	{
 		instance =this;
@@ -191,32 +193,60 @@ public class Main : MonoBehaviour {
 	///显示读条界面，3秒后自动移除读条界面
 	public void StartLoadingUI()
 	{
-		UILoading.SetActive(true);
-		UILoading.GetComponent<UILoading>().Reset();
+		if(openSplash)
+		{
+			UILoading.SetActive(true);
+			UILoading.GetComponent<UILoading>().Reset();
+		}
+		else
+		{
+			splash.SetActive(true);
+		}
+
 		StartCoroutine(Stoploading());
 	}
 	IEnumerator Stoploading()
 	{
-		yield return new WaitForSeconds(3f);
-		UILoading.SetActive(false);
-		if(UIMain.instance)
-		UIMain.instance.IntoMain();
-		if(Player.instance.playerActor!=null&&ifNewBird>5)
+		if(openSplash)
 		{
-			Destroy(Player.instance.playerActor.gameObject);
+			yield return new WaitForSeconds(3f);
+			UILoading.SetActive(false);
+			if(UIMain.instance)
+			UIMain.instance.IntoMain();
+			if(Player.instance.playerActor!=null&&ifNewBird>5)
+			{
+				Destroy(Player.instance.playerActor.gameObject);
+			}
 		}
+		else
+		{
+			openSplash =true;
+			yield return new WaitForSeconds(3.5f);
+			if(UIMain.instance)
+			UIMain.instance.IntoMain();
+			yield return new WaitForSeconds(0.5f);
+			splash.SetActive(false);
+			Destroy(splash);
+		}
+		
 	}
 	void NewBird_0()//秘境深处
 	{
+		splash.SetActive(true);
+		
+		StartCoroutine(StopNewBird_0());
+	}
+	IEnumerator StopNewBird_0()
+	{
+		openSplash =true;
+		yield return new WaitForSeconds(3f);
+		splash.SetActive(false);
+		Destroy(splash);
 		ifNewBird++;
 		NewBird nb = NewBird.LoadNewBird(0);
-		StartCoroutine(StopNewBird_0(nb.gameObject));
-	}
-	IEnumerator StopNewBird_0(GameObject g)
-	{
-		yield return new WaitForSeconds(3f);
-		g.SetActive(false);
-		Destroy(g);
+		yield return new WaitForSeconds(4f);
+		nb.gameObject.SetActive(false);
+		Destroy(nb);
 	}
 	public void HideBasicBanner()
 	{
