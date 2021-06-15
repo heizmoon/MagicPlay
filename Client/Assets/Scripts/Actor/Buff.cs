@@ -725,6 +725,39 @@ public class Buff
     void TriggerSkill(Skill skill)
     {
         Debug.Log("buff触发了技能"+skill.skillName);
+        if(skill.skillData.checkBuff>0)
+        {
+            int buffNum =0;
+            if(skill.skillData.checkSelf)
+            {
+                for (int i = 0; i < skill.caster.buffs.Count; i++)
+                {
+                    if (skill.caster.buffs[i].buffData.id==skill.skillData.checkBuff)
+                    {
+                        buffNum++;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < skill.target.buffs.Count; i++)
+                {
+                    if (skill.target.buffs[i].buffData.id==skill.skillData.checkBuff)
+                    {
+                        buffNum++;
+                    }
+                }
+            }
+            if(buffNum>=skill.skillData.buffNumLimit)
+            {
+                skill.CheckBuffUpdate(true);
+            }
+            else
+            {
+                skill.CheckBuffUpdate(false);
+            }
+            
+        }
         skill.caster.BeginSpell(skill);
         SkillCard.CardThrowCard(skill);
         SkillCard.CardCreateCard(skill);
