@@ -499,7 +499,8 @@ public class Buff
             skill.buffNum =num*skill.tempBuffNum;
             Debug.Log("触发的技能"+skill.skillName+"buff层数"+skill.buffNum);
             skill.CBBuffNum =num*skill.tempCBBuffNum;
-            skill.caster.BeginSpell(skill);
+            
+            TriggerSkill(skill);
                 // skill.ComputeDamage();
             // Battle.Instance.ReceiveSkillDamage(Mathf.CeilToInt(currentValue),target,buffData._genreList[0]);
             // Battle.Instance.ReceiveSkillDamage(skill,skill.damage*num,false,false);
@@ -727,6 +728,8 @@ public class Buff
         Debug.Log("buff触发了技能"+skill.skillName);
         if(skill.skillData.checkBuff>0)
         {
+            Debug.Log("buff检查buff");
+
             int buffNum =0;
             if(skill.skillData.checkSelf)
             {

@@ -1621,7 +1621,7 @@ public class Actor : MonoBehaviour
         bool ifRelive =false;
         for (int i = 0; i < buffs.Count; i++)
         {
-            Debug.LogWarningFormat("---开始查找复活buff---{0}",buffs[i].buffData.id);
+            // Debug.LogWarningFormat("---开始查找复活buff---{0}",buffs[i].buffData.id);
 
             if(buffs[i].buffData._type == BuffType.死亡后复活并恢复百分比生命)
             {
@@ -1715,7 +1715,7 @@ public class Actor : MonoBehaviour
         //有伤害的技能输出伤害
         if(skill.damage!=0)
         skill.ComputeDamage();
-        if(skill.damage==0&skill.buffID>0)
+        if((skill.damage==0&skill.buffID>0)||(skill.damage==0&&skill.addCBBuff))
         {
             //没有伤害，但是会添加BUFF的技能
             Battle.Instance.NoDamageSkillHitTarget(skill);

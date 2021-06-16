@@ -325,6 +325,7 @@ public class UIBattleShop : MonoBehaviour
         {
             Player.instance.playerActor.abilities.Add(item.id);
             AbilityManager.instance.EquipRelic(item.id);
+            item.Disable();
         }
     }
     void OnButtonReturn()
