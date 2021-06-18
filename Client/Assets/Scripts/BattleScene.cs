@@ -41,7 +41,9 @@ public class BattleScene : MonoBehaviour
         Player.instance.ExpAdditon =1;
         Player.instance.ExpAdditonTimes =0;
         Player.instance.GoldAdditon =1;
-        Player.instance.GoldAdditonTimes =0;    
+        Player.instance.GoldAdditonTimes =0;
+        Player.instance.AddGold(-99999);
+        Player.instance.AddGold(Configs.instance.initGold);
 
     }
     // public void ShowRandomAbilityUI()
