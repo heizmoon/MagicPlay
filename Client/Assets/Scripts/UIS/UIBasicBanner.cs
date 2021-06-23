@@ -62,6 +62,7 @@ public class UIBasicBanner : MonoBehaviour
     public void RefeashText()
     {
         // goldText.DOText(Player.instance.Gold.ToString(),2f,true,ScrambleMode.None,null);
+        if(goldText!=null)
         goldText.text = Player.instance.Gold.ToString();
 
         if(Player.instance.playerActor==null)
