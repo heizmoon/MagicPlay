@@ -141,7 +141,7 @@ public class Actor : MonoBehaviour
     public event Action<int[]> OnUseMP;
 
     int totalArmor;
-    int extraAttack;
+    public int extraAttack;
     int totalUseMP;
     //怪物AI相关
     public Skill wanaSkill;
@@ -667,6 +667,7 @@ public class Actor : MonoBehaviour
                     Main.instance.ifNewBird++;
                     Debug.Log("该播片了");
                     Perform.LoadPerform("perform_NewBird2");
+                    PlayerPrefs.SetInt("ifNew",20);
                 }
             }
         }

@@ -194,6 +194,7 @@ public class Buff
             target.OnGetArmor+=ArmorTriggerSkill;
             break;
             case BuffType.当前护甲层数大于x获取BUFF:
+            ArmorTriggerBuff(new int[]{0,0,target.armor});
             target.OnGetArmor+=ArmorTriggerBuff;
             break;
             case BuffType.获得保护状态:
@@ -220,9 +221,15 @@ public class Buff
             break;
             case BuffType.当前额外攻击大于x点时获得buff:
             if(buffData.value==0)
-            target.OnChangeAttack+=ChangeAtttackTriggerBuff;
+            {
+                ChangeAtttackTriggerBuff(new int[]{0,target.extraAttack,0});
+                target.OnChangeAttack+=ChangeAtttackTriggerBuff;
+            }
             else
-            target.target.OnChangeAttack+=ChangeAtttackTriggerBuff;
+            {
+                ChangeAtttackTriggerBuff(new int[]{0,target.target.extraAttack,0});
+                target.target.OnChangeAttack+=ChangeAtttackTriggerBuff;
+            }
             break;
             case BuffType.能量消耗大于x点时触发技能:
             if(target.actorType == ActorType.玩家角色)
