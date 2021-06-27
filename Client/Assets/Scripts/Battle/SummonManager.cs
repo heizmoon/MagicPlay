@@ -183,7 +183,7 @@ public class SummonManager : MonoBehaviour
         return 0;
         else
         {
-            
+            //找到第一个嘲讽的
             for (int i = 0; i < _list.Count; i++)
             {
                 if(_list[i].isTaunt)
@@ -192,12 +192,11 @@ public class SummonManager : MonoBehaviour
                     return _damage;
                 }
             }
+            //没有嘲讽的召唤物的情况，筛选掉所有虚无的
             for (int i = 0; i < _list.Count; i++)
             {
                 if(!_list[i].isVoid)
-                {   _damage =Mathf.FloorToInt(_damage/2f);
-                    if(_damage<1)
-                    return 0;               
+                {                    
                     _list[i].TakeDamage(_damage);
                     return _damage;
                 }
