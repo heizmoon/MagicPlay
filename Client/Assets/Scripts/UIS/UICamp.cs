@@ -67,7 +67,7 @@ public class UICamp : MonoBehaviour
             Player.instance.playerActor.AddMaxHP(5);
             break;
             case 3:
-            Player.instance.playerActor.Crit+=5;
+            Player.instance.playerActor.Crit+=3;
             break;
         }
         gameObject.SetActive(false);
@@ -91,7 +91,7 @@ public class UICamp : MonoBehaviour
             BTNGift.GetComponentInChildren<Text>().text="生命上限+5";
             break;
             case 3:
-            BTNGift.GetComponentInChildren<Text>().text="暴击率+5%";
+            BTNGift.GetComponentInChildren<Text>().text="暴击率+3%";
             break;
         }
         giftType =r;

@@ -142,6 +142,12 @@ public class SkillData{
     public float delaySpell;
     public bool protectSpell;
     public bool initialUnlock;
+    public int petNumLimit;
+    public int PNDamage;
+    public int PNManaCost;
+    public int PNBuff;
+    public bool PNBuffTarget;
+    public int PNBuffNum;
 
 }
 [System.Serializable]
