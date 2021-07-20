@@ -1326,6 +1326,27 @@ public class Actor : MonoBehaviour
                 }
                 
             }
+            //检查召唤物数量的技能在召唤物数量满足的情况下，添加额外BUFF
+            if(skill.addPNBuff&&!skill.targetSelf)
+            {
+                if(!skill.skillData.PNBuffTarget)
+                {
+                    for (int i = 0; i < skill.skillData.PNBuffNum; i++)
+                    {
+                        BuffManager.instance.CreateBuffForActor(skill.skillData.PNBuff,skill.target);
+                        Debug.LogWarning("PNBuff:额外给"+skill.target+"添加1层"+skill.skillData.PNBuff);      
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < skill.skillData.PNBuffNum; i++)
+                    {
+                        BuffManager.instance.CreateBuffForActor(skill.skillData.PNBuff,skill.target.target);
+                        Debug.LogWarning("PNBuff:额外给"+skill.target.target+"添加1层"+skill.skillData.PNBuff);      
+                    }
+                }
+                
+            }
             if(skill.skillData.delaySpell>0&&target.actorType ==ActorType.敌人&&!target.ifProtectSpell)//延缓目标读条时间
             {
                 target.castingbar.DelayHPBar(skill.skillData.delaySpell);
@@ -1716,7 +1737,7 @@ public class Actor : MonoBehaviour
         //有伤害的技能输出伤害
         if(skill.damage!=0)
         skill.ComputeDamage();
-        if((skill.damage==0&skill.buffID>0)||(skill.damage==0&&skill.addCBBuff))
+        if((skill.damage==0&skill.buffID>0)||(skill.damage==0&&skill.addCBBuff)||(skill.damage==0&&skill.addPNBuff))
         {
             //没有伤害，但是会添加BUFF的技能
             Battle.Instance.NoDamageSkillHitTarget(skill);
@@ -1795,6 +1816,26 @@ public class Actor : MonoBehaviour
                 }
             }
             
+        }
+        //检查召唤物数量的技能在召唤物数量满足的情况下，添加额外BUFF
+        if(skill.addPNBuff&&!skill.targetSelf)
+        {
+            if(!skill.skillData.PNBuffTarget)
+            {
+                for (int i = 0; i < skill.skillData.PNBuffNum; i++)
+                {
+                    BuffManager.instance.CreateBuffForActor(skill.skillData.PNBuff,skill.target);
+                    Debug.LogWarning("PNBuff:额外给"+skill.target+"添加1层"+skill.skillData.PNBuff);      
+                }
+            }
+            else
+            {
+                for (int i = 0; i < skill.skillData.PNBuffNum; i++)
+                {
+                    BuffManager.instance.CreateBuffForActor(skill.skillData.PNBuff,skill.target.target);
+                    Debug.LogWarning("PNBuff:额外给"+skill.target.target+"添加1层"+skill.skillData.PNBuff);      
+                }
+            }
         }
         if(abilities.Contains(1))
         {

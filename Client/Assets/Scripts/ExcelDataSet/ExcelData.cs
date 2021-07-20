@@ -144,7 +144,12 @@ public class SkillData{
     public bool initialUnlock;
     public int petNumLimit;
     public int PNDamage;
+    public int PNHeal;
     public int PNManaCost;
+    public int PNManaProduce;
+    public int PNArmor;
+    public bool PNSeep;
+    public int PNCrit;
     public int PNBuff;
     public bool PNBuffTarget;
     public int PNBuffNum;

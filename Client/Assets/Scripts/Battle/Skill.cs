@@ -62,6 +62,7 @@ public class Skill : MonoBehaviour
     public int tempArmor;
     public float exCrit; 
     public bool addCBBuff;
+    public bool addPNBuff;
     bool buffed;//是否已经BUFF过了
 
 
@@ -364,6 +365,50 @@ public class Skill : MonoBehaviour
             ifSeep =skillData.ifSeep;
             exCrit -=skillData.CBCrit;
             addCBBuff = false;
+
+            buffed =false;
+
+        }
+        
+    }
+    ///<summary>用于检测召唤物数量使技能的变化</summary>
+    public void CheckSummonUpdate(bool ifHas)
+    {
+        if(ifHas)
+        {
+            if(buffed)
+            {
+                return;//已经BUFF过了不能再次BUFF
+            }
+            Debug.Log("技能得到了BUFF");
+            IncreaseDamage(skillData.PNDamage);
+            IncreaseHeal(skillData.PNHeal);
+            ReduceMPCost(skillData.PNManaCost);
+            IncreaseManaProduce(skillData.PNManaProduce);
+            IncreaseArmor(skillData.PNArmor);
+            ifSeep =skillData.PNSeep;
+            exCrit +=skillData.PNCrit;
+            if(skillData.PNBuff>0)
+            {
+                addPNBuff = true;
+            }
+            buffed =true;
+        }
+        else
+        {
+            if(!buffed)
+            {
+                return;//没有BUFF过的不需要移除BUFF
+            }
+            Debug.Log("技能失去了BUFF");
+            IncreaseDamage(-skillData.PNDamage);
+            IncreaseHeal(-skillData.PNHeal);
+            ReduceMPCost(-skillData.PNManaCost);
+            IncreaseManaProduce(-skillData.PNManaProduce);
+            IncreaseArmor(-skillData.PNArmor);
+            ifSeep =skillData.ifSeep;
+            exCrit -=skillData.PNCrit;
+            addPNBuff = false;
 
             buffed =false;
 

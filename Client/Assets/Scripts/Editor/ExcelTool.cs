@@ -873,7 +873,17 @@ namespace EditorTool {
                 skillData.delaySpell =collect[i][58].ToString()==""?0:float.Parse(collect[i][58].ToString());
                 skillData.protectSpell = collect[i][59].ToString()=="1"?true:false;
                 skillData.initialUnlock = collect[i][60].ToString()=="1"?true:false;
-
+                skillData.petNumLimit =collect[i][61].ToString()==""?0:int.Parse(collect[i][61].ToString());
+                skillData.PNDamage =collect[i][62].ToString()==""?0:int.Parse(collect[i][62].ToString());
+                skillData.PNHeal =collect[i][63].ToString()==""?0:int.Parse(collect[i][63].ToString());
+                skillData.PNManaCost =collect[i][64].ToString()==""?0:int.Parse(collect[i][64].ToString());
+                skillData.PNManaProduce =collect[i][65].ToString()==""?0:int.Parse(collect[i][65].ToString());
+                skillData.PNArmor =collect[i][66].ToString()==""?0:int.Parse(collect[i][66].ToString());
+                skillData.PNSeep = collect[i][67].ToString()=="1"?true:false;
+                skillData.PNCrit =collect[i][68].ToString()==""?0:int.Parse(collect[i][68].ToString());
+                skillData.PNBuff =collect[i][69].ToString()==""?0:int.Parse(collect[i][69].ToString());
+                skillData.PNBuffTarget = collect[i][70].ToString()=="1"?true:false;
+                skillData.PNBuffNum =collect[i][71].ToString()==""?0:int.Parse(collect[i][71].ToString());
 
 
                 array[i - 2] = skillData;

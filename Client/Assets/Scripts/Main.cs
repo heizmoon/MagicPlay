@@ -378,6 +378,21 @@ public class Main : MonoBehaviour {
 		}
 		
 	}
+	public void PlayGameStartMovie()
+	{
+		GameObject go =Instantiate((GameObject)Resources.Load("Prefabs/NewBird/GameStartMovie"));
+		go.transform.SetParent(allScreenUI);
+		go.transform.localScale =Vector3.one;
+		go.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+		go.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+		StartCoroutine(WatiForMovieEnd());
+	}
+	IEnumerator WatiForMovieEnd()
+	{
+		yield return new WaitForSeconds(10f);
+		Destroy(GameObject.Find("GameStartMovie (clone)").gameObject);
+		InitUIChooseCharacter();
+	}
 	public void InitUITrait()
 	{
 		if(UITrait.instance==null)

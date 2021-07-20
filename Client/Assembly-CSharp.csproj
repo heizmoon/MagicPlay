@@ -63,6 +63,7 @@
      <Compile Include="Assets\Scripts\Actor\CharacterManager.cs" />
      <Compile Include="Assets\Scripts\Actor\ReformManager.cs" />
      <Compile Include="Assets\Scripts\Actor\TraitManager.cs" />
+     <Compile Include="Assets\Scripts\AnimControlScreenWave.cs" />
      <Compile Include="Assets\Scripts\Battle\Battle.cs" />
      <Compile Include="Assets\Scripts\Battle\BattleText.cs" />
      <Compile Include="Assets\Scripts\Battle\EffectManager.cs" />
@@ -153,7 +154,9 @@
      <Compile Include="Assets\Scripts\UIS\UIStatisticLine.cs" />
      <Compile Include="Assets\Scripts\UIS\UITrait.cs" />
      <Compile Include="Assets\Scripts\UIS\UITreasure.cs" />
+     <Compile Include="Assets\Scripts\WaterWave.cs" />
      <None Include="Assets\Anima2D\Readme.txt" />
+     <None Include="Assets\Resources\Texture\WaterWave.shader" />
      <None Include="Assets\Anima2D\Licenses.txt" />
      <None Include="Assets\Anima2D\Version.txt" />
     <Reference Include="UnityEngine">

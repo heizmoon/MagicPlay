@@ -341,7 +341,8 @@ public class Perform : MonoBehaviour
             
             UIBattle.Instance.OnBattleGoOn();
             BattleScene.instance.BattleSceneOver();
-            Main.instance.InitUIChooseCharacter();
+            // Main.instance.InitUIChooseCharacter();
+            Main.instance.PlayGameStartMovie();
         }
         Destroy(gameObject.transform.parent.gameObject);
     }
