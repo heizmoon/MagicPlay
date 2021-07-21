@@ -89,6 +89,10 @@ public class SkillCard : MonoBehaviour
             else
             skill.caster.target.OnGetArmor+=CheckBuffArmorCard;
         }
+        if(skill.skillData.petNumLimit>0)
+        {
+            SummonManager.OnSummonedsNumChange+=CheckSummonNumCard;
+        }
         
         
     }
@@ -139,25 +143,46 @@ public class SkillCard : MonoBehaviour
     }
     public void RefeashCardShow()
     {
+        //{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=heal;{5}=seep;{6}=fast
+        int currentDamage =0;
+        int currentArmor =0;
+        int currentManaCost =Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost;
+        float currentManaProduce =0;
+        int currentHeal =0;
         if(skill.damage>skill.skillData.damage)
-        skill.describe =string.Format(skill.skillData.describe,"<color=cyan>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence),skill.heal);//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=heal;{5}=seep;{6}=fast
+        {
+            currentDamage =Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack-skill.skillData.CBDamage));
+            currentManaProduce =Mathf.Abs(skill.manaProduce-skill.skillData.CBmanaProduce);
+            currentHeal =skill.heal-skill.skillData.CBHeal;
+            currentArmor =Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence-skill.skillData.CBArmor);
+            skill.describe =string.Format(skill.skillData.describe,"<color=cyan>"+currentDamage+"</color>",currentManaCost,currentArmor,currentHeal);
+        }    
         else if(skill.damage==skill.skillData.damage)
         {
             // Debug.Log("技能显示恢复正常");
-            skill.describe =string.Format(skill.skillData.describe,"<color=white>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence),skill.heal);
+            skill.describe =string.Format(skill.skillData.describe,"<color=white>"+currentDamage+"</color>",currentManaCost,currentArmor,currentHeal);
         }
         else
-        skill.describe =string.Format(skill.skillData.describe,"<color=red>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack))+"</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence),skill.heal);
+        skill.describe =string.Format(skill.skillData.describe,"<color=red>"+Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack-skill.skillData.CBDamage))+
+            "</color>",Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce-skill.skillData.CBmanaProduce),
+            Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence-skill.skillData.CBArmor),skill.heal-skill.skillData.CBHeal);
         
         if(skill.addArmor>skill.skillData.addArmor)
-        skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=cyan>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>",skill.heal);//{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
+        skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack-skill.skillData.CBDamage)),
+            Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce-skill.skillData.CBmanaProduce),
+            "<color=cyan>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence-skill.skillData.CBArmor)+"</color>",skill.heal-skill.skillData.CBHeal);
+            //{0}=damage,{1}=manaCost,{2}=manaProduce,{3}=addArmor;{4}=hit;{5}=seep;{6}=fast
         else if(skill.addArmor==skill.skillData.addArmor)
         {
             // Debug.Log("技能显示恢复正常");
-            skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=white>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>",skill.heal);
+            skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack-skill.skillData.CBDamage)),
+                Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce-skill.skillData.CBmanaProduce),
+                "<color=white>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence-skill.skillData.CBArmor)+"</color>",skill.heal-skill.skillData.CBHeal);
         }
         else
-        skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack)),Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce),"<color=red>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence)+"</color>",skill.heal);
+        skill.describe =string.Format(skill.skillData.describe,Mathf.Abs((skill.damage+Player.instance.playerActor.basicAttack-skill.skillData.CBDamage)),
+            Mathf.Abs(skill.realManaCost)+skill.skillData.keepManaCost,Mathf.Abs(skill.manaProduce-skill.skillData.CBmanaProduce),
+            "<color=red>"+Mathf.Abs(skill.addArmor+Player.instance.playerActor.basicDefence-skill.skillData.CBArmor)+"</color>",skill.heal-skill.skillData.CBHeal);
         if(textSkillDescribe!=null)
         textSkillDescribe.text =skill.describe;
 
@@ -527,6 +552,66 @@ public class SkillCard : MonoBehaviour
             skill.CheckBuffUpdate(true);
             HighLightCard(true);
             RefeashCardShow();
+        }
+    }
+    void CheckSummonNumCard(int num,string summonState)
+    {
+        
+        if(summonState =="create")//收到添加了新buff事件，检查添加后层数是否满足
+        {
+            //buff的数量是否达到要求
+            if(num<skill.skillData.petNumLimit)
+            {
+                return;
+            }
+            skill.CheckSummonUpdate(true);
+            HighLightCard(true);
+        }
+        if(summonState =="decrease")//收到buff结束事件，检查结束后层数是否满足
+        {
+            if(num>=skill.skillData.petNumLimit)
+            {
+                return;
+            }
+            skill.CheckSummonUpdate(false);
+            HighLightCard(false);
+        }
+        RefeashCardShow();
+    }
+    public void ChecSummonedNumCardWhileCreateCard()
+    {
+        if(skill.skillData.petNumLimit==0)
+        {
+            return;
+        }
+        int num =SummonManager.instance.playerSummoneds.Count;
+        
+        if(num>=skill.skillData.petNumLimit)
+        {
+            skill.CheckSummonUpdate(true);
+            HighLightCard(true);
+            RefeashCardShow();
+        }
+    }
+    public void ChecArmorCardWhileCreateCard()
+    {
+        if(skill.skillData.checkBuff==-1)
+        {
+            return;
+        }
+        int armor =0;
+        if(skill.skillData.checkSelf)
+        {
+            armor =skill.caster.armor;
+        }
+        else
+        {
+            armor =skill.caster.target.armor;
+        }
+        if(armor>=skill.skillData.buffNumLimit)
+        {
+            skill.CheckBuffUpdate(true);
+            HighLightCard(true);
         }
     }
     void HighLightCard(bool ifShow)//技能卡高亮显示

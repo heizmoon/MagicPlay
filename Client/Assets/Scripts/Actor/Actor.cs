@@ -1818,7 +1818,7 @@ public class Actor : MonoBehaviour
             
         }
         //检查召唤物数量的技能在召唤物数量满足的情况下，添加额外BUFF
-        if(skill.addPNBuff&&!skill.targetSelf)
+        if(skill.addPNBuff&&skill.targetSelf)
         {
             if(!skill.skillData.PNBuffTarget)
             {

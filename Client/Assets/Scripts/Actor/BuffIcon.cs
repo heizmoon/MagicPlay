@@ -24,7 +24,7 @@ public class BuffIcon : MonoBehaviour
     bool ifInit;
     Button button;
     public static event Action<int,string,int,ActorType> OnBuffAction;
-
+ 
     private void Awake() 
     {
         button =GetComponent<Button>();

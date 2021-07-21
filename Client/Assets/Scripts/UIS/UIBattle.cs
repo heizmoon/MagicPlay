@@ -808,6 +808,8 @@ public class UIBattle : MonoBehaviour
         skillCard.RefeashCardShow();
         allCards.Add(skillCard);
         skillCard.CheckBuffCardWhileCreateCard();
+        skillCard.ChecSummonedNumCardWhileCreateCard();
+        skillCard.ChecArmorCardWhileCreateCard();
         return skillCard;
     }
     public void CreateNewCardAndGiveToHand(int id,int delayNumber)

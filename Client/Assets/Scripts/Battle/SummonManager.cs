@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Data;
+using System;
 
 public class SummonManager : MonoBehaviour
 {
     public  static SummonManager instance;
     SummonDataSet manager;
-    List<Summoned> playerSummoneds = new List<Summoned>();
+    public List<Summoned> playerSummoneds = new List<Summoned>();
     List<Summoned> enemySummoneds = new List<Summoned>();
+    public static event Action<int,string> OnSummonedsNumChange;
 
     void Awake()
     {
@@ -59,26 +61,35 @@ public class SummonManager : MonoBehaviour
         {
             playerSummoneds.Add(summoned);
             SummonArray(1);
+            if(OnSummonedsNumChange!=null)
+            {
+                OnSummonedsNumChange(playerSummoneds.Count,"create");
+            }
         }
         else
         {
             enemySummoneds.Add(summoned);
             SummonArray(-1);
         }
+        
     }
     public void DecreaseSummonedNum(Summoned summoned)
     {
         if(summoned.master ==Player.instance.playerActor)
         {
-           playerSummoneds.Remove(summoned);
-           SummonArray(1);
+            playerSummoneds.Remove(summoned);
+            SummonArray(1);
+            if(OnSummonedsNumChange!=null)
+            {
+                OnSummonedsNumChange(playerSummoneds.Count,"decrease");
+            }
         }
         else
         {
             enemySummoneds.Remove(summoned);
            SummonArray(-1);
         }
-        
+    
     }
     public void SummonArray(int isPlayer)
     {

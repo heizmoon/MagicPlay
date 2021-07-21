@@ -65,17 +65,17 @@ public class WaterWave : MonoBehaviour {
         Graphics.Blit(source, destination, _Material);
     }
  
-    void Update()
-    {
-        if (Input.GetMouseButton(0))
-        {
-            Vector2 mousePos = Input.mousePosition;
-            //将mousePos转化为（0，1）区间
-            startPos = new Vector4(mousePos.x / Screen.width, mousePos.y / Screen.height, 0, 0);
-            waveStartTime = Time.time;
-            Debug.Log("startPos,x="+startPos.x+",y="+startPos.y);
-        }
-    }
+    // void Update()
+    // {
+    //     if (Input.GetMouseButton(0))
+    //     {
+    //         Vector2 mousePos = Input.mousePosition;
+    //         //将mousePos转化为（0，1）区间
+    //         startPos = new Vector4(mousePos.x / Screen.width, mousePos.y / Screen.height, 0, 0);
+    //         waveStartTime = Time.time;
+    //         Debug.Log("startPos,x="+startPos.x+",y="+startPos.y);
+    //     }
+    // }
     // void Start()
     // {
     //     Debug.Log("test1");
