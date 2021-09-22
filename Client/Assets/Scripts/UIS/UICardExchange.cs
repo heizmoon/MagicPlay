@@ -102,6 +102,7 @@ public class UICardExchange : MonoBehaviour
             }
             Main.instance.ifNewBird++;
             BTNRetry.gameObject.SetActive(false);
+            BTNClose.gameObject.SetActive(false);
             return;
         }
         else if(Main.instance.ifNewBird <=14)//创造固定奖励
@@ -119,6 +120,8 @@ public class UICardExchange : MonoBehaviour
             }
             Main.instance.ifNewBird=15;
             BTNRetry.gameObject.SetActive(false);
+            BTNClose.gameObject.SetActive(false);
+
             return;
         }
         else

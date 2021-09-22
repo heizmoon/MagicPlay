@@ -340,7 +340,7 @@ public class Perform : MonoBehaviour
             Main.instance.ifNewBird++;
             
             UIBattle.Instance.OnBattleGoOn();
-            BattleScene.instance.BattleSceneOver();
+            // BattleScene.instance.BattleSceneOver();//---------此处略去战斗结束数据重置，需要在其他地方补回------已经补回，待测试
             // Main.instance.InitUIChooseCharacter();
             Main.instance.PlayGameStartMovie();
         }

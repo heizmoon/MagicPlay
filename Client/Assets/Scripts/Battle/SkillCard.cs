@@ -580,6 +580,7 @@ public class SkillCard : MonoBehaviour
     }
     public void ChecSummonedNumCardWhileCreateCard()
     {
+       
         if(skill.skillData.petNumLimit==0)
         {
             return;
@@ -595,7 +596,7 @@ public class SkillCard : MonoBehaviour
     }
     public void ChecArmorCardWhileCreateCard()
     {
-        if(skill.skillData.checkBuff==-1)
+        if(skill.skillData.checkBuff!=-1)
         {
             return;
         }

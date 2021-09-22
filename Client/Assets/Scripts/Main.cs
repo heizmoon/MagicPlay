@@ -390,7 +390,8 @@ public class Main : MonoBehaviour {
 	IEnumerator WatiForMovieEnd()
 	{
 		yield return new WaitForSeconds(10f);
-		Destroy(GameObject.Find("GameStartMovie (clone)").gameObject);
+		Destroy(GameObject.Find("GameStartMovie(Clone)").gameObject);
+		BattleScene.instance.BattleSceneOver();
 		InitUIChooseCharacter();
 	}
 	public void InitUITrait()

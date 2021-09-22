@@ -6,6 +6,8 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class WaterWave : MonoBehaviour {
  
+    bool ifWave;
+    bool ifEnd;
     //Inspector面板上直接拖入
     public Shader shader = null;
     private Material _material = null;
@@ -18,9 +20,9 @@ public class WaterWave : MonoBehaviour {
     public float totalFactor = 1.0f;
  
     //波纹宽度
-    public float waveWidth = 0.3f;
+    public float waveWidth = 0.5f;
     //波纹扩散的速度
-    public float waveSpeed = 0.3f;
+    public float waveSpeed = 0.5f;
  
     private float waveStartTime;
     private Vector4 startPos = new Vector4(0.5f, 0.5f, 0, 0);
@@ -40,7 +42,7 @@ public class WaterWave : MonoBehaviour {
     protected Material GenerateMaterial(Shader shader)
     {
         if (shader == null)
-            return null;
+            shader = Shader.Find("Custom/WaterWave");
         //需要判断shader是否支持
         if (shader.isSupported == false)
             return null;
@@ -53,6 +55,8 @@ public class WaterWave : MonoBehaviour {
  
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
+        if(!ifWave)
+        return;
         //计算波纹移动的距离，根据enable到目前的时间*速度求解
         float curWaveDistance = (Time.time - waveStartTime) * waveSpeed;
         //设置一系列参数
@@ -63,8 +67,19 @@ public class WaterWave : MonoBehaviour {
         _Material.SetFloat("_curWaveDis", curWaveDistance);
         _Material.SetVector("_startPos", startPos);
         Graphics.Blit(source, destination, _Material);
+        if(!ifEnd)
+        Wave();
     }
- 
+    void Wave()
+    {
+        ifEnd =true;
+        StartCoroutine(WaveEnd());
+    }
+    IEnumerator WaveEnd()
+    {
+        yield return new WaitForSeconds(3f);
+        Destroy(this);
+    }
     // void Update()
     // {
     //     if (Input.GetMouseButton(0))
@@ -90,6 +105,8 @@ public class WaterWave : MonoBehaviour {
     // }
     public static void Emit()
     {
-        Player.instance.transform.GetComponent<WaterWave>().waveStartTime =Time.time;
+        WaterWave waterWave =Player.instance.transform.gameObject.AddComponent<WaterWave>();
+        waterWave.waveStartTime =Time.time;
+        waterWave.ifWave = true;
     }
 }
