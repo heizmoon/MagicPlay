@@ -137,7 +137,7 @@ public class UIBattleReward : MonoBehaviour
             Btn_retry.gameObject.SetActive(false);
             return;
         }
-        if(Main.instance.ifNewBird ==15)//创造固定奖励
+        if(Main.instance.ifNewBird==15)//创造固定奖励
         {
             AbilityData[] Adatas =new AbilityData[3]; 
             Adatas[0]= AbilityManager.instance.GetInfo(23);
@@ -150,8 +150,9 @@ public class UIBattleReward : MonoBehaviour
                 abilityItemBoxes[i].Init(Adatas[i]);
                 abilityItemBoxes[i].InReward();
             }
-            Main.instance.ifNewBird++;
+            Main.instance.ifNewBird=16;
             Btn_retry.gameObject.SetActive(false);
+            Debug.LogError("15");
             return;
         }
         if(!Configs.instance.ifChangMode)

@@ -13,7 +13,7 @@ public class UIBattle : MonoBehaviour
     public Actor playerActor;
     public Actor Enemy;
     ///<summary>战斗场景</summary>
-    public GameObject scene;
+    public Transform scene;
     public HPBar EnemyHP;
     public HPBar PlayerHP;
     Timer timer;
@@ -75,6 +75,7 @@ public class UIBattle : MonoBehaviour
     {
         Instance = this;
         // timer =gameObject.GetComponent<Timer>();
+        scene=transform.Find("Scene");
         anim =gameObject.GetComponent<Animation>();
         btn_pause.onClick.AddListener(PauseBattle);
         btn_play.onClick.AddListener(ResumeBattle);
@@ -342,35 +343,37 @@ public class UIBattle : MonoBehaviour
         //根据场景效果，给角色附加buff
     }
     public void BattleBegin()
-    {         
-        //主角入场，怪物出场
-        anim.Play();
-        playerActor.animator.Play("run");        
-        StartCoroutine(WaitForBattleReady());
+    {   
+        //--------如果newBird=16,那么先触发剧情
         if(Main.instance.ifNewBird==16)
         {
-            //战斗开始前先播剧情
-            //当怪物生命值到50%时再播剧情
-            //结束战斗
+        //战斗开始前先播剧情
+        //当怪物生命值到50%时再播剧情
+        //结束战斗
+        Debug.LogError("16");
             NewBird_16();
-            UIBattle.Instance.isBattleOver =true;
         }
+        else if(Main.instance.ifNewBird==17)
+        {
+            StartCoroutine(WaitForBattleReady());
+        }
+        else
+        {
+            //主角入场，怪物出场
+            anim.Play();
+            playerActor.animator.Play("run");        
+            StartCoroutine(WaitForBattleReady());
+        }        
     }
     IEnumerator WaitForBattleReady()
     {
         yield return new WaitForSeconds(1.25f);
         playerActor.animator.Play("idle");
         isBattleOver =false;
-        if(Main.instance.ifNewBird==17)
-        {
-            
-        }
-        else
-        {
-            Debug.Log("???");
-            Enemy.RunAI();
-            StartBattle();
-        }
+        
+        Enemy.RunAI();
+        StartBattle();
+        
                
     }
     public void BattleEnd(Actor actor)
@@ -423,8 +426,8 @@ public class UIBattle : MonoBehaviour
             playerActor.UsingSkillsID.Add(2);
             playerActor.UsingSkillsID.Add(2);
 
-            playerActor.UsingSkillsID.Add(84);
-            playerActor.UsingSkillsID.Add(84);
+            playerActor.UsingSkillsID.Add(88);
+            playerActor.UsingSkillsID.Add(88);
             playerActor.UsingSkillsID.Add(102);
             playerActor.UsingSkillsID.Add(102);
             playerActor.UsingSkillsID.Add(102);
@@ -974,16 +977,12 @@ public class UIBattle : MonoBehaviour
         t.GetComponent<RectTransform>().anchoredPosition =Vector2.zero;
         NewBird.LoadNewBird(11);
     }
-    public void NewBird_16()
+    void NewBird_16()
     {
         Main.instance.ifNewBird=17;
-        StartCoroutine(IENewBird_16());
-    }
-    IEnumerator IENewBird_16()
-    {
-        yield return new WaitForSeconds(1f);
         Perform.LoadPerform("perform_NewBird");
     }
+    
     public void NewBird_17()
     {
         Main.instance.ifNewBird=18;

@@ -29,6 +29,7 @@ public class Map : MonoBehaviour,IBeginDragHandler,IDragHandler
     public string nextMap;
     Vector3 orginPoint;
    float mapHeight =1280;
+   private GameObject newBirdPoint;
     void Awake()
     {
         instance = this;
@@ -49,6 +50,11 @@ public class Map : MonoBehaviour,IBeginDragHandler,IDragHandler
         localImage.sprite =sprite;
         localImage.GetComponent<RectTransform>().sizeDelta =new Vector2(_width,_height)*0.6f;
         // +Player.instance.playerActor.character.data.prefab
+        if(name=="Map_00(Clone)")
+        {
+            newBirdPoint =transform.Find("Pos/Point2-1/newBirdPoint").gameObject;
+            newBirdPoint.SetActive(false);
+        }
         Refresh();
     }
     public void Refresh()
@@ -68,6 +74,12 @@ public class Map : MonoBehaviour,IBeginDragHandler,IDragHandler
             UIBasicBanner.instance.F_LevelUp.SetActive(true);
             UIBasicBanner.instance.ShowNewTalent();
         }
+        //---新手引导指向下一个地点
+        if(newBirdPoint != null &&Main.instance.ifNewBird>5&&Main.instance.ifNewBird<=8)
+        {
+            newBirdPoint.SetActive(true);
+        }
+        
     }
 
     public void MoveLocal(MapPoint point)
@@ -86,7 +98,10 @@ public class Map : MonoBehaviour,IBeginDragHandler,IDragHandler
     IEnumerator WaitForPoint(MapPoint point)
     {
         yield return new WaitForSeconds(1f);
-        
+        if(newBirdPoint!=null&&newBirdPoint.activeSelf)
+        {
+            newBirdPoint.SetActive(false);
+        }
         switch(point.mapPointType)
         {
             case MapPointType.battle:
@@ -153,4 +168,6 @@ public class Map : MonoBehaviour,IBeginDragHandler,IDragHandler
             orginPoint = currentPoint;
         }
     }
+    
+    
 }

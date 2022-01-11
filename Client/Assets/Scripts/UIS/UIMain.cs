@@ -24,6 +24,8 @@ public class UIMain : MonoBehaviour
     Button _buttonSwitchRight;
     Button _buttonOpenShop;
     Button _buttonOpenMatong;
+    Button _buttonCrystal;
+
 
     public Button _buttonCloseShop;
     Button _buttonShopBuy;
@@ -70,7 +72,8 @@ public class UIMain : MonoBehaviour
         _buttonCancel = transform.Find("ActiveUIs/ButtonCancel").GetComponent<Button>();
         _buttonCancel.onClick.AddListener(OnCancelChooseChar);
         _buttonCancel.gameObject.SetActive(false);
-
+        _buttonCrystal = transform.Find("ActiveUIs/upFrame/ButtonCrystal").GetComponent<Button>();
+        _buttonCrystal.onClick.AddListener(OnTapCrystal);
     }
 
     // Update is called once per frame
@@ -244,6 +247,11 @@ public class UIMain : MonoBehaviour
             Destroy(UIMain.instance.gameObject);
         }
         
+    }
+    void OnTapCrystal()
+    {
+        //点击水晶图标，提示水晶可以用于...
+        Debug.Log("点击水晶图标，提示水晶可以用于...");
     }
     void OnCancelChooseChar()
     {

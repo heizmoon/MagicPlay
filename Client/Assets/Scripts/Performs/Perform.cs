@@ -60,9 +60,16 @@ public class Perform : MonoBehaviour
     {
         if(sceneMode==1&&startSyncScene)
         {
-            UIMain.instance.background.localPosition = scene.transform.localPosition;
-            UIMain.instance.background.localScale = scene.transform.localScale;
-
+            if(UIMain.instance!=null)
+            {
+                UIMain.instance.background.localPosition = scene.transform.localPosition;
+                UIMain.instance.background.localScale = scene.transform.localScale;
+            }
+            if(UIBattle.Instance!=null)
+            {
+                UIBattle.Instance.scene.localPosition = scene.transform.localPosition;
+                UIBattle.Instance.scene.localScale = scene.transform.localScale;
+            }
         }
     }
     IEnumerator WaitForLoad()
@@ -335,7 +342,11 @@ public class Perform : MonoBehaviour
             UIBattle.Instance.StartBattle();
         
         }
-        if(Main.instance.ifNewBird ==19)
+        if(Main.instance.ifNewBird==17)
+        {
+            UIBattle.Instance.BattleBegin();
+        }
+        if(Main.instance.ifNewBird==19)
         {
             Main.instance.ifNewBird++;
             
