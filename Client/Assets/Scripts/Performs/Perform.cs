@@ -342,10 +342,10 @@ public class Perform : MonoBehaviour
             UIBattle.Instance.StartBattle();
         
         }
-        if(Main.instance.ifNewBird==17)
-        {
-            UIBattle.Instance.BattleBegin();
-        }
+        // if(Main.instance.ifNewBird==17)
+        // {
+        //     UIBattle.Instance.BattleBegin();
+        // }
         if(Main.instance.ifNewBird==19)
         {
             Main.instance.ifNewBird++;

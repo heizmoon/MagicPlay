@@ -178,7 +178,7 @@ public class Main : MonoBehaviour {
 		if(ifNewBird<7)
 		{
 			UIChooseCharacter.OnChooseCharacter(0,"Map_00");
-			Map.instance.MoveLocal(Map.instance.startPos.GetComponent<MapPoint>().nextPoint[0].GetComponent<MapPoint>());
+			
 			
 		}
 		//--------打开主界面
@@ -239,13 +239,14 @@ public class Main : MonoBehaviour {
 	IEnumerator StopNewBird_0()
 	{
 		openSplash =true;
-		yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(4.5f);
 		splash.SetActive(false);
 		Destroy(splash);
 		ifNewBird++;
 		NewBird nb = NewBird.LoadNewBird(0);
-		yield return new WaitForSeconds(4f);
+		yield return new WaitForSeconds(3f);
 		nb.gameObject.SetActive(false);
+		Map.instance.MoveLocal(Map.instance.startPos.GetComponent<MapPoint>().nextPoint[0].GetComponent<MapPoint>());
 		Destroy(nb);
 	}
 	public void HideBasicBanner()
@@ -389,7 +390,7 @@ public class Main : MonoBehaviour {
 	}
 	IEnumerator WatiForMovieEnd()
 	{
-		yield return new WaitForSeconds(10f);
+		yield return new WaitForSeconds(9f);
 		Destroy(GameObject.Find("GameStartMovie(Clone)").gameObject);
 		BattleScene.instance.BattleSceneOver();
 		InitUIChooseCharacter();

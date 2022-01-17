@@ -33,7 +33,8 @@ public class UICamp : MonoBehaviour
         Player.instance.playerActor.AddHp(Mathf.CeilToInt(Player.instance.playerActor.HpMax*Configs.instance.campRestoreHP) );
         gameObject.SetActive(false);
         BattleScene.instance.OpenMap();
-        Destroy(gameObject);
+        DestoryUI();
+
     }
     public void Init()
     {
@@ -72,6 +73,11 @@ public class UICamp : MonoBehaviour
         }
         gameObject.SetActive(false);
         BattleScene.instance.OpenMap();
+        DestoryUI();
+    }
+    void DestoryUI()
+    {
+        UIBasicBanner.instance.RefeashText();
         Destroy(gameObject);
     }
     void RandomGift()

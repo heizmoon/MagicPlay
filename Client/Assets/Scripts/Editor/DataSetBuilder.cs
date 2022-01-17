@@ -561,13 +561,13 @@ namespace EditorTool {
         MonsterTypeBuild.CreateItemAsset();
         MonsterGroupBuild.CreateItemAsset();
         TraitBuild.CreateItemAsset();
-        RelicBuild.CreateItemAsset();
+        // RelicBuild.CreateItemAsset();
         TaskEventsBuild.CreateItemAsset();
         TriggerEventBuild.CreateItemAsset();
         SceneBuild.CreateItemAsset();
         GuildBuild.CreateItemAsset();
         BuffBuild.CreateItemAsset();
-        RelicGroupBuild.CreateItemAsset();
+        // RelicGroupBuild.CreateItemAsset();
         ReformDataBuild.CreateItemAsset();
         AbilityBuild.CreateItemAsset();
         SummonBuild.CreateItemAsset();

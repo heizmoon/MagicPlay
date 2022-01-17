@@ -136,8 +136,9 @@
      <Compile Include="Assets\Scripts\UIS\UIBasicBanner.cs" />
      <Compile Include="Assets\Scripts\UIS\UIBattle.cs" />
      <Compile Include="Assets\Scripts\UIS\UIBattleCharacter.cs" />
+     <Compile Include="Assets\Scripts\UIS\UIBattleEXP.cs" />
      <Compile Include="Assets\Scripts\UIS\UIBattleFail.cs" />
-     <Compile Include="Assets\Scripts\UIS\UIBattleReward.cs" />
+     <Compile Include="Assets\Scripts\UIS\UIBattleRewardRelic.cs" />
      <Compile Include="Assets\Scripts\UIS\UIBattleShop.cs" />
      <Compile Include="Assets\Scripts\UIS\UIBuffDetail.cs" />
      <Compile Include="Assets\Scripts\UIS\UICamp.cs" />

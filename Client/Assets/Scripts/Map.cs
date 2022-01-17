@@ -71,8 +71,8 @@ public class Map : MonoBehaviour,IBeginDragHandler,IDragHandler
         {
             Player.instance.playerActor.LevelUp();
             BattleScene.instance.ifLevelUp =false;
-            UIBasicBanner.instance.F_LevelUp.SetActive(true);
-            UIBasicBanner.instance.ShowNewTalent();
+            // UIBasicBanner.instance.F_LevelUp.SetActive(true);
+            // UIBasicBanner.instance.ShowNewTalent();
         }
         //---新手引导指向下一个地点
         if(newBirdPoint != null &&Main.instance.ifNewBird>5&&Main.instance.ifNewBird<=8)

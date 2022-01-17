@@ -8,6 +8,7 @@ public class UIBattleCharacter : MonoBehaviour
     Text charName;
     Transform charPoint;
     Text charLevel;
+    Text charEXP;
     Text charHP;
     Text charMP;
     Text charReMp;
@@ -22,6 +23,7 @@ public class UIBattleCharacter : MonoBehaviour
         charName =transform.Find("CharacterName").gameObject.GetComponent<Text>();
         charPoint =transform.Find("CharacterPoint");
         charLevel =transform.Find("CharacterLevel").gameObject.GetComponent<Text>();
+        charEXP =transform.Find("CharacterEXP").gameObject.GetComponent<Text>();
         charHP =transform.Find("CharacterHP").gameObject.GetComponent<Text>();
         charMP =transform.Find("CharacterMP").gameObject.GetComponent<Text>();
         charReMp =transform.Find("CharacterMPRE").gameObject.GetComponent<Text>();
@@ -45,6 +47,7 @@ public class UIBattleCharacter : MonoBehaviour
         playerActor.animator.Play("idle");
         charName.text = playerActor.character.data.name;
         charLevel.text =string.Format("等级：{0}",playerActor.level);
+        charEXP.text =string.Format("经验值：{0}/{1}",BattleScene.instance.exp,CharacterManager.instance.GetLevelData(Player.instance.playerActor.level).exp);
         charHP.text =string.Format("生命值：{0}/{1}",playerActor.HpCurrent,playerActor.HpMax);
         charMP.text =string.Format("能量值：{0}",playerActor.MpMax); 
         charReMp.text =string.Format("每秒能量回复：{0}",playerActor.autoReduceMPAmount*5);

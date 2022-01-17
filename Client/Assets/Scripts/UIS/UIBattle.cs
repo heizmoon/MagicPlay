@@ -350,13 +350,12 @@ public class UIBattle : MonoBehaviour
         //战斗开始前先播剧情
         //当怪物生命值到50%时再播剧情
         //结束战斗
-        Debug.LogError("16");
             NewBird_16();
         }
-        else if(Main.instance.ifNewBird==17)
-        {
-            StartCoroutine(WaitForBattleReady());
-        }
+        // else if(Main.instance.ifNewBird==17)
+        // {
+        //     StartCoroutine(WaitForBattleReady());
+        // }
         else
         {
             //主角入场，怪物出场
@@ -447,24 +446,15 @@ public class UIBattle : MonoBehaviour
             }
             else if(battleType==1)//精英怪
             {
-                if(!Configs.instance.ifChangMode)
-                UIBattleReward.CreateUIBattleReward(1);
-                else
-                UICardExchange.CreateUICardExchange(1);
+                UIBattleRewardRelic.CreateUIBattleRewardRelic(1);//不换牌，只有遗物和经验，金钱
             }
             else if(battleType==2)//BOSS
             {
-                if(!Configs.instance.ifChangMode)
-                UIBattleReward.CreateUIBattleReward(2);
-                else
-                UICardExchange.CreateUICardExchange(2);
+                UICardExchange.CreateUICardExchange(2);//换牌加遗物，加经验，金钱
             }
             else
             {
-                if(!Configs.instance.ifChangMode)
-                UIBattleReward.CreateUIBattleReward(0);
-                else
-                UICardExchange.CreateUICardExchange(0);
+                UICardExchange.CreateUICardExchange(1);//普通怪,换牌，加经验，金钱
             }
             
             BattleScene.instance.BattleEnd(battleType);

@@ -42,7 +42,7 @@ public class UIBasicBanner : MonoBehaviour
         expText =transform.Find("up/exp/expText").GetComponent<Text>();
         expBar =transform.Find("up/exp/expBar/bar").GetComponent<Image>();
 
-        F_LevelUp =transform.Find("LevelUpFrame").gameObject;
+        // F_LevelUp =transform.Find("LevelUpFrame").gameObject;
         BTN_LevelUp =transform.Find("LevelUpFrame/Texts/Button").GetComponent<Button>();
         levleTextObjects =transform.Find("LevelUpFrame/Texts").gameObject;
         text_level =transform.Find("LevelUpFrame/Texts/LevleText").GetComponent<Text>();
@@ -50,7 +50,7 @@ public class UIBasicBanner : MonoBehaviour
         text_defence =transform.Find("LevelUpFrame/Texts/DefenceText").GetComponent<Text>();
         text_HPmax =transform.Find("LevelUpFrame/Texts/TalentText").GetComponent<Text>();
 
-        F_LevelUp.SetActive(false);
+        // F_LevelUp.SetActive(false);
         RegisterButton();
     }
     
@@ -228,7 +228,7 @@ public class UIBasicBanner : MonoBehaviour
     }
     void GoOn()
     {
-        // F_LevelUp.SetActive(false);
+        F_LevelUp.SetActive(false);
         levleTextObjects.SetActive(false);
         // UIBattleReward.CreateUIBattleReward(1);
     }

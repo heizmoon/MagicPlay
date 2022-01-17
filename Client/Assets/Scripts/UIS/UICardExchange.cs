@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 using System.Linq;
-
+///<summary>本类只负责换牌，换牌之后获得经验值和金钱，以及获得遗物，由UIBattleReward负责</summary>
 public class UICardExchange : MonoBehaviour
 {
     public Transform content;
@@ -21,12 +21,15 @@ public class UICardExchange : MonoBehaviour
     bool hasChoosenCard;
     int needChooseStep =2;
     int chooseID;
+    ///<summary>0=仅换牌，适用于事件；>1=换牌后加经验，钱，2=换牌后获得遗物</summary>
     int type =0;
     public GameObject _cards;
     int animStep;
     Transform _getCard;
     Transform _loseCard;
     bool isContrl;
+
+    
     void Awake()
     {
         buttonRemove =transform.Find("ButtonRemove").GetComponent<Button>();
@@ -291,9 +294,17 @@ public class UICardExchange : MonoBehaviour
    {
         if(UIBattle.Instance)
         UIBattle.Instance.OnBattleGoOn();
-        if(type>0)
-        UIBattleReward.CreateUIBattleReward(type);
+        if(type==1)
+        UIBattleEXP.CreateUIBattleEXP(type);
+        else if(type==2)
+        UIBattleRewardRelic.CreateUIBattleRewardRelic(type);
+        StartCoroutine(WaitForDestory());
+   }
+   IEnumerator WaitForDestory()
+   {
+       yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
+       
    }
    public static void CreateUICardExchange(int type)
    {
