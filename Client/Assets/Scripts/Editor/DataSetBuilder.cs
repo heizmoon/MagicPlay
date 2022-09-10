@@ -414,7 +414,7 @@ namespace EditorTool {
     public class RandomEventBuild : Editor 
     {
  
-        [MenuItem("生成表格数据/Summon表")]
+        [MenuItem("生成表格数据/RandomEvent表")]
         public static void CreateItemAsset() 
         {
             // Debug.Log("什么问题？");
