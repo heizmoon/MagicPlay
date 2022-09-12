@@ -509,17 +509,7 @@ public class UIBattle : MonoBehaviour
         gameObject.SetActive(false);
         SkillManager.ClearPool();
         
-        //通知main，以下为测试效果
-        // if(Abyss.instance!=null)
-        // {
-        //     Abyss.instance.GetBattleResult(result);
-        // }
-        // if(BattleEvent.instance!=null)
-        // {
-        //     BattleEvent.instance.GetBattleResult(result);
-        // }
-        
-        
+ 
         
         Destroy(this.gameObject);
     }

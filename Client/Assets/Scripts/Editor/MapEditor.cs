@@ -10,7 +10,6 @@ using System.IO;
 //继承自EditorWindow类
 public class MapEditor : EditorWindow 
 {
-    string bugReporterName = "";
     int nextPointNumber =3;
     GameObject mapPoint;
     int totalLine;//排除了第一层和最后一层

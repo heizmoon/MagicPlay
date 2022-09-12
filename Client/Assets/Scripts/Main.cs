@@ -53,13 +53,8 @@ public class Main : MonoBehaviour {
 
 	void Start ()
 	{
-		// 
-		// CovertHoursToDate();
+
 		Debug.LogFormat("保存的游戏时间为gameDate:{0}",PlayerPrefs.GetString("gameDate"));
-		// PlayerPrefs.SetString("AssetsItems","1001,1,,10,0|1002,2,小家,1,0|1003,1,大法杖,10,0");
-		// PlayerPrefs.SetString("playerAssets","1001,1002,1003");
-
-
 		//初始化
 		
 		gameObject.AddComponent<DateManager>();

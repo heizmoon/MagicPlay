@@ -2,4 +2,5 @@
 Client/Library
 Client/Temp
 Client/obj
-
+Client/Logs
+*.apk

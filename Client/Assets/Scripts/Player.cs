@@ -63,20 +63,7 @@ public class Player : MonoBehaviour
 	///<summary>获取已经解锁的技能,遗物,各种玩家进度,数值</summary>
 	public void Init()
 	{
-		// if(PlayerPrefs.GetString("playerAvatar")=="")
-		// {
-		// 	avaterName ="Girl_01";
-		// }
-		// else
-		// {
-		// 	avaterName =PlayerPrefs.GetString("playerAvatar");
-		// }
 		
-		// playerAbyss = PlayerPrefs.GetInt("abyssLevel")==0?1:PlayerPrefs.GetInt("abyssLevel");
-		// Gold = PlayerPrefs.GetInt("gold");
-		//========================================================临时数值
-		// InputBasicProperty();
-		// LoadTraitList();
 		Crystal = PlayerPrefs.GetInt("Crystal");
 		if(UIMain.instance)
 		UIMain.instance.Refeash();

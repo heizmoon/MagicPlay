@@ -9,10 +9,7 @@ public class Battle : MonoBehaviour
     //战场类用于处理一切关于主角和一个敌方目标战斗的场景
     //包括冒险 和 普通练习施法类技能
     //在这里同时也会计算一切伤害，效果，然后传递给目标
-    static float constanceHitB =1.15f;
-    static float constanceHitT =4f;
-    static float constanceCrit =1.15f;
-    static float constanceResis =1.15f;
+
     Dictionary<Skill,int> damageStatistic =new Dictionary<Skill, int>();//角色输出伤害
     Dictionary<Skill,int> hurtStatistic =new Dictionary<Skill, int>();//角色承受伤害
 
