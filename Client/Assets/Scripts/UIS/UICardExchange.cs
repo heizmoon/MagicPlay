@@ -127,6 +127,24 @@ public class UICardExchange : MonoBehaviour
 
             return;
         }
+        else if(Map.instance.testRewardID!=0)//创造固定奖励
+        {
+            SkillData[] Sdatas =new SkillData[3]; 
+            Sdatas[0]= SkillManager.instance.GetInfo(Map.instance.testRewardID);
+            Sdatas[1]= SkillManager.instance.GetInfo(Map.instance.testRewardID);
+            Sdatas[2]= SkillManager.instance.GetInfo(Map.instance.testRewardID);
+
+            for (int i = 0; i < Sdatas.Length; i++)
+            {
+                skillItemBoxes[i].Reset();
+                skillItemBoxes[i].Init(Sdatas[i]);
+                skillItemBoxes[i].InReward();
+            }
+            BTNRetry.gameObject.SetActive(false);
+            BTNClose.gameObject.SetActive(false);
+
+            return;
+        }
         else
         {
             SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);

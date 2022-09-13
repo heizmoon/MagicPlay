@@ -223,7 +223,12 @@ public class UIMain : MonoBehaviour
     }
     void OnChooseChar()
     {
-        OnChooseCharacter(charID,"Map_01");
+        string mapName ="Map_01";
+        if(Configs.instance.useTestMapName!="")
+        {
+            mapName=Configs.instance.useTestMapName;
+        }
+        OnChooseCharacter(charID,mapName);
     }
     public static void OnChooseCharacter(int charID,string mapName)
     {

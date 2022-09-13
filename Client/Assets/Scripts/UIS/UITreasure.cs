@@ -29,25 +29,24 @@ public class UITreasure : MonoBehaviour
     }
     public void Init()
     {
+        if(Map.instance.testRewardID!=0)//固定奖励
+        {
+            AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(1,Configs.instance.GetCardRank(BattleScene.instance.steps));
+            item.Init(Adatas[0]);
+            type =1;
+            id = Adatas[0].id;
+            
+            item.HideToggleSelect();
+            return;
+        }
         //根据情况随机出宝物
         int level = BattleScene.instance.steps;
-        //先确定随机出道具还是技能卡
-        // if(Random.Range(0,5)>3)
-        // {
-        //     //随机出技能卡
-        //     SkillData[] datas =SkillManager.instance.GetRandomSelfSkillsLevelLimit(1,0);
-        //     item.Init(datas[0]);
-        //     type =0;
-        //     id = datas[0].id;
-        // }
-        // else
-        // {
-            //随机出道具
-            AbilityData[] datas = AbilityManager.instance.GetRandomAbility(1,Configs.instance.GetCardRank(BattleScene.instance.steps));
-            item.Init(datas[0]);
-            type =1;
-            id = datas[0].id;
-        // }
+        //随机出道具
+        AbilityData[] datas = AbilityManager.instance.GetRandomAbility(1,Configs.instance.GetCardRank(BattleScene.instance.steps));
+        item.Init(datas[0]);
+        type =1;
+        id = datas[0].id;
+        
         item.HideToggleSelect();
 
     }
@@ -66,15 +65,7 @@ public class UITreasure : MonoBehaviour
         {
             Player.instance.playerActor.abilities.Add(id);
             AbilityData ability = AbilityManager.instance.GetInfo(id);
-            Player.instance.playerActor.basicAttack+=ability.attack;
-            Player.instance.playerActor.basicDefence+=ability.defence;
-            Player.instance.playerActor.HpMax+=ability.hpMax;
-            Player.instance.playerActor.MpMax+=ability.mpMax;
-            Player.instance.playerActor.Crit+=ability.crit;
-            float reMp =ability.reMp/5;
-            int temp = (int)(reMp*100);
-            reMp =temp/100f;
-            Player.instance.playerActor.autoReduceMPAmount+= reMp;
+            AbilityManager.instance.EquipRelic(item.id);
         }
         BattleScene.instance.OpenMap();
         Destroy(gameObject);

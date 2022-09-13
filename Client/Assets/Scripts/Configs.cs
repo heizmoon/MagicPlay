@@ -23,7 +23,7 @@ public class Configs : MonoBehaviour
     public int removeCardGold;
     public List<string> toolTips;
     public int shopRestoreCost;
-    
+    public string useTestMapName;
 
 
     void Awake()

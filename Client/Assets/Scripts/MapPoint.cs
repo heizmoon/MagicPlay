@@ -12,6 +12,7 @@ public class MapPoint : MonoBehaviour
     //事件，怪物，随机id列表
     public int[] idList;
     public int realID;
+    public int testRewardID;
     bool canMove;
       
     void Awake()

@@ -68,37 +68,6 @@ public class UIBattleRewardRelic : MonoBehaviour
             //获得金钱，经验值，遗物，如果升级，则再次获得遗物，适用于BOSS战
             needChooseStep =2;
         }
-        // 
-        // if(!Configs.instance.ifChangMode)
-        // {
-        //     if(type==0)
-        //     {
-        //         relicFrame.SetActive(false);
-        //         Player.instance.AddGold(steps * Configs.instance.battleLevelGold);
-        //     }
-        //     else
-        //     {
-        //         skillFrame.SetActive(false);
-        //         goldFrame.SetActive(false);
-        //         expFrame.SetActive(false);
-        //     }
-        //     if(type!=2)
-        //     {
-        //         needChooseStep =1;
-        //     }
-        //     else
-        //     {
-        //         needChooseStep =2;
-        //     }
-        // }
-        // else//换牌模式
-        // {   
-        // }
-        // foreach (var item in skillItemBoxes)
-        // {
-        //     item.button.onClick.AddListener(delegate () {GetItem(item);});
-        // }
-        // needChooseStep =1;
         foreach (var item in abilityItemBoxes)
         {
             item.button.onClick.AddListener(delegate () {GetItem(item);});
@@ -129,6 +98,22 @@ public class UIBattleRewardRelic : MonoBehaviour
             Btn_return.gameObject.SetActive(false);
             return;
         }
+        if(Map.instance.testRewardID!=0)//创造固定奖励
+        {
+            Adatas =new AbilityData[3]; 
+            Adatas[0]= AbilityManager.instance.GetInfo(Map.instance.testRewardID);
+            Adatas[1]= AbilityManager.instance.GetInfo(Map.instance.testRewardID);
+            Adatas[2]= AbilityManager.instance.GetInfo(Map.instance.testRewardID);
+            for (int i = 0; i < Adatas.Length; i++)
+            {
+                abilityItemBoxes[i].Reset();
+                abilityItemBoxes[i].Init(Adatas[i]);
+                abilityItemBoxes[i].InReward();
+            }
+            Btn_retry.gameObject.SetActive(false);
+            Btn_return.gameObject.SetActive(false);
+            return;
+        }
         Adatas = AbilityManager.instance.GetRandomAbility(3,rewardCardRank);
         for (int i = 0; i < Adatas.Length; i++)
         {
@@ -136,75 +121,10 @@ public class UIBattleRewardRelic : MonoBehaviour
             abilityItemBoxes[i].Init(Adatas[i]);
             abilityItemBoxes[i].InReward();
         }
-        // if(!Configs.instance.ifChangMode)
-        // {
-        //     if(type==0)
-        //     {
-        //         SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
-        //         for (int i = 0; i < Sdatas.Length; i++)
-        //         {
-        //             skillItemBoxes[i].Reset();
-        //             skillItemBoxes[i].Init(Sdatas[i]);
-        //             skillItemBoxes[i].InReward();
-        //         }
-        //     }
-        //     else if(type ==2&&chooseStep==0)
-        //     {
-        //         SkillData[] Sdatas = SkillManager.instance.GetRandomSelfSkillsLevelLimit(3,rewardCardRank);
-        //         for (int i = 0; i < Sdatas.Length; i++)
-        //         {
-        //             skillItemBoxes[i].Reset();
-        //             skillItemBoxes[i].Init(Sdatas[i]);
-        //             skillItemBoxes[i].InReward();
-        //         }
-        //     }
-        //     else
-        //     {
-        //         AbilityData[] Adatas = AbilityManager.instance.GetRandomAbility(3,rewardCardRank);
-        //         for (int i = 0; i < Adatas.Length; i++)
-        //         {
-        //             abilityItemBoxes[i].Reset();
-        //             abilityItemBoxes[i].Init(Adatas[i]);
-        //             abilityItemBoxes[i].InReward();
-        //         }
-        //     }
-        // }
     }
     
     void GetItem(ItemBox item)
     {
-        // if(!Configs.instance.ifChangMode)
-        // {
-        //     if(item.type ==1)
-        //     {
-        //         // hasChoosenCard =true;
-        //         Player.instance.playerActor.UsingSkillsID.Add(item.id);
-        //         for (int i = 0; i < skillItemBoxes.Count; i++)
-        //         {
-        //             skillItemBoxes[i].Disable();
-        //         }
-        //     }
-        //     else if(item.type ==2)
-        //     {
-        //         // hasChoosenRelic =true;
-        //         Player.instance.playerActor.abilities.Add(item.id);
-        //         AbilityManager.instance.EquipRelic(item.id);
-        //         for (int i = 0; i < abilityItemBoxes.Count; i++)
-        //         {
-        //             abilityItemBoxes[i].Disable();
-        //         }
-        //     }
-        //     chooseStep++;
-        //     if(chooseStep==needChooseStep)
-        //     {
-        //         OnButtonReturn();
-        //     }
-        //     else
-        //     {
-        //         Refreash();
-        //     }
-        // }
-        
         Player.instance.playerActor.abilities.Add(item.id);
         AbilityManager.instance.EquipRelic(item.id);
         for (int i = 0; i < abilityItemBoxes.Count; i++)

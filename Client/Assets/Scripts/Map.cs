@@ -30,6 +30,7 @@ public class Map : MonoBehaviour,IBeginDragHandler,IDragHandler
     Vector3 orginPoint;
    float mapHeight =1280;
    private GameObject newBirdPoint;
+   public int testRewardID;
     void Awake()
     {
         instance = this;
@@ -97,6 +98,7 @@ public class Map : MonoBehaviour,IBeginDragHandler,IDragHandler
     }
     IEnumerator WaitForPoint(MapPoint point)
     {
+        testRewardID =0;
         yield return new WaitForSeconds(1f);
         if(newBirdPoint!=null&&newBirdPoint.activeSelf)
         {
@@ -127,6 +129,10 @@ public class Map : MonoBehaviour,IBeginDragHandler,IDragHandler
             break;
         }
         point.isNowPoint = true;
+        if(point.testRewardID!=0)
+        {
+            testRewardID =point.testRewardID;
+        }
         CloseMap();
     }
     void CloseMap()

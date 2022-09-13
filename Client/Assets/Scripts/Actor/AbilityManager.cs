@@ -267,6 +267,7 @@ public AbilityData[] GetRandomAbilityFromLevel(int number,int type)
         Player.instance.playerActor.startBattleDealCardsNumber+= ability.startBattleDealCardsNumber;
         if(Player.instance.playerActor.startBattleDealCardsNumber<1)
         Player.instance.playerActor.startBattleDealCardsNumber=1;
+        Debug.Log("装备了遗物"+ability.name+"初始发牌数变化"+ability.startBattleDealCardsNumber+",最小发牌数变化"+ability.autoDealCardsMinValue);
     }
     public void UnEquipRelic(int id)
     {

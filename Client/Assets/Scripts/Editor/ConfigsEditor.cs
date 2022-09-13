@@ -30,8 +30,7 @@ public class ConfigsEditor : Editor {
         drawProperty("removeCardGold", "每次移除卡牌金钱增加");
         drawProperty("toolTips", "小提示");
         drawProperty("shopRestoreCost", "商店治疗费用");
-
-
+        drawProperty("useTestMapName", "使用的测试地图名称");
 
         // 只读属性
         // GUI.enabled = false;

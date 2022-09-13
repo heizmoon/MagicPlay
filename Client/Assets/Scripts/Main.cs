@@ -39,6 +39,7 @@ public class Main : MonoBehaviour {
 	public int ifNewBird;
 	bool openSplash;
 	public GameObject splash;
+	public bool enableNewBird;
 	void Awake()
 	{
 		instance =this;
@@ -48,7 +49,12 @@ public class Main : MonoBehaviour {
 		
 		//锁定FPS
 		Application.targetFrameRate = LockFPS;
+		if(enableNewBird)
 		ifNewBird = PlayerPrefs.GetInt("ifNew",0);
+		else
+		{
+			ifNewBird =30;
+		}
 	}
 
 	void Start ()
