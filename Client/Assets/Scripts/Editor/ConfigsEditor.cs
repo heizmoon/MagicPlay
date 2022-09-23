@@ -31,6 +31,8 @@ public class ConfigsEditor : Editor {
         drawProperty("toolTips", "小提示");
         drawProperty("shopRestoreCost", "商店治疗费用");
         drawProperty("useTestMapName", "使用的测试地图名称");
+        drawProperty("levelUpRewardIDs", "使用测试地图时升级获得的遗物列表");
+
 
         // 只读属性
         // GUI.enabled = false;

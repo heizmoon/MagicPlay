@@ -24,7 +24,7 @@ public class Configs : MonoBehaviour
     public List<string> toolTips;
     public int shopRestoreCost;
     public string useTestMapName;
-
+    public List<int> levelUpRewardIDs;
 
     void Awake()
     {

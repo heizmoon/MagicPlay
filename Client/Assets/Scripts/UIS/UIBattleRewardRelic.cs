@@ -58,16 +58,16 @@ public class UIBattleRewardRelic : MonoBehaviour
         {
             //仅获得遗物，适用于事件三选一
         }
-        else if(this.type==1)
-        {
-            //获得金钱和经验值，如果升级，则获得遗物，适用与普通战斗
-            needChooseStep =1;
-        }
-        else if(this.type==2)
-        {
-            //获得金钱，经验值，遗物，如果升级，则再次获得遗物，适用于BOSS战
-            needChooseStep =2;
-        }
+        // else if(this.type==1)
+        // {
+        //     //获得金钱和经验值，如果升级，则获得遗物，适用与普通战斗
+        //     needChooseStep =1;
+        // }
+        // else if(this.type==2)
+        // {
+        //     //获得金钱，经验值，遗物，如果升级，则再次获得遗物，适用于BOSS战
+        //     needChooseStep =2;
+        // }
         foreach (var item in abilityItemBoxes)
         {
             item.button.onClick.AddListener(delegate () {GetItem(item);});
@@ -104,6 +104,22 @@ public class UIBattleRewardRelic : MonoBehaviour
             Adatas[0]= AbilityManager.instance.GetInfo(Map.instance.testRewardID);
             Adatas[1]= AbilityManager.instance.GetInfo(Map.instance.testRewardID);
             Adatas[2]= AbilityManager.instance.GetInfo(Map.instance.testRewardID);
+            for (int i = 0; i < Adatas.Length; i++)
+            {
+                abilityItemBoxes[i].Reset();
+                abilityItemBoxes[i].Init(Adatas[i]);
+                abilityItemBoxes[i].InReward();
+            }
+            Btn_retry.gameObject.SetActive(false);
+            Btn_return.gameObject.SetActive(false);
+            return;
+        }
+        if(Configs.instance.useTestMapName!=""&&type==-1)//升级奖励的情况
+        {
+            Adatas =new AbilityData[3]; 
+            Adatas[0]= AbilityManager.instance.GetInfo(Configs.instance.levelUpRewardIDs[Player.instance.playerActor.level-2]);
+            Adatas[1]= AbilityManager.instance.GetInfo(Configs.instance.levelUpRewardIDs[Player.instance.playerActor.level-2]);
+            Adatas[2]= AbilityManager.instance.GetInfo(Configs.instance.levelUpRewardIDs[Player.instance.playerActor.level-2]);
             for (int i = 0; i < Adatas.Length; i++)
             {
                 abilityItemBoxes[i].Reset();
