@@ -440,6 +440,11 @@ public class UIBattle : MonoBehaviour
             //胜利了
             //如果不是最终BOSS，选择能力奖励
             //怎样判断是否是最终BOSS？
+            /*
+            战斗结束后的奖励根据Configs的设置进行
+            设置A：经验值有效
+            设置B：经验值无效
+            */
             if(BattleScene.instance.beatBossNumber>1&&battleType==2)
             {
                 //最终BOSS，跳过

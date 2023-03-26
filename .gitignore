@@ -4,3 +4,7 @@ Client/Temp
 Client/obj
 Client/Logs
 *.apk
+*.log
+*.log
+Client/Logs/shadercompiler-AssetImportWorker0.log
+Client/Logs/shadercompiler-UnityShaderCompiler.exe0.log
