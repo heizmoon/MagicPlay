@@ -1,4 +1,4 @@
-# [Project Name] - Real-time Roguelike Card Battler
+# [MagicPlay] - Real-time Roguelike Card Battler
 
 ![Unity Version](https://img.shields.io/badge/Unity-2021.3.4f1-blue.svg?logo=unity)
 ![Platform](https://img.shields.io/badge/Platform-Android%20|%20iOS-green.svg)
@@ -30,6 +30,11 @@
 ## 🚀 Getting Started | 快速开始
 
 所有人都可以在此版本基础上进行开发。请遵循以下步骤配置环境。
+
+### State | 当前状态
+·包含4个关卡
+·包含3个不同风格的角色以及卡牌套装
+·包含数位敌人和BOSS
 
 ### Prerequisites | 前置要求
 
